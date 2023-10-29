@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"name": "swim",
+			"path": "."
+		},
+		{
+			"path": "../42git/c03"
+		},
+		{
+			"path": "../42git/c04"
+		},
+		{
+			"path": "../42git/cc05"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"unistd.h": "c",
+			"stdio.h": "c",
+			"typeinfo": "c",
+			"__config": "c",
+			"stdlib.h": "c",
+			"locale": "c"
+		}
+	}
+}

@@ -5,7 +5,8 @@ g1t add .
 g1t status
 g1t comm1t -m "메시지"
 git branch -M main
-g1t push
+git push -u origin main
+git push
 
 [...document.querySelectorAll('td:nth-child(2)')]
 .slice(2,20)
