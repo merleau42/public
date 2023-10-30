@@ -1,0 +1,231 @@
+<html lang="ko"><head></head><body><div id="problem-body" class="">
+    <div class="col-md-12">
+        <section id="description" class="problem-section">
+        <div class="headline">
+        <h2>문제</h2>
+        </div>
+        <div id="problem_description" class="problem-text">
+        <p>이제부터 여러분은 교준이와 간단한 가위바위보 게임을 하게 된다. 교준이는 가위바위보를 하기 전에 다음과 같은 심리전을 펼친다.</p>
+
+<ul>
+<li>가위바위보 전에 "교준이는 '가위'를 낼거야!" 라고 말한 경우 실제로 교준이는 '주먹'을 낸다.</li>
+<li>가위바위보 전에 "교준이는 '보'를 낼거야!" 라고 말한 경우 실제로 교준이는 '보'를 낸다.</li>
+<li>가위바위보 전에 "교준이는 '주먹'을 낼거야!" 라고 말한 경우 실제로 교준이는 '가위'를 낸다.</li>
+</ul>
+
+<p>이제부터 교준이와 총 T번의 가위바위보를 하게 된다. 다만 여러분은 T번의 가위바위보를 모두 <strong>교준이에게 져야 한다</strong>.</p>
+
+<p>교준이와 가위바위보를 하는 프로그램을 작성하시오.</p>
+
+        </div>
+        </section>
+    </div>
+                                        <div class="col-md-12">
+                <section id="custom_funcdef" class="problem-section">
+                    <div class="headline">
+                        <h2>함수 목록 및 정의</h2>
+                    </div>
+                    <div id="problem_custom_funcdef" class="problem-text">
+                        <p>여러분의 프로그램은 제공되는 "<code><strong>WAEP.h</strong></code>" 파일을 include 해야 한다.</p>
+
+<p>여러분은 다음과 같은 함수를 작성해야 한다.</p>
+
+<ul>
+<li><code>void init(int T)</code>
+
+<ul>
+<li>프로그램을&nbsp;실행하고 난 직후, 한 번만 호출된다. <code>T</code>는 여러분이 교준이와 하게 될 게임의 총 판 수를 나타내는 자연수이다.</li>
+</ul>
+</li>
+<li><code>int janken(int P)</code>
+<ul>
+<li>본 함수의 호출은 게임 한 판의 시작을, 종료는 게임 한 판의 종결을 의미한다.</li>
+<li><code>P = 0</code>인 경우, 가위바위보 전에 교준이가 "교준이는 '주먹'을 낼거야!" 라고 심리전을 펼친 것을 의미한다.</li>
+<li><code>P = 2</code>인 경우, 가위바위보 전에 교준이가&nbsp;"교준이는 '가위'를 낼거야!" 라고 심리전을 펼친 것을 의미한다.</li>
+<li><code>P = 5</code>인 경우, 가위바위보 전에 교준이가 "교준이는 '보'를 낼거야!" 라고 심리전을 펼친 것을 의미한다.</li>
+<li>여러분이 '보'를 내야 할 경우 0을, '주먹'을 내야 할 경우 5를, '가위'를 내야 할 경우 2를 반환한다.</li>
+</ul>
+</li>
+</ul>
+
+<p>여러분은 제출할 소스 파일 안에서 다른 변수나 함수 등을 자유롭게 선언할 수 있다. 다만 입출력 함수를 호출하거나 파일에 접근하는 행위는 금지된다. 또한 Grader의 취약점이나 포인터를 이용하여, Grader의 숨겨진 변수에 접근하거나, 점수를 조작하는 등의 불법적 행위를 할 경우, 실격 처리될 수 있음에 유의하라.</p>
+
+<p>여러분이 작성한 소스 코드를 테스트하기 위하여, Sample Grader가 제공된다. 제공되는 Sample Grader는 실제 채점에 활용되는 Grader와 다를 수 있다.</p>
+
+                    </div>
+                </section>
+            </div>
+                                                <div class="col-md-12">
+            <section id="input" class="problem-section">
+            <div class="headline">
+            <h2>입력</h2>
+            </div>
+            <div id="problem_input" class="problem-text">
+            <p>Sample Grader는 다음과 같은 정보를 Standard Input을 통해 읽어들인다. 여러분은 어떠한 입력도 받으면 안된다.</p>
+
+<p>첫 번째 줄에 교준이와 할 게임의 총 판수를 의미하는 자연수 T가 주어진다.</p>
+
+<p>두 번째 줄부터 T개의 줄에 걸쳐, 함수 <code>janken</code>의 인자 P의 값이 주어진다.</p>
+
+            </div>
+            </section>
+        </div>
+
+        <div class="col-md-12">
+            <section id="output" class="problem-section">
+            <div class="headline">
+            <h2>출력</h2>
+            </div>
+            <div id="problem_output" class="problem-text">
+            <p>Sample Grader는 다음과 같은 정보를 Standard Output을 통하여 출력한다. 여러분은 어떠한 출력도 하면 안된다. 첫 번째&nbsp;줄부터 T개의 줄에 걸쳐, 함수 <code>janken</code>이 반환한 값을 출력한다.</p>
+
+            </div>
+            </section>
+        </div>
+                <div class="col-md-12">
+    <section id="limit" class="problem-section">
+    <div class="headline">
+    <h2>제한</h2>
+    </div>
+    <div id="problem_limit" class="problem-text">
+    <ul>
+<li>1 ≤ T ≤ 100</li>
+</ul>
+    </div>
+    </section>
+    </div>
+                                        <div class="col-md-12">
+                <section id="custom_files" class="problem-section">
+                    <div class="headline">
+                        <h2>제공 파일</h2>
+                    </div>
+                    <div id="problem_custom_files" class="problem-text">
+                        <ul>
+<li>Sample Grader:&nbsp;<a href="https://upload.acmicpc.net/2cfbb3a6-d5fa-4abc-8647-4b039e2d48ea/">grader.cpp</a></li>
+<li>WAEP.cpp:&nbsp;<a href="https://upload.acmicpc.net/9864b8a9-dca0-499e-9ea5-655984d9d348/">WAEP.cpp</a></li>
+<li>WAEP.h:&nbsp;<a href="https://upload.acmicpc.net/d80f876c-5ad7-49cd-9b8b-6da02f855415/">WAEP.h</a></li>
+</ul>
+
+                    </div>
+                </section>
+            </div>
+                                                                            <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <section id="sampleinput1">
+                <div class="headline">
+                <h2>예제 입력 1
+                    <button type="button" class="btn btn-link copy-button" style="padding: 0px;" data-clipboard-target="#sample-input-1">복사</button>
+                </h2>
+                </div>
+                <pre class="sampledata" id="sample-input-1">2
+2
+2
+</pre>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section id="sampleoutput1">
+                <div class="headline">
+                <h2>예제 출력 1
+                    <button type="button" class="btn btn-link copy-button" style="padding: 0px;" data-clipboard-target="#sample-output-1">복사</button>
+                </h2>
+                </div>
+                <pre class="sampledata" id="sample-output-1">2
+2
+</pre>
+                </section>
+            </div>
+                            </div>
+        </div>
+                                <div class="col-md-12">
+        <section id="hint" style="display: none;" class="problem-section">
+        <div class="headline">
+        <h2>힌트</h2>
+        </div>
+        <div id="problem_hint" class="problem-text">
+        
+        </div>
+        </section>
+    </div>
+                                                    <div class="col-md-12">
+                <section id="custom_explain" class="problem-section">
+                    <div class="headline">
+                        <h2>부연 설명</h2>
+                    </div>
+                    <div id="problem_custom_explain" class="problem-text">
+                        <p>다음은 위의 입출력 예제에 대해서, Sample Grader와 Interaction하는 과정을 나타낸 것이다.</p>
+
+<table class="table table-bordered" style="width: 100%;">
+<thead>
+<tr>
+    <th style="text-align: center;">WAEP.cpp</th>
+    <th style="text-align: center;">Grader</th>
+    <th style="text-align: center;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>T = 2</code></td>
+    <td style="text-align: center;">Grader에서 T의 값을 읽어들인다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>init(T = 2)</code> 호출</td>
+    <td style="text-align: center;"><code>init</code> 함수는 초기에 한 번만 호출된다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>P = 2</code></td>
+    <td style="text-align: center;">&nbsp;</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>janken(P = 2)</code> 호출</td>
+    <td style="text-align: center;">&nbsp;</td>
+</tr>
+<tr>
+    <td style="text-align: center;"><code>return 2</code></td>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;">가위를 낸다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;">2를 출력</td>
+    <td style="text-align: center;">Grader는 리턴 값을 출력한다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>P = 2</code></td>
+    <td style="text-align: center;">&nbsp;</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;"><code>janken(P = 2)</code> 호출</td>
+    <td style="text-align: center;">&nbsp;</td>
+</tr>
+<tr>
+    <td style="text-align: center;"><code>return 2</code></td>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;">가위를 낸다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;">2를 출력</td>
+    <td style="text-align: center;">Grader는 리턴 값을 출력한다.</td>
+</tr>
+<tr>
+    <td style="text-align: center;">&nbsp;</td>
+    <td style="text-align: center;">종료</td>
+    <td style="text-align: center;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+<p>위의 Interaction 과정은 실제 정해와 전혀 관련이 없으며, 단지 이해를 돕기 위해 만든 예시이다.</p>
+
+                    </div>
+                </section>
+            </div>
+                            </div></body></html>

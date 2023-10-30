@@ -1,0 +1,3711 @@
+<style>.mjx-copytext {font-size: 0;}</style>
+<style>.title-column { width: 45px; text-align: center;}</style>
+<style>table { width: 100%; }</style>
+<style>td { height: 40px; }</style>
+<style>table, th, td { border-collapse: collapse; border: 1px solid black; }</style>
+<style>pre {color:white; font-family:Courier New; padding:9px; line-height:1.36;}</style>
+<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">21548번</td></tr><tr><td class="title-column">문제</td><td><div class="problem-text" id="problem_description">
+ <p>
+  В компании работают
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      n
+     </mi>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $n$
+   </span>
+  </mjx-container>
+  бурундуков (
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+    <mjx-mo class="mjx-n" space="4">
+     <mjx-c class="mjx-c2265">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="4">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      n
+     </mi>
+     <mo>
+      ≥
+     </mo>
+     <mn>
+      2
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $n \ge 2$
+   </span>
+  </mjx-container>
+  ), пронумерованных целыми числами от
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      1
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $1$
+   </span>
+  </mjx-container>
+  до
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      n
+     </mi>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $n$
+   </span>
+  </mjx-container>
+  . Бурундук с номером
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      1
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $1$
+   </span>
+  </mjx-container>
+  является основателем компании, а каждый из остальных бурундуков имеет ровно одного непосредственного начальника. Иными словами, иерархия бурундуков представляет собой корневое дерево, где родитель вершины является её начальником, а дети вершины являются её подчинёнными. Бурундуки, имеющие подчинённых, называются
+  <em>
+   менеджерами
+  </em>
+  , а остальные ---
+  <em>
+   консультантами
+  </em>
+  . Структура компании такова, что каждый менеджер имеет не более
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c38">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      8
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $8$
+   </span>
+  </mjx-container>
+  подчинённых. Обратите внимание, что основатель компании также является менеджером.
+ </p>
+ <p>
+  Основатель компании решил составить доклад для инвесторов о последних проделанных улучшениях разрабатываемого продукта. Каждое улучшение является результатом работы кого-то из консультантов компании. Все улучшения пронумерованы в хронологическим порядке их совершения.
+ </p>
+ <p>
+  Для каждого из консультантов известен список улучшений, сделанных этим консультантом. Каждый консультант обязан выбрать одно из этих улучшений и сделать о нём доклад своему менеджеру. Таким образом, доклад любого консультанта будет состоять ровно из одного улучшения.
+ </p>
+ <p>
+  Каждый менеджер, в том числе основатель компании, должен сделать доклад, представляющий собой объединение докладов всех его подчиненных. Для этого он берёт доклады, полученные от подчинённых, и записывает их подряд без изменений в некотором порядке. Например, если первый доклад состоит из улучшений
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3]$
+   </span>
+  </mjx-container>
+  , а второй --- из улучшений
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c34">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      4
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      10
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2, 4, 10]$
+   </span>
+  </mjx-container>
+  , то в результате объединения может получиться доклад
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c34">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      4
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      10
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2, 4, 10, 1, 3]$
+   </span>
+  </mjx-container>
+  , либо доклад
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c34">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      4
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      10
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3, 2, 4, 10]$
+   </span>
+  </mjx-container>
+  , никакие другие доклады получиться не могут.
+ </p>
+ <p>
+  Основатель компании стремится рассказать об улучшениях максимально логично, поэтому он хочет, чтобы в его докладе улучшения шли в хронологическом порядке, то есть по возрастанию номеров. Помогите консультантам выбрать, о каком улучшении они должны рассказать, а менеджерам выбрать, в каком порядке им располагать доклады подчиненных при объединении, чтобы в итоговом докладе основателя компании вошедшие в него улучшения шли в хронологическом порядке.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">입력</td><td><div class="problem-text" id="problem_input">
+ <p>
+  В первой строке содержится целое число
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      n
+     </mi>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $n$
+   </span>
+  </mjx-container>
+  (
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n" space="4">
+     <mjx-c class="mjx-c2264">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mi class="mjx-i" space="4">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+    <mjx-mo class="mjx-n" space="4">
+     <mjx-c class="mjx-c2264">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="4">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mstyle>
+     <mjx-mspace style="width: 0.167em;">
+     </mjx-mspace>
+    </mjx-mstyle>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      2
+     </mn>
+     <mo>
+      ≤
+     </mo>
+     <mi>
+      n
+     </mi>
+     <mo>
+      ≤
+     </mo>
+     <mn>
+      100
+     </mn>
+     <mstyle scriptlevel="0">
+      <mspace width="0.167em">
+      </mspace>
+     </mstyle>
+     <mn>
+      000
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $2 \leq n \leq 100\,000$
+   </span>
+  </mjx-container>
+  ) --- количество бурундуков в компании. Далее следуют
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D45B TEX-I">
+     </mjx-c>
+    </mjx-mi>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      n
+     </mi>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $n$
+   </span>
+  </mjx-container>
+  описаний бурундуков, по одному в строке:
+ </p>
+ <ul>
+  <li>
+   если бурундук является менеджером, то описание начинается с числа
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c31">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       1
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $1$
+    </span>
+   </mjx-container>
+   , затем следует число
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-msub>
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D458 TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+       <mi>
+        k
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $k_i$
+    </span>
+   </mjx-container>
+   --- количество непосредственных подчинённых у этого бурундука (
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c31">
+      </mjx-c>
+     </mjx-mn>
+     <mjx-mo class="mjx-n" space="4">
+      <mjx-c class="mjx-c2264">
+      </mjx-c>
+     </mjx-mo>
+     <mjx-msub space="4">
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D458 TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+     <mjx-mo class="mjx-n" space="4">
+      <mjx-c class="mjx-c2264">
+      </mjx-c>
+     </mjx-mo>
+     <mjx-mn class="mjx-n" space="4">
+      <mjx-c class="mjx-c38">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       1
+      </mn>
+      <mo>
+       ≤
+      </mo>
+      <msub>
+       <mi>
+        k
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+      <mo>
+       ≤
+      </mo>
+      <mn>
+       8
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $1 \le k_i \le 8$
+    </span>
+   </mjx-container>
+   ), а затем следуют
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-msub>
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D458 TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+       <mi>
+        k
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $k_i$
+    </span>
+   </mjx-container>
+   различных чисел от
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c32">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       2
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $2$
+    </span>
+   </mjx-container>
+   до
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mi class="mjx-i">
+      <mjx-c class="mjx-c1D45B TEX-I">
+      </mjx-c>
+     </mjx-mi>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mi>
+       n
+      </mi>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $n$
+    </span>
+   </mjx-container>
+   --- номера бурундуков, которые являются его подчинёнными;
+  </li>
+  <li>
+   если бурундук является консультантом, то описание начинается с числа
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c32">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       2
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $2$
+    </span>
+   </mjx-container>
+   , затем следует число
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-msub>
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D45A TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+       <mi>
+        m
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $m_i$
+    </span>
+   </mjx-container>
+   --- количество улучшений, о которых этот консультант может рассказать, а затем следуют
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-msub>
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D45A TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+       <mi>
+        m
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $m_i$
+    </span>
+   </mjx-container>
+   различных целых чисел от
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c31">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       1
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $1$
+    </span>
+   </mjx-container>
+   до
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c31">
+      </mjx-c>
+      <mjx-c class="mjx-c30">
+      </mjx-c>
+      <mjx-c class="mjx-c30">
+      </mjx-c>
+     </mjx-mn>
+     <mjx-mstyle>
+      <mjx-mspace style="width: 0.167em;">
+      </mjx-mspace>
+     </mjx-mstyle>
+     <mjx-mn class="mjx-n">
+      <mjx-c class="mjx-c30">
+      </mjx-c>
+      <mjx-c class="mjx-c30">
+      </mjx-c>
+      <mjx-c class="mjx-c30">
+      </mjx-c>
+     </mjx-mn>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>
+       100
+      </mn>
+      <mstyle scriptlevel="0">
+       <mspace width="0.167em">
+       </mspace>
+      </mstyle>
+      <mn>
+       000
+      </mn>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $100\,000$
+    </span>
+   </mjx-container>
+   --- номера улучшений.
+  </li>
+ </ul>
+ <p>
+  Бурундук с номером
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      1
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $1$
+   </span>
+  </mjx-container>
+  (основатель компании) всегда является менеджером, а каждый из остальных бурундуков упомянут в качестве подчинённого ровно один раз и прямо или косвенно подчинен основателю компании.
+ </p>
+ <p>
+  Сумма чисел
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-msub>
+     <mjx-mi class="mjx-i">
+      <mjx-c class="mjx-c1D45A TEX-I">
+      </mjx-c>
+     </mjx-mi>
+     <mjx-script style="vertical-align: -0.15em;">
+      <mjx-mi class="mjx-i" size="s">
+       <mjx-c class="mjx-c1D456 TEX-I">
+       </mjx-c>
+      </mjx-mi>
+     </mjx-script>
+    </mjx-msub>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <msub>
+      <mi>
+       m
+      </mi>
+      <mi>
+       i
+      </mi>
+     </msub>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $m_i$
+   </span>
+  </mjx-container>
+  по всем консультантам не превосходит
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mstyle>
+     <mjx-mspace style="width: 0.167em;">
+     </mjx-mspace>
+    </mjx-mstyle>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+     <mjx-c class="mjx-c30">
+     </mjx-c>
+    </mjx-mn>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mn>
+      100
+     </mn>
+     <mstyle scriptlevel="0">
+      <mspace width="0.167em">
+      </mspace>
+     </mstyle>
+     <mn>
+      000
+     </mn>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $100\,000$
+   </span>
+  </mjx-container>
+  . Гарантируется, что никакое улучшение не было сделано двумя различными консультантами, то есть все упомянутые всеми консультантами улучшения различны.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">출력</td><td><div class="problem-text" id="problem_output">
+ <p>
+  Если составить доклад требуемым образом невозможно, выведите &lt;&lt;
+  <code>
+   No
+  </code>
+  &gt;&gt;.
+ </p>
+ <p>
+  Если доклад составить возможно, выведите &lt;&lt;
+  <code>
+   Yes
+  </code>
+  &gt;&gt;. В этом случае затем вы можете вывести
+  <em>
+   сертификат
+  </em>
+  , который описывает для каждого из бурундуков в порядке их номеров следующее:
+ </p>
+ <ul>
+  <li>
+   если бурундук является менеджером, то нужно вывести список его подчиненных в том порядке, в котором требуется расположить их доклады;
+  </li>
+  <li>
+   если бурундук является консультантом, то нужно вывести номер улучшения, о котором ему нужно рассказать в своем докладе.
+  </li>
+ </ul>
+ <p>
+  Особенность этой задачи заключается в следующем: вам разрешается как выводить сертификат, так и не выводить его. Если решение не выводит сертификат, но правильно определяет возможность составления доклада, оно получит часть баллов за тест.
+ </p>
+ <p>
+  Обратите внимание, что вывод некорректного сертификата приводит к вердикту &lt;&lt;
+  <code>
+   Неправильный ответ
+  </code>
+  &gt;&gt; и нулю баллов за этот тест, несмотря на правильность определения возможности составления доклада.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">제한</td><td><div class="problem-text" id="problem_limit">
+</div>
+</td></tr>
+<tr><td class="title-column">서브태스크</td><td><div class="problem-text" id="problem_subtask">
+ <div class="problem-text" id="problem_custom_subtask_scoring_b">
+  <p>
+   Если во всех тестах подзадачи правильно определена возможность составления доклада, а также во всех тестах, где доклад возможен, предъявлен верный сертификат, за подзадачу выставляется полный балл.
+  </p>
+  <p>
+   В противном случае, если во всех тестах подзадачи правильно определена возможность составления доклада, и на любой тест сертификат либо верный, либо отсутствует, за подзадачу выставляется частичный балл. Обратите внимание, что подзадачи, зависящие от неё, в таком случае будут запущены для тестирования и даже могут быть оценены в полный балл.
+  </p>
+  <p>
+   Обозначим за
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mi class="mjx-i">
+      <mjx-c class="mjx-c1D43E TEX-I">
+      </mjx-c>
+     </mjx-mi>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mi>
+       K
+      </mi>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $K$
+    </span>
+   </mjx-container>
+   максимальное количество непосредственных подчинённых у бурундуковменеджеров, т.е.
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-mi class="mjx-i">
+      <mjx-c class="mjx-c1D43E TEX-I">
+      </mjx-c>
+     </mjx-mi>
+     <mjx-mo class="mjx-n" space="4">
+      <mjx-c class="mjx-c3D">
+      </mjx-c>
+     </mjx-mo>
+     <mjx-mo class="mjx-n" space="4">
+      <mjx-c class="mjx-c6D">
+      </mjx-c>
+      <mjx-c class="mjx-c61">
+      </mjx-c>
+      <mjx-c class="mjx-c78">
+      </mjx-c>
+     </mjx-mo>
+     <mjx-texatom space="2" texclass="ORD">
+      <mjx-msub>
+       <mjx-mi class="mjx-i">
+        <mjx-c class="mjx-c1D458 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+       <mjx-script style="vertical-align: -0.15em;">
+        <mjx-mi class="mjx-i" size="s">
+         <mjx-c class="mjx-c1D456 TEX-I">
+         </mjx-c>
+        </mjx-mi>
+       </mjx-script>
+      </mjx-msub>
+     </mjx-texatom>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mi>
+       K
+      </mi>
+      <mo>
+       =
+      </mo>
+      <mo data-mjx-texclass="OP" movablelimits="true">
+       max
+      </mo>
+      <mrow data-mjx-texclass="ORD">
+       <msub>
+        <mi>
+         k
+        </mi>
+        <mi>
+         i
+        </mi>
+       </msub>
+      </mrow>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $K = \max{k_i}$
+    </span>
+   </mjx-container>
+   . Также обозначим суммарное количество улучшений у бурундуковконсультатов за
+   <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+    <mjx-math aria-hidden="true" class="MJX-TEX">
+     <mjx-munder limits="false">
+      <mjx-mo class="mjx-sop">
+       <mjx-c class="mjx-c2211 TEX-S1">
+       </mjx-c>
+      </mjx-mo>
+      <mjx-script style="vertical-align: -0.285em;">
+       <mjx-texatom size="s" texclass="ORD">
+        <mjx-msub>
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45A TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-script style="vertical-align: -0.15em;">
+          <mjx-mi class="mjx-i" size="s">
+           <mjx-c class="mjx-c1D456 TEX-I">
+           </mjx-c>
+          </mjx-mi>
+         </mjx-script>
+        </mjx-msub>
+       </mjx-texatom>
+      </mjx-script>
+     </mjx-munder>
+    </mjx-math>
+    <mjx-assistive-mml display="inline" unselectable="on">
+     <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <munder>
+       <mo data-mjx-texclass="OP">
+        ∑
+       </mo>
+       <mrow data-mjx-texclass="ORD">
+        <msub>
+         <mi>
+          m
+         </mi>
+         <mi>
+          i
+         </mi>
+        </msub>
+       </mrow>
+      </munder>
+     </math>
+    </mjx-assistive-mml>
+    <span aria-hidden="true" class="no-mathjax mjx-copytext">
+     $\sum_{m_i}$
+    </span>
+   </mjx-container>
+   .
+  </p>
+ </div>
+ <div class="table-responsive">
+  <table class="table table-bordered td-middle subtask-table" style="width: 100%;">
+   <thead>
+    <tr>
+     <th style="width: 5%;">
+      번호
+     </th>
+     <th style="width: 5%;">
+      배점
+     </th>
+     <th style="width: 90%;">
+      제한
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr data-subtask-id="1">
+     <td>
+      1
+     </td>
+     <td>
+      18
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           10
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 10$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 2$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="2">
+     <td>
+      2
+     </td>
+     <td>
+      6
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           20
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 20$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c38">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           8
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 8$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="3">
+     <td>
+      3
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 2$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="4">
+     <td>
+      4
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           5
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 5$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="5">
+     <td>
+      5
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c38">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           8
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 8$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="6">
+     <td>
+      6
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           500
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 500$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 2$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="7">
+     <td>
+      7
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           500
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 500$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           5
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 5$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="8">
+     <td>
+      8
+     </td>
+     <td>
+      4
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           500
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 500$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c38">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           8
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 8$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="9">
+     <td>
+      9
+     </td>
+     <td>
+      8
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 2000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 2$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="10">
+     <td>
+      10
+     </td>
+     <td>
+      6
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 2000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           5
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 5$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="11">
+     <td>
+      11
+     </td>
+     <td>
+      6
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 2000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c38">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           8
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 8$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="12">
+     <td>
+      12
+     </td>
+     <td>
+      12
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+         <mjx-mstyle>
+          <mjx-mspace style="width: 0.167em;">
+          </mjx-mspace>
+         </mjx-mstyle>
+         <mjx-mn class="mjx-n">
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+          <mstyle scriptlevel="0">
+           <mspace width="0.167em">
+           </mspace>
+          </mstyle>
+          <mn>
+           000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100\,000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c32">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           2
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 2$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="13">
+     <td>
+      13
+     </td>
+     <td>
+      6
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+         <mjx-mstyle>
+          <mjx-mspace style="width: 0.167em;">
+          </mjx-mspace>
+         </mjx-mstyle>
+         <mjx-mn class="mjx-n">
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+          <mstyle scriptlevel="0">
+           <mspace width="0.167em">
+           </mspace>
+          </mstyle>
+          <mn>
+           000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100\,000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c35">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           5
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 5$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+    <tr data-subtask-id="14">
+     <td>
+      14
+     </td>
+     <td>
+      14
+     </td>
+     <td class="subtask-body">
+      <p>
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D45B TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n">
+          <mjx-c class="mjx-c2C">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mo class="mjx-sop" space="2">
+          <mjx-c class="mjx-c2211 TEX-S1">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-msub space="2">
+          <mjx-mi class="mjx-i">
+           <mjx-c class="mjx-c1D45A TEX-I">
+           </mjx-c>
+          </mjx-mi>
+          <mjx-script style="vertical-align: -0.15em;">
+           <mjx-mi class="mjx-i" size="s">
+            <mjx-c class="mjx-c1D456 TEX-I">
+            </mjx-c>
+           </mjx-mi>
+          </mjx-script>
+         </mjx-msub>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c31">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+         <mjx-mstyle>
+          <mjx-mspace style="width: 0.167em;">
+          </mjx-mspace>
+         </mjx-mstyle>
+         <mjx-mn class="mjx-n">
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+          <mjx-c class="mjx-c30">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           n
+          </mi>
+          <mo>
+           ,
+          </mo>
+          <mo data-mjx-texclass="OP">
+           ∑
+          </mo>
+          <msub>
+           <mi>
+            m
+           </mi>
+           <mi>
+            i
+           </mi>
+          </msub>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           100
+          </mn>
+          <mstyle scriptlevel="0">
+           <mspace width="0.167em">
+           </mspace>
+          </mstyle>
+          <mn>
+           000
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $n, \sum m_i \leq 100\,000$
+        </span>
+       </mjx-container>
+       ,
+       <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+        <mjx-math aria-hidden="true" class="MJX-TEX">
+         <mjx-mi class="mjx-i">
+          <mjx-c class="mjx-c1D43E TEX-I">
+          </mjx-c>
+         </mjx-mi>
+         <mjx-mo class="mjx-n" space="4">
+          <mjx-c class="mjx-c2264">
+          </mjx-c>
+         </mjx-mo>
+         <mjx-mn class="mjx-n" space="4">
+          <mjx-c class="mjx-c38">
+          </mjx-c>
+         </mjx-mn>
+        </mjx-math>
+        <mjx-assistive-mml display="inline" unselectable="on">
+         <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>
+           K
+          </mi>
+          <mo>
+           ≤
+          </mo>
+          <mn>
+           8
+          </mn>
+         </math>
+        </mjx-assistive-mml>
+        <span aria-hidden="true" class="no-mathjax mjx-copytext">
+         $K \le 8$
+        </span>
+       </mjx-container>
+      </p>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+ </div>
+</div>
+</td></tr>
+<tr><td class="title-column"></td><td><div class="problem-text" id="problem_custom_subtask_scoring_b">
+ <p>
+  Если во всех тестах подзадачи правильно определена возможность составления доклада, а также во всех тестах, где доклад возможен, предъявлен верный сертификат, за подзадачу выставляется полный балл.
+ </p>
+ <p>
+  В противном случае, если во всех тестах подзадачи правильно определена возможность составления доклада, и на любой тест сертификат либо верный, либо отсутствует, за подзадачу выставляется частичный балл. Обратите внимание, что подзадачи, зависящие от неё, в таком случае будут запущены для тестирования и даже могут быть оценены в полный балл.
+ </p>
+ <p>
+  Обозначим за
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D43E TEX-I">
+     </mjx-c>
+    </mjx-mi>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      K
+     </mi>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $K$
+   </span>
+  </mjx-container>
+  максимальное количество непосредственных подчинённых у бурундуковменеджеров, т.е.
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mi class="mjx-i">
+     <mjx-c class="mjx-c1D43E TEX-I">
+     </mjx-c>
+    </mjx-mi>
+    <mjx-mo class="mjx-n" space="4">
+     <mjx-c class="mjx-c3D">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mo class="mjx-n" space="4">
+     <mjx-c class="mjx-c6D">
+     </mjx-c>
+     <mjx-c class="mjx-c61">
+     </mjx-c>
+     <mjx-c class="mjx-c78">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-texatom space="2" texclass="ORD">
+     <mjx-msub>
+      <mjx-mi class="mjx-i">
+       <mjx-c class="mjx-c1D458 TEX-I">
+       </mjx-c>
+      </mjx-mi>
+      <mjx-script style="vertical-align: -0.15em;">
+       <mjx-mi class="mjx-i" size="s">
+        <mjx-c class="mjx-c1D456 TEX-I">
+        </mjx-c>
+       </mjx-mi>
+      </mjx-script>
+     </mjx-msub>
+    </mjx-texatom>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mi>
+      K
+     </mi>
+     <mo>
+      =
+     </mo>
+     <mo data-mjx-texclass="OP" movablelimits="true">
+      max
+     </mo>
+     <mrow data-mjx-texclass="ORD">
+      <msub>
+       <mi>
+        k
+       </mi>
+       <mi>
+        i
+       </mi>
+      </msub>
+     </mrow>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $K = \max{k_i}$
+   </span>
+  </mjx-container>
+  . Также обозначим суммарное количество улучшений у бурундуковконсультатов за
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-munder limits="false">
+     <mjx-mo class="mjx-sop">
+      <mjx-c class="mjx-c2211 TEX-S1">
+      </mjx-c>
+     </mjx-mo>
+     <mjx-script style="vertical-align: -0.285em;">
+      <mjx-texatom size="s" texclass="ORD">
+       <mjx-msub>
+        <mjx-mi class="mjx-i">
+         <mjx-c class="mjx-c1D45A TEX-I">
+         </mjx-c>
+        </mjx-mi>
+        <mjx-script style="vertical-align: -0.15em;">
+         <mjx-mi class="mjx-i" size="s">
+          <mjx-c class="mjx-c1D456 TEX-I">
+          </mjx-c>
+         </mjx-mi>
+        </mjx-script>
+       </mjx-msub>
+      </mjx-texatom>
+     </mjx-script>
+    </mjx-munder>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <munder>
+      <mo data-mjx-texclass="OP">
+       ∑
+      </mo>
+      <mrow data-mjx-texclass="ORD">
+       <msub>
+        <mi>
+         m
+        </mi>
+        <mi>
+         i
+        </mi>
+       </msub>
+      </mrow>
+     </munder>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $\sum_{m_i}$
+   </span>
+  </mjx-container>
+  .
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">힌트</td><td><div class="problem-text" id="problem_hint">
+ <p>
+  Во втором примере не сделан вывод сертификата, что соответствует частичному решению.
+ </p>
+ <p>
+  В третьем примере каждый из консультантов сделал ровно одно улучшение, поэтому выбор улучшений однозначен.
+ </p>
+ <p>
+  У третьего менеджера есть два возможных варианта доклада:
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3]$
+   </span>
+  </mjx-container>
+  или
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[3, 1]$
+   </span>
+  </mjx-container>
+  .
+ </p>
+ <p>
+  У первого менеджера есть четыре возможных варианта доклада с учетом всех возможностей доклада третьего менеджера:
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3]$
+   </span>
+  </mjx-container>
+  +
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2]$
+   </span>
+  </mjx-container>
+  =
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3, 2]$
+   </span>
+  </mjx-container>
+  ,
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2]$
+   </span>
+  </mjx-container>
+  +
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[1, 3]$
+   </span>
+  </mjx-container>
+  =
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2, 1, 3]$
+   </span>
+  </mjx-container>
+  ,
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[3, 1]$
+   </span>
+  </mjx-container>
+  +
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2]$
+   </span>
+  </mjx-container>
+  =
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[3, 1, 2]$
+   </span>
+  </mjx-container>
+  и
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2]$
+   </span>
+  </mjx-container>
+  +
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[3, 1]$
+   </span>
+  </mjx-container>
+  =
+  <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;">
+   <mjx-math aria-hidden="true" class="MJX-TEX">
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5B">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n">
+     <mjx-c class="mjx-c32">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c33">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c2C">
+     </mjx-c>
+    </mjx-mo>
+    <mjx-mn class="mjx-n" space="2">
+     <mjx-c class="mjx-c31">
+     </mjx-c>
+    </mjx-mn>
+    <mjx-mo class="mjx-n">
+     <mjx-c class="mjx-c5D">
+     </mjx-c>
+    </mjx-mo>
+   </mjx-math>
+   <mjx-assistive-mml display="inline" unselectable="on">
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     <mo stretchy="false">
+      [
+     </mo>
+     <mn>
+      2
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      3
+     </mn>
+     <mo>
+      ,
+     </mo>
+     <mn>
+      1
+     </mn>
+     <mo stretchy="false">
+      ]
+     </mo>
+    </math>
+   </mjx-assistive-mml>
+   <span aria-hidden="true" class="no-mathjax mjx-copytext">
+    $[2, 3, 1]$
+   </span>
+  </mjx-container>
+  , но ни в одном из этих докладов улучшения не идут в хронологическом порядке.
+ </p>
+</div>
+</td></tr>
+</table><br><br>
+
+<table><tr><th>입력</th><th>출력</th></tr><tr><td><pre>6
+1 3 5 4 6
+2 3 10 61 60
+2 2 80 20
+2 2 40 70
+1 2 3 2
+2 4 30 90 91 92</pre></td><td><pre>Yes
+5 6 4
+10
+20
+40
+2 3
+30</pre></tr><tr><td><pre>3
+1 2 2 3
+2 1 1
+2 1 2</pre></td><td><pre>Yes
+2 3
+1
+2</pre></tr><tr><td><pre>5
+1 2 2 3
+2 1 2
+1 2 4 5
+2 1 1
+2 1 3</pre></td><td><pre>No</pre></tr></table>

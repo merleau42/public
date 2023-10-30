@@ -1,0 +1,58 @@
+<style>.mjx-copytext {font-size: 0;}</style>
+<style>.title-column { width: 45px; text-align: center;}</style>
+<style>table { width: 100%; }</style>
+<style>td { height: 40px; }</style>
+<style>table, th, td { border-collapse: collapse; border: 1px solid black; }</style>
+<style>pre {color:white; font-family:Courier New; padding:9px; line-height:1.36;}</style>
+<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">9068번</td></tr><tr><td class="title-column">문제</td><td><div class="problem-text" id="problem_description">
+ <p>
+  We consider a tree T = (V, E) where V is a set of vertices and E is a set of edges. A vertex adjacent to v is called a neighbor of v in T , and we denote the set of neighbors of v in T by N(v). A labeling of a tree T is defined as a one-to-one and onto function f : V → {1, 2, ..., |V|}. For two labeling f and g, if f(u) = g(v) and {f(u') | u' ∈ N(u)} = {g(v') | v' ∈ N(v)}, then we say that v and g are equivalent, or f is equivalent to g . Note that basically a labeling f of T is equivalent to f itself. The figure below shows two equivalent labeling; you can easily check the equivalency.
+ </p>
+ <p>
+  <img alt="" src="https://onlinejudgeimages.s3.amazonaws.com/problem/9068/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202017-01-03%20%EC%98%A4%ED%9B%84%205.33.28.png" style="height:193px; width:400px"/>
+ </p>
+ <p>
+  Your task is to devise and implement an efficient algorithm for counting the number of equivalent labeling to a labeling f of T when you are given a tree T and a labeling f. Since f is equivalent to f itself, you must not miss f itself when counting equivalent labeling of f.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">입력</td><td><div class="problem-text" id="problem_input">
+ <p>
+  Your program is to read from standard input. The input consists of T (1 ≤ T ≤ 20) test cases. The number T of test cases is given in the first line of the input. Each test case consists of the number N (1 ≤ N ≤ 1000) of vertices of an input tree in the first line. Each of following N-1 lines contains two integers 1 ≤ i, j ≤ N, which represents an edge of our input tree connecting vertex i and vertex j. The (N + 1)-st line contains N integers representing a labeling, that is, the ith number of (N+1)-st line means the label of vertex i. All the integers are separated by a single space.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">출력</td><td><div class="problem-text" id="problem_output">
+ <p>
+  Your program is to write to standard output. Print exactly one line for each test case with the number of equivalent labeling.
+ </p>
+</div>
+</td></tr>
+<tr><td class="title-column">제한</td><td><div class="problem-text" id="problem_limit">
+</div>
+</td></tr>
+<tr><td class="title-column">힌트</td><td><div class="problem-text" id="problem_hint">
+</div>
+</td></tr>
+</table><br><br>
+
+<table><tr><th>입력</th><th>출력</th></tr><tr><td><pre>2
+9
+2 8
+1 2
+2 3
+3 4
+4 5
+5 6
+4 7
+2 9
+1 9 2 6 3 7 4 5 8
+7
+1 5
+2 5
+5 7
+6 7
+3 6
+4 6
+7 1 6 2 5 3 4</pre></td><td><pre>6
+8</pre></tr></table>

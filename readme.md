@@ -21,4 +21,8 @@
 number.anagrams.filter(30의배수).filter(max)
 
 // 조건을 활용한 그리디
-number.filter(30의배수).anagrams.filter(max)
+number.filter(30의배수).anagrams.filter(max)123
+
+
+
+독서실에서 왔다
