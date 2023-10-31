@@ -1,0 +1,1959 @@
+1000	Sprout	A+B
+1001	Sprout	A-B
+1002	Silver III	터렛
+1003	Silver III	피보나치 함수
+1004	Silver III	어린 왕자
+1005	Gold III	ACM Craft
+1006	Platinum III	습격자 초라기
+1007	Gold II	벡터 매칭
+1008	Sprout	A/B
+1009	Bronze II	분산처리
+1010	Silver V	다리 놓기
+1011	Gold V	Fly me to the Alpha Centauri
+1012	Silver II	유기농 배추
+1013	Gold V	Contact
+1014	Platinum IV	컨닝
+1015	Silver IV	수열 정렬
+1016	Gold I	제곱 ㄴㄴ 수
+1017	Platinum III	소수 쌍
+1018	Silver IV	체스판 다시 칠하기
+1019	Gold I	책 페이지
+1020	Platinum III	디지털 카운터
+1021	Silver IV	회전하는 큐
+1022	Gold IV	소용돌이 예쁘게 출력하기
+1023	Platinum III	괄호 문자열
+1024	Silver II	수열의 합
+1025	Gold V	제곱수 찾기
+1026	Silver IV	보물
+1027	Gold IV	고층 건물
+1028	Platinum V	다이아몬드 광산
+1029	Gold I	그림 교환
+1030	Gold III	프렉탈 평면
+1032	Bronze I	명령 프롬프트
+1033	Gold II	칵테일
+1034	Gold IV	램프
+1035	Gold I	조각 움직이기
+1036	Gold I	36진수
+1037	Bronze I	약수
+1038	Gold V	감소하는 수
+1039	Gold III	교환
+1041	Gold V	주사위
+1043	Gold IV	거짓말
+1044	Platinum III	팀 선발
+1045	Gold I	도로
+1047	Platinum V	울타리
+1048	Platinum IV	유니콘
+1049	Silver IV	기타줄
+1050	Platinum V	물약
+1051	Silver IV	숫자 정사각형
+1052	Silver I	물병
+1053	Gold I	팰린드롬 공장
+1055	Platinum III	끝이없음
+1057	Silver III	토너먼트
+1058	Silver II	친구
+1059	Silver IV	좋은 구간
+1060	Gold I	좋은 수
+1062	Gold IV	가르침
+1063	Silver III	킹
+1064	Silver V	평행사변형
+1065	Silver IV	한수
+1068	Gold V	트리
+1069	Gold III	집으로
+1071	Platinum V	소트
+1072	Silver III	게임
+1073	Platinum III	도미노
+1074	Silver I	Z
+1075	Bronze II	나누기
+1076	Bronze II	저항
+1079	Gold II	마피아
+1080	Silver I	행렬
+1081	Gold I	합
+1082	Gold III	방 번호
+1083	Gold IV	소트
+1085	Bronze III	직사각형에서 탈출
+1086	Platinum V	박성원
+1087	Platinum IV	쥐 잡기
+1088	Platinum III	케이크
+1089	Gold IV	스타트링크 타워
+1090	Platinum IV	체커
+1091	Gold IV	카드 섞기
+1092	Gold V	배
+1093	Platinum III	스티커 수집
+1094	Silver V	막대기
+1095	Gold I	마법의 구슬
+1096	Platinum III	종이 접기
+1097	Platinum V	마법의 문자열
+1099	Gold III	알 수 없는 문장
+1100	Bronze II	하얀 칸
+1101	Gold IV	카드 정리 1
+1102	Platinum V	발전소
+1103	Gold II	게임
+1104	Platinum III	패턴
+1105	Silver I	팔
+1106	Gold V	호텔
+1107	Gold V	리모컨
+1108	Platinum III	검색 엔진
+1109	Platinum IV	섬
+1110	Bronze I	더하기 사이클
+1111	Gold III	IQ Test
+1112	Gold II	진법 변환
+1113	Gold I	수영장 만들기
+1114	Gold I	통나무 자르기
+1115	Gold I	순열
+1117	Gold V	색칠 1
+1119	Gold I	그래프
+1120	Silver IV	문자열
+1121	Platinum III	도형
+1122	Platinum IV	뒤집기
+1124	Silver II	언더프라임
+1125	Platinum IV	바닥 장식
+1126	Platinum III	같은 탑
+1129	Platinum III	키
+1131	Platinum V	숫자
+1132	Gold III	합
+1133	Platinum V	반복되지 않는 단어
+1135	Gold II	뉴스 전하기
+1136	Platinum V	조각 놓기
+1137	Platinum IV	로봇 레이스
+1138	Silver II	한 줄로 서기
+1139	Gold I	울타리
+1140	Platinum III	요금
+1141	Silver II	접두사
+1142	Platinum III	피자
+1145	Bronze I	적어도 대부분의 배수
+1146	Platinum V	지그재그 서기
+1147	Platinum III	BOJ 소풍
+1148	Gold V	단어 만들기
+1149	Silver I	RGB거리
+1151	Platinum IV	그림자
+1152	Bronze II	단어의 개수
+1153	Gold III	네 개의 소수
+1154	Platinum V	팀 편성
+1155	Platinum V	변형 하노이
+1157	Bronze I	단어 공부
+1158	Silver IV	요세푸스 문제
+1159	Bronze II	농구 경기
+1160	Platinum V	Random Number Generator
+1161	Platinum III	버스
+1162	Gold I	도로포장
+1166	Silver III	선물
+1167	Gold II	트리의 지름
+1168	Platinum III	요세푸스 문제 2
+1169	Gold I	정사각형 진열
+1170	Platinum III	선인장의 개수
+1173	Bronze II	운동
+1174	Gold V	줄어드는 수
+1175	Gold I	배달
+1176	Gold I	섞기
+1177	Platinum V	조쌤포스
+1178	Platinum V	간선 추가
+1181	Silver V	단어 정렬
+1182	Silver II	부분수열의 합
+1183	Silver III	약속
+1184	Platinum V	귀농
+1185	Platinum IV	유럽여행
+1186	Gold IV	직사각형 색칠하기
+1188	Gold V	음식 평론가
+1189	Silver I	컴백홈
+1193	Bronze I	분수찾기
+1194	Gold I	달이 차오른다, 가자.
+1195	Gold V	킥다운
+1197	Gold IV	최소 스패닝 트리
+1198	Silver II	삼각형으로 자르기
+1199	Platinum IV	오일러 회로
+1200	Platinum III	기상예측
+1201	Platinum III	NMK
+1202	Gold II	보석 도둑
+1203	Platinum V	게임
+1205	Silver IV	등수 구하기
+1206	Silver II	사람의 수
+1207	Gold II	종이 자르기
+1208	Gold I	부분수열의 합 2
+1209	Platinum IV	단조수열 만들기
+1212	Bronze II	8진수 2진수
+1213	Silver III	팰린드롬 만들기
+1214	Platinum V	쿨한 물건 구매
+1215	Platinum IV	잘못 작성한 요세푸스 코드
+1217	Platinum IV	하우스 M.D.
+1219	Gold I	오민식의 고민
+1222	Gold II	홍준 프로그래밍 대회
+1225	Bronze II	이상한 곱셈
+1226	Platinum IV	국회
+1228	Platinum IV	전쟁
+1229	Gold IV	육각수
+1230	Gold I	문자열 거리
+1231	Gold I	주식왕 동호
+1233	Bronze II	주사위
+1234	Gold II	크리스마스 트리
+1235	Silver IV	학생 번호
+1236	Bronze I	성 지키기
+1238	Gold III	파티
+1239	Gold V	차트
+1240	Gold V	노드사이의 거리
+1241	Gold V	머리 톡톡
+1242	Gold II	소풍
+1244	Silver IV	스위치 켜고 끄기
+1245	Gold V	농장 관리
+1246	Silver IV	온라인 판매
+1247	Bronze III	부호
+1248	Gold III	Guess
+1249	Platinum III	워드똑똑
+1251	Silver V	단어 나누기
+1252	Bronze II	이진수 덧셈
+1253	Gold IV	좋다
+1254	Silver II	팰린드롬 만들기
+1255	Platinum IV	전쟁 - 선전포고
+1256	Gold II	사전
+1258	Platinum III	문제 할당
+1259	Bronze I	팰린드롬수
+1260	Silver II	DFS와 BFS
+1261	Gold IV	알고스팟
+1262	Silver I	알파벳 다이아몬드
+1263	Silver I	시간 관리
+1264	Bronze IV	모음의 개수
+1265	Platinum III	순열
+1267	Bronze III	핸드폰 요금
+1268	Bronze I	임시 반장 정하기
+1269	Silver IV	대칭 차집합
+1270	Silver III	전쟁 - 땅따먹기
+1271	Bronze V	엄청난 부자2
+1272	Gold II	특별 노드
+1273	Platinum III	샷
+1275	Gold I	커피숍2
+1276	Silver I	PLATFORME
+1277	Gold IV	발전소 설치
+1278	Gold III	연극
+1279	Gold II	내멋대로 주사위
+1280	Platinum IV	나무 심기
+1283	Silver I	단축키 지정
+1284	Bronze III	집 주소
+1285	Gold I	동전 뒤집기
+1286	Silver I	부분 직사각형
+1287	Gold I	할 수 있다
+1289	Platinum III	트리의 가중치
+1291	Silver III	이면수와 임현수
+1292	Bronze I	쉽게 푸는 문제
+1293	Platinum III	생물농축
+1294	Platinum III	문자열 장식
+1296	Bronze I	팀 이름 정하기
+1297	Bronze II	TV 크기
+1298	Platinum IV	노트북의 주인을 찾아서
+1299	Platinum IV	전쟁 - 탈출편2
+1300	Gold II	K번째 수
+1301	Gold III	비즈 공예
+1302	Silver IV	베스트셀러
+1303	Silver I	전쟁 - 전투
+1304	Gold IV	지역
+1305	Platinum IV	광고
+1306	Platinum V	달려라 홍준
+1307	Platinum IV	마방진
+1308	Silver V	D-Day
+1309	Silver I	동물원
+1310	Platinum III	달리기 코스
+1311	Gold I	할 일 정하기 1
+1312	Silver V	소수
+1315	Platinum III	RPG
+1316	Silver V	그룹 단어 체커
+1318	Gold III	포커
+1319	Gold II	지민 vs 한수
+1321	Platinum IV	군인
+1322	Gold IV	X와 K
+1323	Gold IV	숫자 연결하기
+1325	Silver I	효율적인 해킹
+1326	Silver II	폴짝폴짝
+1327	Gold V	소트 게임
+1328	Platinum V	고층 빌딩
+1330	Sprout	두 수 비교하기
+1331	Silver V	나이트 투어
+1332	Gold III	풀자
+1333	Bronze II	부재중 전화
+1334	Gold V	다음 팰린드롬 수
+1336	Platinum IV	수열의 개수 NKD
+1337	Silver IV	올바른 배열
+1338	Gold IV	알 수 없는 번호
+1339	Gold IV	단어 수학
+1340	Silver V	연도 진행바
+1341	Gold III	사이좋은 형제
+1342	Silver I	행운의 문자열
+1343	Silver V	폴리오미노
+1344	Gold IV	축구
+1345	Gold II	등차수열
+1346	Platinum IV	탑을 향해서
+1347	Silver III	미로 만들기
+1350	Bronze II	진짜 공간
+1351	Gold V	무한 수열
+1352	Gold I	문자열
+1353	Platinum V	합과 곱
+1354	Gold V	무한 수열 2
+1355	Gold II	구멍난 케이크 자르기
+1356	Bronze I	유진수
+1357	Bronze I	뒤집힌 덧셈
+1358	Silver IV	하키
+1359	Silver IV	복권
+1360	Gold V	되돌리기
+1362	Bronze II	펫
+1364	Gold V	울타리 치기
+1365	Gold II	꼬인 전깃줄
+1368	Gold II	물대기
+1369	Platinum V	배열값
+1371	Bronze II	가장 많은 글자
+1373	Bronze I	2진수 8진수
+1374	Gold V	강의실
+1375	Gold III	나이
+1377	Gold II	버블 소트
+1379	Gold III	강의실 2
+1380	Silver V	귀걸이
+1384	Silver V	메시지
+1385	Platinum V	벌집
+1388	Silver IV	바닥 장식
+1389	Silver I	케빈 베이컨의 6단계 법칙
+1392	Bronze II	노래 악보
+1393	Silver I	음하철도 구구팔
+1394	Gold V	암호
+1395	Platinum III	스위치
+1398	Gold II	동전 문제
+1399	Platinum V	보물의 위치
+1400	Gold II	화물차
+1402	Silver V	아무래도이문제는A번난이도인것같다
+1404	Silver III	토너먼트 승자
+1405	Gold IV	미친 로봇
+1406	Silver II	에디터
+1407	Gold IV	2로 몇 번 나누어질까
+1408	Bronze II	24
+1409	Platinum V	점 칠하기
+1410	Platinum IV	패턴의 개수
+1411	Silver II	비슷한 단어
+1412	Platinum IV	일방통행
+1413	Platinum IV	박스 안의 열쇠
+1414	Gold III	불우이웃돕기
+1415	Gold II	사탕
+1416	Platinum IV	팬 서비스
+1417	Silver V	국회의원 선거
+1418	Silver V	K-세준수
+1419	Gold V	등차수열의 합
+1421	Silver II	나무꾼 이다솜
+1422	Platinum IV	숫자의 신
+1423	Gold III	원숭이 키우기
+1424	Gold II	새 앨범
+1425	Gold II	원숭이 땅을 옮기다
+1426	Platinum III	카드 넣기
+1427	Silver V	소트인사이드
+1429	Gold IV	결혼
+1430	Gold IV	공격
+1431	Silver III	시리얼 번호
+1432	Platinum IV	그래프 수정
+1434	Bronze II	책 정리
+1435	Gold II	네 점
+1436	Silver V	영화감독 숌
+1437	Gold IV	수 분해
+1438	Gold II	가장 작은 직사각형
+1439	Silver V	뒤집기
+1440	Bronze II	타임머신
+1441	Platinum V	나누어 질까
+1442	Platinum III	멋진 수
+1443	Gold I	망가진 계산기
+1445	Gold II	일요일 아침의 데이트
+1446	Silver I	지름길
+1448	Silver III	삼각형 만들기
+1449	Silver III	수리공 항승
+1450	Gold I	냅색문제
+1451	Gold V	직사각형으로 나누기
+1453	Bronze II	피시방 알바
+1455	Silver II	뒤집기 II
+1456	Gold V	거의 소수
+1457	Gold I	정확해
+1459	Silver IV	걷기
+1460	Gold III	진욱이의 농장
+1461	Gold V	도서관
+1462	Platinum IV	퀴즈쇼
+1463	Silver III	1로 만들기
+1464	Gold IV	뒤집기 3
+1469	Gold V	숌 사이 수열
+1470	Gold III	올림픽 게임
+1471	Platinum V	사탕 돌리기
+1473	Platinum V	미로 탈출
+1474	Silver I	밑 줄
+1475	Silver V	방 번호
+1476	Silver V	날짜 계산
+1477	Gold IV	휴게소 세우기
+1479	Platinum III	네 부분문자열
+1480	Gold I	보석 모으기
+1481	Gold III	숌 사각형
+1484	Gold V	다이어트
+1485	Silver III	정사각형
+1486	Gold II	등산
+1487	Silver IV	물건 팔기
+1488	Gold IV	숌트링
+1489	Gold I	대결
+1490	Gold V	자리수로 나누기
+1491	Silver IV	나선
+1493	Gold III	박스 채우기
+1495	Silver I	기타리스트
+1497	Silver II	기타콘서트
+1498	Platinum IV	주기문
+1499	Gold I	뒤집기 수열
+1500	Silver II	최대 곱
+1501	Gold V	영어 읽기
+1502	Platinum IV	숫자 퍼즐 ≤ 8
+1503	Silver II	세 수 고르기
+1504	Gold IV	특정한 최단 경로
+1505	Platinum IV	불 켜기
+1506	Platinum V	경찰서
+1507	Gold II	궁금한 민호
+1508	Gold I	레이스
+1509	Gold I	팰린드롬 분할
+1510	Platinum V	이등변 삼각형
+1511	Platinum V	숫자 만들기
+1512	Gold V	주기문으로 바꾸기
+1513	Gold II	경로 찾기
+1514	Platinum III	자물쇠
+1515	Silver III	수 이어 쓰기
+1516	Gold III	게임 개발
+1517	Platinum V	버블 소트
+1519	Gold III	부분 문자열 뽑기 게임
+1520	Gold III	내리막 길
+1521	Platinum IV	랜덤 소트
+1522	Silver I	문자열 교환
+1523	Platinum III	종점
+1524	Bronze I	세준세비
+1525	Gold II	퍼즐
+1526	Bronze I	가장 큰 금민수
+1527	Silver I	금민수의 개수
+1528	Gold IV	금민수의 합
+1529	Platinum V	동민 수열
+1531	Silver V	투명
+1532	Gold I	동전 교환
+1533	Platinum III	길의 개수
+1534	Platinum IV	다각형 자르기
+1535	Silver II	안녕
+1536	Platinum III	Dance, Dance
+1537	Platinum V	새로운 연산자
+1539	Platinum IV	이진 검색 트리
+1540	Gold III	정사각형의 개수
+1541	Silver II	잃어버린 괄호
+1543	Silver IV	문서 검색
+1544	Silver IV	사이클 단어
+1545	Gold II	안티 팰린드롬
+1546	Bronze I	평균
+1547	Bronze III	공
+1548	Gold V	부분 삼각 수열
+1549	Gold IV	K
+1550	Bronze II	16진수
+1551	Bronze I	수열의 변화
+1552	Silver I	도미노
+1553	Gold V	도미노 찾기
+1555	Platinum V	소수 만들기
+1556	Platinum III	도미노2
+1559	Platinum V	놀라운 미로
+1560	Silver III	비숍
+1561	Gold II	놀이 공원
+1562	Gold I	계단 수
+1563	Gold IV	개근상
+1564	Silver II	팩토리얼5
+1565	Gold III	수학
+1566	Gold III	P배열
+1568	Bronze II	새
+1569	Silver III	정사각형으로 가리기
+1570	Gold IV	오세준
+1571	Gold I	단어 굴리기
+1572	Platinum V	중앙값
+1573	Platinum III	트리 인코딩
+1574	Platinum III	룩 어택
+1576	Silver I	DNA점수
+1577	Gold V	도로의 개수
+1578	Gold II	세계 정복
+1580	Gold III	위치 바꾸기
+1581	Gold V	락스타 락동호
+1582	Platinum IV	아티스트 이동호
+1584	Gold V	게임
+1585	Platinum III	경찰
+1586	Platinum III	목장
+1587	Gold I	이분 매칭
+1588	Gold I	수열
+1590	Silver IV	캠프가는 영식
+1592	Bronze II	영식이와 친구들
+1593	Gold V	문자 해독
+1594	Gold II	전화번호 만들기
+1595	Gold IV	북쪽나라의 도로
+1598	Bronze III	꼬리를 무는 숫자 나열
+1599	Gold V	민식어
+1600	Gold III	말이 되고픈 원숭이
+1601	Platinum V	바이너리 파워 비숍
+1602	Platinum IV	도망자 원숭이
+1604	Platinum IV	정사각형 자르기
+1605	Platinum III	반복 부분문자열
+1606	Silver III	침투 계획 세우기
+1607	Gold III	원숭이 타워
+1609	Platinum III	차의 공격
+1612	Gold V	가지고 노는 1
+1613	Gold III	역사
+1614	Silver III	영식이의 손가락
+1615	Gold I	교차개수세기
+1619	Gold II	점 고르기
+1620	Silver IV	나는야 포켓몬 마스터 이다솜
+1621	Gold III	조삼모사
+1622	Silver IV	공통 순열
+1623	Gold I	신년 파티
+1625	Gold II	조명기구
+1629	Silver I	곱셈
+1630	Gold IV	오민식
+1631	Gold IV	오영식의 보물
+1633	Gold IV	최고의 팀 만들기
+1635	Platinum V	1 또는 -1
+1636	Gold V	한번 열면 멈출 수 없어
+1637	Platinum IV	날카로운 눈
+1639	Silver IV	행운의 티켓
+1640	Gold IV	동전 뒤집기
+1643	Silver I	쿠폰
+1644	Gold III	소수의 연속합
+1646	Gold I	피이보나치 트리
+1647	Gold IV	도시 분할 계획
+1648	Platinum III	격자판 채우기
+1650	Platinum III	지민이의 테러 Season II
+1652	Bronze I	누울 자리를 찾아라
+1653	Platinum V	양팔 저울
+1654	Silver II	랜선 자르기
+1655	Gold II	가운데를 말해요
+1656	Gold IV	덜컹덜컹
+1657	Platinum III	두부장수 장홍준
+1660	Silver I	캡틴 이다솜
+1661	Gold III	다솜이의 신발가게
+1662	Gold V	압축
+1663	Gold I	XYZ 문자열
+1664	Gold III	주민등록번호
+1667	Platinum IV	지민이의 테러 Season IV
+1668	Bronze II	트로피 진열
+1669	Gold V	멍멍이 쓰다듬기
+1670	Gold III	정상 회담 2
+1671	Platinum III	상어의 저녁식사
+1672	Bronze II	DNA 해독
+1673	Bronze II	치킨 쿠폰
+1676	Silver V	팩토리얼 0의 개수
+1677	Gold I	음악
+1679	Silver I	숫자놀이
+1680	Silver IV	쓰레기 수거
+1681	Bronze II	줄 세우기
+1682	Silver I	돌리기
+1684	Gold V	같은 나머지
+1686	Gold IV	복날
+1687	Gold III	행렬 찾기
+1688	Platinum V	지민이의 테러
+1689	Gold IV	겹치는 선분
+1690	Platinum IV	순열
+1691	Gold II	석판
+1694	Gold V	Chessboard in FEN
+1695	Gold IV	팰린드롬 만들기
+1697	Silver I	숨바꼭질
+1699	Silver II	제곱수의 합
+1700	Gold I	멀티탭 스케줄링
+1701	Gold III	Cubeditor
+1702	Platinum V	고속도로
+1703	Bronze III	생장점
+1704	Platinum V	붕어빵타이쿤
+1706	Silver II	크로스워드
+1707	Gold IV	이분 그래프
+1708	Platinum V	볼록 껍질
+1709	Silver II	타일 위의 원
+1711	Silver I	직각삼각형
+1712	Bronze II	손익분기점
+1713	Silver I	후보 추천하기
+1715	Gold IV	카드 정렬하기
+1716	Silver IV	Polynomial Remains
+1717	Gold IV	집합의 표현
+1718	Bronze II	암호
+1719	Gold III	택배
+1720	Gold IV	타일 코드
+1721	Gold V	상자퍼즐
+1722	Gold V	순열의 순서
+1723	Gold I	점 나누기
+1724	Gold I	그림판
+1725	Platinum V	히스토그램
+1726	Gold III	로봇
+1727	Gold II	커플 만들기
+1728	Platinum V	구슬 굴리기
+1729	Gold I	이차원 배열의 합
+1730	Silver V	판화
+1731	Bronze II	추론
+1735	Silver III	분수 합
+1736	Gold I	쓰레기 치우기
+1737	Gold IV	Pibonacci
+1738	Gold II	골목길
+1740	Silver IV	거듭제곱
+1741	Platinum III	반 나누기
+1742	Platinum IV	레이싱결과
+1743	Silver I	음식물 피하기
+1744	Gold IV	수 묶기
+1747	Silver I	소수&팰린드롬
+1748	Silver IV	수 이어 쓰기 1
+1749	Gold IV	점수따먹기
+1750	Gold III	서로소의 개수
+1751	Platinum III	디버그
+1752	Platinum III	세상에서 제일 착한 다솜
+1753	Gold IV	최단경로
+1754	Platinum III	진영 순열
+1755	Silver IV	숫자놀이
+1756	Gold V	피자 굽기
+1757	Gold IV	달려달려
+1758	Silver IV	알바생 강호
+1759	Gold V	암호 만들기
+1760	Platinum III	N-Rook
+1761	Platinum V	정점들의 거리
+1762	Platinum III	평면그래프와 삼각형
+1764	Silver IV	듣보잡
+1765	Gold I	닭싸움 팀 정하기
+1766	Gold II	문제집
+1767	Platinum III	N-Rook II
+1769	Silver V	3의 배수
+1771	Gold II	카드 묶음
+1773	Bronze II	폭죽쇼
+1774	Gold III	우주신과의 교감
+1777	Platinum V	순열복원
+1778	Silver I	Ubiquitous Religions
+1779	Silver III	Text Formalization
+1780	Silver II	종이의 개수
+1781	Gold II	컵라면
+1782	Platinum V	거울 숫자
+1783	Silver III	병든 나이트
+1784	Gold II	팰린드롬 인코딩
+1785	Platinum III	팀 사모예드의 신작
+1786	Platinum V	찾기
+1788	Silver III	피보나치 수의 확장
+1789	Silver V	수들의 합
+1790	Gold V	수 이어 쓰기 2
+1791	Gold II	Queuing at the doctors
+1793	Silver II	타일링
+1795	Gold IV	마알
+1796	Gold IV	신기한 키보드
+1797	Gold II	균형잡힌 줄서기
+1798	Gold I	원뿔좌표계상의 거리
+1799	Gold I	비숍
+1800	Gold I	인터넷 설치
+1801	Platinum IV	직사각형 만들기
+1802	Silver I	종이 접기
+1803	Gold III	무술 연습
+1804	Platinum III	랩싸기
+1806	Gold IV	부분합
+1807	Gold IV	척 노리스
+1808	Silver I	숌작업
+1810	Gold III	징검다리 달리기 2
+1811	Bronze I	Adjacent Mastermind
+1812	Silver IV	사탕
+1813	Bronze I	논리학 교수
+1816	Bronze I	암호 키
+1817	Silver V	짐 챙기는 숌
+1818	Gold II	책정리
+1819	Platinum V	불끄기
+1820	Gold III	Partitioning for fun and profit
+1821	Silver I	수들의 합 6
+1822	Silver IV	차집합
+1823	Gold III	수확
+1824	Platinum III	도미노
+1825	Platinum III	순열 만들기
+1826	Gold II	연료 채우기
+1827	Gold II	여행가이드
+1828	Gold IV	Traveling Salesman
+1829	Platinum IV	사탕 항아리
+1833	Gold III	고속철도 설계하기
+1834	Bronze I	나머지와 몫이 같은 수
+1835	Silver IV	카드
+1836	Platinum IV	트리의 가짓수 세기
+1837	Bronze III	암호제작
+1838	Gold II	버블 정렬
+1843	Gold III	방정식
+1846	Gold IV	장기
+1849	Platinum V	순열
+1850	Silver I	최대공약수
+1852	Platinum V	수 묶기
+1854	Platinum IV	K번째 최단경로 찾기
+1855	Bronze I	암호
+1856	Gold II	단어 게임
+1858	Platinum V	기울기가 가장 큰 두 점
+1862	Silver III	미터계
+1863	Gold V	스카이라인 쉬운거
+1864	Bronze II	문어 숫자
+1865	Gold III	웜홀
+1866	Platinum V	택배
+1867	Platinum III	돌멩이 제거
+1871	Bronze II	좋은 자동차 번호판
+1872	Gold V	로마 숫자
+1874	Silver III	스택 수열
+1875	Gold II	테트리스
+1876	Silver IV	튕기는 볼링공
+1877	Gold IV	끔찍한 수열
+1878	Gold I	천칭 저울
+1881	Gold II	공 바꾸기
+1882	Platinum V	분수 찾기
+1884	Gold I	고속도로
+1885	Gold IV	비부분수열
+1887	Gold V	Cow Pizza
+1888	Gold IV	곰팡이
+1889	Silver I	선물 교환
+1890	Silver I	점프
+1891	Gold IV	사분면
+1892	Gold I	가위바위보
+1893	Platinum IV	시저 암호
+1894	Bronze I	4번째 점
+1895	Silver IV	필터
+1897	Gold V	토달기
+1898	Gold II	이전 수열은 어떤 수열일까
+1900	Silver III	레슬러
+1902	Gold III	špilja
+1904	Silver III	01타일
+1905	Gold III	상자 쌓기
+1906	Platinum III	자리 바꾸기
+1907	Silver IV	탄소 화합물
+1908	Platinum V	곱셈 전개식
+1911	Silver I	흙길 보수하기
+1912	Silver II	연속합
+1913	Silver III	달팽이
+1914	Silver I	하노이 탑
+1915	Gold IV	가장 큰 정사각형
+1916	Gold V	최소비용 구하기
+1917	Gold I	정육면체 전개도
+1918	Gold II	후위 표기식
+1919	Bronze II	애너그램 만들기
+1920	Silver IV	수 찾기
+1922	Gold IV	네트워크 연결
+1924	Bronze I	2007년
+1925	Silver V	삼각형
+1926	Silver I	그림
+1927	Silver II	최소 힙
+1929	Silver III	소수 구하기
+1930	Gold IV	정사면체
+1931	Silver I	회의실 배정
+1932	Silver I	정수 삼각형
+1933	Gold I	스카이라인
+1934	Bronze I	최소공배수
+1935	Silver III	후위 표기식2
+1937	Gold III	욕심쟁이 판다
+1938	Gold II	통나무 옮기기
+1939	Gold III	중량제한
+1940	Silver IV	주몽
+1941	Gold III	소문난 칠공주
+1942	Bronze II	디지털시계
+1943	Gold III	동전 분배
+1944	Gold I	복제 로봇
+1945	Gold I	직사각형
+1946	Silver I	신입 사원
+1947	Gold III	선물 전달
+1948	Platinum V	임계경로
+1949	Gold II	우수 마을
+1951	Silver III	활자
+1952	Bronze I	달팽이2
+1953	Gold IV	팀배분
+1954	Gold IV	화학실험
+1955	Gold II	수식 표현
+1956	Gold IV	운동
+1958	Gold III	LCS 3
+1959	Gold III	달팽이3
+1960	Gold III	행렬만들기
+1963	Gold IV	소수 경로
+1964	Bronze II	오각형, 오각형, 오각형…
+1965	Silver II	상자넣기
+1966	Silver III	프린터 큐
+1967	Gold IV	트리의 지름
+1969	Silver V	DNA
+1970	Platinum IV	건배
+1972	Silver III	놀라운 문자열
+1974	Platinum V	Jump Jump Championship
+1975	Bronze II	Number Game
+1976	Gold IV	여행 가자
+1977	Bronze II	완전제곱수
+1978	Silver V	소수 찾기
+1979	Platinum V	극적인 곱셈
+1980	Silver IV	햄버거 사랑
+1981	Platinum V	배열에서 이동
+1982	Platinum IV	호텔예약
+1983	Gold I	숫자 박스
+1985	Silver IV	디지털 친구
+1986	Silver II	체스
+1987	Gold IV	알파벳
+1988	Gold IV	낮잠 시간
+1989	Platinum V	부분배열 고르기 2
+1990	Gold V	소수인팰린드롬
+1991	Silver I	트리 순회
+1992	Silver I	쿼드트리
+1994	Platinum V	등차수열
+1996	Silver V	지뢰 찾기
+1997	Gold V	박스포장
+1998	Platinum V	이미지 압축
+1999	Gold I	최대최소
+2001	Gold I	보석 줍기
+2002	Silver I	추월
+2003	Silver IV	수들의 합 2
+2004	Silver II	조합 0의 개수
+2005	Platinum III	사발
+2006	Gold IV	Chemistry 101
+2007	Platinum III	수들의 합 3
+2008	Platinum V	사다리 게임
+2010	Bronze III	플러그
+2011	Gold V	암호코드
+2012	Silver III	등수 매기기
+2013	Gold III	선그리기
+2014	Gold I	소수의 곱
+2015	Gold IV	수들의 합 4
+2016	Gold V	미팅 주선하기
+2018	Silver V	수들의 합 5
+2019	Gold IV	다각형개수
+2020	Platinum V	부분 염기서열
+2021	Gold I	최소 환승 경로
+2022	Gold V	사다리
+2023	Gold V	신기한 소수
+2024	Gold III	선분 덮기
+2026	Gold III	소풍
+2027	Platinum III	가장 큰 L
+2028	Bronze II	자기복제수
+2029	Silver IV	성냥
+2030	Platinum V	Burger King
+2031	Gold II	이 쿠키 달지 않아!
+2032	Platinum IV	피라미드
+2033	Bronze I	반올림
+2034	Silver V	반음
+2035	Gold III	증가수열
+2036	Gold IV	수열의 점수
+2037	Bronze I	문자메시지
+2038	Gold II	골롱 수열
+2040	Silver I	수 게임
+2042	Gold I	구간 합 구하기
+2044	Gold IV	windows
+2045	Gold III	마방진
+2047	Gold III	미로
+2049	Platinum III	가장 먼 두 점
+2052	Bronze II	지수연산
+2054	Platinum V	계산 문제
+2055	Gold I	삼각형 찾기
+2056	Gold IV	작업
+2057	Silver V	팩토리얼 분해
+2058	Gold III	원자의 에너지
+2061	Bronze III	좋은 암호
+2062	Gold III	곱하기 게임
+2063	Silver II	철사 연결
+2064	Gold III	IP 주소
+2065	Gold II	나룻배
+2066	Gold I	카드놀이
+2069	Gold I	보이는 산맥
+2070	Gold I	목걸이 수열
+2072	Silver II	오목
+2073	Gold IV	수도배관공사
+2074	Gold II	거듭제곱 계산하기
+2075	Silver II	N번째 큰 수
+2078	Silver III	무한이진트리
+2079	Gold II	팰린드롬
+2082	Silver III	시계
+2083	Bronze IV	럭비 클럽
+2084	Gold IV	차수열
+2086	Gold I	피보나치 수의 합
+2087	Gold I	암호문
+2088	Gold II	트리의 개수
+2089	Silver III	-2진수
+2090	Silver IV	조화평균
+2091	Gold II	동전
+2092	Gold II	집합의 개수
+2094	Platinum III	강수량
+2095	Platinum III	티켓
+2096	Gold V	내려가기
+2097	Bronze I	조약돌
+2098	Gold I	외판원 순회
+2099	Gold I	The game of death
+2102	Platinum IV	보석 줍기
+2103	Silver III	직교다각형 복원
+2104	Platinum V	부분배열 고르기
+2105	Platinum IV	꼬리달린 박성원숭이
+2107	Gold IV	포함하는 구간
+2108	Silver III	통계학
+2109	Gold III	순회강연
+2110	Gold IV	공유기 설치
+2112	Platinum V	두 부분 문자열
+2115	Gold V	갤러리
+2116	Gold V	주사위 쌓기
+2117	Silver II	원형 댄스
+2118	Gold V	두 개의 탑
+2121	Silver III	넷이 놀기
+2122	Platinum III	여섯이서 놀기
+2123	Platinum V	인간 탑 쌓기
+2124	Platinum IV	블록 쌓기
+2126	Platinum III	지진
+2128	Gold IV	마지막 조별 시합
+2129	Gold II	드라이브 파이널
+2130	Platinum V	수조
+2131	Gold II	로봇 명령
+2132	Gold II	나무 위의 벌레
+2133	Gold IV	타일 채우기
+2134	Silver IV	창고 이전
+2135	Platinum V	문자열 압축하기
+2136	Gold I	개미
+2137	Gold IV	가장 가까운 분수
+2138	Gold V	전구와 스위치
+2139	Bronze II	나는 너가 살아온 날을 알고 있다
+2140	Gold IV	지뢰찾기
+2141	Gold IV	우체국
+2142	Gold II	정돈된 배열
+2143	Gold III	두 배열의 합
+2144	Gold I	울타리 넘기
+2145	Bronze II	숫자 놀이
+2146	Gold III	다리 만들기
+2148	Silver II	Super 12
+2149	Silver III	암호 해독
+2150	Platinum V	Strongly Connected Component
+2151	Gold III	거울 설치
+2152	Platinum III	여행 계획 세우기
+2153	Bronze II	소수 단어
+2154	Bronze II	수 이어 쓰기 3
+2155	Gold IV	삼각형의 최단 경로
+2156	Silver I	포도주 시식
+2157	Gold IV	여행
+2158	Gold III	산악자전거
+2159	Gold II	케익 배달
+2160	Bronze I	그림 비교
+2161	Silver V	카드1
+2162	Platinum V	선분 그룹
+2163	Bronze I	초콜릿 자르기
+2164	Silver IV	카드2
+2166	Gold V	다각형의 면적
+2167	Silver V	2차원 배열의 합
+2168	Silver I	타일 위의 대각선
+2169	Gold II	로봇 조종하기
+2170	Gold V	선 긋기
+2171	Gold IV	직사각형의 개수
+2172	Platinum IV	팰린드롬 경로
+2173	Gold III	양파깡 만들기
+2174	Gold V	로봇 시뮬레이션
+2175	Gold V	땅 자르기
+2176	Gold I	합리적인 이동경로
+2178	Silver I	미로 탐색
+2179	Gold V	비슷한 단어
+2180	Platinum V	소방서의 고민
+2183	Bronze I	테니스 시합
+2184	Platinum III	김치 배달
+2186	Gold III	문자판
+2187	Gold V	점 고르기
+2188	Platinum IV	축사 배정
+2189	Silver II	Magickology
+2190	Gold IV	점 고르기 2
+2191	Platinum IV	들쥐의 탈출
+2192	Platinum III	두 수열
+2193	Silver III	이친수
+2194	Gold V	유닛 이동시키기
+2195	Gold V	문자열 복사
+2196	Platinum III	이진수 XOR
+2200	Silver III	계산기
+2201	Gold II	이친수 찾기
+2202	Silver I	Custom table sorter
+2204	Bronze I	도비의 난독증 테스트
+2205	Silver I	저울 추 만들기
+2206	Gold III	벽 부수고 이동하기
+2207	Platinum IV	가위바위보
+2208	Gold II	보석 줍기
+2210	Silver II	숫자판 점프
+2211	Gold II	네트워크 복구
+2212	Gold V	센서
+2213	Gold I	트리의 독립집합
+2214	Gold III	성냥개비와 정사각형
+2215	Platinum III	원형 네트워크
+2216	Gold III	문자열과 점수
+2217	Silver IV	로프
+2218	Gold III	상자 안의 구슬
+2219	Gold IV	보안 시스템 설치
+2220	Platinum IV	힙 정렬
+2222	Platinum V	아이스크림
+2223	Silver IV	금화
+2224	Gold IV	명제 증명
+2225	Gold V	합분해
+2226	Gold IV	이진수
+2228	Gold IV	구간 나누기
+2229	Gold V	조 짜기
+2230	Gold V	수 고르기
+2231	Bronze II	분해합
+2232	Silver II	지뢰
+2233	Gold I	사과나무
+2234	Gold III	성곽
+2235	Silver IV	GPS Encoding
+2236	Silver III	칩 만들기
+2237	Platinum IV	수열 축소
+2238	Silver V	경매
+2239	Gold IV	스도쿠
+2240	Gold V	자두나무
+2242	Platinum V	삼각형 만들기
+2243	Platinum V	사탕상자
+2244	Platinum IV	민코프스키 합
+2245	Gold I	배열 정리하기
+2246	Silver V	콘도 선정
+2247	Gold V	실질적 약수
+2248	Gold III	이진수 찾기
+2250	Gold II	트리의 높이와 너비
+2251	Gold V	물통
+2252	Gold III	줄 세우기
+2253	Gold IV	점프
+2254	Platinum IV	감옥 건설
+2256	Platinum III	젓가락
+2257	Silver II	화학식량
+2258	Gold IV	정육점
+2259	Gold II	두더지 잡기
+2262	Gold IV	토너먼트 만들기
+2263	Gold II	트리의 순회
+2264	Gold II	대칭 그림
+2266	Gold II	금고 테스트
+2268	Gold I	수들의 합 7
+2270	Gold II	하노이 탑
+2271	Platinum IV	암호화 알고리즘의 약점
+2273	Gold III	줄 서기
+2274	Gold I	Conflicting Strings
+2275	Gold I	트리의 높이 줄이기
+2276	Platinum IV	물 채우기
+2278	Gold I	그래프 복원
+2279	Platinum III	사각형과 도형
+2281	Gold IV	데스노트
+2283	Gold II	구간 자르기
+2284	Platinum IV	레이스
+2285	Gold IV	우체국
+2287	Gold I	모노디지털 표현
+2290	Silver II	LCD Test
+2291	Gold II	Sequence
+2292	Bronze II	벌집
+2293	Gold V	동전 1
+2294	Gold V	동전 2
+2295	Gold IV	세 수의 합
+2296	Gold IV	건물짓기
+2298	Gold II	Here-There
+2300	Gold III	기지국
+2302	Silver I	극장 좌석
+2303	Silver V	숫자 게임
+2304	Silver II	창고 다각형
+2305	Gold I	자리 배치
+2306	Gold III	유전자
+2307	Gold I	도로검문
+2309	Bronze I	일곱 난쟁이
+2310	Gold IV	어드벤처 게임
+2312	Silver III	수 복원하기
+2313	Silver I	보석 구매하기
+2314	Gold IV	이세계 게임
+2315	Platinum III	가로등 끄기
+2316	Platinum III	도시 왕복하기 2
+2317	Gold V	결혼식
+2318	Platinum IV	상사 찾기
+2319	Platinum V	문자열 복원하기
+2320	Gold I	끝말잇기
+2325	Platinum V	개코전쟁
+2326	Platinum III	최소 편집 문제 2
+2327	Gold IV	말아톤
+2328	Platinum V	그래프의 해시
+2329	Platinum V	장애물 설계
+2330	Platinum III	미생물 연구실
+2331	Silver IV	반복수열
+2332	Gold V	전화번호
+2335	Gold III	농부
+2338	Bronze V	긴자리 계산
+2339	Gold I	석판 자르기
+2341	Gold IV	팩스 문제
+2342	Gold III	Dance Dance Revolution
+2343	Silver I	기타 레슨
+2344	Gold IV	거울
+2346	Silver III	풍선 터뜨리기
+2349	Silver IV	무선 통신 기지국
+2350	Gold II	대운하
+2352	Gold II	반도체 설계
+2355	Bronze II	시그마
+2357	Gold I	최솟값과 최댓값
+2358	Silver IV	평행선
+2359	Platinum V	드라이브
+2364	Gold I	담장 너머로
+2365	Platinum III	숫자판 만들기
+2367	Platinum IV	파티
+2369	Gold I	행렬의 부분합
+2370	Gold IV	시장 선거 포스터
+2371	Silver II	파일 구별하기
+2374	Gold IV	같은 수로 만들기
+2375	Gold II	농구 골대 세우기
+2376	Platinum V	단말 정점들의 거리
+2378	Gold III	불필요한 수
+2379	Platinum V	트리 탐색하기
+2381	Gold III	최대 거리
+2385	Platinum III	Secret Sharing
+2386	Bronze II	도비의 영어 공부
+2388	Platinum V	블록 쌓기
+2391	Bronze II	Sascha
+2394	Platinum V	드라이브 투어
+2395	Gold I	순열의 개수
+2397	Platinum III	보이는 정사각형
+2398	Gold I	3인통화
+2399	Bronze II	거리의 합
+2403	Gold III	게시판 구멍 가리기
+2404	Silver I	단위 분수로 분할
+2405	Gold IV	세 수, 두 M
+2406	Gold III	안정적인 네트워크
+2407	Silver III	조합
+2408	Bronze II	큰 수 계산
+2410	Gold V	2의 멱수의 합
+2411	Gold IV	아이템 먹기
+2412	Gold IV	암벽 등반
+2413	Gold II	비슷한 순열
+2414	Platinum III	게시판 구멍 막기
+2416	Platinum III	문
+2417	Silver IV	정수 제곱근
+2418	Gold V	단어 격자
+2420	Sprout	사파리월드
+2421	Gold V	저금통
+2422	Silver V	한윤정이 이탈리아에 가서 아이스크림을 사먹는데
+2423	Gold I	전구를 켜라
+2424	Platinum IV	부산의 해적
+2428	Silver III	표절
+2433	Platinum V	The Sound of Silence
+2435	Bronze I	기상청 인턴 신현수
+2436	Gold V	공약수
+2437	Gold II	저울
+2438	Sprout	별 찍기 - 1
+2439	Bronze IV	별 찍기 - 2
+2440	Bronze IV	별 찍기 - 3
+2441	Bronze III	별 찍기 - 4
+2442	Bronze III	별 찍기 - 5
+2443	Bronze III	별 찍기 - 6
+2444	Bronze III	별 찍기 - 7
+2445	Bronze III	별 찍기 - 8
+2446	Bronze III	별 찍기 - 9
+2447	Gold V	별 찍기 - 10
+2448	Gold IV	별 찍기 - 11
+2449	Platinum IV	전구
+2450	Gold II	모양 정돈
+2451	Platinum IV	모둠
+2455	Bronze III	지능형 기차
+2456	Bronze I	나는 학급회장이다
+2457	Gold III	공주님의 정원
+2458	Gold IV	키 순서
+2459	Gold V	철사 자르기
+2460	Bronze III	지능형 기차 2
+2461	Gold II	대표 선수
+2463	Platinum V	비용
+2464	Gold II	비밀번호
+2465	Platinum III	줄 세우기
+2467	Gold V	용액
+2468	Silver I	안전 영역
+2469	Gold V	사다리 타기
+2470	Gold V	두 용액
+2473	Gold III	세 용액
+2475	Sprout	검증수
+2476	Bronze III	주사위 게임
+2477	Silver II	참외밭
+2478	Gold I	자물쇠
+2479	Gold IV	경로 찾기
+2480	Bronze IV	주사위 세개
+2481	Gold II	해밍 경로
+2482	Gold IV	색상환
+2484	Bronze II	주사위 네개
+2485	Silver IV	가로수
+2487	Gold IV	섞기 수열
+2490	Bronze III	윷놀이
+2491	Silver IV	수열
+2492	Gold III	보석
+2493	Gold V	탑
+2494	Platinum V	숫자 맞추기
+2495	Bronze II	연속구간
+2496	Platinum III	금강석
+2498	Platinum III	중앙문자열
+2499	Gold I	의좋은 형제
+2501	Bronze III	약수 구하기
+2502	Silver I	떡 먹는 호랑이
+2503	Silver III	숫자 야구
+2504	Silver I	괄호의 값
+2505	Platinum V	두 번 뒤집기
+2506	Bronze III	점수계산
+2507	Platinum III	공주 구하기
+2508	Silver V	사탕 박사 고창영
+2511	Bronze II	카드놀이
+2512	Silver III	예산
+2513	Gold III	통학버스
+2514	Platinum IV	자동분무기
+2515	Gold II	전시장
+2516	Platinum IV	원숭이
+2517	Platinum IV	달리기
+2518	Platinum V	회전 테이블
+2520	Bronze II	팬케이크 사랑
+2522	Bronze III	별 찍기 - 12
+2523	Bronze III	별 찍기 - 13
+2524	Gold V	희원이의 뉴욕 생활
+2525	Bronze III	오븐 시계
+2526	Bronze II	싸이클
+2527	Silver I	직사각형
+2528	Gold III	사다리
+2529	Silver I	부등호
+2530	Bronze IV	인공지능 시계
+2531	Silver I	회전 초밥
+2532	Platinum IV	먹이사슬
+2533	Gold III	사회망 서비스(SNS)
+2535	Silver V	아시아 정보올림피아드
+2536	Gold I	버스 갈아타기
+2538	Platinum V	모눈종이 자르기
+2539	Gold III	모자이크
+2541	Gold III	점
+2543	Platinum IV	초고속철도
+2545	Silver V	팬케익 먹기
+2546	Bronze I	경제학과 정원영
+2547	Bronze III	사탕 선생 고창영
+2548	Silver III	대표 자연수
+2549	Platinum III	루빅의 사각형
+2550	Gold III	전구
+2551	Gold IV	두 대표 자연수
+2553	Silver II	마지막 팩토리얼 수
+2557	Sprout	Hello World
+2558	Bronze V	A+B - 2
+2559	Silver III	수열
+2560	Gold III	짚신벌레
+2562	Bronze III	최댓값
+2563	Silver V	색종이
+2564	Silver I	경비원
+2565	Gold V	전깃줄
+2566	Bronze III	최댓값
+2567	Silver IV	색종이 - 2
+2568	Platinum V	전깃줄 - 2
+2571	Gold III	색종이 - 3
+2572	Gold III	보드게임
+2573	Gold IV	빙산
+2575	Gold V	수열
+2576	Bronze III	홀수
+2577	Bronze II	숫자의 개수
+2578	Silver IV	빙고
+2579	Silver III	계단 오르기
+2580	Gold IV	스도쿠
+2581	Silver V	소수
+2583	Silver I	영역 구하기
+2585	Gold II	경비행기
+2587	Bronze II	대표값2
+2588	Bronze III	곱셈
+2590	Gold IV	색종이
+2591	Gold V	숫자카드
+2592	Bronze II	대표값
+2593	Platinum V	엘리베이터
+2594	Silver III	놀이공원
+2596	Bronze I	비밀편지
+2597	Silver III	줄자접기
+2598	Platinum III	기둥만들기
+2599	Silver III	짝 정하기
+2600	Gold IV	구슬게임
+2602	Gold IV	돌다리 건너기
+2603	Platinum IV	고속버스 노선
+2605	Bronze II	줄 세우기
+2606	Silver III	바이러스
+2607	Silver III	비슷한 단어
+2608	Silver I	로마 숫자
+2609	Bronze I	최대공약수와 최소공배수
+2610	Gold II	회의준비
+2611	Gold II	자동차경주
+2612	Platinum V	DNA 유사도
+2613	Gold II	숫자구슬
+2615	Silver I	오목
+2616	Gold III	소형기관차
+2617	Gold IV	구슬 찾기
+2618	Platinum IV	경찰차
+2619	Platinum V	단순 사각형
+2620	Platinum IV	직각다각형의 면적 구하기
+2621	Silver IV	카드게임
+2622	Bronze I	삼각형만들기
+2623	Gold III	음악프로그램
+2624	Gold V	동전 바꿔주기
+2628	Silver V	종이자르기
+2629	Gold III	양팔저울
+2630	Silver II	색종이 만들기
+2631	Gold IV	줄세우기
+2632	Gold II	피자판매
+2633	Platinum V	로봇
+2635	Silver V	수 이어가기
+2636	Gold IV	치즈
+2637	Gold II	장난감 조립
+2638	Gold III	치즈
+2641	Silver II	다각형그리기
+2642	Platinum V	전개도
+2643	Gold IV	색종이 올려 놓기
+2644	Silver II	촌수계산
+2645	Platinum IV	회로배치
+2647	Platinum III	검은점과 하얀점 연결
+2648	Gold III	단순 사각형
+2650	Gold IV	교차점개수
+2651	Gold IV	자동차경주대회
+2652	Gold I	블록맞추기
+2653	Gold IV	안정된 집단
+2654	Platinum V	연결 사각형
+2655	Gold III	가장높은탑쌓기
+2658	Gold II	직각이등변삼각형찾기
+2659	Silver III	십자카드 문제
+2660	Gold V	회장뽑기
+2661	Gold IV	좋은수열
+2662	Gold II	기업투자
+2663	Platinum IV	간척지 만들기
+2665	Gold IV	미로만들기
+2666	Gold V	벽장문의 이동
+2667	Silver I	단지번호붙이기
+2668	Gold V	숫자고르기
+2669	Bronze I	직사각형 네개의 합집합의 면적 구하기
+2670	Silver IV	연속부분최대곱
+2671	Gold V	잠수함식별
+2672	Gold II	여러 직사각형의 전체 면적 구하기
+2673	Platinum IV	교차하지 않는 원의 현들의 최대집합
+2675	Bronze II	문자열 반복
+2676	Silver II	라스칼 삼각형
+2677	Silver IV	에드삭 만들기
+2678	Silver V	에드삭 데이터 디코딩하기
+2679	Platinum III	맨체스터의 도로
+2680	Gold III	QR
+2681	Gold II	목장 주인 백승환의 선물
+2682	Gold III	최대 사이클 1
+2684	Bronze I	동전 게임
+2685	Silver II	님비합
+2686	Gold III	팩스
+2688	Silver I	줄어들지 않아
+2689	Gold II	I²C
+2690	Gold IV	옛날에는 조판을 어떻게 했을까?
+2692	Platinum IV	쌍둥이 규현이와 승환이의 생일 케익
+2693	Bronze I	N번째 큰 수
+2694	Gold III	합이 같은 구간
+2695	Gold II	공
+2696	Gold II	중앙값 구하기
+2697	Silver II	다음수 구하기
+2698	Gold IV	인접한 비트의 개수
+2699	Platinum V	격자점 컨벡스헐
+2700	Gold I	볼록 격자 다각형의 내부점
+2701	Gold I	육각 퍼즐
+2702	Bronze II	초6 수학
+2703	Bronze II	Cryptoquote
+2704	Bronze II	이진법 시계
+2705	Silver I	팰린드롬 파티션
+2708	Gold III	폴리큐브의 겉넓이
+2709	Platinum III	가장 작은 K
+2710	Gold I	삼각형 정원
+2711	Bronze II	오타맨 고창영
+2712	Bronze III	미국 스타일
+2713	Silver III	규현이의 사랑을 담은 문자메시지
+2714	Silver V	문자를 받은 승환이
+2715	Gold IV	상범 마법 팬케이크 하우스
+2716	Silver I	원숭이 매달기
+2718	Gold I	타일 채우기
+2720	Bronze III	세탁소 사장 동혁
+2721	Bronze III	삼각수의 합
+2723	Gold IV	눌러서 잠금 해제
+2724	Platinum III	메시지 변환기
+2725	Silver II	보이는 점의 개수
+2726	Gold I	삼각 N-Queen
+2727	Platinum IV	2,3 거듭제곱의 합
+2728	Platinum V	오늘은 마가리타 한 잔?
+2729	Bronze I	이진수 덧셈
+2730	Silver I	오늘은 OS 숙제 제출일
+2731	Platinum V	1379와 세제곱
+2733	Gold III	Brainf*ck
+2737	Gold III	연속 합
+2738	Sprout	행렬 덧셈
+2739	Sprout	구구단
+2740	Silver V	행렬 곱셈
+2741	Sprout	N 찍기
+2742	Bronze IV	기찍 N
+2743	Sprout	단어 길이 재기
+2744	Sprout	대소문자 바꾸기
+2745	Bronze II	진법 변환
+2747	Bronze II	피보나치 수
+2748	Bronze I	피보나치 수 2
+2749	Gold II	피보나치 수 3
+2750	Bronze II	수 정렬하기
+2751	Silver V	수 정렬하기 2
+2752	Bronze IV	세수정렬
+2753	Sprout	윤년
+2754	Sprout	학점계산
+2755	Bronze I	이번학기 평점은 몇점?
+2756	Bronze II	다트
+2757	Silver III	엑셀
+2758	Gold IV	로또
+2759	Gold IV	팬케이크 뒤집기
+2761	Gold I	모형 로켓의 높이
+2763	Platinum V	Histology Assistant
+2764	Gold I	마지막 사진 찍기
+2765	Bronze III	자전거 속도
+2766	Silver V	Candy Sharing Game
+2773	Gold III	바깥 삼각형의 중심
+2774	Bronze II	아름다운 수
+2775	Bronze I	부녀회장이 될테야
+2776	Silver IV	암기왕
+2777	Silver II	숫자 놀이
+2778	Gold III	측량사 지윤
+2779	Gold II	비밀어
+2780	Silver I	비밀번호
+2782	Platinum III	로맨틱 왕
+2783	Bronze III	삼각 김밥
+2784	Silver III	가로 세로 퍼즐
+2785	Silver II	체인
+2786	Gold II	상근이의 레스토랑
+2787	Platinum III	흔한 수열 문제
+2789	Bronze II	유학 금지
+2790	Silver II	F7
+2792	Silver II	보석 상자
+2793	Platinum IV	숫자의 힘
+2796	Platinum V	만남
+2797	Platinum IV	트램폴린
+2798	Bronze II	블랙잭
+2799	Silver IV	블라인드
+2800	Gold V	괄호 제거
+2801	Gold V	REZ
+2802	Platinum III	크레용
+2804	Bronze II	크로스워드 만들기
+2805	Silver II	나무 자르기
+2806	Gold IV	DNA 발견
+2810	Bronze I	컵홀더
+2811	Silver IV	상범이의 우울
+2812	Gold III	크게 만들기
+2813	Platinum IV	매력있는 울타리
+2816	Bronze I	디지털 티비
+2817	Silver III	ALPS식 투표
+2818	Silver I	숙제하기 싫을 때
+2819	Gold II	상근이의 로봇
+2820	Platinum III	자동차 공장
+2822	Silver V	점수 계산
+2823	Silver II	유턴 싫어
+2824	Silver I	최대공약수
+2825	Gold II	수업시간에 교수님 몰래 교실을 나간 상근이
+2828	Silver V	사과 담기 게임
+2829	Gold III	아름다운 행렬
+2830	Gold III	행성 X3
+2831	Gold IV	댄스 파티
+2832	Platinum V	정렬
+2835	Platinum IV	인기도 조사
+2836	Gold III	수상 택시
+2839	Silver IV	설탕 배달
+2840	Silver IV	행운의 바퀴
+2841	Silver I	외계인의 기타 연주
+2842	Platinum V	집배원 한상덕
+2843	Platinum III	마블
+2845	Bronze IV	파티가 끝나고 난 뒤
+2846	Bronze I	오르막길
+2847	Silver IV	게임을 만든 동준이
+2848	Platinum IV	알고스팟어
+2851	Bronze I	슈퍼 마리오
+2852	Silver III	NBA 농구
+2853	Silver I	배
+2854	Gold III	문제 출제
+2855	Platinum III	흥미로운 수열
+2857	Bronze III	FBI
+2858	Bronze II	기숙사 바닥
+2859	Silver III	별 관찰
+2860	Gold IV	종이에 숫자 쓰기
+2861	Platinum IV	원섭동 사람들
+2863	Bronze III	이게 분수?
+2864	Bronze II	5와 6의 차이
+2865	Silver IV	나는 위대한 슈퍼스타K
+2866	Gold V	문자열 잘라내기
+2867	Platinum IV	수열의 값
+2868	Platinum III	MONO
+2869	Bronze I	달팽이는 올라가고 싶다
+2870	Silver IV	수학숙제
+2871	Gold II	아름다운 단어
+2872	Silver II	우리집엔 도서관이 있어
+2873	Platinum III	롤러코스터
+2875	Bronze III	대회 or 인턴
+2876	Silver II	그래픽스 퀴즈
+2877	Gold V	4와 7
+2878	Gold II	캔디캔디
+2879	Gold II	코딩은 예쁘게
+2880	Platinum IV	ŽABE
+2881	Gold III	산책길
+2882	Platinum III	소수 사이클
+2884	Bronze III	알람 시계
+2885	Silver II	초콜릿 식사
+2886	Gold I	자리 전쟁
+2887	Platinum V	행성 터널
+2888	Platinum III	상범 게임
+2890	Silver V	카약
+2891	Silver V	카약과 강풍
+2892	Gold V	심심한 준규
+2893	Platinum IV	XOR 도형
+2896	Bronze I	무알콜 칵테일
+2897	Bronze I	몬스터 트럭
+2900	Gold III	프로그램
+2902	Bronze II	KMP는 왜 KMP일까?
+2903	Bronze III	중앙 이동 알고리즘
+2904	Gold III	수학은 너무 쉬워
+2908	Bronze II	상수
+2909	Bronze II	캔디 구매
+2910	Silver II	빈도 정렬
+2911	Platinum V	전화 복구
+2914	Bronze III	저작권
+2916	Gold IV	자와 각도기
+2917	Gold II	늑대 사냥꾼
+2920	Bronze II	음계
+2921	Bronze III	도미노
+2922	Gold V	즐거운 단어
+2923	Gold II	숫자 게임
+2924	Platinum V	천재
+2929	Bronze I	머신 코드
+2930	Bronze I	가위 바위 보
+2931	Gold III	가스관
+2933	Gold II	미네랄
+2934	Platinum IV	LRH 식물
+2935	Bronze III	소음
+2936	Silver V	채식주의자
+2937	Gold IV	블록 정리
+2938	Gold V	3으로 나누어 떨어지지 않는 배열
+2941	Silver V	크로아티아 알파벳
+2942	Silver II	퍼거슨과 사과
+2943	Silver II	토끼
+2944	Platinum III	수박 던지기 게임
+2947	Bronze I	나무 조각
+2948	Bronze II	2009년
+2949	Silver IV	45도
+2953	Bronze III	나는 요리사다
+2954	Bronze II	창영이의 일기장
+2955	Gold II	스도쿠 풀기
+2957	Platinum V	이진 탐색 트리
+2959	Bronze III	거북이
+2960	Silver IV	에라토스테네스의 체
+2961	Silver II	도영이가 만든 맛있는 음식
+2962	Platinum IV	동물원 확장
+2963	Gold IV	무한 이진 트리 탐색
+2965	Bronze III	캥거루 세마리
+2966	Bronze II	찍기
+2967	Platinum V	그리스-로마 건축
+2968	Platinum III	보드 게임의 왕 김동혁
+2969	Platinum III	메뚜기
+2975	Bronze III	Transactions
+2976	Gold II	NIKOLA
+2977	Gold I	폭탄제조
+2978	Platinum V	A=S
+2979	Bronze II	트럭 주차
+2980	Silver IV	도로와 신호등
+2981	Gold IV	검문
+2982	Gold II	국왕의 방문
+2983	Platinum IV	개구리 공주
+2985	Bronze III	세 수
+2986	Silver III	파스칼
+2987	Gold IV	사과나무
+2989	Platinum III	개구리 왕눈이
+2991	Bronze III	사나운 개
+2992	Silver III	크면서 작은 수
+2993	Silver V	세 부분
+2994	Platinum V	내한 공연
+2995	Platinum IV	생일
+2997	Bronze III	네 번째 수
+2998	Bronze II	8진수
+2999	Bronze I	비밀 이메일
+3000	Silver I	직각 삼각형
+3001	Platinum IV	이상한 문제
+3003	Bronze V	킹, 퀸, 룩, 비숍, 나이트, 폰
+3004	Bronze III	체스판 조각
+3005	Silver II	크로스워드 퍼즐 쳐다보기
+3006	Platinum IV	터보소트
+3007	Platinum III	숫자 원
+3008	Platinum IV	직각 삼각형의 개수
+3009	Bronze III	네 번째 점
+3010	Silver II	페그
+3011	Gold II	이름 지어주기
+3013	Gold II	부분 수열의 중앙값
+3015	Platinum V	오아시스 재결합
+3017	Platinum V	가까운 수 찾기
+3018	Silver IV	캠프파이어
+3019	Silver I	테트리스
+3020	Gold V	개똥벌레
+3022	Silver IV	PRASE
+3023	Bronze I	마술사 이민혁
+3024	Silver III	마라톤 틱택토
+3025	Platinum IV	돌 던지기
+3028	Bronze II	창영마을
+3029	Bronze III	경고
+3030	Gold II	테니스
+3031	Gold I	리그
+3032	Platinum V	승리
+3033	Platinum III	가장 긴 문자열
+3034	Bronze III	앵그리 창영
+3035	Bronze I	스캐너
+3036	Silver IV	링
+3037	Gold I	혼란
+3038	Platinum IV	완전 이진 트리
+3040	Bronze II	백설 공주와 일곱 난쟁이
+3041	Bronze I	N-퍼즐
+3042	Silver II	트리플렛
+3043	Platinum IV	장난감 탱크
+3044	Platinum IV	자전거 경주 준비하기
+3045	Platinum III	이중 연결 리스트
+3046	Bronze IV	R2
+3047	Bronze III	ABC
+3048	Silver IV	개미
+3049	Silver V	다각형의 대각선
+3050	Gold II	집들이
+3052	Bronze II	나머지
+3053	Bronze III	택시 기하학
+3054	Silver V	피터팬 프레임
+3055	Gold IV	탈출
+3056	Platinum V	007
+3057	Platinum III	디버그
+3058	Bronze III	짝수를 찾아라
+3059	Bronze III	등장하지 않는 문자의 합
+3060	Bronze I	욕심쟁이 돼지
+3061	Silver II	사다리
+3062	Bronze II	수 뒤집기
+3063	Silver III	게시판
+3064	Gold V	Minesweeper
+3066	Gold II	브리징 시그널
+3067	Gold V	Coins
+3071	Silver III	The ♡ System
+3075	Gold III	Astromeeting
+3076	Bronze II	상근이의 체스판
+3077	Silver III	임진왜란
+3078	Gold IV	좋은 친구
+3079	Gold V	입국심사
+3080	Platinum III	아름다운 이름
+3085	Silver III	사탕 게임
+3086	Gold I	초콜릿 자르기
+3087	Gold V	상근일
+3088	Silver II	화분 부수기
+3089	Gold III	네잎 클로버를 찾아서
+3090	Platinum III	차이를 최소로
+3095	Gold V	플러스의 개수
+3096	Gold I	영화제
+3097	Silver IV	산책 경로
+3098	Silver III	소셜네트워크
+3099	Gold IV	도트 매트릭스 프린터
+3100	Silver IV	국기 인식
+3101	Gold III	토끼의 이동
+3102	Platinum IV	겹치지 않는 원
+3107	Gold V	IPv6
+3108	Gold II	로고
+3109	Gold II	빵집
+3110	Gold III	부등식
+3111	Platinum IV	검열
+3113	Platinum V	양
+3114	Gold II	사과와 바나나
+3116	Gold III	생물학자
+3117	Gold I	YouTube
+3122	Platinum IV	IGRACI
+3124	Gold II	공원 산책
+3125	Gold IV	GONDOR
+3126	Silver I	반역의 원철이
+3128	Gold I	Hangman Game
+3129	Silver III	상범이의 은밀한 메세지
+3130	Gold V	붙인드롬
+3131	Platinum V	크리스마스 선물
+3132	Silver I	구조조정
+3135	Silver V	라디오
+3136	Platinum IV	평면도
+3139	Silver IV	VANDAL
+3140	Gold II	GULIVER
+3142	Gold II	즐거운 삶을 위한 노력
+3148	Platinum III	빙고
+3151	Gold IV	합이 0
+3152	Silver IV	예쁜 숫자
+3154	Bronze I	알람시계
+3156	Gold V	노래
+3158	Gold V	Sierpinski 삼각형
+3159	Platinum III	전구
+3160	Silver I	24 성냥개비 퍼즐
+3161	Silver III	izbori
+3162	Silver IV	turbo
+3163	Platinum V	떨어지는 개미
+3164	Gold IV	패턴
+3165	Gold III	5
+3166	Platinum IV	maraton
+3167	Gold IV	기차표 검사
+3168	Silver IV	stolni
+3172	Platinum IV	현주와 윤주의 재미있는 단어 게임
+3176	Platinum IV	도로 네트워크
+3177	Platinum V	크로아티아 수 읽기
+3178	Gold IV	코코스
+3181	Bronze II	줄임말 만들기
+3182	Silver III	한동이는 공부가 하기 싫어!
+3183	Bronze II	Dates
+3184	Silver I	양
+3185	Silver III	kviz
+3186	Silver II	소변기
+3187	Silver I	양치기 꿍
+3188	Silver III	nule
+3189	Silver IV	tomo
+3190	Gold IV	뱀
+3192	Gold V	매직 스퀘어
+3193	Gold IV	공
+3194	Gold II	nogomet
+3195	Gold III	ribari
+3197	Platinum V	백조의 호수
+3199	Silver II	ABCD
+3208	Bronze II	gus
+3211	Silver V	kino
+3213	Silver IV	피자
+3216	Silver II	다운로드
+3217	Gold I	malloc
+3218	Silver I	spam
+3221	Gold V	개미의 이동
+3224	Gold V	grupe
+3226	Bronze I	전화 요금
+3227	Bronze I	MO
+3229	Gold I	LIFTOVI
+3230	Bronze I	금메달, 은메달, 동메달은 누가?
+3231	Silver IV	카드놀이
+3232	Bronze I	Multiply
+3233	Gold III	BRODOVI
+3234	Bronze II	LUKA
+3235	Silver IV	TRAJEKT
+3236	Gold III	TELEPORT
+3237	Silver III	UHODE
+3240	Gold III	JOKER
+3244	Platinum IV	두 부분 문자열 2
+3251	Silver IV	SONG
+3252	Silver II	JANICA
+3253	Silver III	TRAM
+3254	Silver IV	김밥 21개
+3257	Gold III	발코딩
+3258	Silver III	컴포트
+3259	Gold V	PEOPLE
+3260	Gold II	TEAMS
+3262	Silver IV	BUHA
+3264	Silver I	ONE
+3265	Platinum V	수열로 수열 구하기
+3267	Platinum IV	TWO
+3268	Gold V	COLA
+3270	Gold I	CATTLE
+3273	Silver III	두 수의 합
+3276	Bronze III	ICONS
+3277	Silver IV	DOMAINS
+3279	Silver V	DOLLARS
+3280	Bronze I	CARDS
+3281	Bronze I	T9
+3282	Bronze II	ROOMS
+3283	Silver II	BARCODE
+3284	Gold V	MASS
+3285	Silver IV	DECODE
+3286	Gold II	SHELVES
+3288	Silver III	BEER
+3289	Gold II	FRIENDS
+3291	Gold III	LIST
+3296	Gold III	SEARCH
+3299	Platinum III	POWER
+3300	Gold II	무어 기계
+3301	Gold II	FATBOY
+3307	Platinum V	대회가 끝나고 난 뒤 빰빠빰
+3318	Platinum III	A Huge Tower
+3324	Platinum V	Dominance
+3326	Platinum V	Knights
+3332	Gold I	Royal treasury
+3338	Platinum V	Depot Rearrangement
+3340	Silver IV	Multi-key Sorting
+3343	Gold IV	장미
+3344	Platinum III	N-Queen
+3345	Platinum III	괄호
+3346	Platinum III	꿍 기지국
+3353	Gold III	Printed Circuit Board
+3354	Platinum V	Matching Bins
+3356	Platinum IV	라디오 전송
+3358	Gold IV	Towers of coins
+3359	Silver II	사각 사각
+3360	Silver I	깡총깡총
+3362	Gold I	수수께끼
+3363	Gold V	동전
+3366	Gold II	수열 줄이기
+3368	Platinum III	Coin Collector
+3369	Silver III	Countries
+3372	Silver I	보드 점프
+3373	Gold V	Cards
+3387	Silver I	Calculator Game
+3391	Platinum III	나이트
+3397	Silver II	Division Expression
+3399	Gold III	Mutexes
+3400	Silver I	Expressions
+3405	Platinum V	파산하는 왕국
+3407	Silver II	맹세
+3412	Bronze I	Darts
+3414	Gold I	Conservation
+3417	Bronze II	Vigenère Cipher Encryption
+3423	Silver III	The Grille
+3425	Gold III	고스택
+3429	Platinum IV	방어선
+3430	Gold I	용이 산다
+3432	Bronze I	Game
+3434	Platinum III	Insults
+3442	Platinum V	직각 다각형
+3443	Silver IV	Reaux! Sham! Beaux!
+3447	Bronze I	버그왕
+3448	Bronze I	문자 인식
+3449	Bronze II	해밍 거리
+3451	Silver IV	Easy Task
+3456	Platinum III	축구공
+3460	Bronze III	이진수
+3462	Gold II	이진 스털링 수
+3464	Platinum IV	Decoding Morse sequences
+3473	Gold I	Complicated Expressions
+3474	Silver III	교수가 된 현우
+3479	Platinum III	Equipment Box
+3482	Gold II	Labyrinth
+3483	Gold V	Piggy-Bank
+3486	Bronze II	Adding Reversed Numbers
+3487	Platinum V	Copying Books
+3495	Silver I	아스키 도형
+3496	Silver III	Binary Encoding
+3499	Gold I	미토콘드리아 이브
+3507	Bronze III	Automated Telephone Exchange
+3508	Silver I	Black Square
+3510	Silver III	Dice
+3512	Bronze III	Flat
+3513	Platinum V	Galaxy Interconnection
+3516	Platinum V	John’s Inversions
+3518	Silver IV	공백왕 빈-칸
+3522	Gold III	Evacuation Plan
+3523	Gold IV	Factorial Simplification
+3525	Platinum III	Hands of Poker
+3526	Platinum V	이상적인 경로
+3528	Platinum III	K-Graph Oddity
+3529	Silver II	Alien Communication Masterclass
+3532	Silver IV	Defense of a Kingdom
+3533	Bronze III	Explicit Formula
+3534	Silver I	Frames
+3541	Silver II	상근타워
+3542	Silver III	Database
+3544	Gold I	Funny Language
+3546	Bronze I	Headshot
+3548	Platinum III	Java Certification
+3550	Silver II	Auxiliary Question of the Universe
+3551	Silver III	Bureaucracy
+3552	Gold II	Circles on a Screen
+3553	Silver V	Dragon’s Question
+3554	Bronze III	Enigmatic Device
+3557	Silver II	Homo or Hetero?
+3559	Gold I	Jealous Numbers
+3565	Platinum III	피보나치 진법
+3566	Bronze II	대형 스크린
+3568	Silver III	iSharp
+3572	Gold I	Billboard
+3578	Bronze III	Holes
+3584	Gold IV	가장 가까운 공통 조상
+3586	Platinum IV	방정식
+3588	Bronze I	Water Main Break
+3590	Gold II	i18n
+3594	Gold III	A+B
+3595	Bronze II	맥주 냉장고
+3596	Platinum III	크로스와 크로스
+3598	Platinum IV	엘리베이터
+3602	Bronze II	iChess
+3610	Silver III	Graveyard
+3613	Silver III	Java vs C++
+3614	Gold III	정사각형
+3616	Gold II	Bridges
+3621	Silver I	족보
+3622	Bronze II	어떤 호박의 할로윈 여행
+3626	Platinum V	Guards
+3629	Silver III	Astronomy
+3632	Gold V	Drying
+3633	Gold I	Expectation
+3634	Silver IV	Flip and Turn
+3635	Gold III	Godfather
+3636	Gold II	Horn Clauses
+3637	Platinum IV	Inner Vertices
+3639	Gold III	K Best
+3641	Platinum III	호프집 선택
+3643	Platinum IV	디지털 시계
+3644	Gold II	그래프 매칭
+3648	Platinum III	아이돌
+3649	Gold V	로봇 프로젝트
+3650	Gold I	암호 해독
+3651	Gold I	이항계수
+3652	Gold V	새트리
+3653	Platinum IV	영화 수집
+3655	Gold V	먼저 가세요
+3657	Gold II	총격전
+3658	Silver I	Tichu
+3661	Gold III	생일 선물
+3662	Platinum III	보석 분배
+3663	Gold III	고득점
+3665	Gold I	최종 순위
+3667	Platinum III	Selling Land
+3668	Silver II	Stock Prices
+3671	Gold IV	산업 스파이의 편지
+3673	Gold III	나눌 수 있는 부분 수열
+3676	Platinum III	Moving to Nuremberg
+3678	Gold I	카탄의 개척자
+3679	Platinum IV	단순 다각형
+3681	Gold I	모빌
+3682	Platinum III	동치 증명
+3684	Silver III	어려운 문제
+3687	Gold II	성냥개비
+3691	Gold III	컴퓨터 조립
+3693	Gold V	컨테이너
+3695	Gold III	Escape from Enemy Territory
+3697	Platinum IV	정상
+3699	Silver V	주차 빌딩
+3700	Platinum III	걷기
+3701	Gold I	스도쿠 변형
+3702	Gold II	The SetStack Computer
+3703	Silver I	Pie
+3706	Gold V	Leonardo’s Notebook
+3709	Silver I	레이저빔은 어디로
+3711	Silver V	학번
+3713	Platinum III	당일치기
+3724	Silver V	표
+3731	Gold IV	Game
+3733	Bronze V	Shares
+3734	Platinum IV	RSA 인수 분해
+3736	Platinum III	System Engineer
+3737	Platinum III	Cycles of Lanes
+3745	Gold II	오름세
+3747	Platinum IV	완벽한 선거!
+3749	Gold V	Build Your Home
+3754	Platinum III	John
+3755	Gold IV	Double Queue
+3758	Silver III	KCPC
+3760	Gold IV	Computers
+3765	Bronze IV	Celebrity jeopardy
+3770	Platinum V	대한민국
+3777	Gold IV	Computer Transformation
+3778	Bronze II	애너그램 거리
+3779	Platinum IV	주기
+3780	Platinum V	네트워크 연결
+3782	Gold III	City Game
+3783	Platinum V	세제곱근
+3787	Silver V	Count on Canton
+3793	Gold V	Common Subsequence
+3803	Gold IV	Networking
+3806	Gold III	S를 T로
+3825	Gold IV	은행수
+3826	Gold V	스타일리시
+3827	Platinum V	일차원 세포 자동자
+3828	Platinum V	잘못된 계산
+3830	Platinum III	교수님은 기다리지 않는다
+3838	Silver III	Distributing Ballot Boxes
+3841	Platinum IV	Non-negative Partial Sums
+3843	Platinum V	볼록 정다각형
+3844	Gold I	백준 공화국
+3845	Bronze I	잔디깎기
+3854	Gold I	3-sided dice
+3855	Gold IV	Trick or Treat
+3856	Silver III	Working at the Restaurant
+3860	Platinum V	할로윈 묘지
+3863	Bronze I	행복한 전화 통화
+3865	Gold IV	학회원
+3866	Gold II	풍선 수집
+3870	Gold I	Find the Multiples
+3875	Gold V	Cubist Artwork
+3876	Gold IV	sed 이용
+3881	Platinum V	말파티 원
+3885	Silver I	회색 영역
+3886	Silver II	Expected Allowance
+3895	Platinum V	그리고 하나가 남았다
+3896	Silver I	소수 사이 수열
+3897	Gold III	Minimal Backgammon
+3900	Platinum IV	Slim Span
+3901	Platinum V	The Morning after Halloween
+3902	Gold IV	Bug Hunt
+3905	Platinum V	How I Wonder What You Are!
+3908	Gold III	서로 다른 소수의 합
+3910	Gold III	거듭제곱 계산
+3914	Gold IV	Maximum Sum
+3918	Gold V	Mobile Computing
+3919	Gold III	Atomic Car Race
+3923	Silver II	저울
+3924	Gold IV	Make a Sequence
+3925	Silver III	암호화의 취약점 찾기
+3926	Platinum V	Pathological Paths
+3932	Silver II	Unreliable Messengers
+3933	Gold V	라그랑주의 네 제곱수 정리
+3934	Platinum V	Area of Polygons
+3935	Platinum IV	바람의 신
+3936	Gold I	Molecular Formula
+3943	Bronze II	헤일스톤 수열
+3944	Silver II	나머지 계산
+3945	Silver I	Pen Counts
+3946	Platinum III	랜덤 걷기
+3948	Platinum V	홍준이의 친위대
+3952	Silver III	Mystery
+3953	Gold V	Battleship
+3954	Gold I	Brainf**k 인터프리터
+3955	Platinum V	캔디 분배
+3957	Silver I	Pizza Hawaii
+3959	Gold I	스키 점프
+3964	Gold III	팩토리얼과 거듭제곱

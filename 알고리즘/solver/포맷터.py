@@ -1,14 +1,19 @@
 from bs4 import BeautifulSoup
-import os
+import os, copy
 import re
 
+os.chdir('./알고리즘/solver')
+print("실행 디렉토리:", os.getcwd())
 
 def convert(problem_number):
-    input_file_path = f'input/{problem_number}.html'
-    output_file_path = f'output/{problem_number}.html'
+    input_file_path = f'./input/{problem_number}.html'
+    output_file_path = f'./output/{problem_number}.html'
 
     with open(input_file_path, 'r', encoding='utf-8') as input_file:
         soup = BeautifulSoup(input_file, 'html.parser')
+    
+    with open(input_file_path, 'r', encoding='utf-8') as input_file:
+        soup2 = BeautifulSoup(input_file, 'html.parser')
 
     img_tags = soup.find_all('img')
 
@@ -18,7 +23,12 @@ def convert(problem_number):
             img_tag['src'] = f'https://www.acmicpc.net{src}'
 
     problem_section_tags = soup.select('section .problem-text:not([id*="problem_sample_explain"])')
-    problem_table_html = f'<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">{problem_number}번</td></tr>'
+
+    for tag in soup2.find_all(['h2','th']):
+      tag.decompose()
+
+    foreign = '외국어' if (len(re.findall(r'[가-힣]',str(soup2))) < 10) else '한국어'
+    problem_table_html = f'<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">{problem_number}번, {foreign}</td></tr>'
 
     for section in problem_section_tags:
         title = section.parent.select_one('h2').text if section.parent.select_one('h2') is not None else ''
@@ -66,5 +76,5 @@ def convert(problem_number):
         output_file.write(table_html)
 
 
-for file_name in  os.listdir('input'):
+for file_name in  os.listdir('./input'):
     convert(re.sub(r'\.html$','',file_name))
