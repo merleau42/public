@@ -1,20 +1,28 @@
+#-*- coding:utf-8 -*-
+
 if True:                                   # import 리스트
   # 모듈 [기초적인 기능] 
   import os
+  import codecs
   from time import sleep
+  from random import random
+
 
   # 모듈 [선별/정리]
   import re                                 # 정규표현식 (regex)
-  import pandas                             # 자료 정돈
+  #import pandas                             # 자료 정돈
 
   # 모듈 [웹 일반]
   import requests                           # URL 접근 / Raw 데이터 요청
+  import urllib                             # html 확장자 접근
 
   # 클래스 [웹 파싱]
   from bs4            import BeautifulSoup  # html을 이용해서 편식
   from selenium       import webdriver      # 브라우저를 실행해서 편식
 
+  # 클래스 [브라우저 조작]
   from selenium.webdriver.common.keys import Keys
+  from selenium.webdriver.chrome.options import Options
 
 
 if True:                                    # 응용 함수 리스트
@@ -97,7 +105,12 @@ if True:                                    # 응용 함수 리스트
      객체.close # 사용한 객체는 소멸시켜서 메모리를 관리합니다 
      날것.close # 이것이 불편하면 다음을 읽어보세요
 
-  def 읽기(경로):                              # 파일로부터 필사된 결과물을 리스트로 리턴합니다
+  def 읽기_string(경로):
+
+      with open(경로, 'r', encoding="utf-8") as A:
+         return A.read()
+
+  def 읽기_list(경로, 찾아, 바꾸기):                              # 파일로부터 필사된 결과물을 리스트로 리턴합니다
     
      # [with 생성 as A] 문법에 대해서:
     
@@ -110,45 +123,116 @@ if True:                                    # 응용 함수 리스트
      # 객체를 다 사용하고나면 소멸( A.close )시켜야하는데 후자는 파이썬이 알아서 해줍니다
 
     
-     with open(경로, 'r') as A:               # 객체 A에다가 로컬 파일을 가져옵니다
+     with open(경로, 'r', encoding="utf-8") as A:               # 객체 A에다가 로컬 파일을 가져옵니다
     
          필사 = []                            # 필사는 처음에는 백지입니다
 
-         for line in A:                     # 객체 A의 내용을 한줄씩 탐색합니다
-             필사.append(line)                # 리스트를 한 칸씩 불려나갑니다
+         for line in A.readlines():           # 객체 A의 내용을 한줄씩 탐색합니다
+            line=line.replace(찾아, 바꾸기)
+            필사.append(line)                  # 리스트를 한 칸씩 불려나갑니다
 
          return 필사                 
 
+  def 읽기_set(경로, 찾아, 바꾸기):                              # 파일로부터 필사된 결과물을 set로 리턴합니다
+
+     with open(경로, 'r', encoding="utf-8") as A:
+    
+         필사 = set()
+
+         for line in A.readlines():
+            line=line.replace(찾아, 바꾸기)
+            필사.add(line)                    
+         return 필사  
+
+  def 경로내파일명 (경로, regex_이름형식):      # 폴더 내에서 조건에 맞는 파일 이름을 리스트로 리턴
+   regex_이름형식 = regex_이름형식 + '\0'
+   l = os.listdir(경로)
+   ll = []
+
+   print (len(l), " 개 파일 발견")
+   for i in l:
+
+      if re.match(regex_이름형식, i+'\0'):
+         ll.append (i)
+   
+   print (len(ll), " 개 파일명 리턴")
+   return ll
+
   def 덮어쓰기(경로, 변수):                       # 넘겨받은 내용을 파일 경로에 문자열로 출력합니다 (덮어쓰기)
 
-     with open(경로, 'w') as A:
+     with open(경로, 'w', encoding="utf-8") as A:
 
          if type(변수) == type(list()):
-             A.writelines('\n'.join(변수))
+             A.writelines('\n'.join(변수) )
 
          else:
-             A.write ( str(변수) )   
+               A.write ( str(변수) )
 
   def 이어쓰기(경로, 변수):                       # 넘겨받은 내용을 파일 경로에 문자열로 출력합니다 (기존 내용에 이어붙이기)
 
-     with open(경로, 'a') as A:
+     with open(경로, 'a', encoding="utf-8") as A:
 
          if type(변수) == type(list()):
-             A.writelines('\n'.join(변수))
+             A.writelines('\n'.join(변수) )
 
          else:
              A.write ( str(변수) )
+
+  def 중복제거(변수, 간격부여):                       # 리스트의 중복된 항목이나, 스트링의 중복된 문자열을 없애고, 같은 자료형으로 반환합니다
+
+     if 간격부여=="":
+      간격부여="\n"
+
+     if type(변수) == type(list()):
+        변수 = set(변수)
+        변수 = list(변수)
+        new = []
+
+        for i in 변수:
+           new.append(i & 간격부여)
+
+        return new 
+
+     elif type(변수) == type(str()):
+        p = re.compile(r"\s+(\S+)\s+([\s\S]+?\s+)?\1\s+")
+        temp = str()
+
+        while(temp != 변수):
+           temp = 변수
+           변수 = re.sub(p, r" \1 \2", 변수)
+
+        return 변수
+
+     else:
+        print ("스트링을 수록하는 리스트나, 스트링으로 주세요")
 
   def 리스트링(리스트, 앞선스트링):                  # 넘겨받은 리스트를, 기존 스트링에 덧붙여서 돌려줍니다
     
      # 따옴표를 통해 "즉석으로 작성한 문자열" 도 객체(단, R-Value)이기 때문에 변수는 필요하지 않아요
      return 앞선스트링.join(리스트)
 
-  def 셀래(드라이버,초, url):                      # 드라이버가 URL을 실행하고, 기다렸다가 html을 가져옵니다
+  def 셀래(드라이버, 초, url):                      # 드라이버가 URL을 실행하고, 기다렸다가 html을 가져옵니다
      드라이버.get(url)
      sleep(초)
 
-     return driver.page_source
+     return 드라이버.page_source
+
+  def 크롬(가로, 세로, headless):
+
+      ops = Options()
+      ops.add_argument("--window-size="+str(가로)+","+str(세로) )
+      if headless:
+         ops.add_argument("headless")
+         print ("headless 모드로 실행합니다")
+      on = webdriver.Chrome("chromedriver", chrome_options=ops)
+
+      return on
+
+  def 아스키 (숫자or문자):                         # 코드를 입력받으면 문자를, 문자를 입력받으면 코드를 리턴합니다
+      if type(숫자or문자)==type(str()):
+        return ord(숫자or문자)
+      elif type(숫자or문자)==type(int()):
+        return chr(숫자or문자)
 
 함수요약 = """ 
    
@@ -170,5 +254,9 @@ if True:                                    # 응용 함수 리스트
    """
 
 
+#### 환경 ####
+입력 = 'D:\파이썬\파이썬 입력\\20200601\\'
+출력 = 'D:\파이썬\파이썬 출력\\20200601\\'
+새폴더 (출력)
+
 #### 작업실 ####
-driver = webdriver.Chrome("C://chromedriver")

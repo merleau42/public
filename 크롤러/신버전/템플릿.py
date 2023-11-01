@@ -77,14 +77,10 @@ if '입출력 모듈':
 	def 불러오기(파일명, by=str):
 		with open(파일명, 'r', encoding='utf8') as f:
 			if by==list:
-				z=re.findall(r'.+',f.read())
+				return re.findall(r'.+',f.read())
 
 			else:
-				z=str()
-				for i in f.readlines():
-					z+=i
-
-		return z
+				return '\n'.join(f.readlines())
 
 if 'Syntactic Sugar':
 	# JS에서, ??문법으로 None 대신에 더미 DOM을 리턴하는 것처럼, 파썬도 더미 객체를 리턴하도록 함
@@ -123,8 +119,8 @@ if '수프 활용법':
 	#			수프(.TAG).find_all( 조건, limit=5 )			----	위에서부터 N개만 찾음. find()는 limit=1
 	#			수프(.TAG).find_all( 조건, recursive=False )	----	직계차일드만(depth==1) 탐색
 	#			수프(.TAG)( 조건 )								----	find_all 함수명 생략하고 괄호만 열어도 됨
-	# 3쟈스 >>> 수프(.TAG).select(	'#QuerySelectorAll'	)
-	#			수프(.TAG).select_one(	'#QuerySelector'	)
+	# 3쟈스 >>> 수프(.TAG).select(	QuerySelectorAll	)
+	#			수프(.TAG).select_one(	QuerySelector	)
 	# 4형제 >>> 수프(.TAG).TAG.next_sibling
 	#			수프(.TAG).TAG.previous_sibling
 	# 4자손 >>> 수프(.TAG).TAG.contents
