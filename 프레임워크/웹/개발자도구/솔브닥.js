@@ -1,4 +1,4 @@
-
+//솔브닥 태그별 문제수
 [...document.querySelectorAll('td:nth-child(2)')]
 .slice(2,20)
 .reduce((s,c,i)=>[...s,
@@ -13,16 +13,3 @@
 .slice(6)
 .reduce((s,c)=>s+c+'\n')
 
-
-5280의 애너그램 중 30의 배수를 만족하는 최댓값
--입력 자릿수 N > 100000
-
-// 완전탐색
-number.anagrams.filter(30의배수).filter(max)
-
-// 조건을 활용한 그리디
-number.filter(30의배수).anagrams.filter(max)123
-
-
-
-독서실에서 왔다
