@@ -2,8 +2,9 @@ from bs4 import BeautifulSoup
 import os, copy
 import re
 
-os.chdir('./알고리즘/solver')
-print("실행 디렉토리:", os.getcwd())
+print("기본 디렉토리:", os.getcwd())
+os.chdir('./네비게이터/BOJ')
+print("디렉토리 설정:", os.getcwd())
 
 def convert(problem_number):
     input_file_path = f'./input/{problem_number}.html'
@@ -28,7 +29,7 @@ def convert(problem_number):
       tag.decompose()
 
     foreign = '외국어' if (len(re.findall(r'[가-힣]',str(soup2))) < 10) else '한국어'
-    problem_table_html = f'<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">{problem_number}번, {foreign}</td></tr>'
+    problem_table_html = f'<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">{problem_number}번,{foreign}</td></tr>'
 
     for section in problem_section_tags:
         title = section.parent.select_one('h2').text if section.parent.select_one('h2') is not None else ''
@@ -70,7 +71,7 @@ def convert(problem_number):
         output_file.write('<style>table { width: 100%; }</style>\n')
         output_file.write('<style>td { height: 40px; }</style>\n')
         output_file.write('<style>table, th, td { border-collapse: collapse; border: 1px solid black; }</style>\n')
-        output_file.write('<style>pre {color:white; font-family:Courier New; padding:9px; line-height:1.36;}</style>\n')
+        output_file.write('<style>pre {color:white; font-family:Courier New; padding:5px; line-height:1.36;}</style>\n')
         output_file.write(problem_table_html)
         output_file.write('\n\n')
         output_file.write(table_html)
