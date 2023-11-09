@@ -2227,5 +2227,3 @@ void rush0X(int x, int y) // 1주차 러쉬, 더 나은 버전
 			write(1, "\n", 1);
 	}
 }
-
-// https://web.archive.org/web/20230804231914/https://gall.dcinside.com/mgallery/board/view?id=wec&no=91441

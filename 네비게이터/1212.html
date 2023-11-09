@@ -76,7 +76,7 @@
 		<tbody>
 		</tbody>
 	</table>
-	<iframe id="csvIframe" style="display: none;" src="./BOJ/백준리스트2"></iframe>
+	<iframe id="csvIframe" style="display: none;" src="./BOJ/백준리스트.html"></iframe>
 	<script>
 		const iframe = document.getElementById("csvIframe");
 		iframe.addEventListener("load", once);
@@ -126,6 +126,8 @@
 				const th = document.createElement("th");
 				th.textContent = headerText;
 				th.addEventListener("click", () => sortTable(headers.indexOf(headerText)));
+				if (headerText == '외국어' || headerText == '해결')
+					th.style.display="none";
 				headerRow.appendChild(th);
 			});
 			table.querySelector("thead").appendChild(headerRow);
@@ -137,24 +139,31 @@
 					const newRow = document.createElement("tr");
 					for (let j = 0; j < rowData.length; j++) {
 						const cellValue = rowData[j];
-						const cell = createCell(cellValue, j);
+						const cell = createCell(cellValue, j, newRow);
 						newRow.appendChild(cell);
 					}
 					table.querySelector("tbody").appendChild(newRow);
 				}
 			});
 
-			function createCell(value, columnIndex) {
+			function createCell(value, columnIndex, tr) {
 				const td = document.createElement("td");
+				td.textContent = value
 				if (columnIndex === 3){
-					td.textContent = parseInt(value);
-					td.style.color = tiersColor[Math.floor((parseInt(value)-1)/5)];
+					td.style.color = tiersColor[Math.floor((value-1)/5)];
 				}
-				else if (columnIndex === 7){
-					//sadsadsadsadsadasdsa
+				if (columnIndex === 6){
+					if (td.textContent == 1){
+						tr.style.background='silver';
+					}
+					td.style.display="none";
 				}
-				else
-					td.textContent = value
+				if (columnIndex === 7){
+					if (td.textContent == 1){
+						tr.style.background='palegreen';
+					}
+					td.style.display="none";
+				}
 				return td;
 			};
 
