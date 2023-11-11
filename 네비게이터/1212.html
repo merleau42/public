@@ -1,75 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>CSV 데이터를 HTML 표로 불러오기</title>
-	<style>
-		th {
-			cursor: pointer;
-			text-align: center;
-		}
+	<head>
+		<title>CSV 데이터를 HTML 표로 불러오기</title>
+		<style>
+			th {
+				cursor: pointer;
+				text-align: center;
+			}
+	
+			th.sorted-asc::after {
+				content: " ▲";
+				color: red;
+			}
+	
+			th.sorted-desc::after {
+				content: " ▼";
+				color: red;
+			}
+	
+			th,
+			td {
+				font-size: 14px;
+				border: 1px solid #000;
+				min-width: 46px;
+			}
+	
+			table {
+				width: 98%;
+				margin: 0 auto; /* 가운데 정렬 */
+				border-collapse: collapse;
+				border: 1px solid #000;
+				margin-top: 25px; /* 조금 띄우기 */
+			}
+	
+			.dropdown-container {
+				display: flex;
+				align-items: center;
+			}
 
-		th.sorted-asc::after {
-			content: " ▲";
-			color: red;
-		}
+			.nav-container {
+				width: 98%;
+				margin: 0 auto;
+				background-color: #f1f1f1;
+			}
 
-		th.sorted-desc::after {
-			content: " ▼";
-			color: red;
-		}
+			#floatingToggleButton {
+				top: 0;
+				position: fixed;
+				bottom: 10px;
+				right: 10px;
+				font-size: 20px;
+				cursor: pointer;
+				background: none;
+				border: none;
+				padding: 5px;
+				border-radius: 5px;
+				z-index: 999; /* 다른 요소 위로 표시하기 위해 높은 값 설정 */
+			}
 
-		th, td {
-			border: 1px solid #000;
-			min-width: 53px;
-		}
+			body {
+				background-color: #1F1F1F;
+				color: #E0E0E0;
+			}
 
-		table {
-			border-collapse: collapse;
-			border: 1px solid #000;
-			width: 95%;
-			margin: 0 auto; /* 가운데 정렬 */
-		}
+			.number-link {
+				cursor: pointer;
+				color: blue;
+				text-decoration: underline;
+			}
+		</style>
 
-		.dropdown-container {
-			display: flex;
-			align-items: center;
-			margin-bottom: 4px;
-		}
-	</style>
-		
-</head>
+	</head>
+	
 <body data-server-no-reload>
-	<div class="dropdown-container">
-		<span>태그　</span>
-		<select id="includeTagDropdown1">
-			<option value="">포함</option>
-		</select>
-		<select id="includeTagDropdown2">
-			<option value="">포함</option>
-		</select>
-		<select id="excludeTagDropdown1">
-			<option value="">미포함</option>
-		</select>
-		<select id="excludeTagDropdown2">
-			<option value="">미포함</option>
-		</select>
-	</div>
-	<div class="dropdown-container">
-		<span>티어　</span>
-		<select id="tierAboveDropdown">
-			<option value="">이상</option>
-		</select>
-		<select id="tierBelowDropdown">
-			<option value="">이하</option>
-		</select>
-		<span>새로 고침:</span>
-		<select id="refreshDropdown">
-			<option value="선택">선택</option>
-			<option value="조건대로">조건대로</option>
-			<option value="랜덤디펜스">랜덤디펜스</option>
-			<option value="초기화">초기화</option>
-		</select>
-	</div>
+	<div class="nav-container">
+        <div class="nav-content">
+            <span>태그　</span>
+            <select id="includeTagDropdown1">
+                <option value="">포함</option>
+            </select>
+            <select id="includeTagDropdown2">
+                <option value="">포함</option>
+            </select>
+            <select id="excludeTagDropdown1">
+                <option value="">미포함</option>
+            </select>
+            <select id="excludeTagDropdown2">
+                <option value="">미포함</option>
+            </select>
+		</div>
+        <div class="nav-content">
+            <span>티어　</span>
+            <select id="tierAboveDropdown">
+                <option value="">이상</option>
+            </select>
+            <select id="tierBelowDropdown">
+                <option value="">이하</option>
+            </select>
+            <label for="hideForeignLanguage">　외국어</label>
+            <input type="checkbox" id="hideForeignLanguage">
+            <label for="hideSolved">해결</label>
+            <input type="checkbox" id="hideSolved">
+		</div>
+		<div class="nav-content">
+            <span>갱신　</span>
+            <select id="refreshDropdown">
+                <option value="선택">선택</option>
+                <option value="조건대로">조건대로</option>
+                <option value="랜덤디펜스">랜덤디펜스</option>
+                <option value="초기화">초기화</option>
+            </select>
+        </div>
+    </div>
+	<div id="floatingToggleButton" onclick="toggleNav()">🍴</div>
 	<table id="csvTable">
 		<thead>
 		</thead>
@@ -77,7 +120,12 @@
 		</tbody>
 	</table>
 	<iframe id="csvIframe" style="display: none;" src="./BOJ/백준리스트.html"></iframe>
+	<iframe src="about:blank" id="myIframe"></iframe>
 	<script>
+		function toggleNav() {
+            const navContainer = document.querySelector('.nav-container');
+            navContainer.style.display = navContainer.style.display=='none' ? 'block' : 'none';
+        }
 		const iframe = document.getElementById("csvIframe");
 		iframe.addEventListener("load", once);
 		function once() {
@@ -91,6 +139,8 @@
 			const tierAboveDropdown = document.getElementById("tierAboveDropdown");
 			const tierBelowDropdown = document.getElementById("tierBelowDropdown");
 			const refreshDropdown = document.getElementById("refreshDropdown");
+			const hideForeignLanguageCheckbox = document.getElementById("hideForeignLanguage");
+			const hideSolvedCheckbox = document.getElementById("hideSolved");
 			
 			const tiers='브실골플다루';
 			const tiersColor=["brown","silver","gold","lime","blue","red"];
@@ -149,12 +199,20 @@
 			function createCell(value, columnIndex, tr) {
 				const td = document.createElement("td");
 				td.textContent = value
+				if (columnIndex === 0){
+					td.className = "number-link";
+				}
+
 				if (columnIndex === 3){
 					td.style.color = tiersColor[Math.floor((value-1)/5)];
 				}
+
+				if (columnIndex === 4){
+					td.textContent = Math.round(value/100)/10 + 'k';
+				}
 				if (columnIndex === 6){
 					if (td.textContent == 1){
-						tr.style.background='silver';
+						tr.style.background='#e0e0e0';
 					}
 					td.style.display="none";
 				}
@@ -205,6 +263,7 @@
 			}
 
 			// 드롭다운 변경 시 필터링 적용
+			
 			includeTagDropdown1.addEventListener("change", () => filterTable());
 			includeTagDropdown2.addEventListener("change", () => filterTable());
 			excludeTagDropdown1.addEventListener("change", () => filterTable());
@@ -215,6 +274,8 @@
 				refreshTable();
 				refreshDropdown.selectedIndex = 0; // 기본 옵션으로 리셋
 			});
+			hideForeignLanguageCheckbox.addEventListener("change", () => filterTable());
+			hideSolvedCheckbox.addEventListener("change", () => filterTable());
 			
 			function filterTable() {
 				const selectedIncludeTag1 = includeTagDropdown1.value;
@@ -223,6 +284,8 @@
 				const selectedExcludeTag2 = excludeTagDropdown2.value;
 				const selectedTierAbove = tierAboveDropdown.value;
 				const selectedTierBelow = tierBelowDropdown.value;
+				const hideForeignLanguage = hideForeignLanguageCheckbox.checked;
+				const hideSolved = hideSolvedCheckbox.checked;
 				
 				const tbody = table.querySelector("tbody");
 				const rows = Array.from(tbody.rows);
@@ -230,6 +293,8 @@
 				rows.forEach(row => {
 					const rowData = row.cells[2].textContent;
 					const tierData = parseInt(row.cells[3].textContent);
+					const hasForeignLanguage = row.cells[6].textContent === "1";
+					const isSolved = row.cells[7].textContent === "1";
 					const tags = rowData.split('/');
 					const includeTag1Match = !selectedIncludeTag1 || tags.includes(selectedIncludeTag1);
 					const includeTag2Match = !selectedIncludeTag2 || tags.includes(selectedIncludeTag2);
@@ -237,7 +302,11 @@
 					const excludeTag2Match = !selectedExcludeTag2 || !tags.includes(selectedExcludeTag2);
 					const tierMatch = (!selectedTierAbove || tierData >= parseInt(selectedTierAbove)) && (!selectedTierBelow || tierData <= parseInt(selectedTierBelow));
 
-					const showRow = includeTag1Match && includeTag2Match && excludeTag1Match && excludeTag2Match && tierMatch;
+					const showRow = includeTag1Match && includeTag2Match &&
+					excludeTag1Match && excludeTag2Match &&
+					tierMatch &&
+					(hideForeignLanguage || !hasForeignLanguage) && (hideSolved || !isSolved);
+
 					row.style.display = showRow ? "table-row" : "none";
 				});
 			}
@@ -263,7 +332,7 @@
 						row.style.display = "table-row";
 					});
 
-					// 모든 드롭다운을 '선택'으로 리셋
+					// 모든 드롭다운을 리셋
 					includeTagDropdown1.selectedIndex = 0;
 					includeTagDropdown2.selectedIndex = 0;
 					excludeTagDropdown1.selectedIndex = 0;
@@ -271,6 +340,12 @@
 					tierAboveDropdown.selectedIndex = 0;
 					tierBelowDropdown.selectedIndex = 0;
 					refreshDropdown.selectedIndex = 0;
+
+					// 모든 체크박스를 리셋
+					hideForeignLanguageCheckbox.checked = false;
+					hideSolvedCheckbox.checked = false;
+
+					filterTable();
 				}
 			}
 
@@ -284,7 +359,79 @@
 				}
 				return randomIndices;
 			}
+
+			filterTable();
 		};
 	</script>
+	<script>
+		var iframeMinimized = false;
+		var html = document.querySelector("html");
+		var body = document.querySelector("body");
+
+		function toggleIframe() {
+			var iframe = document.getElementById("myIframe");
+			iframeMinimized = !iframeMinimized;
+
+			if (iframeMinimized)
+				iframe.style.display = "none";
+			else
+				iframe.style.display = "block";
+		}
+
+		function changeIframeSource(number) {
+			document.querySelector('#debug').innerText = number;
+			var iframe = document.getElementById("myIframe");
+
+			if (iframeMinimized) {
+				toggleIframe();
+			}
+			iframe.src = "./BOJ/output/" + number + ".html";
+			applyStylesToIframe();
+		}
+		
+		function applyStylesToIframe() {
+			var iframe = document.getElementById("myIframe");
+			var innerDocument = iframe.contentDocument || iframe.contentWindow.document;
+			innerDocument.body.style.backgroundColor = "#1F1F1F";
+
+			[...innerDocument.querySelectorAll("td, th")]
+				.forEach(x=>x.style="color:#E0E0E0; border-color:#909090");
+			
+			[...innerDocument.querySelectorAll(".mjx-copytext")]
+				.forEach(x=>x.style.fontSize = "0"); //수식 표현시 종종 나타나는 찌꺼기 제거
+
+			[...innerDocument.querySelectorAll("math")]
+				.forEach(x=>x.style.color = "yellow"); //수식 태그 강조
+
+			[...innerDocument.querySelectorAll("a")]
+				.forEach(x=>x.style.color = "aqua"); //링크 가독성, 파랑 대신
+
+			iframe.style.height = '0';
+			iframe.style.height = innerDocument.body.scrollHeight*1.02+"px";
+			iframe.style.border = "0";
+			iframe.style.width = html.clientWidth*0.98+"px";
+
+		}
+
+		window.addEventListener("DOMContentLoaded", function() {
+			var iframe = document.getElementById("myIframe");
+			
+			var numberLinks = document.querySelectorAll(".number-link");
+			numberLinks.forEach(function(link) {
+				link.onclick = function() {
+					var number = link.innerText;
+					changeIframeSource(number);
+					console.log(12);
+					document.querySelector('#debug').innerText += 1;
+				};
+			});
+
+			iframe.onload = applyStylesToIframe;
+			toggleIframe();
+		});
+
+		window.addEventListener("resize", applyStylesToIframe);
+	</script>
+	<div id="debug">0</div>
 </body>
 </html>
