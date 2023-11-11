@@ -9,64 +9,61 @@
 			}
 	
 			th.sorted-asc::after {
-				content: " ▲";
-				color: red;
+				content: "▲";
 			}
 	
 			th.sorted-desc::after {
-				content: " ▼";
-				color: red;
+				content: "▼";
 			}
 	
-			th,
-			td {
+			th, td {
 				font-size: 14px;
-				border: 1px solid #000;
-				min-width: 46px;
+				border: 1px solid #909090;
+				min-width: 42px;
 			}
 	
-			table {
+			table, iframe {
 				width: 98%;
 				margin: 0 auto; /* 가운데 정렬 */
 				border-collapse: collapse;
-				border: 1px solid #000;
 				margin-top: 25px; /* 조금 띄우기 */
-			}
-	
-			.dropdown-container {
-				display: flex;
-				align-items: center;
 			}
 
 			.nav-container {
 				width: 98%;
 				margin: 0 auto;
-				background-color: #f1f1f1;
+				border: 1px solid #909090;
+				background-color: #dddddd;
+				color: #222222;
 			}
 
-			#floatingToggleButton {
+			#floatingContainer{
 				top: 0;
+				height: 30px;
 				position: fixed;
 				bottom: 10px;
 				right: 10px;
 				font-size: 20px;
-				cursor: pointer;
-				background: none;
 				border: none;
-				padding: 5px;
 				border-radius: 5px;
 				z-index: 999; /* 다른 요소 위로 표시하기 위해 높은 값 설정 */
+				background: none;
+			}
+			
+			#floatingToggleButton {
+				display: inline;
+				cursor: pointer;
+				background: none;
 			}
 
 			body {
-				background-color: #1F1F1F;
-				color: #E0E0E0;
+				background-color: #222222;
+				color: #dddddd;
 			}
 
 			.number-link {
 				cursor: pointer;
-				color: blue;
-				text-decoration: underline;
+				color: aqua;
 			}
 		</style>
 
@@ -74,45 +71,44 @@
 	
 <body data-server-no-reload>
 	<div class="nav-container">
-        <div class="nav-content">
-            <span>태그　</span>
-            <select id="includeTagDropdown1">
-                <option value="">포함</option>
-            </select>
-            <select id="includeTagDropdown2">
-                <option value="">포함</option>
-            </select>
-            <select id="excludeTagDropdown1">
-                <option value="">미포함</option>
-            </select>
-            <select id="excludeTagDropdown2">
-                <option value="">미포함</option>
-            </select>
-		</div>
-        <div class="nav-content">
-            <span>티어　</span>
-            <select id="tierAboveDropdown">
-                <option value="">이상</option>
-            </select>
-            <select id="tierBelowDropdown">
-                <option value="">이하</option>
-            </select>
-            <label for="hideForeignLanguage">　외국어</label>
-            <input type="checkbox" id="hideForeignLanguage">
-            <label for="hideSolved">해결</label>
-            <input type="checkbox" id="hideSolved">
+		<div class="nav-content">
+			<span>태그　</span>
+			<select id="includeTagDropdown1">
+				<option value="">포함</option>
+			</select><select id="includeTagDropdown2">
+				<option value="">포함</option>
+			</select><select id="excludeTagDropdown1">
+				<option value="">미포함</option>
+			</select><select id="excludeTagDropdown2">
+				<option value="">미포함</option>
+			</select>
 		</div>
 		<div class="nav-content">
-            <span>갱신　</span>
-            <select id="refreshDropdown">
-                <option value="선택">선택</option>
-                <option value="조건대로">조건대로</option>
-                <option value="랜덤디펜스">랜덤디펜스</option>
-                <option value="초기화">초기화</option>
-            </select>
-        </div>
-    </div>
-	<div id="floatingToggleButton" onclick="toggleNav()">🍴</div>
+			<span>티어　</span>
+			<select id="tierAboveDropdown">
+				<option value="">이상</option>
+			</select><select id="tierBelowDropdown">
+				<option value="">이하</option>
+			</select><label for="hideForeignLanguage">　외국어</label>
+			<input type="checkbox" id="hideForeignLanguage">
+			<label for="hideSolved">해결</label>
+			<input type="checkbox" id="hideSolved">
+		</div>
+		<div class="nav-content">
+			<span>갱신　</span>
+			<select id="refreshDropdown">
+				<option value="선택">선택</option>
+				<option value="조건대로">조건대로</option>
+				<option value="랜덤디펜스">랜덤디펜스</option>
+				<option value="초기화">초기화</option>
+			</select>
+		</div>
+	</div>
+	<div id="floatingContainer">
+		<div id="floatingToggleButton" onclick="toggleNav()">🍴</div>
+		<div id="floatingToggleButton" onclick="toggleTable()">📋</div>
+		<div id="floatingToggleButton" onclick="toggleProblem()">✍</div>
+	</div>
 	<table id="csvTable">
 		<thead>
 		</thead>
@@ -120,12 +116,16 @@
 		</tbody>
 	</table>
 	<iframe id="csvIframe" style="display: none;" src="./BOJ/백준리스트.html"></iframe>
-	<iframe src="about:blank" id="myIframe"></iframe>
+	<iframe src="about:blank" id="iframeProblem"></iframe>
 	<script>
 		function toggleNav() {
-            const navContainer = document.querySelector('.nav-container');
-            navContainer.style.display = navContainer.style.display=='none' ? 'block' : 'none';
-        }
+			const navContainer = document.querySelector('.nav-container');
+			navContainer.style.display = navContainer.style.display=='none' ? 'block' : 'none';
+		}
+		function toggleTable() {
+			const csvTable= document.querySelector('#csvTable');
+			csvTable.style.display = csvTable.style.display=='none' ? 'table' : 'none';
+		}
 		const iframe = document.getElementById("csvIframe");
 		iframe.addEventListener("load", once);
 		function once() {
@@ -143,23 +143,21 @@
 			const hideSolvedCheckbox = document.getElementById("hideSolved");
 			
 			const tiers='브실골플다루';
-			const tiersColor=["brown","silver","gold","lime","blue","red"];
+			const tiersColor=["saddlebrown","white","gold","lime","blue","red"];
 			// 티어 이상 및 이하 드롭다운에 1부터 30까지의 자연수를 반복문으로 추가
 			for (let i = 1; i <= 30; i++) {
-				const optionAbove = document.createElement("option");
-				optionAbove.value = i.toString();
-				optionAbove.textContent = tiers[Math.floor((i-1)/5)]+(5-(i-1)%5+"");
-				tierAboveDropdown.appendChild(optionAbove);
-
-				const optionBelow = document.createElement("option");
-				optionBelow.value = i.toString();
-				optionBelow.textContent = tiers[Math.floor((i-1)/5)]+(5-(i-1)%5+"");
-				tierBelowDropdown.appendChild(optionBelow);
+				const option = document.createElement("option");
+				option.value = i.toString();
+				option.textContent = tiers[Math.floor((i-1)/5)]+(5-(i-1)%5+"");
+				tierAboveDropdown.appendChild(option);
+				tierBelowDropdown.appendChild(option.cloneNode(true));
 			}
 
 			// 드롭다운 옵션 채우기
-			const uniqueTags = [...new Set(csvData.split("\n").map(row => row.split(",")[2].split('/')).flat())];
+			const uniqueTags = [...new Set(csvData.split("\n").map(row => row.split(",")[2].split('/')).flat())]
 			uniqueTags.forEach(tag => {
+				if (tag == '태그')
+					return;
 				const option = document.createElement("option");
 				option.value = tag;
 				option.textContent = tag;
@@ -201,6 +199,7 @@
 				td.textContent = value
 				if (columnIndex === 0){
 					td.className = "number-link";
+					td.addEventListener("Click",value=>{changeIframeSource(number)})
 				}
 
 				if (columnIndex === 3){
@@ -212,15 +211,18 @@
 				}
 				if (columnIndex === 6){
 					if (td.textContent == 1){
-						tr.style.background='#e0e0e0';
+						tr.style.color='gray';
 					}
 					td.style.display="none";
 				}
 				if (columnIndex === 7){
 					if (td.textContent == 1){
-						tr.style.background='palegreen';
+						tr.style.color="#4c7d4c";
 					}
 					td.style.display="none";
+				}
+				if (columnIndex != 1 && columnIndex != 2){
+					td.style.textAlign = "center";
 				}
 				return td;
 			};
@@ -263,7 +265,6 @@
 			}
 
 			// 드롭다운 변경 시 필터링 적용
-			
 			includeTagDropdown1.addEventListener("change", () => filterTable());
 			includeTagDropdown2.addEventListener("change", () => filterTable());
 			excludeTagDropdown1.addEventListener("change", () => filterTable());
@@ -362,14 +363,12 @@
 
 			filterTable();
 		};
-	</script>
-	<script>
 		var iframeMinimized = false;
 		var html = document.querySelector("html");
 		var body = document.querySelector("body");
 
-		function toggleIframe() {
-			var iframe = document.getElementById("myIframe");
+		function toggleProblem() {
+			var iframe = document.getElementById("iframeProblem");
 			iframeMinimized = !iframeMinimized;
 
 			if (iframeMinimized)
@@ -379,20 +378,20 @@
 		}
 
 		function changeIframeSource(number) {
-			document.querySelector('#debug').innerText = number;
-			var iframe = document.getElementById("myIframe");
+			console.log("changeIframeSource");
+			var iframe = document.getElementById("iframeProblem");
 
 			if (iframeMinimized) {
-				toggleIframe();
+				toggleProblem();
 			}
 			iframe.src = "./BOJ/output/" + number + ".html";
 			applyStylesToIframe();
 		}
 		
 		function applyStylesToIframe() {
-			var iframe = document.getElementById("myIframe");
+			var iframe = document.getElementById("iframeProblem");
 			var innerDocument = iframe.contentDocument || iframe.contentWindow.document;
-			innerDocument.body.style.backgroundColor = "#1F1F1F";
+			innerDocument.body.style.backgroundColor = "#222222";
 
 			[...innerDocument.querySelectorAll("td, th")]
 				.forEach(x=>x.style="color:#E0E0E0; border-color:#909090");
@@ -409,29 +408,27 @@
 			iframe.style.height = '0';
 			iframe.style.height = innerDocument.body.scrollHeight*1.02+"px";
 			iframe.style.border = "0";
-			iframe.style.width = html.clientWidth*0.98+"px";
 
 		}
 
 		window.addEventListener("DOMContentLoaded", function() {
-			var iframe = document.getElementById("myIframe");
+			var iframe = document.getElementById("iframeProblem");
 			
 			var numberLinks = document.querySelectorAll(".number-link");
 			numberLinks.forEach(function(link) {
 				link.onclick = function() {
 					var number = link.innerText;
 					changeIframeSource(number);
-					console.log(12);
-					document.querySelector('#debug').innerText += 1;
+					console.log("DOMContentLoaded");
 				};
 			});
 
 			iframe.onload = applyStylesToIframe;
-			toggleIframe();
+			toggleProblem();
 		});
 
 		window.addEventListener("resize", applyStylesToIframe);
 	</script>
-	<div id="debug">0</div>
+	<div id="debug" class="number-link">2557</div>
 </body>
 </html>
