@@ -17,24 +17,18 @@
 			}
 	
 			th, td {
-				font-size: 14px;
+				font-family: Malgun Gothic;
 				border: 1px solid #909090;
 				min-width: 42px;
 			}
 	
-			table, iframe {
+			table, iframe, .nav-container {
 				width: 98%;
 				margin: 0 auto; /* 가운데 정렬 */
 				border-collapse: collapse;
-				margin-top: 25px; /* 조금 띄우기 */
-			}
-
-			.nav-container {
-				width: 98%;
-				margin: 0 auto;
+				margin-bottom: 25px; /* 조금 띄우기 */
 				border: 1px solid #909090;
-				background-color: #dddddd;
-				color: #222222;
+				background-color: #2f2f2f;
 			}
 
 			#floatingContainer{
@@ -49,6 +43,11 @@
 				z-index: 999; /* 다른 요소 위로 표시하기 위해 높은 값 설정 */
 				background: none;
 			}
+
+			select {
+				background-color: #2f2f2f;
+				color: #dddddd;
+			}
 			
 			#floatingToggleButton {
 				display: inline;
@@ -57,13 +56,9 @@
 			}
 
 			body {
-				background-color: #222222;
+				font-size: 14px;
+				background-color: #1f1f1f;
 				color: #dddddd;
-			}
-
-			.number-link {
-				cursor: pointer;
-				color: aqua;
 			}
 		</style>
 
@@ -198,8 +193,10 @@
 				const td = document.createElement("td");
 				td.textContent = value
 				if (columnIndex === 0){
-					td.className = "number-link";
-					td.addEventListener("Click",value=>{changeIframeSource(number)})
+					td.addEventListener("click",()=>{
+						console.log(value);
+						changeIframeSource(value);
+					});
 				}
 
 				if (columnIndex === 3){
@@ -378,7 +375,6 @@
 		}
 
 		function changeIframeSource(number) {
-			console.log("changeIframeSource");
 			var iframe = document.getElementById("iframeProblem");
 
 			if (iframeMinimized) {
@@ -392,9 +388,12 @@
 			var iframe = document.getElementById("iframeProblem");
 			var innerDocument = iframe.contentDocument || iframe.contentWindow.document;
 			innerDocument.body.style.backgroundColor = "#222222";
+			innerDocument.body.style.margin = "0 auto";
 
 			[...innerDocument.querySelectorAll("td, th")]
-				.forEach(x=>x.style="color:#E0E0E0; border-color:#909090");
+				.forEach(x=>x.style=`color:#E0E0E0; border-color:#909090;
+				font-family:Malgun Gothic; font-size:14px;
+				background-color:#2d2d2d`);
 			
 			[...innerDocument.querySelectorAll(".mjx-copytext")]
 				.forEach(x=>x.style.fontSize = "0"); //수식 표현시 종종 나타나는 찌꺼기 제거
@@ -405,6 +404,9 @@
 			[...innerDocument.querySelectorAll("a")]
 				.forEach(x=>x.style.color = "aqua"); //링크 가독성, 파랑 대신
 
+			[...innerDocument.querySelectorAll("img")]
+			.forEach(x=>x.style = "max-width:100%");
+
 			iframe.style.height = '0';
 			iframe.style.height = innerDocument.body.scrollHeight*1.02+"px";
 			iframe.style.border = "0";
@@ -413,22 +415,11 @@
 
 		window.addEventListener("DOMContentLoaded", function() {
 			var iframe = document.getElementById("iframeProblem");
-			
-			var numberLinks = document.querySelectorAll(".number-link");
-			numberLinks.forEach(function(link) {
-				link.onclick = function() {
-					var number = link.innerText;
-					changeIframeSource(number);
-					console.log("DOMContentLoaded");
-				};
-			});
-
 			iframe.onload = applyStylesToIframe;
 			toggleProblem();
 		});
 
 		window.addEventListener("resize", applyStylesToIframe);
 	</script>
-	<div id="debug" class="number-link">2557</div>
 </body>
 </html>

@@ -69,7 +69,7 @@ def convert(problem_number):
         output_file.write('<style>.mjx-copytext {font-size: 0;}</style>\n')
         output_file.write('<style>.title-column { width: 45px; text-align: center;}</style>\n')
         output_file.write('<style>table { width: 100%; }</style>\n')
-        output_file.write('<style>td { height: 40px; }</style>\n')
+        output_file.write('<style>td { height: 30px; }</style>\n')
         output_file.write('<style>table, th, td { border-collapse: collapse; border: 1px solid black; }</style>\n')
         output_file.write('<style>pre {color:white; font-family:Courier New; padding:5px; line-height:1.36;}</style>\n')
         output_file.write(problem_table_html)
