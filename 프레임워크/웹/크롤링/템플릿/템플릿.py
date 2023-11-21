@@ -145,8 +145,10 @@ if '셀레늄 조작법':
 	#			부분에 접근 DRIVER.find_element().find_element().find_element()...
 	#			요소 리스트 DRIVER.find_elements("방법", "값")
 	# 6방법 >>> xpath,  css selector,  (...,  link text,  id,  name,  class name,  tag name)
+	#			DRIVER.find_element_by_css_selector(' QuerySelector ')
 	# 7쟈스 >>> DRIVER.execute_script( "자바스크립트 코드;" )
-	# 7막대 >>> DRIVER.execute_script( "window.scrollTo(0, document.body.scrollHeight);" )
+	# 7변수 >>> DRIVER.execute_script( return window.변수명 )
+	# 7막대 >>> DRIVER.execute_script( window.scrollTo(0, document.body.scrollHeight); )
 	# 8대기 >>> time.sleep(초)					----	정해진 시간 동안 무조건적으로 실행을 중지. 암시적 대기.
 	# 8대기 >>> 대기 (드라이버, "방법", "값")
 	#			쿼리의 대상이 존재할 때까지 명시적 대기. 리턴값은 드라이버 객체와 유사한 객체.

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main(){
-    printf("c++언어");
+    printf("c언어");
     return 0;
 }
