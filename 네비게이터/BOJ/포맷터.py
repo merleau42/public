@@ -29,13 +29,13 @@ def convert(problem_number):
       tag.decompose()
 
     foreign = '외국어' if (len(re.findall(r'[가-힣]',str(soup2))) < 10) else '한국어'
-    problem_table_html = f'<table class="problem-table"><tr><td class="title-column">정보</td><td align="center">{problem_number}번,{foreign}</td></tr>'
+    problem_table_html = f'<table class="problem-table"><tr><th class="title-column">정보</th><th align="center">{problem_number}번,{foreign}</th></tr>'
 
     for section in problem_section_tags:
         title = section.parent.select_one('h2').text if section.parent.select_one('h2') is not None else ''
         content = section.prettify()
         problem_table_html += f'<tr><td class="title-column">{title}</td><td>{content}</td></tr>\n'
-    problem_table_html += '</table><br><br>'
+    problem_table_html += '</table>'
 
 
     sample_sections = soup.select('section:not(#description, #input, #output, #limit, #subtask, #custom_explain, #custom_files, #custom_funcdef)')
@@ -66,15 +66,18 @@ def convert(problem_number):
     table_html += '</table>'
 
     with open(output_file_path, 'w', encoding='utf-8') as output_file:
-        output_file.write('<style>.mjx-copytext {font-size: 0;}</style>\n')
-        output_file.write('<style>.title-column { width: 45px; text-align: center;}</style>\n')
-        output_file.write('<style>table { width: 100%; }</style>\n')
-        output_file.write('<style>td { height: 30px; }</style>\n')
-        output_file.write('<style>table, th, td { border-collapse: collapse; border: 1px solid black; }</style>\n')
-        output_file.write('<style>pre {color:white; font-family:Courier New; padding:5px; line-height:1.36;}</style>\n')
+        output_file.write('<head><style>')
+        output_file.write('body {font-size: 0;}\n')
+        output_file.write('.mjx-copytext {font-size: 0;}\n')
+        output_file.write('.title-column { width: 45px; text-align: center;}\n')
+        output_file.write('table { width: 100%; }\n')
+        output_file.write('table, th, td { border-collapse: collapse; border: 1px solid black; height: 30px;}\n')
+        output_file.write('pre { font-weight:bold;}\n')
+        output_file.write('</style></head>')
+        output_file.write('<body data-server-no-reload>')
         output_file.write(problem_table_html)
-        output_file.write('\n\n')
         output_file.write(table_html)
+        output_file.write('</body>')
 
 
 for file_name in  os.listdir('./input'):
