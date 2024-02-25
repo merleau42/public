@@ -1,0 +1,148 @@
+언젠가는 pdf를 만들겠지만 지금은 필요없으니 집착하지 말 것
+
+
+프로그래밍
+Structure and Interpretation of Computer Programs(번역본: 프로그램의 구조와 해석, SICP)
+Composing Programs
+How to Design Programs
+
+컴퓨터구조
+Computer Systems: A Programmer's Perspective(번역본: 컴퓨터시스템, 이하 CS:APP)
+The Elements of Computing Systems(속칭 "Nand2Tetris")
+Patterson과 Henessy의 Computer Organization and Design
+
+알고리즘과 자료구조
+Steven Skiena가 쓴 The Algorithm Design Manual
+How to Solve It
+
+컴퓨터 과학을 위한 수학
+Mathematics for Computer Science
+Gilbert Strang
+
+운영체제
+Operating System Concepts(번역본: 운영체제)(속칭 "공룡책")
+Modern Operating Systems(번역본: 운영체제론)
+Operating Systems: Three Easy Pieces(번역본: 운영체제 아주 쉬운 세가지 이야기, 이하 OSTEP)
+Lion's commentary on Unix
+The Design and Implementation of the FreeBSD Operating System
+Mac OS X Internals
+Linux Kernel Development
+
+컴퓨터 네트워킹
+Computer Networking: A Top-Down Approach(번역본: 컴퓨터 네트워킹 하향식 접근)
+
+데이터베이스
+Architecture of a Database System
+Readings in Database Systems (빨간책 Peter Bailis, Joe Hellerstein와 Michael Stonebraker)
+Database Management Systems (Ramakrishnan와 Gehrke가 쓴 입문 교재)
+Transaction Processing: Concepts and Techniques (Jim Gray 심화 교재)
+Data and Reality: A Timeless Perspective on Perceiving and Managing Information in Our Imprecise World 입니다.
+
+언어와 컴파일러
+Crafting Interpreters (Bob Nystrom)
+Compilers: Principles, Techniques & Tools(드래곤북, 번역본: 컴파일러)
+
+분산시스템
+Designing Data-Intensive Applications(Martin Kleppmann, 이하 DDIA)
+Maarten van Steen와 Andrew Tanenbaum의 Distributed Systems, 3rd Edition
+
+인공지능
+Artificial Intelligence: A Modern Approach (Russel과 Norvic)
+
+컴퓨터 그래픽
+Computer Graphics: Principles and Practice
+
+
+
+		심리테스트
+나는 다른 사람들과 함께 시간을 보낼 때 힘이 난다.
+나는 다른 사람들의 눈치를 보지 않고 내 의견을 적극적으로 말한다.
+혼자 하는 일보다 다른 사람들과 적극적으로 상호작용을 하는 일을 더 좋아한다.
+나는 누가 시키지 않더라도 필요하다고 생각하면 자발적으로 일을 한다.
+나와 관련된 중요한 일의 의사결정은 스스로 한다.
+나는 가급적 다른 사람의 도움을 받지 않고 스스로 문제를 해결한다.
+나는 역경이나 고난을 직면해도 잘 극복하는 편이다.
+나는 어려운 상황이 닥쳐도 모든 일이 잘 해결될 거라고 확신한다.
+당황스럽고 힘든 상황이 닥쳐도, 내가 어떤 생각을 하고 있는지 스스로 잘 알고 있다.
+나는 환경 변화를 선제적으로 탐색하는 편이다.
+나는 환경 변화에 유연하게 대처하는 편이다.
+나는 환경 변화를 빠르게 인지하는 편이다.
+정보에 대하여 정확한 근거에 기반하여 분석할 수 있다.
+분석한 내용을 기반으로 전체 상황이나 맥락을 고려하여 추론할 수 있다.
+문제해결을 위하여 주어진 상황을 총괄적으로 이해하고 필요한 지식을 적용할 수 있다.
+내 생각이나 감정을 적절하게 표현할 수 있다.
+타인의 감정을 배려하며 상황에 알맞은 대화를 할 수 있다.
+타인의 의도나 전달하고자 하는 바를 정확하고 빠르게 파악하여 대화할 수 있다.
+
+
+
+24. 1. 30. (화)  14:39
+
+근용님, 안녕하세요. 저 김병철입니다. ㅋㅋㅋㅋ 주소 알려주셔서 덕분에 서신을 보낼 수가 있네요. 저는 '신입 수용자 거실' 이란 곳에서 3박 4일 동안 지내다가 어제(월) 부터 '본 빵'으로 들어와 9m * 3m 정도 되는 공간에서 여덟 ~ 아홉 명이 지내고 있습니다. 하하 영화에서 보던 장면이 실화에요.
+
+처음엔 신체 검사를 하고. (아, 그런데 제 생활이 궁금하시겠죠? 타이핑해서 작성하고 싶네요.) '신입방' 에서 네 명(20대 1, 30대 1, 60대 2)이 아무것도 없이 아침 6시 기상 ~ 저녁 9시 취침의 일상을 고작 며칠 지내다가 인사하고 헤어지니 조금의 아쉬움도 있었고 가만히 있으니 하루가 정말 무료하고 깁니다.
+
+이곳의 행정은 정말 느리고 효율적이지 않습니다. 무언가 요청하면 기본적으로 종이에 적어서 아침 6시마다 수거해가는데 적어도 하루 이상 걸립니다. ㅋㅋㅋ 아직까지 영치한 도서를 받지 못했고 저는 경호처우 등급 (모범 등급 S1~S4)도 아직 분류 심사를 못 받아 대기중입니다. 아마 S2 등급이 나올 것 같아요.
+
+이 편지도 언제 도착할지 모르겠어요. 듣기로는 나가는 데에 3일, 배송에 5일 정도 걸린다네요. 우표도 목요일에만 구매가 가능하여 이 봉투, 편지지, 우표도 얻어서 보내고 있습니다.
+
+근용님은 별일 없이 제주에 계신가요? 잘 지내고 계신지 안부가 궁금합니다. 정말 같이 공부하고 싶고, 여유로이 경치를 바라보며 담소 나누고 싶네요. ㅋㅋㅋ 나가서 그렇게 합시다. 저는 지낼만 합니다. 다음 일과가 있어 곧 편지를 마쳐야 겠어요.
+
+제 주소를 디스코드(열린 시인의 사회와 경산이요. 참고로 제 이야기는 숨길 것 없으니 궁금해한다면 누구에게나 말씀하셔도 좋습니다.)에 공개해주시겠어요? 서신을 보내고 싶은 분이 계시다면 반가울 것 같네요. (서울특별시 송파구 정의로 37 3322) 3322은 제 수번 (수용자 번호) 입니다. 서신을 주고받고 사회와 교류하는 것이 가석방에 도움이 된다고 하네요. 전화는 운동시간에 5분 이내 '지인 등록'이 된 다섯명 까지만 된다는 것 같습니다. 온라인으로 '지인 등록'이 가능한가요? 제가 아는 방법은 지인이 직접 가까운 교도소나 구치소에 신분증을 가지고 가는 방법 뿐입니다.
+
+정말 마쳐야겠어요. 급히 궁금한 것을 부탁드리고 이번 편지는 마치겠습니다.
+요즘 가장 고민하고 있는 것은 '출역 (징역이나 노동일을 나가는 것. 일과 시간에 일을 하는 것) 신청을 해야하는가?'의 여부입니다. 가장 우선적인 기준은 '학습 시간의 확보' 인데요.
+
+정말 좁은 공간에서 단체 생활을 하니 잠자기 전의 한 시간이나 낮에 두 시간 정도가 고작입니다. '사소' (사동 소지?)를 만약 출역 신청을 해서 할 수 있다면 혼자 지낼 수 있고 조금 더 자유시간이 생길 것 같습니다.
+
+[1] 서울 동부구치소에서 출역 신청하여 사소가 되기를 노려본다
+[2] 일을 신청하지 않으면 자동적으로 두 달(?) 쯤 뒤 랜덤으로 (아마) 2급 교도소로 이감된다고 합니다. 교도소가 공부하는 데에 더 좋을지 모르겠어요. 정보 찾아주시고 대략 알려주신다면 편히 참고하겠습니다. 다른 수용자 분들은 교도소가 괜찮다네요. 구치소보다는
+
+마지막으로 C언어 코딩문제 적당히 세 시간 고민할만한(?) 문제 세 개쯤 보내주시면 손코딩+상상코딩으로 답장하겠습니다. 정답도 함께 보내주셔도 좋구요. Computer Science 관련한 이론 자료 무엇이든 도움될 것 같아요. 밖에 궁금한 게 많지만 이만 마쳐요! 고맙습니다.
+
+저는 썩 잘 지내고 있답니다. 환경이 정말 열악하여 정신수양이 잘 되고 있답니다. 얼음물로 매일 샤워해요. 같은 방 분들도 제게 친절히 대해주는 편입니다. 움직일 공간은 아쉽게도 별로 없네요. 하하, 운동도 하여 심신을 단련하려는 계획에 약간 지장은 있지만 맨몸 운동을 하고 있습니다. 정말 안녕~
+
+12층 건물로 다섯 개 동으로 이루어져 있어요. 지금은 10층 5동 1당임 105-1. 바깥 조금 보임. 
+
+*독학사 일정은 언제인가요?
+*다들 잘 지내려나. 인사 못 한 사람들이 많넹.
+*OPEN AI 에서는 어떤 일이 일어나고 있을까.
+
+
+
+
+Athletic Greens - 광범위한 미량 영양소
+Fadogia Agrestis- 400-600 mg
+GABA - 100mg
+L-티로신 - 500mg 주1~2회
+NAC - 감기와 독감에 복용
+NMN 및 NB - NMN 1~2g 및 NR 500mg
+TMG - 500mg
+nmn - 1g
+글루타민 - 10g 정도
+글리신 - 2g
+라파마이신 - 6mg 일주일에 한번 복용
+레스베라트롤 - 1g
+마그네슘 L트레오네이트 - 140mg
+메트포르민 - 800mg ~ 1000mg ( 운동하기 전 날 밤에는 복용하지 않음 )
+붕소 - 2~4mg
+미네랄&비타민 A~Z
+스퍼미딘 - 1~2mg
+아슈와간다 - 이른 오후에 250-300mg, 저녁에 다시 250-300mg
+아스피린 - 81mg
+아연 - 15g 정도
+아피게닌 - 50mg
+알파 GPC - 300mg 주1~2회
+알파리포산 - 500mg
+오메가3 - 2~3g의 EPA
+이노시톨 - 900mg
+코큐텐
+퀘르세틴 - 500mg
+크레아틴 - 5g
+타우린 - 2g 
+테아닌- 100~300mg
+통캇 알리- 400mg
+페닐에틸아민(PEA) - 500mg 1~2주에 1회
+포도씨 추출물 - 식사 전 400-800mg
+피세틴 - 500mg
+홍경천 - 50mg~최대 680mg
