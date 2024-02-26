@@ -1,0 +1,1 @@
+/home/keunykim/.config/fish/config.fish
