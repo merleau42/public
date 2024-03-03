@@ -1,10 +1,13 @@
+#include <stdio.h>
 #include <unistd.h>
 
-int main(){
-    int b, c;
+int main()
+{
+    printf("%d\n", (p = &a, *p));
+    printf("%d\n", (p = &b, *p));
+    printf("%d\n", (p = &c, *p));
 
-    b = 1734697332;
-    c = 1735287147;
-    write(1, &b, 4);
-    write(1, &c, 4);
+    printf("%d\n", (q = &a, *q));
+    printf("%d\n", (q = &b, *q));
+    printf("%d\n", (q = &c, *q));
 }
