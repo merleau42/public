@@ -1,13 +1,14 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 
-int main()
+int main(void)
 {
-    printf("%d\n", (p = &a, *p));
-    printf("%d\n", (p = &b, *p));
-    printf("%d\n", (p = &c, *p));
+	size_t a;
+	a = 0;
+	char *s="aqwec";
 
-    printf("%d\n", (q = &a, *q));
-    printf("%d\n", (q = &b, *q));
-    printf("%d\n", (q = &c, *q));
+	printf("%c", s[a++]);
+	printf("%c", s[a++]);
+	printf("%c", s[a++]);
 }
