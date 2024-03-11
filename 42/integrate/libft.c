@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <unistd.h>
 
 // 대문자를 소문자로 바꿔주는 함수. 대문자가 아니라면 원본을 리턴
 int	ft_tolower(int c)
@@ -234,30 +236,69 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 // n=0이라면 0을 리턴합니다. 비교는 unsigned char을 기준으로 이루어집니다.
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t	i;
+	size_t			i;
+	unsigned char	*bytes_s1;
+	unsigned char	*bytes_s2;
 
+	bytes_s1 = (unsigned char *) s1;
+	bytes_s2 = (unsigned char *) s2;
 	i = 0;
-	while (s1[i] != '\0' || s2[i] != '\0')
+	while (bytes_s1[i] != '\0' || bytes_s2[i] != '\0')
 	{
 		if (i >= n)
 			return (0);
-		if ((unsigned char)s1[i] != (unsigned char)s2[i])
-			break;
+		if (bytes_s1[i] != bytes_s2[i])
+			break ;
 		i++;
 	}
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	return (bytes_s1[i] - bytes_s2[i]);
 }
 
 // 두 메모리영역 n바이트를 비교하여, 처음으로 불일치하는 쌍의 바이트 차이를 리턴
 // n=0이라면 0을 리턴합니다. 비교는 unsigned char을 기준으로 이루어집니다.
-int	*ft_memcmp(const void *s1, const void *s2, size_t n)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
+	size_t			i;
+	unsigned char	*bytes_s1;
+	unsigned char	*bytes_s2;
+
+	bytes_s1 = (unsigned char *) s1;
+	bytes_s2 = (unsigned char *) s2;
+	i = 0;
+	while (1)
+	{
+		if (i >= n)
+			return (0);
+		if (bytes_s1[i] != bytes_s2[i])
+			break ;
+		i++;
+	}
+	return (bytes_s1[i] - bytes_s2[i]);
 }
 
-// 큰 문자열에서 작은 문자열이 처음으로 발견된 주소를 리턴.
+// 큰 문자열에서 작은 문자열이 처음으로 발견된 주소를 리턴. len범위에 포괄되어야함
 // 작은 문자열이 존재하지(포괄되지) 않으면 NULL리턴, 빈문자열이면 큰 문자열 리턴
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
+	size_t	i;
+	size_t	len_ltt;
+
+	if (!little)
+		return (NULL);
+	if (little[0] == '\0')
+		return ((char *) big);
+	len_ltt = ft_strlen(little);
+	i = 0;
+	while (big[i] != '\0' && i < len)
+	{
+		if (len - i < len_ltt)
+			break ;
+		if (big[i] == little[0])
+			if (ft_strncmp(big + i, little, len_ltt) == 0)
+				return ((char *) big + i);
+		i++;
+	}
+	return (NULL);
 }
 
 // 크기가 size씩인 연속적인 nmemb칸의 메모리 공간을 할당하고 리턴. 0으로 초기화.
@@ -265,6 +306,11 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 // size * nmemb 으로 정수 오버플로우가 발생하면 오류를 리턴합니다.
 void	*ft_calloc(size_t nmemb, size_t size)
 {
+	if (size == 0 || nmemb == 0)
+		return (malloc(0));
+	if (INT_MAX / size < nmemb)
+		return (NULL);
+	return ft_memset(malloc(nmemb * size), 0, nmemb * size);
 }
 
 // 수를 ‘숫자 문자열’ 로 변환하여 리턴합니다.
@@ -276,24 +322,78 @@ char	*ft_itoa(int n)
 // 문자열에서 ‘숫자’를 발굴하고, 수로 변환해서 리턴.
 int	ft_atoi(const char *nptr)
 {
+	int res;
+	int sign;
+	int i;
+
+	res = 0;
+	sign = 1;
+	i = 0;
+	while ((9 <= nptr[i] && nptr[i] <= 13) || nptr[i] == ' ')
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
+		sign = sign * (44 - nptr[i++]); // 음의 부호는 45, 양의 부호는 43
+	if (nptr[i] == '-' || nptr[i] == '+')
+		return (0);
+	while ('0' <= nptr[i] && nptr[i] <= '9')
+		res = 10 * res + nptr[i++] - '0';
+	return (res * sign);
 }
 
 // 문자열의 인덱스 start부터 최대 len바이트만큼, 부분 문자열 추출하고 리턴
-// malloc을 사용하여 새로운 메모리 영역을 할당합니다. 실패하면 NULL리
+// malloc을 사용하여 새로운 메모리 영역을 할당합니다. 실패하면 NULL 리턴
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
+	size_t	remain;
+	char	*sub;
+
+	remain = ft_strlen(s + start);
+	if (len > remain)
+		len = remain;
+	sub = (char *) malloc(sizeof(char) * (len + 1));
+	ft_strlcpy(sub, s + start, len + 1);
+	return (sub);
 }
 
 // 두 개의 문자열 s1과 s2를 이어붙여서, 연결 문자열을 생성하고 리턴합니다.
 // malloc을 사용하여 연결 문자열의 메모리를 할당합니다. 실패하면 NULL리턴
 char	*ft_strjoin(char const *s1, char const *s2)
 {
+	size_t	len_s1;
+	size_t	len_s2;
+	char	*concat;
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	concat = (char *) malloc(sizeof(char) * (len_s1 + len_s2 + 1));
+	if (!concat)
+		return (NULL);
+	ft_strlcpy(concat, s1, len_s1 + 1);
+	ft_strlcat(concat, s2, len_s1 + len_s2 + 1);
+	return (concat);
 }
 
 // 문자열 양쪽 끝에서, 사전에 수록된 문자들을 모두 제거한 새로운 문자열 리턴
 // malloc을 사용하여 새로운 문자열의 메모리를 할당합니다. 실패하면 NULL 리턴
 char	*ft_strtrim(char const *s1, char const *set)
 {
+	size_t	start;
+	size_t	end;
+	char*	trimmed;
+
+	if (!s1 || !set)
+		return NULL;
+	if (s1[0] == '\0' || set[0] == '\0')
+		return ft_strdup(s1);
+	start = 0;
+	while (ft_strchr(set,s1[start]))
+		start++;
+	end = ft_strlen(s1) - 1;
+	while (ft_strrchr(set,s1[end]))
+		end--;
+	trimmed = malloc(sizeof(char) * (end - start + 1 + 1));
+	ft_strlcpy(trimmed, s1 + start, (end - start + 1 + 1));
+	return trimmed;
 }
 
 // 구분자를 기준으로 문자열을 분할하여 얻어지는, 부분 문자열들의 배열을
@@ -308,30 +408,97 @@ char	**ft_split(char const *s, char c)
 // malloc을 사용하여 새로운 문자열의 메모리를 할당합니다. 실패하면 NULL 리턴
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
+	char	*map;
+	char	*rewind;
+
+	if (!s || !f)
+		return (NULL);
+	map = ft_strdup(s);
+	rewind = map;
+	while (*map != '\0')
+	{
+		*map = (*f)(map - rewind, *map);
+		map++;
+	}
+	return rewind;
 }
 
 // 문자열을 순회하여, 문자 주소와 인덱스를 함수 f에 전달하고,
 // 반환값으로 기존 문자를 변경
 void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
+	char	*rewind;
+
+	if (!s || !f)
+		return ;
+	rewind = s;
+	while (*s != '\0')
+	{
+		(*f)(s - rewind, s);
+		s++;
+	}
 }
 
 // 파일 디스크립터 fd 에 상응하는 파일에 문자를 출력합니다
 void	ft_putchar_fd(char c, int fd)
 {
+	write(fd, &c, 1);
 }
 
 // 파일 디스크립터 fd 에 상응하는 파일에 문자열을 출력합니다
 void	ft_putstr_fd(char *s, int fd)
 {
+	write(fd, s, ft_strlen(s));
 }
 
 // 파일 디스크립터 fd 에 상응하는 파일에 문자열을 개행 문자와 함께 출력합니다.
 void	ft_putendl_fd(char *s, int fd)
 {
+	write(fd, s, ft_strlen(s));
+	write(fd, "\n", 1);
 }
 
 // 파일 디스크립터 fd 에 상응하는 파일에 정수를 숫자 문자열로 출력합니다
 void	ft_putnbr_fd(int n, int fd)
 {
+	char conv[10];
+	char start;
+	int i;
+
+	if (n == -2147483648)
+		write(fd, "-2147483648", 11);
+	else
+	{
+		if (n < 0)
+		{
+			write(fd, "-", 1);
+			n = -n;
+		}
+		i = 10;
+		start = 9;
+		while (i--)
+		{
+			conv[i] = n % 10 + '0';
+			n = n / 10;
+			if (conv[i] != '0')
+				start = i;
+		}
+		write(fd, conv + start, 10 - start);
+	}	
+}
+
+char fn(unsigned int i, char c)
+{
+	if ('A' <= c && c <= 'Z')
+		return c + 32;
+	if ('a' <= c && c <= 'z')
+		return c - 32;
+	return c;
+}
+
+int main(void)
+{
+	char *s = "abcdEFGHI23mnZ";
+	printf("%s\n", s);
+	printf("%s", ft_strmapi(s, fn));
 }

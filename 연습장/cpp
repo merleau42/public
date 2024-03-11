@@ -1,0 +1,20 @@
+// cc -x c 옵션으로, 확장자없는 파일도 C파일로 간주해서 컴파일 가능
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+    if(1)
+        if(!1)
+            printf("1");
+        else if(2)
+            printf("23");
+}
+
+/*
+
+x   f       k
+0   r*s      1
+1   r*s     s
+
+
+*/
