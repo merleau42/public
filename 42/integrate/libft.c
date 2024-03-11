@@ -58,16 +58,16 @@ int	ft_isascii(int c)
 void	*ft_memset(void *s, int c, size_t n)
 {
 	unsigned char	*bytes;
-	size_t			idx;
+	size_t			i;
 
 	bytes = (unsigned char *) s;
-	idx = 0;
-	while (idx < n)
+	i = 0;
+	while (i < n)
 	{
-		bytes[idx] = (unsigned char) c;
-		idx++;
+		bytes[i] = (unsigned char) c;
+		i++;
 	}
-	return (bytes);
+	return (s);
 }
 
 // 메모리의 n바이트를 ‘\0’으로 덮어쓰는 함수
@@ -136,7 +136,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 
 	bytes = (unsigned char *) s;
 	i = 0;
-	while (bytes[i] != '\0')
+	while (bytes[i] != '\0' && i < n)
 	{
 		if (bytes[i] == c)
 			return ((void *) bytes + i);
@@ -152,11 +152,15 @@ void	*ft_memchr(const void *s, int c, size_t n)
 char	*ft_strdup(const char *s)
 {
 	size_t	i;
+	size_t	len;
 	char	*dest;
 
-	dest = (char *) malloc(sizeof (char) * (ft_strlen(s) + 1));
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	dest = (char *) malloc(sizeof (char) * (len + 1));
 	i = 0;
-	while (dest[i] != '\0')
+	while (i < len)
 	{
 		dest[i] = s[i];
 		i++;
@@ -173,10 +177,12 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	unsigned char	*bytes_d;
 	unsigned char	*bytes_s;
 
+	if (!dest || !src)
+		return (NULL);
 	bytes_d = (unsigned char *) dest;
 	bytes_s = (unsigned char *) src;
 	i = 0;
-	while (bytes_d[i] != '\0' && i < n)
+	while (i < n)
 	{
 		bytes_d[i] = bytes_s[i];
 		i++;
@@ -189,6 +195,25 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 // 메모리 영역이 겹칠 수 있습니다.
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
+	size_t			i;
+	unsigned char	*bytes_d;
+	unsigned char	*bytes_s;
+
+	if (!dest || !src)
+		return (NULL);
+	bytes_d = (unsigned char *) dest;
+	bytes_s = (unsigned char *) src;
+	i = 0;
+	while (i < n)
+	{
+		if (dest <= src)
+			bytes_d[i] = bytes_s[i];
+		else
+			bytes_d[n - i - 1] = bytes_s[n - i - 1];
+		i++;
+	}
+	bytes_d[i] = '\0';
+	return (dest);
 }
 
 // 문자열 dest에 src를 size-1 바이트 덮어쓰고 쟁여둔 한 자리 널을넣는 함수
@@ -310,21 +335,43 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (malloc(0));
 	if (INT_MAX / size < nmemb)
 		return (NULL);
-	return ft_memset(malloc(nmemb * size), 0, nmemb * size);
+	return (ft_memset(malloc(nmemb * size), 0, nmemb * size));
 }
 
 // 수를 ‘숫자 문자열’ 로 변환하여 리턴합니다.
 // malloc을 사용하여 새로운 메모리 영역을 할당합니다. 실패하면 NULL 리턴.
 char	*ft_itoa(int n)
 {
+	char	conv[11];
+	int		start;
+	int		i;
+	int		sign;
+
+	sign = (n < 0);
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	else
+	{
+		i = 11;
+		start = 10;
+		while (i--)
+		{
+			conv[i] = (n * (1 - 2 * sign)) % 10 + '0';
+			n = n / 10;
+			if (conv[i] != '0')
+				start = i;
+		}
+		conv[start - 1] = '-';
+		return (ft_strdup(conv + start - sign));
+	}	
 }
 
 // 문자열에서 ‘숫자’를 발굴하고, 수로 변환해서 리턴.
 int	ft_atoi(const char *nptr)
 {
-	int res;
-	int sign;
-	int i;
+	int	res;
+	int	sign;
+	int	i;
 
 	res = 0;
 	sign = 1;
@@ -332,7 +379,7 @@ int	ft_atoi(const char *nptr)
 	while ((9 <= nptr[i] && nptr[i] <= 13) || nptr[i] == ' ')
 		i++;
 	if (nptr[i] == '-' || nptr[i] == '+')
-		sign = sign * (44 - nptr[i++]); // 음의 부호는 45, 양의 부호는 43
+		sign = sign * (44 - nptr[i++]);
 	if (nptr[i] == '-' || nptr[i] == '+')
 		return (0);
 	while ('0' <= nptr[i] && nptr[i] <= '9')
@@ -347,10 +394,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	remain;
 	char	*sub;
 
+	if (!s)
+		return (NULL);
 	remain = ft_strlen(s + start);
 	if (len > remain)
 		len = remain;
 	sub = (char *) malloc(sizeof(char) * (len + 1));
+	if (!sub)
+		return (NULL);
 	ft_strlcpy(sub, s + start, len + 1);
 	return (sub);
 }
@@ -363,6 +414,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	len_s2;
 	char	*concat;
 
+	if (!s1 || !s2)
+		return (NULL);
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
 	concat = (char *) malloc(sizeof(char) * (len_s1 + len_s2 + 1));
@@ -379,21 +432,38 @@ char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	start;
 	size_t	end;
-	char*	trimmed;
+	char	*trimmed;
 
 	if (!s1 || !set)
-		return NULL;
+		return (NULL);
 	if (s1[0] == '\0' || set[0] == '\0')
-		return ft_strdup(s1);
+		return (ft_strdup(s1));
 	start = 0;
-	while (ft_strchr(set,s1[start]))
+	while (ft_strchr(set, s1[start]))
 		start++;
 	end = ft_strlen(s1) - 1;
-	while (ft_strrchr(set,s1[end]))
+	while (ft_strrchr(set, s1[end]))
 		end--;
 	trimmed = malloc(sizeof(char) * (end - start + 1 + 1));
 	ft_strlcpy(trimmed, s1 + start, (end - start + 1 + 1));
-	return trimmed;
+	return (trimmed);
+}
+
+static	size_t	word_count(char const *s, char c)
+{
+	size_t	words;
+
+	words = 0;
+	while (*s)
+	{
+		while (*s == c)
+			s++;
+		if (*s)
+			words++;
+		while (*s != '\0' && *s != c)
+			s++;
+	}
+	return (words);
 }
 
 // 구분자를 기준으로 문자열을 분할하여 얻어지는, 부분 문자열들의 배열을
@@ -401,6 +471,28 @@ char	*ft_strtrim(char const *s1, char const *set)
 // 실패하면 NULL을 리턴 free를 사용할 수 있습니다
 char	**ft_split(char const *s, char c)
 {
+	char		**frame;
+	size_t		words;
+	size_t		len;
+	size_t		i;
+
+	words = word_count(s, c);
+	frame = (char **) malloc(sizeof(char *) * (words + 1));
+	i = 0;
+	while (i < words)
+	{
+		while (*s == c)
+			s++;
+		len = 0;
+		while (*s != '\0' && *s != c)
+		{
+			s++;
+			len++;
+		}
+		frame[i++] = ft_substr(s - len, 0, len);
+	}
+	frame[i] = (char *) 0;
+	return (frame);
 }
 
 // 문자열을 순회하여, 각각의 문자와 인덱스를 함수 f에 전달하고,
@@ -415,12 +507,12 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 		return (NULL);
 	map = ft_strdup(s);
 	rewind = map;
-	while (*map != '\0')
+	while (*map)
 	{
 		*map = (*f)(map - rewind, *map);
 		map++;
 	}
-	return rewind;
+	return (rewind);
 }
 
 // 문자열을 순회하여, 문자 주소와 인덱스를 함수 f에 전달하고,
@@ -432,7 +524,7 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 	if (!s || !f)
 		return ;
 	rewind = s;
-	while (*s != '\0')
+	while (*s)
 	{
 		(*f)(s - rewind, s);
 		s++;
@@ -461,9 +553,9 @@ void	ft_putendl_fd(char *s, int fd)
 // 파일 디스크립터 fd 에 상응하는 파일에 정수를 숫자 문자열로 출력합니다
 void	ft_putnbr_fd(int n, int fd)
 {
-	char conv[10];
-	char start;
-	int i;
+	char	conv[10];
+	char	start;
+	int		i;
 
 	if (n == -2147483648)
 		write(fd, "-2147483648", 11);
@@ -487,18 +579,90 @@ void	ft_putnbr_fd(int n, int fd)
 	}	
 }
 
-char fn(unsigned int i, char c)
+char	fn(unsigned int i, char c)
 {
+	(void) i;
 	if ('A' <= c && c <= 'Z')
-		return c + 32;
+		return (c + 32);
 	if ('a' <= c && c <= 'z')
-		return c - 32;
-	return c;
+		return (c - 32);
+	return (c);
 }
 
+void	ffn(unsigned int i, char *c)
+{
+	(void) i;
+	if (ft_isdigit(*c))
+		printf("수");
+	if (ft_isalpha(*c))
+		printf("알");
+}
+
+#include <string.h>
+#include <stdlib.h>
 int main(void)
 {
-	char *s = "abcdEFGHI23mnZ";
-	printf("%s\n", s);
-	printf("%s", ft_strmapi(s, fn));
+	const char *s = "11221abcd321EFGHI23mnZ33211";
+	printf("original:\n%s\n", s);
+	printf("substr:\n%s\n", ft_substr(s, 7, 7));
+	printf("iteri:\n");
+	ft_striteri(ft_strdup(s), ffn);
+	printf("\nmap:\n%s\n", ft_strmapi(s, fn));
+	printf("trim:\n%s\n", ft_strtrim(s, "123"));
+	printf("strnstr:\n%s\n", ft_strnstr(s, "HI", 33));
+
+	//int tab[]=
+	//{-2147483648, -2147483647, -4525, -10, -9, -8, -2, -1, 0,
+	//  2147483647,  2147483646,  4525,  10,  9,  8,  2,  1, 0};
+	//for (int i = 0; i < 18; i++)
+	//	printf("/%d\\\n\\%s/\n", tab[i], ft_itoa(tab[i]));
+	
+	char w;
+	char** tk[50]={0};
+	w = '1';
+	printf("\nstrim: %s\n\n", ft_strtrim("111aba321411wqwe11111", &w));
+
+	printf("[5: 2 6 8 6 3]\n");
+	printf("[2: 2 6]\n");
+	printf("[1: 6]\n");
+	printf("[0: 0]\n");
+	tk[0] = ft_split("__ad___eqwewe__dsasadsd___gaksad___das__", '_');
+	tk[1] = ft_split("__ad___eqwewe__dsasadsd___gaksad___das_", '_');
+	tk[2] = ft_split("__ad___eqwewe__dsasadsd___gaksad___das", '_');
+	tk[3] = ft_split("_ad___eqwewe__dsasadsd___gaksad___das__", '_');
+	tk[4] = ft_split("ad___eqwewe__dsasadsd___gaksad___das__", '_');
+	tk[5] = ft_split("_ad___eqwewe__dsasadsd___gaksad___das_", '_');
+	tk[6] = ft_split("ad___eqwewe__dsasadsd___gaksad___das", '_');
+	tk[7] = ft_split("__ad___eqwewe___", '_');
+	tk[8] = ft_split("_ad___eqwewe___", '_');
+	tk[9] = ft_split("ad___eqwewe___", '_');
+	tk[10] = ft_split("__ad___eqwewe_", '_');
+	tk[11] = ft_split("__ad___eqwewe", '_');
+	tk[12] = ft_split("_ad___eqwewe_", '_');
+	tk[13] = ft_split("ad___eqwewe", '_');
+	tk[14] = ft_split("___eqwewe___", '_');
+	tk[15] = ft_split("_eqwewe___", '_');
+	tk[16] = ft_split("eqwewe___", '_');
+	tk[17] = ft_split("___eqwewe_", '_');
+	tk[18] = ft_split("___eqwewe", '_');
+	tk[19] = ft_split("_eqwewe_", '_');
+	tk[20] = ft_split("eqwewe", '_');
+	tk[21] = ft_split("___", '_');
+	tk[22] = ft_split("__", '_');
+	tk[23] = ft_split("_", '_');
+	tk[24] = ft_split("", '_');
+	for (int i=0; i<=24; i++)
+	{
+		for (int j=0; tk[i][j] != NULL; j++)
+			printf("%s  ", tk[i][j]);
+		printf("\n");
+	}
+
+	printf("-----정교화 시작-----\n");
+	int a, b;
+	printf("%d\n", (ft_memset(&a, 5 ,2), a) );
+	printf("%d\n", (   memset(&b, 5 ,2), a) );
+
+	printf("%d\n", (ft_bzero(&a, 4), a) );
+	printf("%d\n", (   bzero(&b, 4), a) );
 }
