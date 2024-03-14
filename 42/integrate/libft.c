@@ -136,14 +136,14 @@ void	*ft_memchr(const void *s, int c, size_t n)
 
 	bytes = (unsigned char *) s;
 	i = 0;
-	while (bytes[i] != '\0' && i < n)
+	while (i < n)
 	{
-		if (bytes[i] == c)
-			return ((void *) bytes + i);
+		if (bytes[i] == (unsigned char) c)
+			return ((void *)(bytes + i));
 		i++;
 	}
 	if (c == '\0')
-		return ((void *) bytes + i);
+		return ((void *)(bytes + i));
 	else
 		return (NULL);
 }
@@ -159,6 +159,8 @@ char	*ft_strdup(const char *s)
 		return (NULL);
 	len = ft_strlen(s);
 	dest = (char *) malloc(sizeof (char) * (len + 1));
+	if (!dest)
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -179,6 +181,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 
 	if (!dest || !src)
 		return (NULL);
+	//if(!dest && !src && n > 0)
+	//	return (NULL);
 	bytes_d = (unsigned char *) dest;
 	bytes_s = (unsigned char *) src;
 	i = 0;
@@ -187,7 +191,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		bytes_d[i] = bytes_s[i];
 		i++;
 	}
-	bytes_d[i] = '\0';
 	return (dest);
 }
 
@@ -201,6 +204,8 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 
 	if (!dest || !src)
 		return (NULL);
+	//if(!dest && !src && n > 0)
+	//	return (NULL);
 	bytes_d = (unsigned char *) dest;
 	bytes_s = (unsigned char *) src;
 	i = 0;
@@ -212,7 +217,6 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 			bytes_d[n - i - 1] = bytes_s[n - i - 1];
 		i++;
 	}
-	bytes_d[i] = '\0';
 	return (dest);
 }
 
@@ -242,7 +246,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	if (size == 0)
 		return (ft_strlen(src));
 	i = 0;
-	while (dst[i] != '\0')
+	while (dst[i] != '\0' && i < size)
 		i++;
 	begin_of_null = i;
 	if (size <= begin_of_null)
@@ -308,8 +312,10 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	size_t	i;
 	size_t	len_ltt;
 
-	if (!little)
+	if (!big || !little)
 		return (NULL);
+	//if (!big && !len)
+	//	return (NULL);
 	if (little[0] == '\0')
 		return ((char *) big);
 	len_ltt = ft_strlen(little);
@@ -331,11 +337,17 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 // size * nmemb 으로 정수 오버플로우가 발생하면 오류를 리턴합니다.
 void	*ft_calloc(size_t nmemb, size_t size)
 {
+	void	*alloc;
+
 	if (size == 0 || nmemb == 0)
 		return (malloc(0));
 	if (INT_MAX / size < nmemb)
 		return (NULL);
-	return (ft_memset(malloc(nmemb * size), 0, nmemb * size));
+	alloc = malloc(nmemb * size);
+	if (!alloc)
+		return (NULL);
+	ft_memset(alloc, 0, nmemb * size);
+	return (alloc);
 }
 
 // 수를 ‘숫자 문자열’ 로 변환하여 리턴합니다.
@@ -392,11 +404,19 @@ int	ft_atoi(const char *nptr)
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	remain;
+	size_t	s_len;
 	char	*sub;
 
 	if (!s)
 		return (NULL);
-	remain = ft_strlen(s + start);
+	s_len = ft_strlen(s);
+	if (s_len > start)
+		remain = s_len - start;
+	else
+	{
+		start = 0;
+		remain = 0;
+	}
 	if (len > remain)
 		len = remain;
 	sub = (char *) malloc(sizeof(char) * (len + 1));
@@ -441,15 +461,20 @@ char	*ft_strtrim(char const *s1, char const *set)
 	start = 0;
 	while (ft_strchr(set, s1[start]))
 		start++;
-	end = ft_strlen(s1) - 1;
-	while (ft_strrchr(set, s1[end]))
-		end--;
-	trimmed = malloc(sizeof(char) * (end - start + 1 + 1));
-	ft_strlcpy(trimmed, s1 + start, (end - start + 1 + 1));
+	end = ft_strlen(s1);
+	if (start > end)
+		start = end;
+	else
+		while (ft_strrchr(set, s1[end - 1]))
+			end--;
+	trimmed = malloc(sizeof(char) * (end - start + 1));
+	if (!trimmed)
+		return (NULL);
+	ft_strlcpy(trimmed, s1 + start, (end - start + 1));
 	return (trimmed);
 }
 
-static	size_t	word_count(char const *s, char c)
+static	size_t	ft_word_count(char const *s, char c)
 {
 	size_t	words;
 
@@ -476,8 +501,10 @@ char	**ft_split(char const *s, char c)
 	size_t		len;
 	size_t		i;
 
-	words = word_count(s, c);
+	words = ft_word_count(s, c);
 	frame = (char **) malloc(sizeof(char *) * (words + 1));
+	if (!frame)
+		return (NULL);
 	i = 0;
 	while (i < words)
 	{
@@ -507,6 +534,8 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 		return (NULL);
 	map = ft_strdup(s);
 	rewind = map;
+	if (!map)
+		return (NULL);
 	while (*map)
 	{
 		*map = (*f)(map - rewind, *map);
@@ -516,7 +545,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 }
 
 // 문자열을 순회하여, 문자 주소와 인덱스를 함수 f에 전달하고,
-// 반환값으로 기존 문자를 변경
+// 반환값으로 기존 문자를 변경할 수 있음
 void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
 	char	*rewind;
@@ -531,26 +560,30 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 	}
 }
 
-// 파일 디스크립터 fd 에 상응하는 파일에 문자를 출력합니다
+// 파일 디스크립터 fd에 상응하는 파일에 문자를 출력합니다
 void	ft_putchar_fd(char c, int fd)
 {
 	write(fd, &c, 1);
 }
 
-// 파일 디스크립터 fd 에 상응하는 파일에 문자열을 출력합니다
+// 파일 디스크립터 fd에 상응하는 파일에 문자열을 출력합니다
 void	ft_putstr_fd(char *s, int fd)
 {
+	if (!s)
+		return ;
 	write(fd, s, ft_strlen(s));
 }
 
-// 파일 디스크립터 fd 에 상응하는 파일에 문자열을 개행 문자와 함께 출력합니다.
+// 파일 디스크립터 fd에 상응하는 파일에 문자열을 개행 문자와 함께 출력합니다.
 void	ft_putendl_fd(char *s, int fd)
 {
+	if (!s)
+		return ;
 	write(fd, s, ft_strlen(s));
 	write(fd, "\n", 1);
 }
 
-// 파일 디스크립터 fd 에 상응하는 파일에 정수를 숫자 문자열로 출력합니다
+// 파일 디스크립터 fd에 상응하는 파일에 정수를 숫자 문자열로 출력합니다
 void	ft_putnbr_fd(int n, int fd)
 {
 	char	conv[10];
@@ -665,4 +698,19 @@ int main(void)
 
 	printf("%d\n", (ft_bzero(&a, 4), a) );
 	printf("%d\n", (   bzero(&b, 4), a) );
+
+	printf("1:%s\n", ft_strtrim("    asdasdasdsa    ", "\t \n"));
+	printf("2:%s\n", ft_strtrim(" ", "\t \n"));
+	printf("3:%s\n", ft_strtrim("  ", "\t \n"));
+	printf("4:%s", ft_strtrim("          ", "\t \n"));
+
+	printf("-----strlcat-----\n");
+	char	*dest;
+	dest = (char *)malloc(sizeof(*dest) * 15);
+	ft_memset(dest, 'r', 15);
+	// rrrrrrrrrrrrrrr
+	printf("%d", ft_strlcat(dest, "lorem ipsum dolor sit amet", 5));
+	write(1, "\n", 1);
+	write(1, dest, 15);
+
 }
