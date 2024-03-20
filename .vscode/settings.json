@@ -76,7 +76,9 @@
         "string.h": "c",
         "limits.h": "c",
         "libft.h": "c",
-        "cpp": "c"
+        "cpp": "c",
+        "PRF.C": "cpp",
+        "stddef.h": "c"
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",

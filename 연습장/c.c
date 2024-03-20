@@ -1,14 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct A_{
-	int a;
-	int b;
-} A;
 
 int main() {
-	A w;
-	w.a = 1;
-	w.b = 2;
-	printf("%d, %d", w.a, w.b);
+    int *p;
+    
+    p = malloc(0);
+
+    printf("%p\n", p);
+    printf("%p\n", (void*) 0);
+    printf("%p\n", (void*) 0+ 1);
+    printf("%p\n", (void*) 0+ 2);
+    printf("%p\n", (void*) 0+ 3);
+
+    free(p);
+    printf("free1\n");
+
+    free(NULL);
+    printf("free2");
+
+    return 0;
 }
