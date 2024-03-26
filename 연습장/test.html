@@ -1,11 +1,95 @@
 <html>
-<table border="1" style="border-collapse : collapse">
-<tr>
-	<th>작성자</th>
-	<th>제목</th>
-	<th>소개</th>
-	<th>주제</th>
-</tr>
+<head>
+	<style>
+		body
+		{
+			margin: 0;
+		}
+		.container
+		{
+			margin-top: -30px;
+			height: 30px;
+			width: 100%;
+			position: fixed;
+			background-color: whitesmoke;
+			opacity: 70%;
+		}
+		input
+		{
+			height: 100%;
+			width: 40%;
+			display: block;
+			margin: auto;
+			text-align: center;
+			font-size: large;
+		}
+		table
+		{
+			margin-top: 30px;
+			font-family: Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			background-color: ghostwhite;
+			table-layout: fixed;
+		}
+		td
+		{
+			padding: 3px;
+		}
+		td:nth-child(1)
+		{
+			width: 10vw;
+			text-align: center;
+		}
+		td:nth-child(2)
+		{
+			width: 35vw;
+		}
+		td:nth-child(3)
+		{
+			width : 35vw;
+		}
+		td:nth-child(4)
+		{
+			width: 20vw;
+			text-align: center;
+		}
+		a
+		{
+			text-decoration-line: none;
+		}
+	</style>
+	<script>
+		window.addEventListener('DOMContentLoaded',	main);
+		function main()
+		{
+			Search.oninput = e=>{filter_row(e.target.value)};
+	
+		}
+		function set_width()
+		{
+			ths = [...document.querySelectorAll('th')];
+			[...document.querySelectorAll('td')]
+			.forEach((x,i) => x.style.width=ths[i].style.width)
+
+		}
+		function filter_row(keyword)
+		{
+			rows = [...document.querySelectorAll('tbody tr')];
+			console.log (rows);
+
+			rows.forEach(row => row.style.display = "block");
+
+			rows.filter(row => !row.innerText.includes(keyword))
+				.forEach(row => row.style.display = "none");
+		}
+	</script>
+</head>
+<body>
+<div class="container">
+	<input id="Search" type="text" placeholder="검색어">
+</div>
+<table border="1">
+<tbody>
 <tr>
 	<td>kyungjle</td>
 	<td><a href="https://80000coding.notion.site/misc-Github-Action-ecf91c98f04040f59a8de48b35d6b0d2?pvs=25">[misc] Github Action을 이용해 코드 검사 자동화하기</a></td>
@@ -7843,4 +7927,6 @@
 	<td></td>
 	<td>linux, c </td>
 </tr>
+</tbody>
 </table></html>'
+</body>
