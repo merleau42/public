@@ -1,28 +1,41 @@
-var1 = "메롱"
-var2 = 456
-var3 = 789
+NAME = libft.a
 
+CFILE =	ft_isalnum.c ft_isalpha.c ft_isdigit.c ft_isascii.c ft_isprint.c \
+		ft_tolower.c ft_toupper.c \
+		ft_bzero.c ft_memset.c ft_calloc.c \
+		ft_strlen.c \
+		ft_strchr.c ft_strrchr.c ft_memchr.c ft_strnstr.c ft_strncmp.c ft_memcmp.c \
+		ft_strdup.c ft_strlcpy.c ft_strlcat.c ft_memcpy.c ft_memmove.c \
+		ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c \
+		ft_strmapi.c ft_striteri.c \
+		ft_atoi.c ft_itoa.c \
+		ft_putchar_fd.c	ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c \
+#BFILE = 보너스1.c 보너스2.c ....
 
-act1 :
-	echo "안녕하세요"
-	echo "두번째 문장"
+ifdef BNS
+	OFILE = $(CFILE:%.c=%.o) $(BFILE:%.c=%.o)
+else
+	OFILE = $(CFILE:%.c=%.o)
+endif
 
-act2 :
-	echo ${var1}
+$(NAME)	:	$(OFILE)
+		ar rc libft.a $(OFILE)
 
-act3 : 피츄
-	echo "피까 ?"
+%.o : %.c
+		cc -Werror -Wextra -Wall -c $< -I./ -o $@
 
-라이츄 : 피카츄 번개의돌
-	echo "피카츄가 라이츄로 진화했다!!"
+all	:	$(NAME)
 
-피츄 :
-	echo "피피츄츄"
+clean	:
+		rm -f $(OFILE)
 
-번개의돌 :
-	echo "내가 찐"
+fclean	:	clean
+		rm -f $(NAME)
 
+re	:	fclean all
 
+bonus :
+	make BNS=yes
+	make $(NAME)
 
-# 조건문에서 파일보다 함수를 먼저 확인할 것
-.PHONY : 번개의돌
+.PHONY	:	all clean fclean re bonus

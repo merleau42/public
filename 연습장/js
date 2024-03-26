@@ -1,2 +1,47 @@
-var a = 3;
-console.log(a);
+// 팔만코딩경 DB를 평범한 테이블 태그로 변경하기
+'<html><table border="1" style="border-collapse : collapse">\n'+
+
+    // 모든 행을 가져오기
+    [...document.querySelectorAll('.notion-table-view-row')]
+    
+        // 각 행에 대해서 동작
+        .map(row=>
+                // 행의 모든 열을 가져오기
+                (rewind=[...row.querySelectorAll('[data-col-index]')])
+                
+                // 필요한 열만 남기기
+                .filter(col=>[0,1,4,5,7].includes(col.attributes['data-col-index'].value*1))
+                
+                // 문자열로 변환하기, 필요없는 개행 없애기
+                .map(col => col.innerText.replace(/\n/g,', '))
+
+                // 문서 하이퍼링크 보존하기
+                .reduce((s,c,i) => [...s, i==0 ? `<a href="${rewind[0].querySelector('a').href}">${c}</a>` : c], [])
+
+                // 열을 td 태그로 감싸기
+                .map(col => `\t<td>${col}</td>\n`)
+
+                // 열의 새로운 순서를 표기하기
+                .map((col,i) => `${[1,3,0,4,2][i]}#${col}`)
+
+                // 배열을 아스키 순서로 정렬하여, 열을 재배치하기
+                .toSorted()
+    
+                // 열을 결합해서 하나의 문자열로 만들기
+                .join('')
+
+                // [주제 분류]셀과 [태그]셀을 이어붙이기
+                .replace(/<\/td>\n4#\t<td>/,', ')
+
+                // 순서 표식 없애기
+                .replace(/^\d#/,'')
+            )
+        .map(row=>
+                // 행을 tr 태그로 감싸기
+                `\t<tr>\n${row}</tr>`
+            )
+        // 행을 결합해서 하나의 문자열로 만들기
+        .join('\n')
+
+// 테이블 태그를 닫아주기
++'</table></html>'

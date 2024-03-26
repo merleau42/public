@@ -1,0 +1,80 @@
+All of these functions write the output under the control of a format string that specifies how subsequent arguments (or arguments accessed via the variable-length argument facilities of stdarg(3)) are converted for output.  
+
+이러한 모든 함수는 후속 인수의 가변 길이 인수 시설을 통해 액세스되는 인수가 출력을 위해 변환되는 방법을 지정하는 형식 문자열의 제어 하에 출력을 기록합니다.  
+Format of the format string The format string is a character string, beginning and ending in its initial shift state, if any. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream; and conversion specifications, each of which results in fetching zero or more subsequent arguments. Each conversion specification is introduced by the character %, and ends with a conversion specifier. In between there may be (in this order) zero or more flags, an optional minimum field width, an optional precision and an optional length modifier.  
+
+형식 문자열의 형식 문자열은 초기 시프트 상태에서 시작하고 끝나는 문자열(있는 경우)입니다. 형식 문자열은 출력 스트림에 변경되지 않고 복사되는 일반 문자(%가 아닌)와 변환 사양(각각 0 이상의 후속 인수를 가져오는 결과)으로 구성됩니다. 각 변환 사양은 문자 %로 소개되고 변환 지정자로 끝납니다. 그 사이에는 0 이상의 플래그, 선택적 최소 필드 너비, 선택적 정밀도 및 선택적 길이 수정자가 있을 수 있습니다.  
+ The overall syntax of a conversion specification is:  
+ %[$][flags][width][.precision][length modifier]conversion  
+
+변환 규격의 전반적인 구문은 다음과 같습니다:  
+ %[$][flags][폭][.정밀][길이 수식어]convers 이온  
+ The arguments must correspond properly (after type promotion) with the conversion specifier. By default, the arguments are used in the order given, where each '*' (see Field width and Precision below) and each conversion specifier asks for the next argument (and it is an error if insufficiently many arguments are given). One can also specify explicitly which argument is taken, at each place where an argument is required, by writing "%m$" instead of '%' and "*m$" instead of '*', where the decimal integer m denotes the position in the argument list of the desired argument, indexed starting from 1. Thus,  
+ printf("%*d", width, num);  
+ and  
+ printf("%2$*1$d", width, num);  
+
+인수는 변환 지정자와 적절하게 일치해야 합니다. 기본적으로 인수는 주어진 순서대로 사용되며, 각 변환 지정자는 다음 인수를 요청합니다(아래 필드 너비 및 정밀도 참조). 또한 인수가 필요한 각 위치에서 '%' 대신 '%m$'를, '*' 대신 '*m$'를 작성하여 인수가 필요한 각 위치에서 인수를 명시적으로 지정할 수 있습니다. 여기서 십진 정수 m은 1부터 색인화된 원하는 인수 목록에서 위치를 나타냅니다. 따라서, 인수가 필요한 각 위치에서 '%' 대신 '%m$'를 작성하여 인수를 명시적으로 지정할 수도 있습니다,  
+ printf ("%*d", 너비, num);  
+
+그리고.  
+ printf ("% 2$*1$d", 너비, num);  
+ are equivalent. The second style allows repeated references to the same argument. The C99 standard does not include the style using '$', which comes from the Single UNIX Specification. If the style using '$' is used, it must be used throughout for all conversions taking an argument and all width and precision arguments, but it may be mixed with "%%" formats, which do not consume an argument. There may be no gaps in the numbers of arguments specified using '$'; for example, if arguments 1 and 3 are specified, argument 2 must also be specified somewhere in the format string.  
+ For some numeric conversions a radix character ("decimal point") or thousands' grouping character is used. The actual character used depends on the LC_NUMERIC part of the locale. (See setlocale(3).) The POSIX locale uses '.' as radix character, and does not have a grouping character. Thus,  
+ printf("%'.2f", 1234567.89);  
+ results in "1234567.89" in the POSIX locale, in "1234567,89" in the nl_NL locale, and in "1.234.567,89" in the da_DK locale.  
+
+이와 같습니다. 두 번째 스타일은 동일한 인수를 반복적으로 참조할 수 있게 해줍니다. C99 표준에는 Single UNIX Specification에서 나온 '$'를 사용하는 스타일이 포함되어 있지 않습니다. '$'를 사용하는 스타일을 사용하는 경우 인수를 사용하는 모든 변환과 너비 및 정밀도 인수를 사용하는 모든 변환에 사용해야 하지만 인수를 사용하지 않는 "%%" 형식과 혼합될 수 있습니다. '$'를 사용하여 지정하는 인수의 수에는 공백이 없을 수 있습니다. 예를 들어 인수 1과 3이 지정되면 인수 2도 형식 문자열의 어딘가에 지정해야 합니다.  
+
+일부 숫자 변환에는 래딕스 문자("10진수") 또는 수천' 그룹화 문자가 사용됩니다. 실제 사용되는 문자는 로케일의 LC_NUMERIC 부분에 따라 다릅니다. (setlocale(3) 참조) POSIX 로케일은 '.'를 래딕스 문자로 사용하며 그룹화 문자는 없습니다. 따라서,  
+ printf("%'.2f", 1234567.89); 
+ POSIX 로케일에서는 "1234567.89", nl_NL 로케일에서는 "1234567,89", da_DK 로케일에서는 "1.234.567,89"가 발생합니다.  
+ Flag characters The character % is followed by zero or more of the following flags:  
+
+플래그 문자 % 다음에 0개 이상의 플래그가 표시됩니다:  
+ # The value should be converted to an "alternate form". For o conversions, the first character of the output string is made zero (by prefixing a 0 if it was not zero already). For x and X conversions, a nonzero result has the string "0x" (or "0X" for X conversions) prepended to it. For a, A, e, E, f, F, g, and G conversions, the result will always contain a decimal point, even if no digits follow it (normally, a decimal point appears in the results of those conversions only if a digit follows). For g and G conversions, trailing zeros are not removed from the result as they would otherwise be. For m, if errno contains a valid error code, the output of strerrorname_np(errno) is printed; otherwise, the value stored in errno is printed as a decimal number. For other conversions, the result is undefined.  
+ # 이 값은 "대체 형태"로 변환되어야 합니다. o 변환의 경우 출력 문자열의 첫 번째 문자가 0이 됩니다(0이 아닌 경우 0을 접두사로 붙임). x와 X 변환의 경우 0이 아닌 결과에 문자열 "0x" (또는 X 변환의 경우 "0X")가 붙습니다. a, A, e, E, F, F, g, G 변환의 경우 그 뒤에 오는 숫자가 없더라도 결과는 항상 소수점을 포함합니다(보통 숫자가 뒤에 오는 경우에만 소수점이 나타납니다). g와 G 변환의 경우 뒤에 오는 0이 결과에서 제거되지 않습니다. m의 경우 errno에 유효한 오류 코드가 포함되어 있으면 sterrorname_np(errno)의 출력이 출력되고, 그렇지 않으면 errno에 저장된 값이 소수점으로 출력됩니다. 다른 변환의 경우 결과는 정의되지 않습니다.  
+ 0 The value should be zero padded. For d, i, o, u, x, X, a, A, e, E, f, F, g, and G conversions, the converted value is padded on the left with zeros rather than blanks. If the 0 and - flags both appear, the 0 flag is ignored. If a precision is given with an integer conversion (d, i, o, u, x, and X), the 0 flag is ignored. For other conversions, the behavior is undefined.  
+ 0 값은 제로 패딩이어야 합니다. d, i, o, u, x, X, a, A, e, E, f, F, g 및 G 변환의 경우 변환된 값은 빈칸이 아닌 0으로 왼쪽에 패딩됩니다. 만약 0과 - 플래그가 모두 나타나면, 0 플래그는 무시됩니다. 정수 변환(d, i, o, u, x 및 X)으로 정밀도가 주어지면, 0 플래그는 무시됩니다. 다른 변환의 경우, 동작은 정의되지 않습니다.  
+ - The converted value is to be left adjusted on the field boundary. (The default is right justification.) The converted value is padded on the right with blanks, rather than on the left with blanks or zeros. A - overrides a 0 if both are given.  
+ - 변환된 값은 필드 경계에 왼쪽으로 조정됩니다. (기본값은 오른쪽 정당화입니다.) 변환된 값은 빈칸이나 0이 있는 왼쪽이 아니라 빈칸이 있는 오른쪽에 채워집니다. A - 둘 다 주어지면 0을 재정의합니다.  
+ ' ' (a space) A blank should be left before a positive number (or empty string) produced by a signed conversion.  
+ ' ' (공백) 부호 변환에 의해 생성되는 양수(또는 빈 문자열) 앞에는 공백이 있어야 합니다.  
+ + A sign (+ or -) should always be placed before a number produced by a signed conversion. By default, a sign is used only for negative numbers. A + overrides a space if both are used.  
+ + 부호(+ 또는 -)는 항상 부호 변환에 의해 생성된 숫자 앞에 놓여야 합니다. 부호는 기본적으로 음수에만 사용됩니다. 둘 다 사용되면 A +는 공백을 재정의합니다.  
+ The five flag characters above are defined in the C99 standard. The Single UNIX Specification specifies one further flag character.  
+
+위의 다섯 개의 플래그 문자는 C99 표준에 정의되어 있습니다. Single UNIX 규격에는 플래그 문자가 하나 더 지정되어 있습니다.  
+ Field width An optional decimal digit string (with nonzero first digit) specifying a minimum field width. If the converted value has fewer characters than the field width, it will be padded with spaces on the left (or right, if the left-adjustment flag has been given). Instead of a decimal digit string one may write "*" or "*m$" (for some decimal integer m) to specify that the field width is given in the next argument, or in the m-th argument, respectively, which must be of type int. A negative field width is taken as a '-' flag followed by a positive field width. In no case does a nonexistent or small field width cause truncation of a field; if the result of a conversion is wider than the field width, the field is expanded to contain the conversion result.  
+
+필드 폭 최소 필드 폭을 지정하는 선택적인 10진수 문자열(첫 번째 숫자가 0이 아닌 경우)입니다. 변환된 값에 필드 폭보다 적은 문자가 있으면 왼쪽(또는 왼쪽 조정 플래그가 지정된 경우 오른쪽)에 공백으로 채워집니다. 10진수 문자열 대신에 "*" 또는 "*m$"(일부 10진수 정수 m의 경우)를 써서 필드 폭이 다음 인수 또는 m번째 인수에 주어지도록 지정할 수 있습니다. 음수 필드 폭은 '-' 플래그 다음에 양수 필드 폭이 뒤따릅니다. 어떤 경우에도 필드 폭이 없거나 작으면 필드가 잘리지 않고 변환 결과가 필드 폭보다 넓으면 변환 결과를 포함하도록 필드가 확장됩니다. 
+ Precision An optional precision, in the form of a period ('.') followed by an optional decimal digit string. Instead of a decimal digit string one may write "*" or "*m$" (for some decimal integer m) to specify that the precision is given in the next argument, or in the m-th argument, respectively, which must be of type int. If the precision is given as just '.', the precision is taken to be zero. A negative precision is taken as if the precision were omitted. This gives the minimum number of digits to appear for d, i, o, u, x, and X conversions, the number of digits to appear after the radix character for a, A, e, E, f, and F conversions, the maximum number of significant digits for g and G conversions, or the maximum number of characters to be printed from a string for s and S conversions.  
+
+정밀도 선택적인 정밀도는 십진수 문자열(옵션) 다음에 마침표('.') 형태로 표시됩니다. 십진수 문자열 대신에 "*" 또는 "*m$"(일부 십진수 정수 m의 경우)를 써서 다음 인수 또는 m번째 인수에 정밀도가 부여되도록 지정할 수 있습니다. 정밀도가 '.'로 지정되면 정밀도는 0이 됩니다. 정밀도가 누락된 것처럼 음의 정밀도가 사용됩니다. 이것은 d, i, o, u, x 및 X 변환에 표시되는 최소 자릿수, a, A, e, E, f 및 F 변환의 경우 래딕스 문자 뒤에 표시되는 자릿수, g 및 G 변환의 경우 최대 유효 자릿수 또는 s 및 S 변환의 경우 문자열에서 인쇄되는 최대 문자 수를 제공합니다.  
+ Conversion specifiers A character that specifies the type of conversion to be applied. The conversion specifiers and their meanings are:  
+
+변환 지정자 적용할 변환 유형을 지정하는 문자입니다. 변환 지정자와 그 의미는 다음과 같습니다:  
+ d, i The int argument is converted to signed decimal notation. The precision, if any, gives the minimum number of digits that must appear; if the converted value requires fewer digits, it is padded on the left with zeros. The default precision is 1. When 0 is printed with an explicit precision 0, the output is empty.  
+ d, i int 인수는 부호가 붙은 십진법 표기법으로 변환됩니다. 정밀도는 표시되어야 하는 최소 자릿수를 제공합니다. 변환된 값이 더 적은 자릿수를 요구하는 경우 왼쪽에 0이 추가됩니다. 기본 정밀도는 1입니다. 명시적 정밀도 0으로 0을 인쇄하면 출력이 비어 있습니다.  
+ o, u, x, X The unsigned int argument is converted to unsigned octal (o), unsigned decimal (u), or unsigned hexadecimal (x and X) notation. The letters abcdef are used for x conversions; the letters ABCDEF are used for X conversions. The precision, if any, gives the minimum number of digits that must appear; if the converted value requires fewer digits, it is padded on the left with zeros. The default precision is 1. When 0 is printed with an explicit precision 0, the output is empty.  
+ o, u, x, X 부호가 없는 int 인수는 부호가 없는 8진수(o), 부호가 없는 10진수(u) 또는 부호가 없는 16진수(x 및 X) 표기법으로 변환됩니다. abcdef 문자는 x 변환에 사용되고, ABCDEF 문자는 X 변환에 사용됩니다. 정밀도는 표시되어야 하는 최소 자릿수를 제공합니다. 변환된 값이 더 적은 자릿수를 필요로 하는 경우 왼쪽에 0이 추가됩니다. 기본 정밀도는 1입니다. 0이 명시적인 정밀도 0으로 인쇄되면 출력이 비어 있습니다.  
+ c If no l modifier is present, the int argument is converted to an unsigned char, and the resulting character is written. If an l modifier is present, the wint_t (wide character) argument is converted to a multibyte sequence by a call to the wcrtomb(3) function, with a conversion state starting in the initial state, and the resulting multibyte string is written.  
+ c 수식자가 없으면 int 인수는 부호가 없는 문자로 변환되고 결과 문자가 기록됩니다. 수식자가 있으면 wint_t(넓은 문자) 인수는 wcrtomb(3) 함수에 대한 호출에 의해 멀티바이트 시퀀스로 변환되고 변환 상태는 초기 상태에서 시작되며 결과 멀티바이트 문자열이 기록됩니다.  
+ s If no l modifier is present: the const char * argument is expected to be a pointer to an array of character type (pointer to a string). Characters from the array are written up to (but not including) a terminating null byte ('\0'); if a precision is specified, no more than the number specified are written. If a precision is given, no null byte need be present; if the precision is not specified, or is greater than the size of the array, the array must contain a terminating null byte.  
+ s nl 수식자가 없는 경우: const char * 인수는 문자 유형의 배열에 대한 포인터(문자열에 대한 포인터)가 될 것으로 예상됩니다. 배열의 문자는 종료 널 바이트('\0')까지 기록됩니다. 정밀도가 지정되면 지정된 숫자 이하가 기록됩니다. 정밀도가 지정되면 널 바이트가 존재할 필요가 없고, 정밀도가 지정되지 않았거나 배열의 크기보다 크면 배열에 종료 널 바이트가 포함되어야 합니다. 
+ If an l modifier is present: the const wchar_t * argument is expected to be a pointer to an array of wide characters. Wide characters from the array are converted to multibyte characters (each by a call to the wcrtomb(3) function, with a conversion state starting in the initial state before the first wide character), up to and including a terminating null wide character. The resulting multibyte characters are written up to (but not including) the terminating null byte. If a precision is specified, no more bytes than the number specified are written, but no partial multibyte characters are written. Note that the precision determines the number of bytes written, not the number of wide characters or screen positions. The array must contain a terminating null wide character, unless a precision is given and it is so small that the number of bytes written exceeds it before the end of the array is reached.  
+ l개의 수식어가 있는 경우 const wchar_t * 인수는 넓은 문자의 배열에 대한 포인터가 될 것으로 예상됩니다. 배열의 넓은 문자는 (각각 wcrtomb(3) 함수에 대한 호출에 의해, 첫 번째 넓은 문자 앞에 초기 상태에서 변환 상태가 시작되는) 종료 널 넓은 문자까지 포함하여 멀티바이트 문자로 변환됩니다. 결과적인 멀티바이트 문자는 종료 널 바이트까지 기록되지만 포함되지는 않습니다. 정밀도가 지정되면 지정된 수보다 많은 바이트가 기록되지만 부분 멀티바이트 문자는 기록되지 않습니다. 정밀도는 넓은 문자나 화면 위치의 수가 아니라 기록되는 바이트 수를 결정합니다. 정밀도가 지정되고 배열이 끝나기 전에 기록된 바이트 수가 초과할 정도로 작지 않으면 배열에는 종료 널 넓은 문자가 포함되어야 합니다.  
+ p The void * pointer argument is printed in hexadecimal (as if by %#x or %#lx).  
+ p void * pointer 인수는 16진수(예를 들어 %#x 또는 %#lx)로 인쇄됩니다.  
+ % A '%' is written. No argument is converted. The complete conversion specification is '%%'.  
+ % %'가 작성되었습니다. 변환된 인수가 없습니다. 전체 변환 사양은 '% %'입니다. 
+RETURN VALUE Upon successful return, these functions return the number of characters printed (excluding the null byte used to end output to strings).  
+RETURN VALUE 성공적으로 반환되면 이 함수들은 출력된 문자의 수를 반환합니다(현에 대한 출력을 종료하는 데 사용되는 널 바이트 제외).  
+ The functions snprintf() and vsnprintf() do not write more than size bytes (including the terminating null byte ('\0')). If the output was truncated due to this limit, then the return value is the number of characters (excluding the terminating null byte) which would have been written to the final string if enough space had been available. Thus, a return value of size or more means that the output was truncated. (See also below under NOTES.)  
+
+함수 snprintf() 및 vsnprintf()는 크기 바이트(종료 널 바이트('\0'))보다 많이 쓰지 않습니다. 이 한계로 인해 출력이 잘린 경우, 반환 값은 충분한 공간이 있었다면 최종 문자열에 기록되었을 문자 수(종료 널 바이트 제외)입니다. 따라서 크기 이상의 반환 값은 출력이 잘린 것을 의미합니다. (아래 참고 참조)  
+ If an output error is encountered, a negative value is returned.  
+
+출력 오류가 발생하면 음의 값이 반환됩니다.  
+BUGS Code such as printf(foo); often indicates a bug, since foo may contain a % character. If foo comes from untrusted user input, it may contain %n, causing the printf() call to write to memory and creating a security hole. 
+printf(foo)와 같은 벅스 코드; foo에 % 문자가 포함되어 있을 수 있으므로 종종 버그를 나타냅니다. foo가 신뢰할 수 없는 사용자 입력에서 나온 경우 %n을 포함하여 printf() 호출이 메모리에 기록되고 보안 구멍이 발생할 수 있습니다.

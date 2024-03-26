@@ -1,23 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   c.c                                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/25 10:49:28 by keunykim          #+#    #+#             */
+/*   Updated: 2024/03/25 10:52:06 by keunykim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
-#include <string.h>
+#define MACRO 42
 
+int	main(void)
+{
+	const char	*tmp[MACRO] = {0, };
+	int			i;
 
-int main() {
-    int *p;
-    
-    p = malloc(0);
-
-    printf("%p\n", p);
-    printf("%p\n", (void*) 0);
-    printf("%p\n", (void*) 0+ 1);
-    printf("%p\n", (void*) 0+ 2);
-    printf("%p\n", (void*) 0+ 3);
-
-    free(p);
-    printf("free1\n");
-
-    free(NULL);
-    printf("free2");
-
-    return 0;
+	i = 0;
+	while (i < 42)
+		printf("%d\n", tmp[i++]);
 }
