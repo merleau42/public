@@ -1,94 +1,126 @@
 <html>
-<head>
-	<style>
-		body
-		{
-			margin: 0;
-		}
-		.container
-		{
-			margin-top: -30px;
-			height: 30px;
-			width: 100%;
-			position: fixed;
-			background-color: whitesmoke;
-			opacity: 70%;
-		}
-		input
-		{
-			height: 100%;
-			width: 40%;
-			display: block;
-			margin: auto;
-			text-align: center;
-			font-size: large;
-		}
-		table
-		{
-			margin-top: 30px;
-			font-family: Arial, Helvetica, sans-serif;
-			border-collapse: collapse;
-			background-color: ghostwhite;
-			table-layout: fixed;
-		}
-		td
-		{
-			padding: 3px;
-		}
-		td:nth-child(1)
-		{
-			width: 10vw;
-			text-align: center;
-		}
-		td:nth-child(2)
-		{
-			width: 35vw;
-		}
-		td:nth-child(3)
-		{
-			width : 35vw;
-		}
-		td:nth-child(4)
-		{
-			width: 20vw;
-			text-align: center;
-		}
-		a
-		{
-			text-decoration-line: none;
-		}
-	</style>
-	<script>
-		window.addEventListener('DOMContentLoaded',	main);
-		function main()
-		{
-			Search.oninput = e=>{filter_row(e.target.value)};
+	<head>
+		<style>
+			body
+			{
+				margin: 0;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			.container
+			{
+				margin-top: -30px;
+				height: 30px;
+				width: 100%;
+				position: fixed;
+				background-color: ghostwhite;
+				opacity: 70%;
+				text-align: center;
+			}
+			input, #Total
+			{
+				height: 100%;
+				display: inline-block;
+				text-align: center;
+				font-size: large;
+			}
+			#Search
+			{
+				width: 40%;
+			}
+			#Clear
+			{
+				opacity: 60%;
+				background-color: white;
+			}
+			#Total
+			{
+				opacity: 80%;
+			}
+			table
+			{
+				margin-top: 30px;
+				border-collapse: collapse;
+				background-color: ghostwhite;
+				table-layout: fixed;
+			}
+			td
+			{
+				padding: 3px;
+				word-break: break-all;
+			}
+			td:nth-child(1)
+			{
+				width: 10vw;
+				text-align: center;
+			}
+			td:nth-child(4)
+			{
+				width: 20vw;
+				text-align: center;
+			}
+			td:nth-child(2), td:nth-child(3)
+			{
+				width : 35vw;
+			}
+			a
+			{
+				text-decoration-line: none;
+			}
+		</style>
+		<script>
+			window.addEventListener('DOMContentLoaded',	main)
+			function main()
+			{
+				Search.oninput = e=>{filter_row(e.target.value)}
+				Clear.addEventListener('click', x=>{Search.value=''; filter_row(Search.value)})
+			}
+			function filter_row(keyword)
+			{
+				filters = [...'^#@$']
+				.map(x => [keyword.search(x), x])
+				.filter(x => x[0] > -1)
+				.toSorted((x,y) => x[0] - y[0])
+				.map((x,i,a) => i < a.length - 1 ? keyword.substring(a[i][0], a[i+1][0]).toLowerCase() : 0)
+				.filter(x=>x!==0)
+				.map(x=>('#@'.includes(x[0]) ? x : ' ' + x))
+				.toSorted()
 	
-		}
-		function set_width()
-		{
-			ths = [...document.querySelectorAll('th')];
-			[...document.querySelectorAll('td')]
-			.forEach((x,i) => x.style.width=ths[i].style.width)
-
-		}
-		function filter_row(keyword)
-		{
-			rows = [...document.querySelectorAll('tbody tr')];
-			console.log (rows);
-
-			rows.forEach(row => row.style.display = "block");
-
-			rows.filter(row => !row.innerText.includes(keyword))
+				rows = [...document.querySelectorAll('tbody tr')]
+				rows.forEach(row => row.style.display = "")
+				// display 옵션 ""은 "none"이 아니며 고유한 설정이 있음.
+				// block 넣으면 테이블이 깨지는 문제가 있었는데, 디폴트를 따라해서 ""을 넣으니 해결
+	
+				plain = (filters[0]??"").slice(1)
+				author = (filters.filter(x=>x[0] == '@')[0]??"").slice(1)
+				tags = (filters.filter(x=>x[0] == '#')[0]??"").slice(1)
+	
+				rows.filter(row => !row.innerText.toLowerCase().includes(plain))
 				.forEach(row => row.style.display = "none");
-		}
-	</script>
-</head>
+	
+				rows.filter(row => !row.querySelectorAll('td')[0].innerText.toLowerCase().includes(author))
+				.forEach(row => row.style.display = "none");
+	
+				rows.filter(row =>
+				!(row.querySelectorAll('td')[3].innerText.toLowerCase().split(/ *, */).reduce((s,c)=>[...s, c],[''])).includes(tags))
+				.forEach(row => row.style.display = "none");
+				Total.innerText = rows.filter(row=>row.style.display == '').length
+			}
+		</script>
+	</head>
 <body>
 <div class="container">
-	<input id="Search" type="text" placeholder="검색어">
+	<input id="Search" type="text" placeholder="검색어@작성자#태그"><input id="Clear" type="button" value="X">
+	<div id="Total">업데이트 2024.3.28</div>
 </div>
 <table border="1">
+<thead>
+<tr align="center">
+	<td>작성자</td>
+	<td>제목</td>
+	<td>소개</td>
+	<td>태그</td>
+</tr>
+</thead>
 <tbody>
 <tr>
 	<td>kyungjle</td>
@@ -142,7 +174,7 @@
 	<td>hyunjunk</td>
 	<td><a href="https://80000coding.notion.site/45b95ca5e20f49d68058039ace1c16a5?pvs=25">교육과 학습에 대한 생각</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>hyunjunk</td>
@@ -176,7 +208,7 @@
 </tr>
 <tr>
 	<td>kyungjle</td>
-	<td><a href="https://80000coding.notion.site/C-dd099860360f4902bef36a96730076b2?pvs=25">[C] 스택의 방향을 판단하는 코드 작성하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/C-dd099860360f4902bef36a96730076b2?pvs=25">[C] 스택의 방향을 판단하는 코드 작성하기</a></td>
 	<td>스택은 항상 높은 주소에서 낮은 주소로 자랄까요? 이것을 어떻게 확인할 수 있을까요?</td>
 	<td>c, 컴퓨터구조 </td>
 </tr>
@@ -224,7 +256,7 @@
 </tr>
 <tr>
 	<td>dogwak</td>
-	<td><a href="https://80000coding.notion.site/126dc22073ec453b91d981e3a5b680f2?pvs=25">원자성이란 무엇인가?, 2</a></td>
+	<td><a href="https://80000coding.notion.site/126dc22073ec453b91d981e3a5b680f2?pvs=25">원자성이란 무엇인가?</a></td>
 	<td>동기화를 위한 요소인 semaphore, 그 속에 등장하는 원자성에 대해서 알아보자.</td>
 	<td>thread, 컴퓨터구조 </td>
 </tr>
@@ -362,7 +394,7 @@
 </tr>
 <tr>
 	<td>haeem</td>
-	<td><a href="https://80000coding.notion.site/42-Common-Core-926ddbd86b334c348fcbb8645ec95018?pvs=25">42 Common Core 암호문 해독 실전, 4</a></td>
+	<td><a href="https://80000coding.notion.site/42-Common-Core-926ddbd86b334c348fcbb8645ec95018?pvs=25">42 Common Core 암호문 해독 실전</a></td>
 	<td>무시무시한 복어 암호의 세계</td>
 	<td>암호, 보안, ctf, treasure hunt</td>
 </tr>
@@ -548,7 +580,7 @@
 </tr>
 <tr>
 	<td>hyunjunk</td>
-	<td><a href="https://80000coding.notion.site/vs-5f1a4f9f25d14a3b9236e6d6cc9f8bb8?pvs=25">배열 vs 연결리스트, 3</a></td>
+	<td><a href="https://80000coding.notion.site/vs-5f1a4f9f25d14a3b9236e6d6cc9f8bb8?pvs=25">배열 vs 연결리스트</a></td>
 	<td></td>
 	<td>cs </td>
 </tr>
@@ -650,7 +682,7 @@
 </tr>
 <tr>
 	<td>cheseo</td>
-	<td><a href="https://80000coding.notion.site/const-char-vs-char-const-4eaf13713faa4c11a983902bd6d451a2?pvs=25">const char * vs char * const, 1</a></td>
+	<td><a href="https://80000coding.notion.site/const-char-vs-char-const-4eaf13713faa4c11a983902bd6d451a2?pvs=25">const char * vs char * const</a></td>
 	<td>const의 위치에 따라 정해지는 비상수/상수 포인터/데이터 정리</td>
 	<td>c, c++ </td>
 </tr>
@@ -668,7 +700,7 @@
 </tr>
 <tr>
 	<td>sanan</td>
-	<td><a href="https://80000coding.notion.site/ORM-Hibernate-JPA-QueryDSL-25af47d9c2134556abfdc5ddf37f1129?pvs=25">ORM - Hibernate - JPA - QueryDSL을 알아보자, 1</a></td>
+	<td><a href="https://80000coding.notion.site/ORM-Hibernate-JPA-QueryDSL-25af47d9c2134556abfdc5ddf37f1129?pvs=25">ORM - Hibernate - JPA - QueryDSL을 알아보자</a></td>
 	<td></td>
 	<td>java, data base, orm, api</td>
 </tr>
@@ -764,7 +796,7 @@
 </tr>
 <tr>
 	<td>juyojeon</td>
-	<td><a href="https://80000coding.notion.site/d2ee84ccd7084dddb8533f0e3f3033ff?pvs=25">구글 클라우드 플랫폼 무료 서버 받기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/d2ee84ccd7084dddb8533f0e3f3033ff?pvs=25">구글 클라우드 플랫폼 무료 서버 받기</a></td>
 	<td>Google Cloud Free Tier 무료 VM</td>
 	<td>linux, 시스템, 네트워크, 컴퓨터, 서버</td>
 </tr>
@@ -812,7 +844,7 @@
 </tr>
 <tr>
 	<td>hyunjunk</td>
-	<td><a href="https://80000coding.notion.site/DB-Memory-Mapped-File-f6cc395bb7834e8f9a117a7172a15bc6?pvs=25">DB구현에서 왜 Memory Mapped File을 안쓸까, 4</a></td>
+	<td><a href="https://80000coding.notion.site/DB-Memory-Mapped-File-f6cc395bb7834e8f9a117a7172a15bc6?pvs=25">DB구현에서 왜 Memory Mapped File을 안쓸까</a></td>
 	<td></td>
 	<td>data base, cs </td>
 </tr>
@@ -824,7 +856,7 @@
 </tr>
 <tr>
 	<td>tnam</td>
-	<td><a href="https://80000coding.notion.site/pragma-once-4ff0a20c0d144de293102d73d3a0eb6e?pvs=25">헤더 중복 방지 기법 세 가지(#pragma once), 3</a></td>
+	<td><a href="https://80000coding.notion.site/pragma-once-4ff0a20c0d144de293102d73d3a0eb6e?pvs=25">헤더 중복 방지 기법 세 가지(#pragma once)</a></td>
 	<td>헤더 중복 방지 기법 세 가지(#pragma once)</td>
 	<td>c++, compiler</td>
 </tr>
@@ -1046,7 +1078,7 @@
 </tr>
 <tr>
 	<td>jonghopa</td>
-	<td><a href="https://80000coding.notion.site/22ae75e603104083bb42d775f318000c?pvs=25">자연어 처리 소개, 1</a></td>
+	<td><a href="https://80000coding.notion.site/22ae75e603104083bb42d775f318000c?pvs=25">자연어 처리 소개</a></td>
 	<td>자연어 처리 개념, 전체 과정 설명</td>
 	<td>인공지능, 딥러닝</td>
 </tr>
@@ -1244,7 +1276,7 @@
 </tr>
 <tr>
 	<td>eoh</td>
-	<td><a href="https://80000coding.notion.site/Unsigned-char-Char-cf6277352ff84d0488499e356269e57e?pvs=25">Unsigned char와 Char의 차이, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Unsigned-char-Char-cf6277352ff84d0488499e356269e57e?pvs=25">Unsigned char와 Char의 차이</a></td>
 	<td></td>
 	<td>cs, libft, datatype</td>
 </tr>
@@ -1294,7 +1326,7 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/google-sheet-with-python-7bfeae7340fb41d0a0e99b8bf0bef6b3?pvs=25">작성중… google sheet with python</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>hyunjunk</td>
@@ -1316,7 +1348,7 @@
 </tr>
 <tr>
 	<td>isunwoo</td>
-	<td><a href="https://80000coding.notion.site/m1-m2-Mac-VMware-Ubuntu-6020ebc86a2c468e9440a5686272a925?pvs=25">m1, m2 Mac 에서 VMware를 통해 Ubuntu 설치, 4</a></td>
+	<td><a href="https://80000coding.notion.site/m1-m2-Mac-VMware-Ubuntu-6020ebc86a2c468e9440a5686272a925?pvs=25">m1, m2 Mac 에서 VMware를 통해 Ubuntu 설치</a></td>
 	<td>m1, m2 Mac 에서 VMWare를 통해 Ubuntu 20.04 설치</td>
 	<td>가상머신, virtual machine </td>
 </tr>
@@ -1354,11 +1386,11 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/AWS-e9768ce6287244e6b78fe90e53ea62b3?pvs=25">AWS에서 컴퓨터 빌리기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>kijsong</td>
-	<td><a href="https://80000coding.notion.site/Git-00bcbffd6fbb4be481abef0925efd267?pvs=25">Git 커밋 메시지 컨벤션, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Git-00bcbffd6fbb4be481abef0925efd267?pvs=25">Git 커밋 메시지 컨벤션</a></td>
 	<td></td>
 	<td>git </td>
 </tr>
@@ -1366,7 +1398,7 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/ARP-5258b19533db47b089f382966c88ce24?pvs=25">ARP 동작 순서</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>juha</td>
@@ -1390,7 +1422,7 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/DataGrip-AWS-RDS-5fb56a4fafe2471190c0d5a03603c1f5?pvs=25">DataGrip으로 AWS RDS보기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>kijsong</td>
@@ -1412,9 +1444,9 @@
 </tr>
 <tr>
 	<td>yeju</td>
-	<td><a href="https://80000coding.notion.site/cron-db143aef8b49494f941f099e32bb798c?pvs=25">cron 표현식, 2</a></td>
+	<td><a href="https://80000coding.notion.site/cron-db143aef8b49494f941f099e32bb798c?pvs=25">cron 표현식</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>mingkang</td>
@@ -1432,7 +1464,7 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/github-action-7265aaf69d744759811f10d17c1c91c5?pvs=25">github action</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>mingkang</td>
@@ -1514,7 +1546,7 @@
 </tr>
 <tr>
 	<td>juha</td>
-	<td><a href="https://80000coding.notion.site/git-Obsidian-0c1faaaab373452988845bf013c85970?pvs=25">git과 Obsidian 연동하여 세팅하는 법, 1</a></td>
+	<td><a href="https://80000coding.notion.site/git-Obsidian-0c1faaaab373452988845bf013c85970?pvs=25">git과 Obsidian 연동하여 세팅하는 법</a></td>
 	<td>git을 노트 저장소로 삼아서 세팅하는 법을 소개한다.</td>
 	<td>obsidian, automation</td>
 </tr>
@@ -1640,7 +1672,7 @@
 </tr>
 <tr>
 	<td>kiyolee</td>
-	<td><a href="https://80000coding.notion.site/underflow-underflow-2023-02-03-10d17093d9cd4edb8d2b55a4bff86565?pvs=25">여러분, underflow(언더플로우)는 틀린 용어랍니다. (정정) → underflow, 그때는 맞고 지금은 틀리다. (정정 2023.02.03), 2</a></td>
+	<td><a href="https://80000coding.notion.site/underflow-underflow-2023-02-03-10d17093d9cd4edb8d2b55a4bff86565?pvs=25">여러분, underflow(언더플로우)는 틀린 용어랍니다. (정정) → underflow, 그때는 맞고 지금은 틀리다. (정정 2023.02.03)</a></td>
 	<td>integer에서 용어 underflow는 학문적으로는 존재하지 않고, 표현범위의 최대값을 넘든, 최소값을 넘든 둘 다 overflow라고 한다. 다만… integer에서 underflow 그때는 맞고 지금은 틀리다.</td>
 	<td>c, underflow, overflow</td>
 </tr>
@@ -1658,9 +1690,9 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/Makefile-f5692200a9e841afa7045e8a0e50de50?pvs=25">Makefile 내장 변수와 규칙, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-f5692200a9e841afa7045e8a0e50de50?pvs=25">Makefile 내장 변수와 규칙</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>joonhan</td>
@@ -1718,7 +1750,7 @@
 </tr>
 <tr>
 	<td>yunselee</td>
-	<td><a href="https://80000coding.notion.site/NRVO-001d363c4f004f49a80cbbd8edac49f2?pvs=25">NRVO, 1</a></td>
+	<td><a href="https://80000coding.notion.site/NRVO-001d363c4f004f49a80cbbd8edac49f2?pvs=25">NRVO</a></td>
 	<td></td>
 	<td>c++ </td>
 </tr>
@@ -1774,11 +1806,11 @@
 	<td>gshim</td>
 	<td><a href="https://80000coding.notion.site/VSC-2-e0e69c5aefb84d4182225b668b2853dc?pvs=25">VSC 디버깅툴 찍먹2 - 사용법</a></td>
 	<td>깔고 셋팅했으니 이제 쓰자!! VSC DEBUG!</td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>sokwon</td>
-	<td><a href="https://80000coding.notion.site/char-char-55f0f3945bac423286efc72b9e194e11?pvs=25">char는 char로 연산이 안된다고?, 2</a></td>
+	<td><a href="https://80000coding.notion.site/char-char-55f0f3945bac423286efc72b9e194e11?pvs=25">char는 char로 연산이 안된다고?</a></td>
 	<td>과제 진행 중 char type의 연산에 대한 신기한 경험을 공유합니다.</td>
 	<td>c, 넣어주세요</td>
 </tr>
@@ -1808,13 +1840,13 @@
 </tr>
 <tr>
 	<td>jaesjeon</td>
-	<td><a href="https://80000coding.notion.site/Next-js-2-CREATE-YOUR-FIRST-APP-bc0ccbe2aabe4205aaa7e9233bb5ead6?pvs=25">Next.js 공식 문서 읽기(2) - <CREATE YOUR FIRST APP></a></td>
+	<td><a href="https://80000coding.notion.site/Next-js-2-CREATE-YOUR-FIRST-APP-bc0ccbe2aabe4205aaa7e9233bb5ead6?pvs=25">Next.js 공식 문서 읽기(2) - <:CREATE YOUR FIRST APP:></a></td>
 	<td>Next.js 공식 사이트에 learn 문서를 공부하면서 정리한 간단 번역본입니다.</td>
 	<td>프론트엔드, react, next.js </td>
 </tr>
 <tr>
 	<td>jaesjeon</td>
-	<td><a href="https://80000coding.notion.site/Next-js-1-FOUNDATIONS-a688c09821014d51a01f37d773906165?pvs=25">Next.js 공식 문서 읽기(1) - <FOUNDATIONS></a></td>
+	<td><a href="https://80000coding.notion.site/Next-js-1-FOUNDATIONS-a688c09821014d51a01f37d773906165?pvs=25">Next.js 공식 문서 읽기(1) - <:FOUNDATIONS:></a></td>
 	<td>Next.js 공식 사이트에 learn 문서를 공부하면서 정리한 간단 번역본입니다.</td>
 	<td>프론트엔드, react, next.js </td>
 </tr>
@@ -1882,7 +1914,7 @@
 	<td>yeju</td>
 	<td><a href="https://80000coding.notion.site/vscode-PortForwarding-bf160e512fcf4084a7b5b07411898560?pvs=25">vscode에서 PortForwarding하기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>sokwon</td>
@@ -1982,7 +2014,7 @@
 </tr>
 <tr>
 	<td>rolee</td>
-	<td><a href="https://80000coding.notion.site/libft-f217ea68a2da4e9da1f503e66f0b705e?pvs=25">libft, 깨고 나니 보이는 것들, 5</a></td>
+	<td><a href="https://80000coding.notion.site/libft-f217ea68a2da4e9da1f503e66f0b705e?pvs=25">libft, 깨고 나니 보이는 것들</a></td>
 	<td>libft 과제를 진행하며 공부한 몇 가지 내용들을 정리해보았다!</td>
 	<td>c, 42cursus, 자료구조 </td>
 </tr>
@@ -1994,7 +2026,7 @@
 </tr>
 <tr>
 	<td>juha, swang</td>
-	<td><a href="https://80000coding.notion.site/2022-42-ec6de1a69b13464282a39cd6ebac19e9?pvs=25">2022 연말 42설문, 1</a></td>
+	<td><a href="https://80000coding.notion.site/2022-42-ec6de1a69b13464282a39cd6ebac19e9?pvs=25">2022 연말 42설문</a></td>
 	<td>2022 연말을 맞이하여 실시한 설문조사 결과 페이지</td>
 	<td>42event, 설문</td>
 </tr>
@@ -2024,7 +2056,7 @@
 </tr>
 <tr>
 	<td>juha</td>
-	<td><a href="https://80000coding.notion.site/Makefile-01-intro-8b5f8a97fe134adba47fbbb3b00969d5?pvs=25">[한글로 Makefile 가볍게 읽어보기] 01. intro, 3</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-01-intro-8b5f8a97fe134adba47fbbb3b00969d5?pvs=25">[한글로 Makefile 가볍게 읽어보기] 01. intro</a></td>
 	<td>Makefile을 쪼개서 읽어보자.</td>
 	<td>makefile, 교육과정</td>
 </tr>
@@ -2054,7 +2086,7 @@
 </tr>
 <tr>
 	<td>jaeseule</td>
-	<td><a href="https://80000coding.notion.site/0-Intro-d41c468dd9c2429b977610132f749ea0?pvs=25">비전공자도 쉽게 배우는 인공지능 - 0 : Intro, 1</a></td>
+	<td><a href="https://80000coding.notion.site/0-Intro-d41c468dd9c2429b977610132f749ea0?pvs=25">비전공자도 쉽게 배우는 인공지능 - 0 : Intro</a></td>
 	<td>본격적인 인공지능 배우기에 앞서 간단한 제 소개와 제가 어떻게 인공지능 공부를 했는지 말하고, 인공지능을 배우기 위해서는 어떤 기본적인 것들을 알아야 하는지 소개하려고 합니다.</td>
 	<td>인공지능, ai, 딥러닝, python</td>
 </tr>
@@ -2066,7 +2098,7 @@
 </tr>
 <tr>
 	<td>kiyolee</td>
-	<td><a href="https://80000coding.notion.site/null-pointer-96d70f3eee054aa2a29e5792c6a01a47?pvs=25">[시시비비] 널포인터(null pointer)가 인자로 들어오는 경우에 대한 시시비비, 1</a></td>
+	<td><a href="https://80000coding.notion.site/null-pointer-96d70f3eee054aa2a29e5792c6a01a47?pvs=25">[시시비비] 널포인터(null pointer)가 인자로 들어오는 경우에 대한 시시비비</a></td>
 	<td></td>
 	<td>c, null pointer, 예외처리</td>
 </tr>
@@ -2078,7 +2110,7 @@
 </tr>
 <tr>
 	<td>hyunjunk</td>
-	<td><a href="https://80000coding.notion.site/if-else-switch-LUT-c4f3f1f21573477ebcc1a3f5caa960b6?pvs=25">if-else문과 switch문의 차이 (LUT), 1</a></td>
+	<td><a href="https://80000coding.notion.site/if-else-switch-LUT-c4f3f1f21573477ebcc1a3f5caa960b6?pvs=25">if-else문과 switch문의 차이 (LUT)</a></td>
 	<td>switch문 컴파일러 최적화</td>
 	<td>c, c++, assembly, cs, 컴파일러</td>
 </tr>
@@ -2102,7 +2134,7 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/Makefile-make-6172b58680564cb18c4f2179009aef3f?pvs=25">Makefile, make 기초, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-make-6172b58680564cb18c4f2179009aef3f?pvs=25">Makefile, make 기초</a></td>
 	<td>Makefile에 대해 알아야 할 모든 것</td>
 	<td>makefile, c</td>
 </tr>
@@ -2114,7 +2146,7 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/minitalk-4-e6a1b5e093ec4ee4b2b365715dfb2895?pvs=25">minitalk (4) 시그널 주의사항 ​, 1</a></td>
+	<td><a href="https://80000coding.notion.site/minitalk-4-e6a1b5e093ec4ee4b2b365715dfb2895?pvs=25">minitalk (4) 시그널 주의사항 ​</a></td>
 	<td></td>
 	<td>c, 42cursus, minitalk </td>
 </tr>
@@ -2132,7 +2164,7 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/minitalk-1-2306877981474a88b854f419f22d8c53?pvs=25">minitalk (1) 허용 함수, 1</a></td>
+	<td><a href="https://80000coding.notion.site/minitalk-1-2306877981474a88b854f419f22d8c53?pvs=25">minitalk (1) 허용 함수</a></td>
 	<td></td>
 	<td>c, 42cursus, minitalk </td>
 </tr>
@@ -2149,7 +2181,7 @@
 	<td>aws, 배포</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/RDB-Redis-Cache-7ebc2496b0cb401198bf6d56373bc059?pvs=25">조회 기능을 RDB 대신 Redis Cache로 대체하는 것은 효율적일가?</a></td>
 	<td>업무중에 진행한 뻘짓연구 1</td>
 	<td>java, spring boot, redis, mysql </td>
@@ -2192,7 +2224,7 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/42curses-_bonus-cc20ff0d5f584909b280cedb24efe4ff?pvs=25">[42curses] _bonus 파일 자동 생성 스크립트, 1</a></td>
+	<td><a href="https://80000coding.notion.site/42curses-_bonus-cc20ff0d5f584909b280cedb24efe4ff?pvs=25">[42curses] _bonus 파일 자동 생성 스크립트</a></td>
 	<td>보너스용 파일 만들기, 직접 할 필요 없어요!</td>
 	<td>42cursus, 자동화</td>
 </tr>
@@ -2210,7 +2242,7 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/3da7a03430e94be180140bb161007fe0?pvs=25">널 가드에 대해, 1</a></td>
+	<td><a href="https://80000coding.notion.site/3da7a03430e94be180140bb161007fe0?pvs=25">널 가드에 대해</a></td>
 	<td>널 가드? 그게 뭐지??</td>
 	<td>42seoul </td>
 </tr>
@@ -2222,7 +2254,7 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/push_swap-aec7b30c1e75478cb47c893272b5bdee?pvs=25">[push_swap] 구현 순서 가이드, 1</a></td>
+	<td><a href="https://80000coding.notion.site/push_swap-aec7b30c1e75478cb47c893272b5bdee?pvs=25">[push_swap] 구현 순서 가이드</a></td>
 	<td></td>
 	<td>42cursus </td>
 </tr>
@@ -2258,7 +2290,7 @@
 </tr>
 <tr>
 	<td>cheseo</td>
-	<td><a href="https://80000coding.notion.site/ft_printf-3e12395e150d4a5892886a4e417a60c1?pvs=25">ft_printf 보너스까지 해보자(*^▽^*), 2</a></td>
+	<td><a href="https://80000coding.notion.site/ft_printf-3e12395e150d4a5892886a4e417a60c1?pvs=25">ft_printf 보너스까지 해보자(*^▽^*)</a></td>
 	<td>ft_printf 재밌어요! (나만 고통받을 수 없어… 후후후…)</td>
 	<td>c, 과제, ft_printf</td>
 </tr>
@@ -2372,7 +2404,7 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/libft-errno-ef3238145f654b76a64e99027611a676?pvs=25">[libft] errno와 매크로 사용, 1</a></td>
+	<td><a href="https://80000coding.notion.site/libft-errno-ef3238145f654b76a64e99027611a676?pvs=25">[libft] errno와 매크로 사용</a></td>
 	<td></td>
 	<td>42cursus </td>
 </tr>
@@ -2438,7 +2470,7 @@
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/MacOS-e7f119a83c984d3e9d0835eb96864a3b?pvs=25">MacOS 에서 커서 속도 높이기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/MacOS-e7f119a83c984d3e9d0835eb96864a3b?pvs=25">MacOS 에서 커서 속도 높이기</a></td>
 	<td>MacOS 해킹하기</td>
 	<td>mac os, mac</td>
 </tr>
@@ -2450,7 +2482,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/iOS-eaaf5d2ff7ca490d8e938a8878755a04?pvs=25">[팔만코딩경 개발기] iOS 단축어 활용해서 서버 상태 체크하기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/iOS-eaaf5d2ff7ca490d8e938a8878755a04?pvs=25">[팔만코딩경 개발기] iOS 단축어 활용해서 서버 상태 체크하기</a></td>
 	<td></td>
 	<td>ios </td>
 </tr>
@@ -2458,7 +2490,7 @@
 	<td>suhshin, nkim</td>
 	<td><a href="https://80000coding.notion.site/bf5da1ff4f1c463eb401539aee4a1e33?pvs=25">임시제목</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>suhshin</td>
@@ -2474,7 +2506,7 @@
 </tr>
 <tr>
 	<td>gychoi</td>
-	<td><a href="https://80000coding.notion.site/cc09894040a34d56a2574d1d94a17fd2?pvs=25">무지개빛 터미널, 1</a></td>
+	<td><a href="https://80000coding.notion.site/cc09894040a34d56a2574d1d94a17fd2?pvs=25">무지개빛 터미널</a></td>
 	<td>주의) 취하지 않음 (중요)- 그저 10월이 되기 10분 전이여서 9월 포스트를 빠르게 작성하려 할 뿐…</td>
 	<td>잡지식, shell</td>
 </tr>
@@ -2534,7 +2566,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/EC2-lightsail-ubuntu-ssl-80fb8597cd47439f97b23be931da4364?pvs=25">누구보다 빠르게 EC2 → lightsail 이전하기(ubuntu 설정부터 ssl 인증서 발급까지), 1</a></td>
+	<td><a href="https://80000coding.notion.site/EC2-lightsail-ubuntu-ssl-80fb8597cd47439f97b23be931da4364?pvs=25">누구보다 빠르게 EC2 → lightsail 이전하기(ubuntu 설정부터 ssl 인증서 발급까지)</a></td>
 	<td>저렴한 Lightsail로 갈아타자!</td>
 	<td>aws </td>
 </tr>
@@ -2648,7 +2680,7 @@
 </tr>
 <tr>
 	<td>minjungk</td>
-	<td><a href="https://80000coding.notion.site/Makefile-Makefile-1c295f7bcfbc41df8e8a23a66f6266d3?pvs=25">[Makefile] Makefile 의존성 처리, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-Makefile-1c295f7bcfbc41df8e8a23a66f6266d3?pvs=25">[Makefile] Makefile 의존성 처리</a></td>
 	<td></td>
 	<td>makefile </td>
 </tr>
@@ -2720,7 +2752,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/React-emotion-styled-component-7ad296c7883249519cf7074a196d42ea?pvs=25">[React] emotion과 styled-component의 차이, 1</a></td>
+	<td><a href="https://80000coding.notion.site/React-emotion-styled-component-7ad296c7883249519cf7074a196d42ea?pvs=25">[React] emotion과 styled-component의 차이</a></td>
 	<td></td>
 	<td>react </td>
 </tr>
@@ -2744,7 +2776,7 @@
 </tr>
 <tr>
 	<td>yeonhkim</td>
-	<td><a href="https://80000coding.notion.site/char-int-ft-memset-4382416262554994a32b0393c8b01800?pvs=25">어차피 char로 해석할건데 왜 int형 매개변수로 받을까? (ft. memset()), 1</a></td>
+	<td><a href="https://80000coding.notion.site/char-int-ft-memset-4382416262554994a32b0393c8b01800?pvs=25">어차피 char로 해석할건데 왜 int형 매개변수로 받을까? (ft. memset())</a></td>
 	<td></td>
 	<td>c, 역사, 라이브러리, libft, c언어, c99</td>
 </tr>
@@ -2840,7 +2872,7 @@
 </tr>
 <tr>
 	<td>gychoi</td>
-	<td><a href="https://80000coding.notion.site/leaks-1-2-457f637fb1014f79adc80ca72bd3c6f3?pvs=25">leaks 1.2배 더 유용하게 사용하기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/leaks-1-2-457f637fb1014f79adc80ca72bd3c6f3?pvs=25">leaks 1.2배 더 유용하게 사용하기</a></td>
 	<td>leaks 명령어, 솔직히 사용하시는데 조금 불편하셨죠?</td>
 	<td>잡지식, 디버거 </td>
 </tr>
@@ -2860,7 +2892,7 @@
 	<td>yunselee</td>
 	<td><a href="https://80000coding.notion.site/sleep-9dcd4c54c86b4a489b002d786092b328?pvs=25">철학자 내가 사용한 sleep정책</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>yunselee</td>
@@ -2876,7 +2908,7 @@
 </tr>
 <tr>
 	<td>jiwahn</td>
-	<td><a href="https://80000coding.notion.site/printf-10981a9a178f440e98bfcba1d9c90bb6?pvs=25">아니 그래서 printf 버퍼 관리가 뭔데…!!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/printf-10981a9a178f440e98bfcba1d9c90bb6?pvs=25">아니 그래서 printf 버퍼 관리가 뭔데…!!</a></td>
 	<td>Don’t implement the buffer management of the original printf()!</td>
 	<td>c, 42cursus, 운영체제, i/o</td>
 </tr>
@@ -2969,7 +3001,7 @@
 	<td>suhshin</td>
 	<td><a href="https://80000coding.notion.site/React-React-Query-b0655b9243e8435b97a6244fbf875637?pvs=25">[React] React-Query로 리팩토링하기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>ycha, suhshin</td>
@@ -3111,7 +3143,7 @@
 </tr>
 <tr>
 	<td>chahan</td>
-	<td><a href="https://80000coding.notion.site/it-9cf8f06142d84867a955251d09b32a27?pvs=25">제조업 it 개발자로 살아남기 -일, 페이, 사내문화, 복지-, 2</a></td>
+	<td><a href="https://80000coding.notion.site/it-9cf8f06142d84867a955251d09b32a27?pvs=25">제조업 it 개발자로 살아남기 -일, 페이, 사내문화, 복지-</a></td>
 	<td>제조업 대기업 it 개발자로 살아남기</td>
 	<td>42seoul </td>
 </tr>
@@ -3129,13 +3161,13 @@
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/Inception-d6e6ca38d41347baa80ba1b4f40886ab?pvs=25">Inception 공부할때 유용했던 링크들을 정리해서 올릴건데 제목을 뭐라고 정하면 좋을까요, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Inception-d6e6ca38d41347baa80ba1b4f40886ab?pvs=25">Inception 공부할때 유용했던 링크들을 정리해서 올릴건데 제목을 뭐라고 정하면 좋을까요</a></td>
 	<td>Inception 공부하면서 유용했던 링크들입니다</td>
 	<td>42cursus, 42seoul, docker, 도커 컨테이너, inception</td>
 </tr>
 <tr>
 	<td>joonhan</td>
-	<td><a href="https://80000coding.notion.site/16-feat-printf-fbebe8bd620e41bb86c4ab0f580e6f10?pvs=25">메모리 주소는 왜 16진수로 표현할까? (feat. printf), 4</a></td>
+	<td><a href="https://80000coding.notion.site/16-feat-printf-fbebe8bd620e41bb86c4ab0f580e6f10?pvs=25">메모리 주소는 왜 16진수로 표현할까? (feat. printf)</a></td>
 	<td>printf에서 %p 서식 지정자로 출력하는 메모리 주소가 왜 16진수인지 궁금해서 정리한 글입니다.</td>
 	<td>c, 기초지식</td>
 </tr>
@@ -3165,7 +3197,7 @@
 </tr>
 <tr>
 	<td>minkyeki</td>
-	<td><a href="https://80000coding.notion.site/Vimium-Vim-2a61bdb018be4efdaf5709ecc66df1cf?pvs=25">[Vimium] 웹브라우저를 Vim 처럼., 1</a></td>
+	<td><a href="https://80000coding.notion.site/Vimium-Vim-2a61bdb018be4efdaf5709ecc66df1cf?pvs=25">[Vimium] 웹브라우저를 Vim 처럼.</a></td>
 	<td>웹브라우저를 마우스 없이 사용하게 해주는 크롬 익스텐션</td>
 	<td>chrome, vim, 소개</td>
 </tr>
@@ -3231,7 +3263,7 @@
 </tr>
 <tr>
 	<td>yotak</td>
-	<td><a href="https://80000coding.notion.site/0104754db58342d58557172d7ec5b6f8?pvs=25">[운영체제] 컴퓨터 시스템 구조, 1</a></td>
+	<td><a href="https://80000coding.notion.site/0104754db58342d58557172d7ec5b6f8?pvs=25">[운영체제] 컴퓨터 시스템 구조</a></td>
 	<td>반효경 교수님의 온라인 강의 2주차 내용을 정리하였습니다. CPU, Memory, 입출력 장치의 작동이 어떻게 이루어지는 지를 설명합니다!</td>
 	<td>운영체제</td>
 </tr>
@@ -3453,7 +3485,7 @@
 </tr>
 <tr>
 	<td>minkyeki</td>
-	<td><a href="https://80000coding.notion.site/Push-Swap-merge-sort-402024b213ba447aac0f0eeaf91f0e5f?pvs=25">Push Swap: merge sort 병합 정렬로 해결하기, 4</a></td>
+	<td><a href="https://80000coding.notion.site/Push-Swap-merge-sort-402024b213ba447aac0f0eeaf91f0e5f?pvs=25">Push Swap: merge sort 병합 정렬로 해결하기</a></td>
 	<td>퀵소트, 모래시계, 그리디 외에 다른 방법인 병합정렬을 소개합니다</td>
 	<td>42cursus, algorithm</td>
 </tr>
@@ -3495,7 +3527,7 @@
 </tr>
 <tr>
 	<td>jbak</td>
-	<td><a href="https://80000coding.notion.site/55a4ed9613c04035a969afb270ffef91?pvs=25">프로세스와 스레드(유튜브 링크), 2</a></td>
+	<td><a href="https://80000coding.notion.site/55a4ed9613c04035a969afb270ffef91?pvs=25">프로세스와 스레드(유튜브 링크)</a></td>
 	<td></td>
 	<td>운영체제, 개발지식 </td>
 </tr>
@@ -3531,7 +3563,7 @@
 </tr>
 <tr>
 	<td>mypark</td>
-	<td><a href="https://80000coding.notion.site/cpp-virtual-208436f5e29b4af0a27b5fa973aae710?pvs=25">[cpp] virtual 키워드 탐구일지, 1</a></td>
+	<td><a href="https://80000coding.notion.site/cpp-virtual-208436f5e29b4af0a27b5fa973aae710?pvs=25">[cpp] virtual 키워드 탐구일지</a></td>
 	<td>cpp에 나오는 가상 함수, 가상 상속이 어떤 방식으로 구현되었는지</td>
 	<td>c++, 42seoul </td>
 </tr>
@@ -3549,7 +3581,7 @@
 </tr>
 <tr>
 	<td>yunslee</td>
-	<td><a href="https://80000coding.notion.site/commit-d98f0972fce2442d8239e665a0a7d749?pvs=25">작업 중 실수로 날려버린 commit 되살리기!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/commit-d98f0972fce2442d8239e665a0a7d749?pvs=25">작업 중 실수로 날려버린 commit 되살리기!</a></td>
 	<td></td>
 	<td>git, github</td>
 </tr>
@@ -3579,7 +3611,7 @@
 </tr>
 <tr>
 	<td>sangtale</td>
-	<td><a href="https://80000coding.notion.site/4a76a7bda82849cbb290a0a196eb4591?pvs=25">닌자 코드, 6</a></td>
+	<td><a href="https://80000coding.notion.site/4a76a7bda82849cbb290a0a196eb4591?pvs=25">닌자 코드</a></td>
 	<td>닌자처럼 코드를 작성하는 법(Feat. Norminette, 클린 코드)</td>
 	<td>잡지식, 개발지식, javascript </td>
 </tr>
@@ -3641,7 +3673,7 @@
 	<td>jibang</td>
 	<td><a href="https://80000coding.notion.site/eng-ad81c4d10198468d9953b0b99bd27443?pvs=25">아나콘다/주피터 세팅(eng)</a></td>
 	<td>5월부터 아나콘다가 M1에서도 지원되는데, 참고해서 설치하면 좋을 것 같습니다.</td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>junhelee</td>
@@ -3663,7 +3695,7 @@
 </tr>
 <tr>
 	<td>solim</td>
-	<td><a href="https://80000coding.notion.site/ECMAScript-ECMAScript-2022-702242eb995e4cb2b7ca68cd66c64d7a?pvs=25">ECMAScript와 ECMAScript 2022의 제안 알아보기, 3</a></td>
+	<td><a href="https://80000coding.notion.site/ECMAScript-ECMAScript-2022-702242eb995e4cb2b7ca68cd66c64d7a?pvs=25">ECMAScript와 ECMAScript 2022의 제안 알아보기</a></td>
 	<td>ECMA-262(ECMAScript)에 대한 설명과 2022년 6월 승인될 ECMAScript 2022의 Finished Proposal에 대해 알아보기</td>
 	<td>web, 프론트엔드, 잡지식, 개발지식, ecma-262</td>
 </tr>
@@ -3723,8 +3755,8 @@
 </tr>
 <tr>
 	<td>sangtale</td>
-	<td><a href="https://80000coding.notion.site/subject-so_long-4c4ea32e0c3b4dff83271bd1fc27e5f2?pvs=25">왜 subject의 이름이 so_long일까?, 3</a></td>
-	<td><은하수를 여행하는 히치하이커를 위한 안내서>의 간략한 내용을 다룹니다.</td>
+	<td><a href="https://80000coding.notion.site/subject-so_long-4c4ea32e0c3b4dff83271bd1fc27e5f2?pvs=25">왜 subject의 이름이 so_long일까?</a></td>
+	<td><:은하수를 여행하는 히치하이커를 위한 안내서:>의 간략한 내용을 다룹니다.</td>
 	<td>잡지식 </td>
 </tr>
 <tr>
@@ -3741,7 +3773,7 @@
 </tr>
 <tr>
 	<td>solim</td>
-	<td><a href="https://80000coding.notion.site/weakness-CWE-f536a1e60de14ac4a0fd62659a4c47a4?pvs=25">소프트웨어 약점(weakness)과 CWE, 1</a></td>
+	<td><a href="https://80000coding.notion.site/weakness-CWE-f536a1e60de14ac4a0fd62659a4c47a4?pvs=25">소프트웨어 약점(weakness)과 CWE</a></td>
 	<td>CWE에 대한 설명</td>
 	<td>개발지식, 잡지식, 보안, 시큐어코딩</td>
 </tr>
@@ -3879,7 +3911,7 @@
 </tr>
 <tr>
 	<td>joonhan</td>
-	<td><a href="https://80000coding.notion.site/feat-DFS-BFS-51503941ff714cd4a4ccec8a68eddbb7?pvs=25">미로찾기 알고리즘 해결 전략 및 구현 (feat. DFS, BFS), 2</a></td>
+	<td><a href="https://80000coding.notion.site/feat-DFS-BFS-51503941ff714cd4a4ccec8a68eddbb7?pvs=25">미로찾기 알고리즘 해결 전략 및 구현 (feat. DFS, BFS)</a></td>
 	<td>미로찾기 유형에 따른 DFS 와 BFS 활용 방법을 소개합니다.</td>
 	<td>알고리즘, 자료구조, c </td>
 </tr>
@@ -3891,7 +3923,7 @@
 </tr>
 <tr>
 	<td>chanhpar</td>
-	<td><a href="https://80000coding.notion.site/atexit-107bc2ff145e427b9bd076b015908916?pvs=25">atexit을 활용해 누수 확인하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/atexit-107bc2ff145e427b9bd076b015908916?pvs=25">atexit을 활용해 누수 확인하기</a></td>
 	<td>메모리 누수 간편하게 확인하는 방법</td>
 	<td>c, shell, 잡지식, 메모리누수</td>
 </tr>
@@ -3933,7 +3965,7 @@
 </tr>
 <tr>
 	<td>sangtale</td>
-	<td><a href="https://80000coding.notion.site/Mac-VS-Code-C-feat-C-bd91b45ccbc6433498c7935c1881fb25?pvs=25">Mac과 VS Code로 C#을 할 수 없을까? (feat. C# 찍먹), 1</a></td>
+	<td><a href="https://80000coding.notion.site/Mac-VS-Code-C-feat-C-bd91b45ccbc6433498c7935c1881fb25?pvs=25">Mac과 VS Code로 C#을 할 수 없을까? (feat. C# 찍먹)</a></td>
 	<td>C 언어보다 C#이 낯선, 42 Seoul을 통해서 C#에 다가서는 사람들을 위한 글</td>
 	<td>c#, vscode</td>
 </tr>
@@ -3993,7 +4025,7 @@
 </tr>
 <tr>
 	<td>sunhwang</td>
-	<td><a href="https://80000coding.notion.site/Top-100-224d0f3b39604365979a4c68dbcac119?pvs=25">한 번쯤 읽어보면 좋을 개발자 추천도서 Top 100, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Top-100-224d0f3b39604365979a4c68dbcac119?pvs=25">한 번쯤 읽어보면 좋을 개발자 추천도서 Top 100</a></td>
 	<td>교보문고에서 정리한 개발서적 모음으로 사은품으로만 얻을 수 있는데 공유를 위해 올립니다!</td>
 	<td>잡지식, 컴퓨터</td>
 </tr>
@@ -4035,13 +4067,13 @@
 </tr>
 <tr>
 	<td>chanhpar</td>
-	<td><a href="https://80000coding.notion.site/vim-listchars-dd6588a1d7ef4b3aa0db79d7adc18166?pvs=25">vim 잡기술 - listchars, 1</a></td>
+	<td><a href="https://80000coding.notion.site/vim-listchars-dd6588a1d7ef4b3aa0db79d7adc18166?pvs=25">vim 잡기술 - listchars</a></td>
 	<td>공백문자를 보이게 설정하고, 모양과 색깔을 지정하는 방법</td>
 	<td>vim</td>
 </tr>
 <tr>
 	<td>hyeonjan</td>
-	<td><a href="https://80000coding.notion.site/GNL_Bonus-OPEN_MAX-18e53b57d1dd47568d0110d07d769e7f?pvs=25">[GNL_Bonus] OPEN_MAX가 올바르지 않은 까닭, 3</a></td>
+	<td><a href="https://80000coding.notion.site/GNL_Bonus-OPEN_MAX-18e53b57d1dd47568d0110d07d769e7f?pvs=25">[GNL_Bonus] OPEN_MAX가 올바르지 않은 까닭</a></td>
 	<td></td>
 	<td>42cursus </td>
 </tr>
@@ -4191,7 +4223,7 @@
 </tr>
 <tr>
 	<td>sunhwang</td>
-	<td><a href="https://80000coding.notion.site/Flutter-497dc9bfb79549dba4e2946ad868224b?pvs=25">Flutter 아키텍쳐 계층 살펴보기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Flutter-497dc9bfb79549dba4e2946ad868224b?pvs=25">Flutter 아키텍쳐 계층 살펴보기</a></td>
 	<td>Flutter 아키텍쳐 계층이 있다고 하는디..</td>
 	<td>flutter</td>
 </tr>
@@ -4203,7 +4235,7 @@
 </tr>
 <tr>
 	<td>seohyuki</td>
-	<td><a href="https://80000coding.notion.site/npx-3adce1958c344e0ab1fe5c44b0768bad?pvs=25">npx란 무엇일까?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/npx-3adce1958c344e0ab1fe5c44b0768bad?pvs=25">npx란 무엇일까?</a></td>
 	<td></td>
 	<td>node.js, 패키지</td>
 </tr>
@@ -4287,7 +4319,7 @@
 </tr>
 <tr>
 	<td>sungjpar</td>
-	<td><a href="https://80000coding.notion.site/GNL-OPEN_MAX-vs-Linked-list-b40a72e7c1314d2fa401f924b7048c48?pvs=25">GNL OPEN_MAX vs Linked list?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/GNL-OPEN_MAX-vs-Linked-list-b40a72e7c1314d2fa401f924b7048c48?pvs=25">GNL OPEN_MAX vs Linked list?</a></td>
 	<td>GNL에서 사용하는 자료구조에 대한 제 의견을 작성해봤습니다.</td>
 	<td>c, 42cursus, 42seoul, get_next_line, open_max, linked_list</td>
 </tr>
@@ -4329,7 +4361,7 @@
 </tr>
 <tr>
 	<td>chanhpar</td>
-	<td><a href="https://80000coding.notion.site/man-vim-7cf061c6a49541a4a80a747a3a3fe2d8?pvs=25">man 페이지를 vim으로 열어보자!, 2</a></td>
+	<td><a href="https://80000coding.notion.site/man-vim-7cf061c6a49541a4a80a747a3a3fe2d8?pvs=25">man 페이지를 vim으로 열어보자!</a></td>
 	<td>터미널에서 매뉴얼을 vim으로 여는 방법입니다</td>
 	<td>vim, 잡지식</td>
 </tr>
@@ -4437,7 +4469,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/git-rebase-i-Rebasing-Merge-75c6610b686943d2aa5d1b211a20c388?pvs=25">(git) rebase -i 로 커밋 가지고 놀기 & Rebasing Merge, 4</a></td>
+	<td><a href="https://80000coding.notion.site/git-rebase-i-Rebasing-Merge-75c6610b686943d2aa5d1b211a20c388?pvs=25">(git) rebase -i 로 커밋 가지고 놀기 & Rebasing Merge</a></td>
 	<td>rebase에 대해 깊숙히 알아보자!</td>
 	<td>git </td>
 </tr>
@@ -4467,7 +4499,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/WSL-2-5d6e310c3ca04d3ba4152c9fca40ff4f?pvs=25">윈도우 머신러닝 개발환경 세팅(WSL 2), 2</a></td>
+	<td><a href="https://80000coding.notion.site/WSL-2-5d6e310c3ca04d3ba4152c9fca40ff4f?pvs=25">윈도우 머신러닝 개발환경 세팅(WSL 2)</a></td>
 	<td>윈도우 WSL 2로 머신러닝 환경을 세팅해보자</td>
 	<td>인공지능 </td>
 </tr>
@@ -4479,7 +4511,7 @@
 </tr>
 <tr>
 	<td>minkyeki</td>
-	<td><a href="https://80000coding.notion.site/80-C-31f3b39714834a759d88c99284e7f3ca?pvs=25">80년대 C언어는 어땠을까?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/80-C-31f3b39714834a759d88c99284e7f3ca?pvs=25">80년대 C언어는 어땠을까?</a></td>
 	<td>C언어의 역사</td>
 	<td>c, 프로그래밍 언어</td>
 </tr>
@@ -4491,19 +4523,19 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/and-or-8d30d8ec1dec411ebc0ef23379839448?pvs=25">자바스크립트/파이썬의 and와 or, 1</a></td>
+	<td><a href="https://80000coding.notion.site/and-or-8d30d8ec1dec411ebc0ef23379839448?pvs=25">자바스크립트/파이썬의 and와 or</a></td>
 	<td>왜 0 or 1이 true가 아니고 1이냐고요? 비트연산이라서? 땡!</td>
 	<td>javascript, python, c언어, c++, short-circuit evaluation, 개발지식, java</td>
 </tr>
 <tr>
 	<td>dha</td>
-	<td><a href="https://80000coding.notion.site/OS-Threads-Concurrency-fdb26846016346d3aeca21df7baafd92?pvs=25">[OS] Threads & Concurrency, 1</a></td>
+	<td><a href="https://80000coding.notion.site/OS-Threads-Concurrency-fdb26846016346d3aeca21df7baafd92?pvs=25">[OS] Threads & Concurrency</a></td>
 	<td>공룡책 4장을 공부하며 정리한 내용입니다.</td>
 	<td>운영체제, multithread, concurrency, operating system</td>
 </tr>
 <tr>
 	<td>sumkim</td>
-	<td><a href="https://80000coding.notion.site/Longest-Increasing-Subsequence-aaed48853f144848b41681d9ee59a60f?pvs=25">최장 증가 부분 수열(Longest Increasing Subsequence), 6</a></td>
+	<td><a href="https://80000coding.notion.site/Longest-Increasing-Subsequence-aaed48853f144848b41681d9ee59a60f?pvs=25">최장 증가 부분 수열(Longest Increasing Subsequence)</a></td>
 	<td></td>
 	<td>알고리즘 </td>
 </tr>
@@ -4515,7 +4547,7 @@
 </tr>
 <tr>
 	<td>daejlee</td>
-	<td><a href="https://80000coding.notion.site/makefile-31f70ec9795945f7840a5ecac265bab8?pvs=25">실전압축 makefile, 6</a></td>
+	<td><a href="https://80000coding.notion.site/makefile-31f70ec9795945f7840a5ecac265bab8?pvs=25">실전압축 makefile</a></td>
 	<td>libft를 진행하며 실제로 사용한 makefile 관련 내용을 정리했습니다.</td>
 	<td>makefile </td>
 </tr>
@@ -4539,7 +4571,7 @@
 </tr>
 <tr>
 	<td>joonhan</td>
-	<td><a href="https://80000coding.notion.site/make-Makefile-b553047b42f640669f30f4aef0b0503d?pvs=25">[make] Makefile 개념 및 사용법 정리 , 2</a></td>
+	<td><a href="https://80000coding.notion.site/make-Makefile-b553047b42f640669f30f4aef0b0503d?pvs=25">[make] Makefile 개념 및 사용법 정리</a></td>
 	<td>프로그램 빌드에 사용하는 Makefile 개념, 문법을 정리한 글입니다.</td>
 	<td>makefile, 기초지식</td>
 </tr>
@@ -4557,13 +4589,13 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/re-fclean-all-d25159318abd4e7caeeee3cc8023008d?pvs=25">`re: fclean all`을 쓰지 마세요!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/re-fclean-all-d25159318abd4e7caeeee3cc8023008d?pvs=25">`re: fclean all`을 쓰지 마세요!</a></td>
 	<td>Makefile 토막 상식: re: fclean all 쓰시는 분 필독! 0점 받아도 할 말 없어요</td>
 	<td>makefile, 42seoul</td>
 </tr>
 <tr>
 	<td>jijeong</td>
-	<td><a href="https://80000coding.notion.site/LaTeX-0fc58551fdae4c119d63ee6102d21ac7?pvs=25">LaTeX (시작하는 방법과 참고자료), 1</a></td>
+	<td><a href="https://80000coding.notion.site/LaTeX-0fc58551fdae4c119d63ee6102d21ac7?pvs=25">LaTeX (시작하는 방법과 참고자료)</a></td>
 	<td>좀 더 편하게 pdf 서식을 만들려고 뒤적거리면서 모았던 레이텍 입문 정보입니다.</td>
 	<td>latex, 잡지식, 기록</td>
 </tr>
@@ -4575,7 +4607,7 @@
 </tr>
 <tr>
 	<td>junsoh</td>
-	<td><a href="https://80000coding.notion.site/Code-Data-Heap-Stack-22a4e32332ce41098eb20ca7baa72cbc?pvs=25">[메모리 구조] Code, Data, Heap, Stack, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Code-Data-Heap-Stack-22a4e32332ce41098eb20ca7baa72cbc?pvs=25">[메모리 구조] Code, Data, Heap, Stack</a></td>
 	<td></td>
 	<td>c, cs, memory</td>
 </tr>
@@ -4623,7 +4655,7 @@
 </tr>
 <tr>
 	<td>sujpark</td>
-	<td><a href="https://80000coding.notion.site/HTML-JavaScript-defer-async-a2d519649b994e04a9a2c338be776bee?pvs=25">[HTML] [JavaScript] defer와 async, 1</a></td>
+	<td><a href="https://80000coding.notion.site/HTML-JavaScript-defer-async-a2d519649b994e04a9a2c338be776bee?pvs=25">[HTML] [JavaScript] defer와 async</a></td>
 	<td>Script 태그의 속성인 defer와 async에 대해 공부합니다.</td>
 	<td>html, javascript</td>
 </tr>
@@ -4647,7 +4679,7 @@
 </tr>
 <tr>
 	<td>jmaing</td>
-	<td><a href="https://80000coding.notion.site/Makefile-C-C-38ce31eb01e444f78ae1ec9f1802b7f8?pvs=25">Makefile 없는 C/C++ 개발환경, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-C-C-38ce31eb01e444f78ae1ec9f1802b7f8?pvs=25">Makefile 없는 C/C++ 개발환경</a></td>
 	<td>Make의 문제점, 그리고 Ninja와 Meson에 대한 초간단 소개.</td>
 	<td>c, c++, makefile, 개발환경, trend, 기초지식, 개발지식, 잡지식</td>
 </tr>
@@ -4671,7 +4703,7 @@
 </tr>
 <tr>
 	<td>yunselee</td>
-	<td><a href="https://80000coding.notion.site/c77ea7420865471399d186db7b4db798?pvs=25">게임 회사에 신입 게임 서버 프로그래머로 입사하기 위해 공부할 것, 1</a></td>
+	<td><a href="https://80000coding.notion.site/c77ea7420865471399d186db7b4db798?pvs=25">게임 회사에 신입 게임 서버 프로그래머로 입사하기 위해 공부할 것</a></td>
 	<td>최흥배 멘토님 유튜브 요약</td>
 	<td>c++, 취업준비, 게임서버, 게임개발</td>
 </tr>
@@ -4689,15 +4721,15 @@
 </tr>
 <tr>
 	<td>sungjpar</td>
-	<td><a href="https://80000coding.notion.site/CS-Short-circuit-Evaluation-2283e1be93c54f00ac7a83bcb7dcad0d?pvs=25">[CS] Short-circuit Evaluation, 1</a></td>
+	<td><a href="https://80000coding.notion.site/CS-Short-circuit-Evaluation-2283e1be93c54f00ac7a83bcb7dcad0d?pvs=25">[CS] Short-circuit Evaluation</a></td>
 	<td>Evaluation strategy 중 하나인 short-circuit evaluation에 대해서 간단하게 알아보는 글입니다.</td>
 	<td>cs, short-circuit evaluation, evaluation strategy</td>
 </tr>
 <tr>
 	<td>sehyan</td>
-	<td><a href="https://80000coding.notion.site/42-ssh-5dcdc70aeca441de93200ce64c940db8?pvs=25">로컬환경에서 42 ssh로 과제 푸시하기, 3</a></td>
+	<td><a href="https://80000coding.notion.site/42-ssh-5dcdc70aeca441de93200ce64c940db8?pvs=25">로컬환경에서 42 ssh로 과제 푸시하기</a></td>
 	<td>로컬에서 42 ssh로 과제 푸시하기!!</td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>jeonglee</td>
@@ -4707,19 +4739,19 @@
 </tr>
 <tr>
 	<td>bolee</td>
-	<td><a href="https://80000coding.notion.site/iOS-Swift-SwiftUI-1d01257db3234dbbbd67432512bd1c8d?pvs=25">[iOS] 아이패드로 Swift와 SwiftUI 코딩하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/iOS-Swift-SwiftUI-1d01257db3234dbbbd67432512bd1c8d?pvs=25">[iOS] 아이패드로 Swift와 SwiftUI 코딩하기</a></td>
 	<td>맥북은 없지만 아이패드만 있을 때 아이패드를 이용한 Swift 코딩하는 법</td>
 	<td>swift, swiftui, ios, ios개발</td>
 </tr>
 <tr>
 	<td>sujpark</td>
-	<td><a href="https://80000coding.notion.site/OS-1-c42deb005fda4c85a3a03b66a61d0dd3?pvs=25">[OS] 1장 서론, 1</a></td>
+	<td><a href="https://80000coding.notion.site/OS-1-c42deb005fda4c85a3a03b66a61d0dd3?pvs=25">[OS] 1장 서론</a></td>
 	<td>운영체제에 대해</td>
 	<td>운영체제, cs </td>
 </tr>
 <tr>
 	<td>sangtale</td>
-	<td><a href="https://80000coding.notion.site/get_next_line-756ac9492cf246499d1c2dab9594ddd3?pvs=25">[get_next_line] 정리글 아카이브, 2</a></td>
+	<td><a href="https://80000coding.notion.site/get_next_line-756ac9492cf246499d1c2dab9594ddd3?pvs=25">[get_next_line] 정리글 아카이브</a></td>
 	<td></td>
 	<td>42seoul, 42cursus </td>
 </tr>
@@ -4761,13 +4793,13 @@
 </tr>
 <tr>
 	<td>woojlee</td>
-	<td><a href="https://80000coding.notion.site/TCP-IP-e7f460d92da14654a4b7e0df33931d54?pvs=25">[네트워크] TCP / IP 가 뭘까?, 4</a></td>
+	<td><a href="https://80000coding.notion.site/TCP-IP-e7f460d92da14654a4b7e0df33931d54?pvs=25">[네트워크] TCP / IP 가 뭘까?</a></td>
 	<td>TCP / IP 간략 설명</td>
 	<td>network, 네트워크, ip, tcp, udp, port, packet, 패킷</td>
 </tr>
 <tr>
 	<td>sangtale</td>
-	<td><a href="https://80000coding.notion.site/838477efe4c84b039495d2252395779c?pvs=25">[개잡다] 세계 최초의 프로그래머는 누구일까?, 4</a></td>
+	<td><a href="https://80000coding.notion.site/838477efe4c84b039495d2252395779c?pvs=25">[개잡다] 세계 최초의 프로그래머는 누구일까?</a></td>
 	<td>개발 잡학을 다룹니다.</td>
 	<td>개발지식, 잡지식</td>
 </tr>
@@ -4809,19 +4841,19 @@
 </tr>
 <tr>
 	<td>sujpark</td>
-	<td><a href="https://80000coding.notion.site/HTML-DOM-5e01fc3b6cf54aca9c32fb9cd5967115?pvs=25">[HTML] 브라우저 렌더링 과정으로 알아보는 DOM, 1</a></td>
+	<td><a href="https://80000coding.notion.site/HTML-DOM-5e01fc3b6cf54aca9c32fb9cd5967115?pvs=25">[HTML] 브라우저 렌더링 과정으로 알아보는 DOM</a></td>
 	<td>웹 프론트엔드에서 중요한 개념인 DOM에 대해 공부해봅니다.</td>
 	<td>html, web, dom, frontend</td>
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/RSA-7f385557fe3d4ac397da6d4ffa7ab283?pvs=25">비대칭키 암호화 - RSA와 타원곡선 알고리즘, 1</a></td>
+	<td><a href="https://80000coding.notion.site/RSA-7f385557fe3d4ac397da6d4ffa7ab283?pvs=25">비대칭키 암호화 - RSA와 타원곡선 알고리즘</a></td>
 	<td></td>
 	<td>보안, 암호 </td>
 </tr>
 <tr>
 	<td>sujpark</td>
-	<td><a href="https://80000coding.notion.site/Vanilla-JS-2-671731d34f7945d2bac4a5a954997c66?pvs=25">[Vanilla JS] 고양이 사진첩2, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Vanilla-JS-2-671731d34f7945d2bac4a5a954997c66?pvs=25">[Vanilla JS] 고양이 사진첩2</a></td>
 	<td>프로그래머스 개발자 매칭 과제 풀이</td>
 	<td>javascript, js, frontend</td>
 </tr>
@@ -4833,24 +4865,24 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/9cee202e1dc345538f0373c331854493?pvs=25">보안 목표와 대칭키 암호화, 1</a></td>
+	<td><a href="https://80000coding.notion.site/9cee202e1dc345538f0373c331854493?pvs=25">보안 목표와 대칭키 암호화</a></td>
 	<td></td>
 	<td>보안, 암호 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/ba9bff54f8004854a58348052f51a9fb?pvs=25"></a></td>
 	<td>적어주세요!</td>
 	<td>멘토특강, 넣어주세요</td>
 </tr>
 <tr>
 	<td>dha</td>
-	<td><a href="https://80000coding.notion.site/VSCode-d5d36b7db6054d1fb2d9ad0ddd8f1ff9?pvs=25">VSCode 파일 확장자로 정렬하기, 3</a></td>
+	<td><a href="https://80000coding.notion.site/VSCode-d5d36b7db6054d1fb2d9ad0ddd8f1ff9?pvs=25">VSCode 파일 확장자로 정렬하기</a></td>
 	<td>VSCode Explorer 확장자로 정렬하기</td>
 	<td>vscode, vscode explorer sort</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/6bb8b749a26e48ae94525c2c53053f11?pvs=25">비상근멘토 모집(서류마감)</a></td>
 	<td></td>
 	<td>멘토특강 </td>
@@ -4863,7 +4895,7 @@
 </tr>
 <tr>
 	<td>gulee</td>
-	<td><a href="https://80000coding.notion.site/52fe1430c25d46a08b097e4277e28e62?pvs=25">자료구조의 기초 및 개념, 2</a></td>
+	<td><a href="https://80000coding.notion.site/52fe1430c25d46a08b097e4277e28e62?pvs=25">자료구조의 기초 및 개념</a></td>
 	<td></td>
 	<td>개발지식 </td>
 </tr>
@@ -4899,7 +4931,7 @@
 </tr>
 <tr>
 	<td>kanghyki</td>
-	<td><a href="https://80000coding.notion.site/TDD-b6daf686eb364f53845aa4b4faa38e91?pvs=25">TDD란 무엇일까?, 2</a></td>
+	<td><a href="https://80000coding.notion.site/TDD-b6daf686eb364f53845aa4b4faa38e91?pvs=25">TDD란 무엇일까?</a></td>
 	<td></td>
 	<td>tdd</td>
 </tr>
@@ -4935,7 +4967,7 @@
 </tr>
 <tr>
 	<td>yuchung</td>
-	<td><a href="https://80000coding.notion.site/NodeJs-process-env-f30d37bdc8ef4231b1662e7d8aa47363?pvs=25">[NodeJs] process.env 환경변수 , 1</a></td>
+	<td><a href="https://80000coding.notion.site/NodeJs-process-env-f30d37bdc8ef4231b1662e7d8aa47363?pvs=25">[NodeJs] process.env 환경변수</a></td>
 	<td>node.js 에서 사용하는 환경변수를 설정할 수 있는 파일 process.env에 대해서 알아보았다.</td>
 	<td>javascript, 환경변수</td>
 </tr>
@@ -4959,7 +4991,7 @@
 </tr>
 <tr>
 	<td>sankang</td>
-	<td><a href="https://80000coding.notion.site/VS-Code-96f537df6f64456696ac7c816864b783?pvs=25">[VS Code] 프로젝트 별로 다른 설정값 지정하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/VS-Code-96f537df6f64456696ac7c816864b783?pvs=25">[VS Code] 프로젝트 별로 다른 설정값 지정하기</a></td>
 	<td>탭 VS 스페이스. 매번 설정 바꾸기 너무 귀찮을때</td>
 	<td>vscode, ide</td>
 </tr>
@@ -5025,7 +5057,7 @@
 </tr>
 <tr>
 	<td>seongwki</td>
-	<td><a href="https://80000coding.notion.site/Mac-OS-1c22145be66845268313c1935effe173?pvs=25">[Mac OS] 프로그램별로 음량 조절하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Mac-OS-1c22145be66845268313c1935effe173?pvs=25">[Mac OS] 프로그램별로 음량 조절하기</a></td>
 	<td>프로그램별로 음량을 조절해 보아요.</td>
 	<td>mac os </td>
 </tr>
@@ -5043,15 +5075,15 @@
 </tr>
 <tr>
 	<td>echung</td>
-	<td><a href="https://80000coding.notion.site/42world-6d3c8839812445ceb92ffc455c82e96d?pvs=25">42world 개발기 (부제: 마음먹은 일을 해내는 법), 4</a></td>
+	<td><a href="https://80000coding.notion.site/42world-6d3c8839812445ceb92ffc455c82e96d?pvs=25">42world 개발기 (부제: 마음먹은 일을 해내는 법)</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>sehyan</td>
 	<td><a href="https://80000coding.notion.site/27290dd2e7b8404d896c8171c4ea267d?pvs=25">이미지 링크 블록</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>jinbekim</td>
@@ -5073,13 +5105,13 @@
 </tr>
 <tr>
 	<td>mypark</td>
-	<td><a href="https://80000coding.notion.site/ssh-c1fb89d494ae479cae705899fe2fac37?pvs=25">ssh, 1</a></td>
+	<td><a href="https://80000coding.notion.site/ssh-c1fb89d494ae479cae705899fe2fac37?pvs=25">ssh</a></td>
 	<td>ssh 서버를 구축해보고, 직접 로그인해서 ssh가 어떻게 동작하는지 알아보자</td>
 	<td>ssh</td>
 </tr>
 <tr>
 	<td>donlee</td>
-	<td><a href="https://80000coding.notion.site/Dangling-Pointer-7449063e3d0341499a12884276459b3c?pvs=25">댕글링 포인터(Dangling Pointer), 3</a></td>
+	<td><a href="https://80000coding.notion.site/Dangling-Pointer-7449063e3d0341499a12884276459b3c?pvs=25">댕글링 포인터(Dangling Pointer)</a></td>
 	<td>댕글링 포인터는 무엇일까?</td>
 	<td>c, 포인터</td>
 </tr>
@@ -5121,7 +5153,7 @@
 </tr>
 <tr>
 	<td>dha</td>
-	<td><a href="https://80000coding.notion.site/5806ee719d1c426c91d41f198a6fb09e?pvs=25">‘포트 포워딩’ 왜 하는 거야?, 2</a></td>
+	<td><a href="https://80000coding.notion.site/5806ee719d1c426c91d41f198a6fb09e?pvs=25">‘포트 포워딩’ 왜 하는 거야?</a></td>
 	<td>아무 생각없이 했던 포트 포워딩! 왜 하는 걸까?</td>
 	<td>network</td>
 </tr>
@@ -5168,7 +5200,7 @@
 	<td>c, 포인터 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/MR-MixedReailty-3e2ca2b628334780a7c7d3b1467172d2?pvs=25">MR(MixedReailty) 경험에 대한 이해</a></td>
 	<td>Hololens2를 직접 체험하면서 MR을 어떻게 경험할 수 있는지 이해 하고, 개발 방향 및 전망을 알아봅니다</td>
 	<td>멘토특강, 혼합현실, mixed reality, hololens</td>
@@ -5181,13 +5213,13 @@
 </tr>
 <tr>
 	<td>yunslee</td>
-	<td><a href="https://80000coding.notion.site/fa6cef35a2024683973f157b80916a57?pvs=25">멘토링 - 김종필 멘토님, 1</a></td>
+	<td><a href="https://80000coding.notion.site/fa6cef35a2024683973f157b80916a57?pvs=25">멘토링 - 김종필 멘토님</a></td>
 	<td>버넥트의 테크리더 김종필 멘토님을 만나서 C#, Unity 그리고 신입개발자 취업에 대해서 멘토링을 받았습니다.</td>
 	<td>멘토링후기, unity, c#</td>
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/Unity-Apple-Login-12aea39188754210b35dd1066377389c?pvs=25">Unity에서 Apple Login하는 방법, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Unity-Apple-Login-12aea39188754210b35dd1066377389c?pvs=25">Unity에서 Apple Login하는 방법</a></td>
 	<td></td>
 	<td>unity, ios, c# </td>
 </tr>
@@ -5205,7 +5237,7 @@
 </tr>
 <tr>
 	<td>jeonglee</td>
-	<td><a href="https://80000coding.notion.site/Linux-61f06eee3f9a4f52ae6ccecd3df9e544?pvs=25">Linux 기본 개념..!, 3</a></td>
+	<td><a href="https://80000coding.notion.site/Linux-61f06eee3f9a4f52ae6ccecd3df9e544?pvs=25">Linux 기본 개념..!</a></td>
 	<td>linux의 기본 개뇸뇸뇸입니당</td>
 	<td>linux, 기초</td>
 </tr>
@@ -5265,13 +5297,13 @@
 </tr>
 <tr>
 	<td>dha</td>
-	<td><a href="https://80000coding.notion.site/12f5b82fb8ec413ea8b3274c64bc120a?pvs=25">비트 연산으로 플래그 처리하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/12f5b82fb8ec413ea8b3274c64bc120a?pvs=25">비트 연산으로 플래그 처리하기</a></td>
 	<td>(모르고 보면 마법 같은) 비트 연산으로 플래그를 처리해보자.</td>
 	<td>c, 개발지식, 비트 연산</td>
 </tr>
 <tr>
 	<td>chulee</td>
-	<td><a href="https://80000coding.notion.site/061bc460732c482c88477577daa2908b?pvs=25">시스템 접근 통제 방식, 2</a></td>
+	<td><a href="https://80000coding.notion.site/061bc460732c482c88477577daa2908b?pvs=25">시스템 접근 통제 방식</a></td>
 	<td>시스템 보안에서 접근 통제 방식에 대해 다뤄보았습니다.</td>
 	<td>시스템, 보안 </td>
 </tr>
@@ -5307,7 +5339,7 @@
 </tr>
 <tr>
 	<td>echung</td>
-	<td><a href="https://80000coding.notion.site/Swift-ViewController-Lifecycle-c1ab4569f9434bae8c7ea3481ae6fcef?pvs=25">(Swift) ViewController의 Lifecycle 이해하기, 4</a></td>
+	<td><a href="https://80000coding.notion.site/Swift-ViewController-Lifecycle-c1ab4569f9434bae8c7ea3481ae6fcef?pvs=25">(Swift) ViewController의 Lifecycle 이해하기</a></td>
 	<td></td>
 	<td>swift </td>
 </tr>
@@ -5325,7 +5357,7 @@
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/ycha-16a16c24c3f0413e86b322bb3a4c4f7c?pvs=25">소인배 필로소퍼 구현하기 ycha 버전, 2</a></td>
+	<td><a href="https://80000coding.notion.site/ycha-16a16c24c3f0413e86b322bb3a4c4f7c?pvs=25">소인배 필로소퍼 구현하기 ycha 버전</a></td>
 	<td></td>
 	<td>c, 42seoul, multithread</td>
 </tr>
@@ -5355,7 +5387,7 @@
 </tr>
 <tr>
 	<td>sankang</td>
-	<td><a href="https://80000coding.notion.site/const-char-char-const-1c4da656b2bf4cd8a8fa8b70befa3e07?pvs=25">const char* 와 char const*는 같다. 왜?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/const-char-char-const-1c4da656b2bf4cd8a8fa8b70befa3e07?pvs=25">const char* 와 char const*는 같다. 왜?</a></td>
 	<td></td>
 	<td>c, 키워드, 포인터</td>
 </tr>
@@ -5379,7 +5411,7 @@
 </tr>
 <tr>
 	<td>yuchung</td>
-	<td><a href="https://80000coding.notion.site/Makefile-A-to-Z-df141ab97fa540fe97dfe6004cf6a3b9?pvs=25">Makefile을 만들기 위한 A to Z, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-A-to-Z-df141ab97fa540fe97dfe6004cf6a3b9?pvs=25">Makefile을 만들기 위한 A to Z</a></td>
 	<td>makefile을 처음 작성하기까지 공부한 내용들을 정리했습니다.</td>
 	<td>makefile </td>
 </tr>
@@ -5396,14 +5428,14 @@
 	<td>git </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Node-module-e832142f9a954c1983acdf275207c590?pvs=25">Node 에서 module 이란?</a></td>
 	<td>프론트엔드를 공부하는 5기 카뎃입니다 호힛</td>
 	<td>node.js </td>
 </tr>
 <tr>
 	<td>jaesjeon</td>
-	<td><a href="https://80000coding.notion.site/c23cad98c18f478aa3238d6f321e3de8?pvs=25">연결리스트와 이중포인터, 1</a></td>
+	<td><a href="https://80000coding.notion.site/c23cad98c18f478aa3238d6f321e3de8?pvs=25">연결리스트와 이중포인터</a></td>
 	<td>gnl 과제를 수행하면서 사용하게 된 연결리스트에서 헷갈렸던 내용 중 이중포인터에 대해 정리했습니다!</td>
 	<td>c </td>
 </tr>
@@ -5421,7 +5453,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/Xcode-Xcode-13-2-Internal-error-Missing-Package-Description-Module-d0c0cea4a2d446b39e7cde50725dd751?pvs=25">(Xcode) Xcode 13.2 - Internal error : Missing Package Description Module 에러 해결!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Xcode-Xcode-13-2-Internal-error-Missing-Package-Description-Module-d0c0cea4a2d446b39e7cde50725dd751?pvs=25">(Xcode) Xcode 13.2 - Internal error : Missing Package Description Module 에러 해결!</a></td>
 	<td></td>
 	<td>xcode </td>
 </tr>
@@ -5445,7 +5477,7 @@
 </tr>
 <tr>
 	<td>yohwang</td>
-	<td><a href="https://80000coding.notion.site/xcode13-state-config-067a01f4cd5a43b19b773646fbc77878?pvs=25">[xcode13] state config는 어디로 갔을까?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/xcode13-state-config-067a01f4cd5a43b19b773646fbc77878?pvs=25">[xcode13] state config는 어디로 갔을까?</a></td>
 	<td>좌충우돌 iOS 학습기록입니다</td>
 	<td>xcode, ios</td>
 </tr>
@@ -5462,7 +5494,7 @@
 	<td>c, c99</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/67302eee13074056a4e9469669d7fff2?pvs=25">성장하는 주니어 개발자</a></td>
 	<td>성장 가능성이 높은 주니어 개발자들은 어떤 태도를 갖고 있고, 어떻게 하면 더 좋은 개발자로 성장할 수 있을지 이야기해봅니다.</td>
 	<td>멘토특강, 주니어개발자, ios개발, 질문, 소통, 탐구, 역지사지</td>
@@ -5481,25 +5513,25 @@
 </tr>
 <tr>
 	<td>jeonglee, yji</td>
-	<td><a href="https://80000coding.notion.site/C-99cb1911b2814c6c97d91d82e80956d9?pvs=25">C언어로 게임을 만든다고..?!, 2</a></td>
+	<td><a href="https://80000coding.notion.site/C-99cb1911b2814c6c97d91d82e80956d9?pvs=25">C언어로 게임을 만든다고..?!</a></td>
 	<td>학교 과제로 만들어본 C언어 로그라이크 게임 개발일지</td>
 	<td>c, game, ncurses, 튜토리얼</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/vim-ae2da9b3489e404397d7f8b01c4413cc?pvs=25">vim에서 문자열 치환하기</a></td>
 	<td></td>
 	<td>vim, 명령어</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/483ff55e54744a06bd7d8e8ebb054cde?pvs=25">자바스크립트는 왜 프로토타입을 선택했을까?, 2</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/483ff55e54744a06bd7d8e8ebb054cde?pvs=25">자바스크립트는 왜 프로토타입을 선택했을까?</a></td>
 	<td>프론트엔드에 관심 있는 5기 카뎃입니다. 좋은 글인 것 같아서 공유합니다ㅎㅎ</td>
 	<td>js, javascript </td>
 </tr>
 <tr>
 	<td>gulee</td>
-	<td><a href="https://80000coding.notion.site/size_t-405b810d81b8452ea6f9b1282d816ba4?pvs=25">size_t 란 ?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/size_t-405b810d81b8452ea6f9b1282d816ba4?pvs=25">size_t 란 ?</a></td>
 	<td>size_t 는 뭐하는 녀석이지...?</td>
 	<td>c, 개발지식, 자료형, size_t, c언어</td>
 </tr>
@@ -5529,7 +5561,7 @@
 </tr>
 <tr>
 	<td>dha</td>
-	<td><a href="https://80000coding.notion.site/Swift-0d3e4130e6634caeaa216067edab32ad?pvs=25">(Swift) 로컬 푸시 알림 구현하기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Swift-0d3e4130e6634caeaa216067edab32ad?pvs=25">(Swift) 로컬 푸시 알림 구현하기</a></td>
 	<td>iOS - Local notification</td>
 	<td>ios, swift, 앱개발</td>
 </tr>
@@ -5547,7 +5579,7 @@
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/iOS-939aa0f816694943a9b27149ddfaef5c?pvs=25">iOS 출시 규정, 2</a></td>
+	<td><a href="https://80000coding.notion.site/iOS-939aa0f816694943a9b27149ddfaef5c?pvs=25">iOS 출시 규정</a></td>
 	<td></td>
 	<td>ios, mac os, apple</td>
 </tr>
@@ -5565,24 +5597,24 @@
 </tr>
 <tr>
 	<td>jaesjeon</td>
-	<td><a href="https://80000coding.notion.site/Libft-atoi-KO-c313c79c21b6462487eb421b2100d28a?pvs=25">Libft-<atoi> 왜 [KO]가 뜨는걸까?, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Libft-atoi-KO-c313c79c21b6462487eb421b2100d28a?pvs=25">Libft-<:atoi:> 왜 [KO]가 뜨는걸까?</a></td>
 	<td>atoi 함수의 리턴값에 대해 알아봅니다!</td>
 	<td>c, 42seoul </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/e3db3661f1f9437d95d7962f748f45c4?pvs=25">그룹 멘토링 소감(오종인 멘토님)</a></td>
 	<td></td>
 	<td>멘토링후기 </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/101-a29ab4b67dfe47ff97a1af32e59f6f42?pvs=25">그로스 해킹 101, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/101-a29ab4b67dfe47ff97a1af32e59f6f42?pvs=25">그로스 해킹 101</a></td>
 	<td>차경묵(Hannal, Software Engineer) 멘토와 함께 일하는 마켓핏랩 정성영(Growth Director), 변성철(Business Analyst)님과 함께 요즘 웹/앱 서비스들을 데이터로 성장시키는 방법들을 소개합니다.</td>
 	<td>멘토특강, 그로스해킹, growth hacking, 데이터 마케팅</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/2efe77963d46401ebc865dcabeb07e0e?pvs=25">디자인 씽킹으로 프로젝트 기획해보기</a></td>
 	<td>아이디어가 있을때 발전시키는 방법에 대한 소개</td>
 	<td>멘토특강, 디자인씽킹, design thinking</td>
@@ -5595,84 +5627,84 @@
 </tr>
 <tr>
 	<td>donlee</td>
-	<td><a href="https://80000coding.notion.site/Oauth-2-0-79ced3f6868347beb8821dc39fcebde7?pvs=25">Oauth 2.0 는 무엇일까, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Oauth-2-0-79ced3f6868347beb8821dc39fcebde7?pvs=25">Oauth 2.0 는 무엇일까</a></td>
 	<td>웹개발에서 무조건 만나는 Oauth 2.0, 과연 무엇일까?</td>
 	<td>web, 기초지식</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/1d4153ba8a184bf5bcc46590ccacfb38?pvs=25">정규식으로 한글, 영어, 숫자만 입력받기</a></td>
 	<td>안녕하세요 5기 카뎃입니다! JS를 위주로 공부하고 있습니다. 보기만 하고 정리를 하지 않으니까 머리에 남는게 없어서 시작합니다...</td>
 	<td>javascript, js </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/62e181c1d73f491e9f268ea4412bf9e7?pvs=25">생성자함수, 프로토타입을 이해해보자!</a></td>
 	<td>안녕하세요 5기 카뎃입니다! JS를 위주로 공부하고 있습니다. 보기만 하고 정리를 하지 않으니까 머리에 남는게 없어서 시작합니다...</td>
 	<td>javascript, js </td>
 </tr>
 <tr>
 	<td>yohwang</td>
-	<td><a href="https://80000coding.notion.site/101-f8e4deac499242a0b005914eb98deb00?pvs=25">그로스해킹 101(교육생 후기), 2</a></td>
+	<td><a href="https://80000coding.notion.site/101-f8e4deac499242a0b005914eb98deb00?pvs=25">그로스해킹 101(교육생 후기)</a></td>
 	<td>팔만코딩경에 처음으로 작성해보는 글입니다! 혹 잘못 작성한 부분이 있다면 댓글 부탁드립니다!</td>
 	<td>멘토특강후기, 그로스해커</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Swift-Sign-In-With-Apple-92571e69c1a642dd9745310d709ab448?pvs=25">(Swift) Sign In With Apple 구현하기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/tmux-9004b1cd580c4843ad76d3c85682a778?pvs=25">tmux로 터미널로 더 간편하게 코딩하기!</a></td>
 	<td></td>
 	<td>shell, 화면분할, 터미널_활성화</td>
 </tr>
 <tr>
 	<td>gulee</td>
-	<td><a href="https://80000coding.notion.site/C-5b6a0cc061644474b4ddcfab0ea830d0?pvs=25">C언어 기초문법(?), 2</a></td>
+	<td><a href="https://80000coding.notion.site/C-5b6a0cc061644474b4ddcfab0ea830d0?pvs=25">C언어 기초문법(?)</a></td>
 	<td>안녕하세요. 5기 gulee입니다. 앞으로 들어올 기수 포함 현재 저와 같이 들어온 5기분들중에 c언어 기초가 부족하다고 생각하시는 분들을 위해서 올려요!</td>
 	<td>c, 기초지식, c언어</td>
 </tr>
 <tr>
 	<td>kanghyki</td>
-	<td><a href="https://80000coding.notion.site/Undefined-behavior-02ea2950e0a5428da737b08250e04481?pvs=25">Undefined behavior 란?, 3</a></td>
+	<td><a href="https://80000coding.notion.site/Undefined-behavior-02ea2950e0a5428da737b08250e04481?pvs=25">Undefined behavior 란?</a></td>
 	<td></td>
 	<td>개발지식, c, undefined behavior</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/b148ea74edc54fd69a1c25d5317bd916?pvs=25">게임 서버 개발자 준비하기</a></td>
 	<td>적어주세요!</td>
 	<td>멘토특강, 게임서버, 게임개발</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/v3-044f8405756246f5a03d59e27ea9e52a?pvs=25">오픈소스 만들고 먹고살기 v3</a></td>
 	<td>오픈소스를 만드는 방법 부터, 테드폴디비허브 프로젝트와 엔터프라이즈 제품으로 먹고사는 지금까지의 과정을 이야기하는 시간입니다.</td>
 	<td>멘토특강, 오픈소스, 테드폴허브</td>
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/34796a9a444b4a25a56360a7aeadf623?pvs=25">멘토링 - 김종필 멘토님, 2</a></td>
+	<td><a href="https://80000coding.notion.site/34796a9a444b4a25a56360a7aeadf623?pvs=25">멘토링 - 김종필 멘토님</a></td>
 	<td>면접 후기 멘토링</td>
 	<td>unity, c#, 멘토링후기</td>
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/github-dev-97dd08bde65843029c77e4ab2d660047?pvs=25">github.dev로 간단하게 코드 살펴보기, 5</a></td>
+	<td><a href="https://80000coding.notion.site/github-dev-97dd08bde65843029c77e4ab2d660047?pvs=25">github.dev로 간단하게 코드 살펴보기</a></td>
 	<td></td>
 	<td>github </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/2e98c0bdbb8f4feda70a06a8a780c2a8?pvs=25">개발자가 알면 좋은 네트워크 기본지식, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/2e98c0bdbb8f4feda70a06a8a780c2a8?pvs=25">개발자가 알면 좋은 네트워크 기본지식</a></td>
 	<td>몰라도 개발할 수 있지만, 알면 더 잘할 수 있는 네트워크 기본 지식 알아보기</td>
 	<td>멘토특강, network, 기초지식</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/C-068f0a1cb2a242559566bacc43b286bf?pvs=25">C++ 게임 서버 개발하기</a></td>
 	<td>C++ 게임 서버 개발을 하기 위해서 무엇을, 어떻게 공부해야할지 이야기 합니다</td>
 	<td>멘토특강, c++, 게임서버</td>
@@ -5697,12 +5729,12 @@
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/PlayerPrefs-a5c0eb1301a14d10b416240bfba684c2?pvs=25">데이터 저장 - PlayerPrefs, 1</a></td>
+	<td><a href="https://80000coding.notion.site/PlayerPrefs-a5c0eb1301a14d10b416240bfba684c2?pvs=25">데이터 저장 - PlayerPrefs</a></td>
 	<td></td>
 	<td>unity, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/5d2b22e158c043c3a71df6a447e68d1d?pvs=25">인디 개발자가 들려주는 자유로운 삶과 개발</a></td>
 	<td>자유로운 iOS 모바일 개발자의 삶에 대한 진솔한 이야기를 들려드릴게요. 디자이너와의 작업 방식과 프로젝트 관리 방법에 대해서도 함께 알아보아요 ​</td>
 	<td>멘토특강, 인디개발자, ios, 앱개발</td>
@@ -5721,7 +5753,7 @@
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/6ca83cc92812485e928636db36497f4d?pvs=25">사파리 탭 그룹 기능, 2</a></td>
+	<td><a href="https://80000coding.notion.site/6ca83cc92812485e928636db36497f4d?pvs=25">사파리 탭 그룹 기능</a></td>
 	<td></td>
 	<td>mac os, safari, mac</td>
 </tr>
@@ -5732,19 +5764,19 @@
 	<td>vscode, 사람답게 살기</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/300-1359ea613b714a598e7e0ff8ce3cbfff?pvs=25">엔지니어 출신 창업자가 겪은 300억 밸류 회사가 되기까지의 일들</a></td>
 	<td>창업, 투자, 기술개발, 양산, 소비자반응.. \'엔지니어의 결과물은 소비자가 판단한다\'</td>
 	<td>멘토특강, 창업</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Rust-46251ef4d7344b59a9269ecfb218a848?pvs=25">실전으로 시작하는 Rust 프로그래밍</a></td>
 	<td>Rust 프로그래밍을 실전으로 시작하며 배우고 덤으로 Hacktoberfest에도 참가합시다. (전달식 강의가 아닙니다. 개발 장비를 지참 부탁드립니다.)</td>
 	<td>멘토특강, rust, hacktoberfest, 프로그래밍 언어</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/0b581ada8d064563ad2425b45b657ca2?pvs=25">개발자로 걸어온 길</a></td>
 	<td>짧다면 짧고 길다면 긴 10년 동안의 개발여정기를 들려드립니다</td>
 	<td>멘토특강, 개발자의 삶</td>
@@ -5811,7 +5843,7 @@
 </tr>
 <tr>
 	<td>echung</td>
-	<td><a href="https://80000coding.notion.site/git-add-c651a07e82a2435eb3b822384482cddc?pvs=25">git add 실수했을때.. 작업 되돌리기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/git-add-c651a07e82a2435eb3b822384482cddc?pvs=25">git add 실수했을때.. 작업 되돌리기</a></td>
 	<td></td>
 	<td>git, github </td>
 </tr>
@@ -5865,7 +5897,7 @@
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/SDL-2-0-6-Texture-7753186d6cf441d5bd5a580b19b8108a?pvs=25">SDL 2.0 을 알아보자 (6탄) - Texture 이미지 출력하기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/SDL-2-0-6-Texture-7753186d6cf441d5bd5a580b19b8108a?pvs=25">SDL 2.0 을 알아보자 (6탄) - Texture 이미지 출력하기</a></td>
 	<td></td>
 	<td>c, graphics </td>
 </tr>
@@ -5889,7 +5921,7 @@
 </tr>
 <tr>
 	<td>echung</td>
-	<td><a href="https://80000coding.notion.site/Swift-if-guard-0bd77cd37dc74cf493ee8ca4fbca898e?pvs=25">Swift에서 if 와 guard중에 뭘 써야하나..., 2</a></td>
+	<td><a href="https://80000coding.notion.site/Swift-if-guard-0bd77cd37dc74cf493ee8ca4fbca898e?pvs=25">Swift에서 if 와 guard중에 뭘 써야하나...</a></td>
 	<td></td>
 	<td>swift, swift docs</td>
 </tr>
@@ -5937,13 +5969,13 @@
 </tr>
 <tr>
 	<td>suhshin, ycha</td>
-	<td><a href="https://80000coding.notion.site/238083d6cd2c467d9847a7beb5bc744d?pvs=25">새벽에 영화보고 삘받아서 만든 게임 개발기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/238083d6cd2c467d9847a7beb5bc744d?pvs=25">새벽에 영화보고 삘받아서 만든 게임 개발기</a></td>
 	<td></td>
 	<td>c, game </td>
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/SDL-2-0-1-6cea1c29a2bc426f8fe18ae9994a8ae9?pvs=25">SDL 2.0 을 알아보자 (1탄) - 설치하기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/SDL-2-0-1-6cea1c29a2bc426f8fe18ae9994a8ae9?pvs=25">SDL 2.0 을 알아보자 (1탄) - 설치하기</a></td>
 	<td>mlx 말고 그래픽라이브러리를 써보자</td>
 	<td>c, graphics, sdl</td>
 </tr>
@@ -5955,7 +5987,7 @@
 </tr>
 <tr>
 	<td>suhshin, ycha</td>
-	<td><a href="https://80000coding.notion.site/Swift-feat-KeyPath-2c9f09c681624336b8fea2d2d721f5ae?pvs=25">(Swift) 이름은 모르지만 어쨌든 "\\." 에 대한 포스팅 (feat. KeyPath), 2</a></td>
+	<td><a href="https://80000coding.notion.site/Swift-feat-KeyPath-2c9f09c681624336b8fea2d2d721f5ae?pvs=25">(Swift) 이름은 모르지만 어쨌든 "\\." 에 대한 포스팅 (feat. KeyPath)</a></td>
 	<td>Swift의 keyPath 에 대해서 알아보자</td>
 	<td>swift </td>
 </tr>
@@ -5966,7 +5998,7 @@
 	<td>swift </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/List-vs-Tuple-c394125b2c624d62bc371ff7ec150cf4?pvs=25">List vs Tuple</a></td>
 	<td></td>
 	<td>python, 기초</td>
@@ -5979,67 +6011,67 @@
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/dev-e80f91be474f4510aa5a444bad0ef600?pvs=25">앗! 실수로 dev 브랜치에서 작업했을때..!, 2</a></td>
+	<td><a href="https://80000coding.notion.site/dev-e80f91be474f4510aa5a444bad0ef600?pvs=25">앗! 실수로 dev 브랜치에서 작업했을때..!</a></td>
 	<td>stash 를 활용해보자</td>
 	<td>git, github</td>
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/geojson-80236516709b46a08a51e92357e1b66e?pvs=25">geojson 테스트 파일 만들기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/geojson-80236516709b46a08a51e92357e1b66e?pvs=25">geojson 테스트 파일 만들기</a></td>
 	<td></td>
 	<td>개발지식 </td>
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/fract-ol-fractal-4f76dc7e8a5b400fb09ddaca95d58ab5?pvs=25">[fract-ol] fractal 개념, 5</a></td>
+	<td><a href="https://80000coding.notion.site/fract-ol-fractal-4f76dc7e8a5b400fb09ddaca95d58ab5?pvs=25">[fract-ol] fractal 개념</a></td>
 	<td></td>
 	<td>42seoul </td>
 </tr>
 <tr>
 	<td>jaeskim</td>
-	<td><a href="https://80000coding.notion.site/ReactDom-Portal-Render-64afbb3d1d864c76988c2dc3ab6e0017?pvs=25">ReactDom의 Portal, Render의 차이점, 활용방안 알아보기!, 2</a></td>
+	<td><a href="https://80000coding.notion.site/ReactDom-Portal-Render-64afbb3d1d864c76988c2dc3ab6e0017?pvs=25">ReactDom의 Portal, Render의 차이점, 활용방안 알아보기!</a></td>
 	<td>ReactDom의 createPortal, render 함수에 대해서 정리 하였습니다.</td>
 	<td>react, reactdom</td>
 </tr>
 <tr>
 	<td>suhshin, ycha</td>
-	<td><a href="https://80000coding.notion.site/eb1726b85f884cd4b5d9bf4b276ec401?pvs=25">멘토링 - 김종필 멘토님, 2</a></td>
+	<td><a href="https://80000coding.notion.site/eb1726b85f884cd4b5d9bf4b276ec401?pvs=25">멘토링 - 김종필 멘토님</a></td>
 	<td></td>
 	<td>멘토링후기 </td>
 </tr>
 <tr>
 	<td>jiychoi</td>
-	<td><a href="https://80000coding.notion.site/Github-PR-7210208eb4f749299590f8713d7ebb78?pvs=25">Github에서 PR 리뷰하기, 5</a></td>
+	<td><a href="https://80000coding.notion.site/Github-PR-7210208eb4f749299590f8713d7ebb78?pvs=25">Github에서 PR 리뷰하기</a></td>
 	<td></td>
 	<td>git, github, 기초</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/5-yari-content-ko-ko-afe1d9af00b5402598906844761fd37a?pvs=25">5 월 yari-content-ko — ko 지역 고정 해제 및 향후 계획, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/5-yari-content-ko-ko-afe1d9af00b5402598906844761fd37a?pvs=25">5 월 yari-content-ko — ko 지역 고정 해제 및 향후 계획</a></td>
 	<td></td>
 	<td>open source, mdn</td>
 </tr>
 <tr>
 	<td>suhshin, echung, ycha</td>
-	<td><a href="https://80000coding.notion.site/Git-workflow-98ac572cf4fa44e6a8c6d046b2d8d5a8?pvs=25">Git workflow 따라해보기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Git-workflow-98ac572cf4fa44e6a8c6d046b2d8d5a8?pvs=25">Git workflow 따라해보기</a></td>
 	<td>git workflow 를 비슷하게 따라해보자!</td>
 	<td>git </td>
 </tr>
 <tr>
 	<td>suhshin, echung, ycha</td>
-	<td><a href="https://80000coding.notion.site/Git-branch-35fc5453b82343c4bdd37f53c24ec2fb?pvs=25">Git branch 입문하기 - 머지할게요, 3</a></td>
+	<td><a href="https://80000coding.notion.site/Git-branch-35fc5453b82343c4bdd37f53c24ec2fb?pvs=25">Git branch 입문하기 - 머지할게요</a></td>
 	<td>git branch 알고가자!</td>
 	<td>git </td>
 </tr>
 <tr>
 	<td>klim</td>
-	<td><a href="https://80000coding.notion.site/b81217c169c6459ca2684b357afda3bb?pvs=25">머신러닝 분류 모델의 성능 평가 지표 분석, 1</a></td>
+	<td><a href="https://80000coding.notion.site/b81217c169c6459ca2684b357afda3bb?pvs=25">머신러닝 분류 모델의 성능 평가 지표 분석</a></td>
 	<td>머신러닝 탐지/분류 모델의 성능을 평가하는 지표를 분석해보자</td>
 	<td>인공지능, 딥러닝, 머신러닝</td>
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/f1eb82ef0a4a466abf28e838894ce459?pvs=25">나만 몰랐던 이야기 - 데이터 삭제편, 5</a></td>
+	<td><a href="https://80000coding.notion.site/f1eb82ef0a4a466abf28e838894ce459?pvs=25">나만 몰랐던 이야기 - 데이터 삭제편</a></td>
 	<td></td>
 	<td>잡지식, 파일삭제</td>
 </tr>
@@ -6051,30 +6083,30 @@
 </tr>
 <tr>
 	<td>nasong</td>
-	<td><a href="https://80000coding.notion.site/Unity-ae4e684af9ec48efbe0de52f74ab627e?pvs=25">Unity로 만든 게임을 웹 사이트에 배포하는 법, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Unity-ae4e684af9ec48efbe0de52f74ab627e?pvs=25">Unity로 만든 게임을 웹 사이트에 배포하는 법</a></td>
 	<td></td>
 	<td>unity, webgl</td>
 </tr>
 <tr>
 	<td>jiychoi</td>
-	<td><a href="https://80000coding.notion.site/Docker-a5351d92ef3c4ebea6156a0eed70063f?pvs=25">생활코딩 Docker 입구 수업 정리, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Docker-a5351d92ef3c4ebea6156a0eed70063f?pvs=25">생활코딩 Docker 입구 수업 정리</a></td>
 	<td>생활코딩 도커 강의 (https://opentutorials.org/course/4781) 를 간단하게 정리하였읍니다</td>
 	<td>docker, 기초</td>
 </tr>
 <tr>
 	<td>suhshin, ycha</td>
-	<td><a href="https://80000coding.notion.site/71a6f4cf5aa24b76be8115c1e16662c3?pvs=25">멘토링 - 최흥배 멘토님, 3</a></td>
+	<td><a href="https://80000coding.notion.site/71a6f4cf5aa24b76be8115c1e16662c3?pvs=25">멘토링 - 최흥배 멘토님</a></td>
 	<td></td>
 	<td>멘토링후기 </td>
 </tr>
 <tr>
 	<td>jaeskim</td>
-	<td><a href="https://80000coding.notion.site/Github-Action-JS-piscine-e108168be3124db2a84581dec817fce4?pvs=25">Github Action를 이용하여 JS piscine 자동화 하기!, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Github-Action-JS-piscine-e108168be3124db2a84581dec817fce4?pvs=25">Github Action를 이용하여 JS piscine 자동화 하기!</a></td>
 	<td></td>
 	<td>github-action, git, jspiscine</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/88caa222030244f1b6651b8550b55959?pvs=25">금융시스템 딥러닝 적용하기</a></td>
 	<td>기존 금융 시스템에 대한 이해를 바탕으로 딥러닝 모델을 탑재할 때 고려해야 할 사항을 공유</td>
 	<td>멘토특강, 딥러닝</td>
@@ -6087,7 +6119,7 @@
 </tr>
 <tr>
 	<td>ycha</td>
-	<td><a href="https://80000coding.notion.site/debd8267449b45ea92bb5822a2f11bec?pvs=25">커밋 메세지 바꾸기, 1</a></td>
+	<td><a href="https://80000coding.notion.site/debd8267449b45ea92bb5822a2f11bec?pvs=25">커밋 메세지 바꾸기</a></td>
 	<td></td>
 	<td>git, github </td>
 </tr>
@@ -6111,13 +6143,13 @@
 </tr>
 <tr>
 	<td>chan</td>
-	<td><a href="https://80000coding.notion.site/182e9d2e7f4e49a397a6762fb989e946?pvs=25">정규표현식 사용해보기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/182e9d2e7f4e49a397a6762fb989e946?pvs=25">정규표현식 사용해보기</a></td>
 	<td>정규표현식을 통한 문자열 파싱 </td>
 	<td>정규표현식 </td>
 </tr>
 <tr>
 	<td>echung</td>
-	<td><a href="https://80000coding.notion.site/bbfbfed5d55c4aafa2b8b52578472d0d?pvs=25">마크다운 초보가 쓰는 마크다운 고수되는 법, 5</a></td>
+	<td><a href="https://80000coding.notion.site/bbfbfed5d55c4aafa2b8b52578472d0d?pvs=25">마크다운 초보가 쓰는 마크다운 고수되는 법</a></td>
 	<td></td>
 	<td>github, markdown</td>
 </tr>
@@ -6135,72 +6167,72 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/865f4b2a519849e8a1730f893a4fed45?pvs=25">깃허브 프로필 꾸미기!, 5</a></td>
+	<td><a href="https://80000coding.notion.site/865f4b2a519849e8a1730f893a4fed45?pvs=25">깃허브 프로필 꾸미기!</a></td>
 	<td></td>
 	<td>github, 포트폴리오</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/93575dec492048a3b41cf1defb626bc3?pvs=25">컴퓨터는 어떻게 동작하는가?</a></td>
 	<td>전기신호 0과 1이 CPU를 움직이는 원리부터 VM위에서 동작하는 자바스크립트 까지 동작원리</td>
 	<td>멘토특강, 컴퓨터</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/CPO-e173cc28393f4f91948101205b14faf8?pvs=25">멘토 특강 - 뉴로핏 신현묵 CPO</a></td>
 	<td>제 8회 기업 채용 설명회(취업특강)</td>
 	<td>멘토특강후기, 취업</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/Justin-Yoo-fb1cb58499484633ac1c94a23d245298?pvs=25">기업 채용 설명회 후기 - Justin Yoo, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/Justin-Yoo-fb1cb58499484633ac1c94a23d245298?pvs=25">기업 채용 설명회 후기 - Justin Yoo</a></td>
 	<td></td>
 	<td>멘토특강후기 </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/makefile-objs-d933d00e5e484b029be28909dfc18eb4?pvs=25">makefile objs 분리하기, 6</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/makefile-objs-d933d00e5e484b029be28909dfc18eb4?pvs=25">makefile objs 분리하기</a></td>
 	<td></td>
 	<td>makefile </td>
 </tr>
 <tr>
 	<td>echung, ycha</td>
-	<td><a href="https://80000coding.notion.site/Seg-fault-lldb-fad9b8dad24c4e1797c74663f42b7968?pvs=25">Seg fault 나서 다 때려치고 싶을 때.. lldb 간단 사용법, 2</a></td>
+	<td><a href="https://80000coding.notion.site/Seg-fault-lldb-fad9b8dad24c4e1797c74663f42b7968?pvs=25">Seg fault 나서 다 때려치고 싶을 때.. lldb 간단 사용법</a></td>
 	<td></td>
 	<td>개발지식 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/CTO-1845422d1fe34be3af9a64bb336bd591?pvs=25">기술기반 스타트업 CTO되어서 알게된 것</a></td>
 	<td>S/W솔루션 개발 기업의 CTO를 하면서 미리 알았었다면 좋았을 개발, 사람, 영업에 대한 공유</td>
 	<td>멘토특강, cto, 기술기반</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/JS-1880d59122084ab78275bd7651b794c7?pvs=25">한페이지로 정리하는 JS 기본</a></td>
 	<td></td>
 	<td>js </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/CSS-aced645963b74c39bd19e616df289cb1?pvs=25">한페이지로 정리하는 CSS 속성</a></td>
 	<td></td>
 	<td>css </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/CSS-248455a098bc4b96a2c396cab930d13d?pvs=25">한페이지로 정리하는 CSS</a></td>
 	<td></td>
 	<td>css </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/HTML-VSCODE-ca9c23f9e998415ba48f034b6f72aa6b?pvs=25">한페이지로 정리하는 HTML, VSCODE 설정</a></td>
 	<td></td>
 	<td>html, vscode </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/HTML-CSS-JS-b7b81bf6b5d9485fa70dcfdf394c8b10?pvs=25">한페이지로 정리하는 HTML, CSS, JS</a></td>
 	<td></td>
 	<td>js, html, css </td>
@@ -6219,7 +6251,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/so_long-bgm-54a0b8c841ed4a3b8bc040a1135b3cb5?pvs=25">so_long 게임에 bgm을 넣어보자(쉘 멀티프로세스 활용하기), 2</a></td>
+	<td><a href="https://80000coding.notion.site/so_long-bgm-54a0b8c841ed4a3b8bc040a1135b3cb5?pvs=25">so_long 게임에 bgm을 넣어보자(쉘 멀티프로세스 활용하기)</a></td>
 	<td></td>
 	<td>shell, 42seoul, multiprocess</td>
 </tr>
@@ -6237,18 +6269,18 @@
 </tr>
 <tr>
 	<td>najlee</td>
-	<td><a href="https://80000coding.notion.site/Closure-96b07fc0f7844963bcc2b9d55842ad6e?pvs=25">Closure 와 고차함수, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Closure-96b07fc0f7844963bcc2b9d55842ad6e?pvs=25">Closure 와 고차함수</a></td>
 	<td></td>
 	<td>swift</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/WebRTC-76a6cfb706a24047a9bb2b5512a1b288?pvs=25">간단한 WebRTC 실습</a></td>
 	<td></td>
 	<td>react, nest, webrtc </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/WebRTC-f4e6378a1ec24d4b974800edd02dd26d?pvs=25">WebRTC 개요</a></td>
 	<td></td>
 	<td>webrtc, chrome </td>
@@ -6266,14 +6298,14 @@
 	<td>react, typescript, notion, next.js, notion-api</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/8c41a026fd674b7c91c8847aad19c370?pvs=25">멀티플레이 이동게임 만들기</a></td>
 	<td>React 와 Nest 를 이용한 멀티플레이 이동게임</td>
 	<td>react, nest, 저빈도 업데이트, 멀티플레이 게임 동기화</td>
 </tr>
 <tr>
 	<td>suhshin, ycha</td>
-	<td><a href="https://80000coding.notion.site/Makefile-7253209b7c794ec19efe8847767f0350?pvs=25">Makefile 에서 로딩중 띄우기, 4</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-7253209b7c794ec19efe8847767f0350?pvs=25">Makefile 에서 로딩중 띄우기</a></td>
 	<td>Makefile 변수를 통하여 로딩중 띄운다.</td>
 	<td>makefile, shell, linux, mac os, 로딩중</td>
 </tr>
@@ -6296,7 +6328,7 @@
 	<td>shell, linux </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/GUI-d567eefc628c46d6bcd682a457030e6f?pvs=25">윈도우에서 리눅스 GUI 프로그램 실행하기</a></td>
 	<td></td>
 	<td>ros, linux </td>
@@ -6320,13 +6352,13 @@
 	<td>js, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/a72be28a5d034b40bc221397fb3f03c0?pvs=25">초보자를 위한 자바 세미나</a></td>
 	<td>자바 입문</td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/RxSwift-2f75684be74b480bbb4fd1b77dd51499?pvs=25">RxSwift 연습하기</a></td>
 	<td>RxSwift 로 로그인화면 구현해보기</td>
 	<td>swift, rxswift, ios</td>
@@ -6338,7 +6370,7 @@
 	<td>js, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/2399f582643343ffafefd06c995de9bf?pvs=25">인공지능에서 인공지능 플랫폼의 역할과 클라우드 네이티브 기술</a></td>
 	<td>인공지능 모델을 개발에서 플랫폼의 역할이 매우 중요하며 이런 시스템이 AI 산업에서 결정적인 역할을 할 것입니다.</td>
 	<td>멘토특강, ai, cloud</td>
@@ -6357,36 +6389,36 @@
 </tr>
 <tr>
 	<td>sehyan</td>
-	<td><a href="https://80000coding.notion.site/Deque-bab54a8f01de4dcc96302e8eaae9ed67?pvs=25">양방향 큐-Deque, 4</a></td>
+	<td><a href="https://80000coding.notion.site/Deque-bab54a8f01de4dcc96302e8eaae9ed67?pvs=25">양방향 큐-Deque</a></td>
 	<td></td>
 	<td>자료구조 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/GPU-CUDA-d8131e92bde94526a604217ef31d5a86?pvs=25">인공지능을 위한 GPU(CUDA 설치)</a></td>
 	<td>\'왜 AI분야는 GPU가 좋아야 하지?\' 및 AI 공부를 위한 GPU설치 방법</td>
 	<td>인공지능, gpu, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Rust-65e2480de86d40f69c3b5c61cf6f98d6?pvs=25">안전한 프로그래밍 언어 Rust</a></td>
 	<td>Rust는 어떤 언어이고, 무엇이 Rust를 StackOverflow에서 가장 사랑받는 프로그래밍 언어로 만들었을까?</td>
 	<td>멘토특강, rust, 프로그래밍 언어, 메모리누수, 시큐어코딩</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/SW-277aaad27bc8423faa1eeb788e93ca06?pvs=25">반도체 SW 개발자의 삶</a></td>
 	<td>C, C++을 사용하여 수준높은 FW 를 만들고, 나노 단위의 성능까지 고려하는 반도체 SW 개발자의 삶과 처우 그리고 미래 성장성 공유</td>
 	<td>멘토특강, 반도체, sw, 개발자의 삶</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/32495fa4d05249c0a7ef62d738c7f533?pvs=25">개발자로서 사람답게 살기</a></td>
 	<td>신입 개발자로서 거짓없이 사람답게 살려면 어떻게 해야할것인가에 대한 탐구</td>
 	<td>멘토특강, 사람답게 살기, 개발자의 삶</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Enhanced-AI-Platform-64b950a2dfb448ee94958cb6d7c06239?pvs=25">Enhanced AI Platform</a></td>
 	<td>다양한 기존 시스템에 딥러닝 모델을 적용하기 위해 선행되어야 할 ai platform과 그 플랫폼의 고도화 방향성 공유</td>
 	<td>멘토특강, ai, platform</td>
@@ -6405,7 +6437,7 @@
 </tr>
 <tr>
 	<td>gilee</td>
-	<td><a href="https://80000coding.notion.site/VIM-IDE-6fcdf4a3730f4ba0927a4434e38e3550?pvs=25">VIM을 IDE로!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/VIM-IDE-6fcdf4a3730f4ba0927a4434e38e3550?pvs=25">VIM을 IDE로!</a></td>
 	<td></td>
 	<td>vim </td>
 </tr>
@@ -6434,7 +6466,7 @@
 	<td>c, shell </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/AppleMapKit-by-kchoi-a986462f9bdd42758e5ddbe46b869ecd?pvs=25">AppleMapKit 에서 내가 보고 있는 화면 실제 크기 구하기 (by kchoi)</a></td>
 	<td></td>
 	<td>swift </td>
@@ -6459,7 +6491,7 @@
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/include-guard-naming-convention-53f5ead4b4224b94b0e8f1fb7416d8cf?pvs=25">나만 몰랐던 이야기 - include guard의 naming convention편, 2</a></td>
+	<td><a href="https://80000coding.notion.site/include-guard-naming-convention-53f5ead4b4224b94b0e8f1fb7416d8cf?pvs=25">나만 몰랐던 이야기 - include guard의 naming convention편</a></td>
 	<td></td>
 	<td>c, c++, 헤더파일, include guard</td>
 </tr>
@@ -6470,151 +6502,151 @@
 	<td>c, 자료구조, 연결리스트, 구조체, 동적할당</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/24-Networking-with-Java-3-TCP-UDP-6e6e6e5c837d474c996cdb5acb7b936f?pvs=25">자바를 자바 24 (Networking with Java(3)) : TCP, UDP</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/26-Multithreaded-Programming-with-Java-2-Thread-States-Daemon-Thread-468a1731d0b84aab8c05ceda9c13b8f2?pvs=25">자바를 자바 26 (Multithreaded Programming with Java (2)) : Thread States, Daemon Thread</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/25-Chat-Program-eaf3a69d8fea471a8882a8ee928157b9?pvs=25">자바를 자바 25 (Chat Program)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/21-Network-IP-8ceb484760f54ac4b521321d0135baa4?pvs=25">자바를 자바 21 (Network, IP)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/23-processes-and-thread-multithreading-137bf839b9344aa1beeb9b99460de383?pvs=25">자바를 자바 23 (processes and thread, multithreading)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/22-Reading-from-HTML-626355c7ee454a0e92dba1cb27548feb?pvs=25">자바를 자바 22 (Reading from HTML)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/20-Collection-Framework-5-HashMap-TreeMap-f82d192a77114179b0a0e6c1241c8aa5?pvs=25">자바를 자바 20 (Collection Framework(5)) : HashMap, TreeMap</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/18-Collection-Framework-3-Iterator-Array-Comparable-Comparator-3a5058ee1c774230a5a696fb2f138a67?pvs=25">자바를 자바 18 (Collection Framework (3)) : Iterator, Array, Comparable, Comparator</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/16-Collection-Framework-1-List-Set-Map-ArrayList-b826a355a46d40f4bdcb11def7dcdf33?pvs=25">자바를 자바 16(Collection Framework(1), List, Set, Map, ArrayList)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/19-Collection-Framework-4-HashSet-TreeSet-d2a78b4f49b24ea79b6a860a83ca99f8?pvs=25">자바를 자바 19 (Collection Framework (4)) : HashSet, TreeSet</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/17-Collection-Framework-2-LinkedList-Stack-Queue-efb2b4d2d3cd4b9ba50889334839b74e?pvs=25">자바를 자바 17(Collection Framework(2), LinkedList, Stack, Queue)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/13-Exception-Handling-Errors-3f1620c9bf33431ca22e9bff8c70f914?pvs=25">자바를 자바 13(Exception Handling, Errors)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/14-Generic-Programming-82a1349a9ea64726b2b9da11cbc58bf5?pvs=25">자바를 자바 14(Generic Programming)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/15-Generic-Programming-250b454300ad407192f1406ccfd32f3f?pvs=25">자바를 자바 15(Generic Programming)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/09-interface-inheritance-4b14603fb1b147528f3bf9b9179b55a0?pvs=25">자바를 자바 09 (interface, inheritance, 인터페이스, 상속)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/11-class-object-file-input-file-output-4ca773aa505948078df0d2240e3ae879?pvs=25">자바를 자바 11 (class object, file input, file output)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/10-inheritance-class-object-4d04d24d58154418836e12c0be9b8837?pvs=25">자바를 자바 10 (inheritance, class object, 상속, 객체)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/08-2-OOP-interface-ddfeede70d7948e5aad437071166933a?pvs=25">자바를 자바 08-2 (OOP, interface)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/06-Arrays-8da0020f4d024bb88a7c69178c04662d?pvs=25">자바를 자바 06 (Arrays)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/08-call-by-value-35fe6506d96f49d0be4544c62344ba00?pvs=25">자바를 자바 08(클래스 세부, call-by-value)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/07-Class-cf439e54072340308ded2a101fc514db?pvs=25">자바를 자바 07 (Class)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/05-String-input-output-Control-Flow-2c086aed38e44f12a71b2ebcc9749eb5?pvs=25">자바를 자바 05(String/input,output/Control Flow)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/04-Arithmetic-Operators-Strings-8353a6e7204e4f68811e0c228ee27a31?pvs=25">자바를 자바 04 (Arithmetic Operators, Strings, 연산자, 문자열)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/03-Arithmetic-operators-5349c78f5f33489da04e3fff74a4f384?pvs=25">자바를 자바 03 (Arithmetic operators, 연산자)</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/01-02-ch1-primitive-types-variables-9c535b808981441ba7e364a1ce4a2bcf?pvs=25">자바를 자바 01/02 (ch1 - primitive types, variables)</a></td>
 	<td></td>
 	<td>java </td>
@@ -6627,7 +6659,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/Singleton-Pattern-72257718fd41402990fa244ff2bedb13?pvs=25">Singleton Pattern, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Singleton-Pattern-72257718fd41402990fa244ff2bedb13?pvs=25">Singleton Pattern</a></td>
 	<td></td>
 	<td>c </td>
 </tr>
@@ -6704,7 +6736,7 @@
 	<td>docker, 파티션</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Oauth-1142561866094256b8bc4bcf2cc89b96?pvs=25">삽질기(Oauth)</a></td>
 	<td></td>
 	<td>개발지식 </td>
@@ -6782,13 +6814,13 @@
 	<td>docker, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/fc3435901e534337ba952f8f203a6b6d?pvs=25">협업은 왜?</a></td>
 	<td>적어주세요!</td>
 	<td>github, 개발지식 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/76e596d226244fbbaf2a22c77c665950?pvs=25">암호</a></td>
 	<td></td>
 	<td>개발지식 </td>
@@ -6807,12 +6839,12 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/What-is-Flutter-39458e2145ba438ca7e1912b1455982f?pvs=25">What is Flutter, 1</a></td>
+	<td><a href="https://80000coding.notion.site/What-is-Flutter-39458e2145ba438ca7e1912b1455982f?pvs=25">What is Flutter</a></td>
 	<td></td>
 	<td>flutter </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/45731331db5d4bedac0833e97f7bb487?pvs=25">프론트엔드 개발자가 하는일</a></td>
 	<td></td>
 	<td>프론트엔드 </td>
@@ -6824,19 +6856,19 @@
 	<td>js, redirect</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/bc4c8ac00dc14eb58b9e61d982919514?pvs=25">오디오 신호 이해 및 음성인식</a></td>
 	<td>오디오 신호 이해를 기반으로 한 딥러닝 음성인식</td>
 	<td>멘토특강, 딥러닝, 음성인식, 오디오 신호</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/b0819bb140264f439d258caf5b6ca5ce?pvs=25">취업, 창업, 개발자의 삶</a></td>
 	<td>국내/국외 x 학업/취업/창업 모든 경험 성장기</td>
 	<td>멘토특강, 취업, 창업, 개발자의 삶</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Technical-Writing-8a841553f20d4b19b1bc273f214b5971?pvs=25">Technical Writing</a></td>
 	<td>공학계열 지식의 표현법 숙지를 통한 성장</td>
 	<td>멘토특강, technical writing</td>
@@ -6848,19 +6880,19 @@
 	<td>docker, buildx</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/f8f435a7915648299902ba13f745f5c8?pvs=25">프론트엔드</a></td>
 	<td></td>
 	<td>프론트엔드 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/f8fdec5aaa2749d29a3c24ad426e2753?pvs=25">도커 컨테이너 이해</a></td>
 	<td>도커 구성의 이해 및 활용</td>
 	<td>멘토특강, docker, 도커 컨테이너</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/3aa649c102ae461b8996a319b19e4d74?pvs=25">프로미스</a></td>
 	<td></td>
 	<td>js </td>
@@ -6872,25 +6904,25 @@
 	<td>git </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/9a33cd13b3de4567abbb5b02432379f7?pvs=25">상태관리</a></td>
 	<td></td>
 	<td>프론트엔드 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/2503fd16971b4afd8387cc019ddd6c8a?pvs=25">인공지능 기술 동향</a></td>
 	<td>인공지능 기술 개요 및 최신 유명 학회 발표된 기술 동향</td>
 	<td>멘토특강, ai, trend</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/LMS-KB-x-42-4113637df7fc4166a2f10d1a29a7ed55?pvs=25">클라우드 교육 LMS 구축기(KB손해보험 x 42서울)</a></td>
 	<td>KB 손보가 42서울 카뎃과 협력해 자사 및 계열사 임직원 대상 LMS를 구축한 과정</td>
 	<td>멘토특강, cloud, lms</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/370d0c2f5bb346cd8f937005ea5f4d22?pvs=25">개발자가 알아야할 시큐어코딩</a></td>
 	<td>개발자라면 보안 취약점에 원인이되는 나쁜 코딩 방식과 습관을 버려야 합니다. 해킹에 악용될수 있는 사례 및 보완 기법</td>
 	<td>멘토특강, 시큐어코딩</td>
@@ -6902,7 +6934,7 @@
 	<td>shell </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Js-0302e3ba7ecb447b9a9a08a3b8f8f2ad?pvs=25">Js의 비동기</a></td>
 	<td></td>
 	<td>js </td>
@@ -6914,13 +6946,13 @@
 	<td>docker </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/677098d2be2e48a082be0e7944d2122a?pvs=25">라벨스티커 만들기</a></td>
 	<td></td>
 	<td>iot </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Makefile-c6f977ea6e8e4709a4e5f19287e0e6f9?pvs=25">Makefile 직접 만들어쓰기 세션 자료</a></td>
 	<td></td>
 	<td>피카츄, makefile </td>
@@ -6938,19 +6970,19 @@
 	<td>python </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/a7e504cc94fc49adbd0212c944f3c986?pvs=25">포인터 배열의 포인터로 배열을 만들어보자</a></td>
 	<td></td>
 	<td>c </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/5228e1351d1b4c07b970e9a988fa650f?pvs=25">함수 포인터로 한 파일에서 여러 테케 관리하기</a></td>
 	<td></td>
 	<td>c </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/c-cf19acfc990d4285abd8d348e46f58f3?pvs=25">c에서 메모리를 무엇으로 판단하여 접근하는가에 따른 연산처리 방식의 차이</a></td>
 	<td></td>
 	<td>c </td>
@@ -6962,32 +6994,32 @@
 	<td>docker, development</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/flask-388ede42e3234fc990f196a416ae0ed9?pvs=25">flask로 라즈베리파이 웹서버 열기</a></td>
 	<td></td>
 	<td>python, iot </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/3-AWS-0d149643b7734fd3b043b91dad7ec2a2?pvs=25">3. 스프링부트 & AWS 웹서비스 만들기: 스프링이란 무엇인가?</a></td>
 	<td></td>
 	<td>spring </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/3-fa88b03adf1b4269ac2cc0263c914b11?pvs=25">3.쉽게 배우는 알고리즘: 검색트리</a></td>
 	<td></td>
 	<td>algorithm </td>
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/ft_printf-_2-d19cc347d29b4bbd9549c845e8171a15?pvs=25">ft_printf 뽀개기_2ㄹ, 1</a></td>
+	<td><a href="https://80000coding.notion.site/ft_printf-_2-d19cc347d29b4bbd9549c845e8171a15?pvs=25">ft_printf 뽀개기_2ㄹ</a></td>
 	<td></td>
 	<td>42seoul </td>
 </tr>
 <tr>
 	<td>najlee</td>
-	<td><a href="https://80000coding.notion.site/miniRT-rt-02410306d3414961a2c2590370b9a043?pvs=25">miniRT 평가용 rt 파일, 1</a></td>
+	<td><a href="https://80000coding.notion.site/miniRT-rt-02410306d3414961a2c2590370b9a043?pvs=25">miniRT 평가용 rt 파일</a></td>
 	<td></td>
 	<td>42seoul </td>
 </tr>
@@ -6998,7 +7030,7 @@
 	<td>c, 개발지식, makefile</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/M1-1-8-677d4d59ecdf46d0ba19f698a2eb7d3a?pvs=25">맥 M1 환경에서 자바 1.8 설치</a></td>
 	<td></td>
 	<td>mac os </td>
@@ -7010,13 +7042,13 @@
 	<td>잡지식 </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/VScode-Linux-630cc090d98440c58ddcadc1b9b15558?pvs=25">VScode에서 Linux 터미널 같이 실행하기, 2</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/VScode-Linux-630cc090d98440c58ddcadc1b9b15558?pvs=25">VScode에서 Linux 터미널 같이 실행하기</a></td>
 	<td></td>
 	<td>vscode, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/vscode-launch-json-35e98af573df4c4c947d5ceb8848c361?pvs=25">.vscode의 launch.json 이해해보기</a></td>
 	<td></td>
 	<td>vscode </td>
@@ -7034,7 +7066,7 @@
 	<td>git, etc</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/vscode-tasks-json-93593d7e617f412e96158051bd16104f?pvs=25">.vscode의 tasks.json 이해해보기</a></td>
 	<td></td>
 	<td>vscode, 기초, 튜토리얼</td>
@@ -7055,19 +7087,19 @@
 	<td>hyson</td>
 	<td><a href="https://80000coding.notion.site/SSL-e327487db56443b6af6cf3bfce5e3f47?pvs=25">SSL 프로토콜</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/get_next_line-6efbdaf98bc4408eb9f4c48421c9dbfa?pvs=25">get_next_line 시작하기</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/AI-df1785fecd35457c825aaa8476fe33c5?pvs=25">AI 강의</a></td>
 	<td></td>
-	<td></td>
+	<td>-</td>
 </tr>
 <tr>
 	<td>youkim</td>
@@ -7082,7 +7114,7 @@
 	<td>42seoul </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/2-AWS-90f4d5c72fa449f2b0b5086ab71727a1?pvs=25">2. 스프링부트 & AWS 웹서비스 만들기: 환경설정 박살내기</a></td>
 	<td></td>
 	<td>spring </td>
@@ -7101,55 +7133,55 @@
 </tr>
 <tr>
 	<td>sehyan</td>
-	<td><a href="https://80000coding.notion.site/exit-0-exit-1-64b2e1939f62426f84ea4ea3e699cc52?pvs=25">exit(0)과 exit(1)의 차이, 2</a></td>
+	<td><a href="https://80000coding.notion.site/exit-0-exit-1-64b2e1939f62426f84ea4ea3e699cc52?pvs=25">exit(0)과 exit(1)의 차이</a></td>
 	<td></td>
 	<td>c </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Norminette-V2-Error-0ef07e9fcd2540c89ec8291135b26de4?pvs=25">Norminette V2 Error 모음</a></td>
 	<td></td>
 	<td>norminette, 42seoul </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/VundleVim-b8cbcc4d50c445188f861c1dd58041a1?pvs=25">VundleVim 설치 및 사용법</a></td>
 	<td></td>
 	<td>vim, 플러그인, 튜토리얼</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/1-88b9bd4f63484d06a3d04392d06edfc3?pvs=25">다이나믹프로그래밍 - 1, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/1-88b9bd4f63484d06a3d04392d06edfc3?pvs=25">다이나믹프로그래밍 - 1</a></td>
 	<td></td>
 	<td>algorithm </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/1-AWS-Hello-World-bfc3c7d10a4d480f82868dfe4c99f5c7?pvs=25">1. 스프링부트 & AWS 웹서비스 만들기: Hello World!</a></td>
 	<td></td>
 	<td>spring, 튜토리얼</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Mac-18c08c99855543bfa8ca806be197afa0?pvs=25">Mac 트랙패드 세 손가락 드래그 기능 켜기</a></td>
 	<td></td>
 	<td>mac os </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/2-bbaeef1360f442b1a21730509aad8aec?pvs=25">2.쉽게 배우는 알고리즘: 선택 알고리즘</a></td>
 	<td></td>
 	<td>알고리즘, 자료구조, 기초</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/d9057c3bd7fc427898a549333267d8fb?pvs=25">단축키 정리, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/d9057c3bd7fc427898a549333267d8fb?pvs=25">단축키 정리</a></td>
 	<td></td>
 	<td>mac os </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/1-c106764c68d749b69b39800719df9c58?pvs=25">1. 쉽게 배우는 알고리즘: 정렬 알고리즘, 2</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/1-c106764c68d749b69b39800719df9c58?pvs=25">1. 쉽게 배우는 알고리즘: 정렬 알고리즘</a></td>
 	<td></td>
 	<td>알고리즘, 자료구조, 기초</td>
 </tr>
@@ -7167,31 +7199,31 @@
 </tr>
 <tr>
 	<td>youkim</td>
-	<td><a href="https://80000coding.notion.site/ls-man-47ec5eac48224ce7ab1b9cf04382014f?pvs=25">ls, man 예쁘게 꾸미, 3</a></td>
+	<td><a href="https://80000coding.notion.site/ls-man-47ec5eac48224ce7ab1b9cf04382014f?pvs=25">ls, man 예쁘게 꾸미</a></td>
 	<td></td>
 	<td>shell</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/0cedb192b0ca4920b2177bcfa10b5464?pvs=25">프로젝트 워크 플로우 예제</a></td>
 	<td></td>
 	<td>github, 개발지식 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/React-4-3-webpack-fbb2e86d138f4afba296e675a06c8fa7?pvs=25">React로 시작하는 프론트 개발 4(환경 구축 3, webpack)</a></td>
 	<td></td>
 	<td>react, 프론트엔드 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Makefile-feat-f09f312d171149d195ba92e61432afe1?pvs=25">리코딩 시 Makefile 을 이용한 간단한 테스터 작성하기 (feat. 원형함수)</a></td>
 	<td></td>
 	<td>c, 개발지식 </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/1-Comprehension-ac6f795a50f542509930b9b149d18d38?pvs=25">파이썬을 파이썬스럽게-1 (Comprehension), 4</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/1-Comprehension-ac6f795a50f542509930b9b149d18d38?pvs=25">파이썬을 파이썬스럽게-1 (Comprehension)</a></td>
 	<td></td>
 	<td>python </td>
 </tr>
@@ -7202,43 +7234,43 @@
 	<td>mac os </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/try-catch-throw-throws-finally-cd4a8dd8645248e49dff9dc4c89840b1?pvs=25">삽추) 예외처리 try catch, throw, throws, finally</a></td>
 	<td></td>
 	<td>java </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/Session-VS-JWT-1f213f10185c4b4e8372119402fecdd0?pvs=25">로그인 인증방식 어떤게 좋을까? Session VS JWT, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/Session-VS-JWT-1f213f10185c4b4e8372119402fecdd0?pvs=25">로그인 인증방식 어떤게 좋을까? Session VS JWT</a></td>
 	<td></td>
 	<td>web </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Vim-2ba378ee3bb54de18a3fb44c899cccce?pvs=25">Vim 기본조작 및 유용한 기능들</a></td>
 	<td></td>
 	<td>vim, 튜토리얼, 기초</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/WAS-5f85c51db6ce40068699b8e8498e627e?pvs=25">현대의 웹서버(WAS)</a></td>
 	<td></td>
 	<td>web </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Django-vs-Node-js-9729f375758d4cc09332e27b7ec34a30?pvs=25">Django vs Node.js</a></td>
 	<td></td>
 	<td>django </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/React-3-2-babel-785a084480814395a08cddccfaea2692?pvs=25">React로 시작하는 프론트 개발 3(환경 구축 2, babel)</a></td>
 	<td></td>
 	<td>react, 프론트엔드 </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/React-2-1-5ed6009a3529499ea02824d02dddfb28?pvs=25">React로 시작하는 프론트 개발 2(환경 구축 1, 툴체인)</a></td>
 	<td></td>
 	<td>react, 프론트엔드 </td>
@@ -7274,14 +7306,14 @@
 	<td>c, 42seoul, 포인터, 오류</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/React-1-Frontend-3b85d533a1c447c7b71bf7ea991d322a?pvs=25">React로 시작하는 프론트 개발 1(Frontend 원론과 개발 연습), 2</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/React-1-Frontend-3b85d533a1c447c7b71bf7ea991d322a?pvs=25">React로 시작하는 프론트 개발 1(Frontend 원론과 개발 연습)</a></td>
 	<td></td>
 	<td>react, 개발지식, 프론트엔드 </td>
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/4-Raytracing-One-Weekend-1-0d919c9460e14a0fbe07307e28b9ba37?pvs=25">(4) Raytracing One Weekend 식 이해하기! 1, 1</a></td>
+	<td><a href="https://80000coding.notion.site/4-Raytracing-One-Weekend-1-0d919c9460e14a0fbe07307e28b9ba37?pvs=25">(4) Raytracing One Weekend 식 이해하기! 1</a></td>
 	<td></td>
 	<td>42seoul </td>
 </tr>
@@ -7311,7 +7343,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/0-minirt-4988ecf34d1f4b9490687872092b981b?pvs=25">(0) minirt 시작하기!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/0-minirt-4988ecf34d1f4b9490687872092b981b?pvs=25">(0) minirt 시작하기!</a></td>
 	<td></td>
 	<td>42seoul </td>
 </tr>
@@ -7335,7 +7367,7 @@
 </tr>
 <tr>
 	<td>suhshin</td>
-	<td><a href="https://80000coding.notion.site/get_next_line-by-suhshin-975319c9434342409073c3d41f8729ab?pvs=25">get_next_line() 뽀개기 by suhshin, 1</a></td>
+	<td><a href="https://80000coding.notion.site/get_next_line-by-suhshin-975319c9434342409073c3d41f8729ab?pvs=25">get_next_line() 뽀개기 by suhshin</a></td>
 	<td></td>
 	<td>42seoul, 파일디스크립터, 더블포인터</td>
 </tr>
@@ -7407,12 +7439,12 @@
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/Vim-62d92ae6545a47278dcb6b31d148e732?pvs=25">Vim에서 자동완성 사용하기, 13</a></td>
+	<td><a href="https://80000coding.notion.site/Vim-62d92ae6545a47278dcb6b31d148e732?pvs=25">Vim에서 자동완성 사용하기</a></td>
 	<td></td>
 	<td>vim, 오류, 자동완성, 플러그인</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/CORS-Cross-Origin-Resource-Sharing-a79e01b276964e80be04ec245b1fcd9b?pvs=25">CORS (Cross-Origin Resource Sharing)</a></td>
 	<td></td>
 	<td>개발지식 </td>
@@ -7424,56 +7456,56 @@
 	<td>js </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/28821f8bed814ea685c056919f9f0d08?pvs=25">렌더링 엔진의 동작 과정</a></td>
 	<td></td>
 	<td>web, browser </td>
 </tr>
 <tr>
 	<td>youkim</td>
-	<td><a href="https://80000coding.notion.site/Vim-b4702358265f453b9c22585600c44927?pvs=25">Vim 커스터마이징하기, 3</a></td>
+	<td><a href="https://80000coding.notion.site/Vim-b4702358265f453b9c22585600c44927?pvs=25">Vim 커스터마이징하기</a></td>
 	<td></td>
 	<td>vim, 플러그인</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Windows-Linux-f7f43e26a3d24624a4aac70555a772b5?pvs=25">Windows 에서 Linux 돌리기(가상머신 아님)</a></td>
 	<td></td>
 	<td>linux </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/a34314f410e54752933becbaa377d0fd?pvs=25">브라우저의 렌더링 과정</a></td>
 	<td></td>
 	<td>web, browser </td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/VScode-60aa3537288c4a1795f58fac550e4155?pvs=25">VScode 단축키 모음, 1</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/VScode-60aa3537288c4a1795f58fac550e4155?pvs=25">VScode 단축키 모음</a></td>
 	<td></td>
 	<td>vscode, 명령어</td>
 </tr>
 <tr>
 	<td>chan</td>
-	<td><a href="https://80000coding.notion.site/f8b028707dba4043b169950b793cd3f3?pvs=25">함수의 내부로 점프하기, 3</a></td>
+	<td><a href="https://80000coding.notion.site/f8b028707dba4043b169950b793cd3f3?pvs=25">함수의 내부로 점프하기</a></td>
 	<td></td>
 	<td>vim, development</td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/Mutable-Immutable-4a01ef08e5284f2688c9fac1ed4b6b04?pvs=25">Mutable / Immutable</a></td>
 	<td></td>
 	<td>python </td>
 </tr>
 <tr>
-	<td></td>
+	<td>-</td>
 	<td><a href="https://80000coding.notion.site/812c3b1a626c4234911349aa80508411?pvs=25">파이썬은 어떻게 변수를 다룰까?</a></td>
 	<td></td>
 	<td>python </td>
 </tr>
 <tr>
 	<td>najlee</td>
-	<td><a href="https://80000coding.notion.site/11f676dcfda24f60850036ffd0a6f551?pvs=25">순열과 조합을 구현해봅시다!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/11f676dcfda24f60850036ffd0a6f551?pvs=25">순열과 조합을 구현해봅시다!</a></td>
 	<td></td>
 	<td>python </td>
 </tr>
@@ -7485,13 +7517,13 @@
 </tr>
 <tr>
 	<td>jekim</td>
-	<td><a href="https://80000coding.notion.site/lldb-222e8d82f70b4002b2ab73fc35a9ab14?pvs=25">디버거 lldb 를 써보자, 2</a></td>
+	<td><a href="https://80000coding.notion.site/lldb-222e8d82f70b4002b2ab73fc35a9ab14?pvs=25">디버거 lldb 를 써보자</a></td>
 	<td></td>
 	<td>개발지식 </td>
 </tr>
 <tr>
 	<td>jekim</td>
-	<td><a href="https://80000coding.notion.site/Makefile-4e32c1b7d1354883b0c47ee3465b8f39?pvs=25">Makefile로 디버거를 간단하게 실행해보자., 3</a></td>
+	<td><a href="https://80000coding.notion.site/Makefile-4e32c1b7d1354883b0c47ee3465b8f39?pvs=25">Makefile로 디버거를 간단하게 실행해보자.</a></td>
 	<td></td>
 	<td>개발지식 </td>
 </tr>
@@ -7509,7 +7541,7 @@
 </tr>
 <tr>
 	<td>hyson</td>
-	<td><a href="https://80000coding.notion.site/a4791dbb44ff483195914c28cfb477db?pvs=25">메모리 누수 확인하기!, 4</a></td>
+	<td><a href="https://80000coding.notion.site/a4791dbb44ff483195914c28cfb477db?pvs=25">메모리 누수 확인하기!</a></td>
 	<td></td>
 	<td>shell, 메모리누수</td>
 </tr>
@@ -7520,8 +7552,8 @@
 	<td>c++, fill, stl</td>
 </tr>
 <tr>
-	<td></td>
-	<td><a href="https://80000coding.notion.site/19cc8324b23b49f6bdcdfc9a45f87dce?pvs=25">노션 페이지 티스토리 블로그에 옮기기, 3</a></td>
+	<td>-</td>
+	<td><a href="https://80000coding.notion.site/19cc8324b23b49f6bdcdfc9a45f87dce?pvs=25">노션 페이지 티스토리 블로그에 옮기기</a></td>
 	<td></td>
 	<td>notion </td>
 </tr>
@@ -7617,13 +7649,13 @@
 </tr>
 <tr>
 	<td>najlee</td>
-	<td><a href="https://80000coding.notion.site/2-61f055cb23854adcac0bfc70dcac070e?pvs=25">2차원배열 동시에 선언&초기화하기, 2</a></td>
+	<td><a href="https://80000coding.notion.site/2-61f055cb23854adcac0bfc70dcac070e?pvs=25">2차원배열 동시에 선언&초기화하기</a></td>
 	<td></td>
 	<td>python </td>
 </tr>
 <tr>
 	<td>jekim</td>
-	<td><a href="https://80000coding.notion.site/Express-76764596b88b43b4820facf7f85e1633?pvs=25">Express) 미들웨어를 써보자!, 1</a></td>
+	<td><a href="https://80000coding.notion.site/Express-76764596b88b43b4820facf7f85e1633?pvs=25">Express) 미들웨어를 써보자!</a></td>
 	<td></td>
 	<td>node.js </td>
 </tr>
@@ -7635,7 +7667,7 @@
 </tr>
 <tr>
 	<td>jekim</td>
-	<td><a href="https://80000coding.notion.site/Express-3afb7ad212ee49a187a28286e9e6fed1?pvs=25">Express 를 시작해보자., 3</a></td>
+	<td><a href="https://80000coding.notion.site/Express-3afb7ad212ee49a187a28286e9e6fed1?pvs=25">Express 를 시작해보자.</a></td>
 	<td></td>
 	<td>node.js </td>
 </tr>
@@ -7647,7 +7679,7 @@
 </tr>
 <tr>
 	<td>chan</td>
-	<td><a href="https://80000coding.notion.site/db3d116bf4be45e991ccb157596faf9f?pvs=25">도커를 왜 써야하나요?, 2</a></td>
+	<td><a href="https://80000coding.notion.site/db3d116bf4be45e991ccb157596faf9f?pvs=25">도커를 왜 써야하나요?</a></td>
 	<td></td>
 	<td>docker, development</td>
 </tr>
@@ -7785,7 +7817,7 @@
 </tr>
 <tr>
 	<td>chan</td>
-	<td><a href="https://80000coding.notion.site/427477e6e79c4a808dcabb006bef5544?pvs=25">리틀 엔디안, 빅 엔디안, 3</a></td>
+	<td><a href="https://80000coding.notion.site/427477e6e79c4a808dcabb006bef5544?pvs=25">리틀 엔디안, 빅 엔디안</a></td>
 	<td></td>
 	<td>시스템 </td>
 </tr>
@@ -7928,5 +7960,5 @@
 	<td>linux, c </td>
 </tr>
 </tbody>
-</table></html>'
+</table></html>
 </body>
