@@ -36,8 +36,8 @@
 				.map((col,i,a)=> i!=3 ? col
 				: ([...new Set((col+','+a[i+1]).toLowerCase().split(/ *, */))]+'').replace(/^,|,$|(,)([^$])/g,'$1 $2')).slice(0,4)
 
-				// [이름] 혹은 [분류] 비었다면 - 으로 표기
-				.reduce((s,c,i) => [...s, (i==0||i==3)&&!c ? '-' : c], [])
+				// 셀이 비었다면 - 으로 표기
+				.reduce((s,c,i) => [...s, !c ? '-' : c], [])
 
 				// 모든 열을 <td>로 감싸기
 				.map(col => `<td>${col}</td>\n`)
@@ -46,7 +46,7 @@
 				.join('')
 			)
 		// [메모] 열 추가하기
-		.map(row => `${row}<td><input class="memo"></input></td>`)
+		.map(row => `${row}<td><input class="memo"></td>`)
 
 		// 행을 <tr>로 감싸기
 		.map((row,i) => `<tr idx="${i}">\n${row}\n</tr>`)
