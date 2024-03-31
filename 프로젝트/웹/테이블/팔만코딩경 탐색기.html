@@ -25,7 +25,7 @@
 				opacity: 70%;
 				text-align: center;
 			}
-			#Search, #Clear, #Total, #Bin
+			#Search, #Clear, #Total, #Bin, #Refresh, #Save, #Load
 			{
 				display: inline-block;
 				text-align: center;
@@ -51,11 +51,24 @@
 			{
 				opacity: 60%;
 			}
-			#Bin
+			#Bin, #Refresh, #Save, #Load
 			{
-				color: red;
+				padding-right: 0;
 				border: 0;
 				cursor: pointer;
+			}
+			#Bin
+			{
+				padding-left: 3;
+				color: red;
+			}
+			#Refresh
+			{
+				padding-left: 4;
+				color:darkgreen;
+				font-size: small;
+				font-weight: bold;
+				opacity: 80%;
 			}
 			#Total
 			{
@@ -67,6 +80,7 @@
 				border-collapse: collapse;
 				background-color: ghostwhite;
 				table-layout: fixed;
+				font-size: 14;
 			}
 			td
 			{
@@ -78,14 +92,18 @@
 				width: 10vw;
 				text-align: center;
 			}
+			td:nth-child(2)
+			{
+				width : 30vw;
+			}
+			td:nth-child(3)
+			{
+				width : 30vw;
+			}
 			td:nth-child(4)
 			{
 				width: 20vw;
 				text-align: center;
-			}
-			td:nth-child(2), td:nth-child(3)
-			{
-				width : 30vw;
 			}
 			td:nth-child(5)
 			{
@@ -109,24 +127,84 @@
 				color: blue;
 				content: '▼';
 			}
-
+			tr:hover
+			{
+				background-color:lavender;
+			}
 		</style>
 		<script>
 			window.addEventListener('DOMContentLoaded',	main)
 			function main()
 			{
-				assign_events();
+				assign_events_once();
+				assign_events_repeat();
 				load_memo('value');
+				load_color();
 			}
-			function assign_events()
+			function upload_json()
+			{
+				if (!confirm("저장하지 않은 메모는 삭제됩니다"))
+					return ;
+				localStorage.clear();
+				Object.assign(localStorage, JSON.parse(prompt("저장한 메모를 입력해주세요")));
+				locate_memo('value');
+				load_memo('value');
+				load_color();
+			}
+			function assign_events_once()
 			{
 				Search.oninput = e=>{filter_row(e.target.value)};
 				Clear.addEventListener('click', x=>{Search.value=''; filter_row(Search.value)});
 				Bin.addEventListener('click', reset_memo);
+				Refresh.addEventListener('click', e=>{location.reload()});
 				document.querySelectorAll('thead td')
 				.forEach((th,idx) => th.addEventListener('click', e=>{sort_row(idx)}));
+				document.querySelector('[download]').setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(localStorage)));
+				Load.onclick = upload_json;
+				load_color();
+			}
+			function assign_events_repeat()
+			{
+				document.querySelectorAll('td:nth-child(1), td:nth-child(3), td:nth-child(4)')
+				.forEach(td=> {
+					td.onclick = e => {
+						memo = localStorage[td.parentNode.getAttribute('idx')];
+						if (memo == undefined) memo = '[찜]'
+						else if (memo.includes('[찜]')) memo = memo.replace('[찜]', '[주의]');
+						else if (memo.includes('[주의]')) memo = memo.replace('[주의]', '[읽음]');
+						else if (memo.includes('[읽음]')) memo = memo.replace('[읽음]', '');
+						else memo = '[찜]' + memo;
+						localStorage[td.parentNode.getAttribute('idx')] = memo+'';
+
+						locate_memo('value');
+						load_memo('value');
+						load_color();
+						activate_memo();
+					};
+				});
+				activate_memo();
+			}
+			function load_color()
+			{
+				color_set = {'[찜]':'#FFFFDD', '[주의]':'#FFEEDD', '[읽음]':'#CCFFCC'};
+				[...document.querySelectorAll('[idx]')]
+				.forEach(tr => tr.style.background = "");
+				[...document.querySelectorAll('[idx]')].forEach(tr =>
+					tr.style.background = color_set[
+						['[읽음]','[주의]','[찜]'].filter(flag =>
+						(localStorage[tr.getAttribute('idx')]??"").includes(flag))[0]
+					]
+				)
+			}
+			function activate_memo()
+			{
 				document.querySelectorAll('[idx]')
-				.forEach(tr => tr.querySelector('.memo').oninput = e=>{localStorage[tr.getAttribute('idx')]=e.target.value});
+				.forEach(tr => {
+					tr.querySelector('.memo').oninput = e => {
+						localStorage[tr.getAttribute('idx')] = e.target.value;
+						load_color();
+					};
+				});
 			}
 			function locate_memo(type)
 			{
@@ -160,9 +238,12 @@
 			{
 				if (!confirm("메모를 삭제할까요?"))
 					return ;
-				clear_memo('value');
-				clear_memo('td');
+				clear_memo('td')
+				locate_memo('value')
+				clear_memo('value')
 				localStorage.clear()
+				load_color()
+				assign_events_repeat()
 			}
 			function filter_row(keyword)
 			{
@@ -239,25 +320,23 @@
 				clear_memo('td');
 				locate_memo('value');
 				load_memo('value');
-
-				document.querySelectorAll('[idx]')
-				.forEach(tr => tr.querySelector('.memo').oninput = e=>{localStorage[tr.getAttribute('idx')]=e.target.value});
+				assign_events_repeat();
 			}
 			</script>
 			</head>
 <body>
 	<div class="container">
 		<input id="Search" type="text" placeholder="검색어@작성자#태그%메모"><input id="Clear" type="button" value="X">
-		<div id="Total">업데이트 2024.3.28</div><input id="Bin" type="button" value="🗑">
+		<div id="Total">업데이트 2024.4.1</div><a download="80000.json"><input id="Save" type="button" value="💾"></a><input id="Load" type="button" value="📂"><input id="Bin" type="button" value="🗑"><input id="Refresh" type="button" value="새로고침">
 		</div>
 <table border="1" height="1">
-	<thead>
-		<tr align="center">
-			<td class="unorder">작성자</td>
-			<td class="unorder">제목</td>
-			<td class="unorder">소개</td>
-			<td class="unorder">태그</td>
-	<td>메모</td>
+<thead>
+<tr align="center">
+<td class="unorder">작성자</td>
+<td class="unorder">제목</td>
+<td class="unorder">소개</td>
+<td class="unorder">태그</td>
+<td class="unorder">메모</td>
 </tr>
 </thead>
 <tbody>
