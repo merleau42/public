@@ -7,4 +7,4 @@ try{if (tick ==  5) here=document.location.href.match(/.+\/users\/(.+)/)[1];
 tick++;}
 catch{tick = 0}
 
-// hyungyki, jimjeong, jinyjeon, sanbaek, yerpark
+// hyungyki, sanbaek, jimjeong
