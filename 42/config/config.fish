@@ -12,7 +12,7 @@ if status is-interactive
 	alias R="clear; cd $42/rendu/$NAME; pwd; ls";
 	alias e="clear; cd $dev/exercise; pwd; ls";
 
-	alias g="clear; git add .; git ls-files";
+	alias g="clear; git add .";
 
 	alias c="clear; cc $FLAGS *.c -o $out";
 	alias sc="clear; cc $FLAGS $42/integrate/$NAME.c -o $out";
