@@ -4,12 +4,16 @@ if status is-interactive
 	export 42="~/dev/42";
 	export out="~/goinfre/out.out";
 	export FLAGS="-Werror -Wextra -Wall";
+
+	export msg_d="깃허브 git add, git push는 여기서";
+	export msg_r="git clone [주소] [과제폴더] -- 내부에서 작업할 것";
+	export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
 	
 	export NAME="libft";
 
-	alias d="clear; cd $dev; pwd; ls";
-	alias r="clear; cd $42/rendu; pwd; ls";
-	alias R="clear; cd $42/rendu/$NAME; pwd; ls";
+	alias d="clear; cd $dev; echo $msg_d; pwd; ls";
+	alias r="clear; cd $42/rendu; echo $msg_r; pwd; ls";
+	alias R="clear; cd $42/rendu/$NAME; echo $msg_R; pwd; ls";
 	alias e="clear; cd $dev/exercise; pwd; ls";
 
 	alias g="clear; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
@@ -21,4 +25,5 @@ if status is-interactive
 
 	alias a="clear; $out";
 
+	echo "진행중인 과제: $NAME";
 end
