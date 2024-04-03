@@ -1,5 +1,5 @@
 if status is-interactive
-	# 하드링크: ~/7897897897ssssssffffffffff77fffffffffffffffff
+	# 하드링크: ~/7897897897fffffffffffffffff
 	export dev="~/dev";
 	export 42="~/dev/42";
 	export out="~/goinfre/out.out";
