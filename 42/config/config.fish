@@ -1,5 +1,23 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
-    # asdasdsadsa
-    alias ww="echo 77777";
+	# 하드링크: ~/
+	export dev="~/dev";
+	export 42="~/dev/42";
+	export out="~/goinfre/out.out";
+	export FLAGS="-Werror -Wextra -Wall";
+	
+	export NAME="libft";
+
+	alias d="clear; cd $dev; pwd; ls";
+	alias r="clear; cd $42/rendu; pwd; ls";
+	alias R="clear; cd $42/rendu/$NAME; pwd; ls";
+	alias e="clear; cd $dev/exercise; pwd; ls";
+
+	alias g="clear; git add .; git ls-files";
+
+	alias c="clear; cc $FLAGS *.c -o $out";
+	alias sc="clear; cc $FLAGS $42/integrate/$NAME.c -o $out";
+	alias ec="clear; cc $FLAGS $dev/exercises/*.c -o $out";
+
+	alias a="clear; $out";
+
 end

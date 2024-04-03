@@ -709,7 +709,7 @@ int main(void)
 	dest = (char *)malloc(sizeof(*dest) * 15);
 	ft_memset(dest, 'r', 15);
 	// rrrrrrrrrrrrrrr
-	printf("%d", ft_strlcat(dest, "lorem ipsum dolor sit amet", 5));
+	printf("%zu", ft_strlcat(dest, "lorem ipsum dolor sit amet", 5));
 	write(1, "\n", 1);
 	write(1, dest, 15);
 
