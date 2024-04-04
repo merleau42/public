@@ -139,13 +139,10 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	while (i < n)
 	{
 		if (bytes[i] == (unsigned char) c)
-			return ((void *)(bytes + i));
+			return ((void *)bytes + i);
 		i++;
 	}
-	if (c == '\0')
-		return ((void *)(bytes + i));
-	else
-		return (NULL);
+	return (NULL);
 }
 
 // 문자열을 복제하고 새로운 문자열로 리턴
@@ -155,8 +152,6 @@ char	*ft_strdup(const char *s)
 	size_t	len;
 	char	*dest;
 
-	if (!s)
-		return (NULL);
 	len = ft_strlen(s);
 	dest = (char *) malloc(sizeof (char) * (len + 1));
 	if (!dest)
@@ -179,10 +174,10 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	unsigned char	*bytes_d;
 	unsigned char	*bytes_s;
 
-	if (!dest || !src)
+	// if (!dest || !src)
+	// 	return (NULL);
+	if(!dest && !src && n > 0)
 		return (NULL);
-	//if(!dest && !src && n > 0)
-	//	return (NULL);
 	bytes_d = (unsigned char *) dest;
 	bytes_s = (unsigned char *) src;
 	i = 0;
@@ -202,10 +197,10 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	unsigned char	*bytes_d;
 	unsigned char	*bytes_s;
 
-	if (!dest || !src)
+	// if (!dest || !src)
+	// 	return (NULL);
+	if(!dest && !src && n > 0)
 		return (NULL);
-	//if(!dest && !src && n > 0)
-	//	return (NULL);
 	bytes_d = (unsigned char *) dest;
 	bytes_s = (unsigned char *) src;
 	i = 0;
@@ -312,10 +307,10 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	size_t	i;
 	size_t	len_ltt;
 
-	if (!big || !little)
+	// if (!big || !little)
+	// 	return (NULL);
+	if (!big && !len)
 		return (NULL);
-	//if (!big && !len)
-	//	return (NULL);
 	if (little[0] == '\0')
 		return ((char *) big);
 	len_ltt = ft_strlen(little);
@@ -395,7 +390,7 @@ int	ft_atoi(const char *nptr)
 	if (nptr[i] == '-' || nptr[i] == '+')
 		return (0);
 	while ('0' <= nptr[i] && nptr[i] <= '9')
-		res = 10 * res + nptr[i++] - '0';
+		res = 10 * res + (nptr[i++] - '0');
 	return (res * sign);
 }
 
@@ -485,10 +480,21 @@ static	size_t	ft_word_count(char const *s, char c)
 			s++;
 		if (*s)
 			words++;
-		while (*s != '\0' && *s != c)
+		while (*s && *s != c)
 			s++;
 	}
 	return (words);
+}
+
+static	char	**free_all(char **frame, size_t allocated)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < allocated)
+		free(frame[i++]);
+	free (frame);
+	return (NULL);
 }
 
 // 구분자를 기준으로 문자열을 분할하여 얻어지는, 부분 문자열들의 배열을
@@ -498,27 +504,28 @@ char	**ft_split(char const *s, char c)
 {
 	char		**frame;
 	size_t		words;
-	size_t		len;
+	char const	*word_start;
 	size_t		i;
 
+	if (!s)
+		return (NULL);
 	words = ft_word_count(s, c);
 	frame = (char **) malloc(sizeof(char *) * (words + 1));
-	if (!frame)
-		return (NULL);
 	i = 0;
-	while (i < words)
+	while (frame && i < words)
 	{
 		while (*s == c)
 			s++;
-		len = 0;
-		while (*s != '\0' && *s != c)
-		{
+		word_start = s;
+		while (*s && *s != c)
 			s++;
-			len++;
-		}
-		frame[i++] = ft_substr(s - len, 0, len);
+		frame[i] = ft_substr(word_start, 0, s - word_start);
+		if (!frame[i])
+			return (free_all(frame, i));
+		i++;
 	}
-	frame[i] = (char *) 0;
+	if (frame)
+		frame[i] = (char *) 0;
 	return (frame);
 }
 
@@ -633,7 +640,15 @@ void	ffn(unsigned int i, char *c)
 
 #include <string.h>
 #include <stdlib.h>
-int main(void)
+
+int main()
+{
+	
+
+	return 0;
+}
+
+int main2()
 {
 	const char *s = "11221abcd321EFGHI23mnZ33211";
 	printf("original:\n%s\n", s);
@@ -715,7 +730,7 @@ int main(void)
 	return 0;
 }
 
-int	main2()
+int	main3()
 {
 	char **a;
 
