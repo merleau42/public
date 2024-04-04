@@ -6,14 +6,14 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:25:07 by keunykim          #+#    #+#             */
-/*   Updated: 2024/04/04 17:45:04 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/04/04 21:50:30 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list              *ft_lstnew(void *content)
+t_list	*ft_lstnew(void *content)
 {
 	(void) content;
-	return 0;
+	return (0);
 }

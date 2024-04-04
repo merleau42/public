@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:49:00 by keunykim          #+#    #+#             */
-/*   Updated: 2024/04/04 20:22:35 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/04/04 21:39:35 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,4 @@ char	**ft_split(char const *s, char c)
 	if (frame)
 		frame[i] = (char *) 0;
 	return (frame);
-}
-
-#include <stdio.h>
-int	main()
-{
-	char *a[3];
-
-	a = ft_split("   ab  cd  ef   ", '');
-	printf("%s", a[0]);
-	printf("%s", a[1]);
-	printf("%s", a[2]);
-	printf("%s", a[3]);
 }

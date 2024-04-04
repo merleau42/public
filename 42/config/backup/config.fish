@@ -12,9 +12,12 @@ if status is-interactive
 	export NAME="get_next_line";
 
 	alias d="clear; cd $dev; echo $msg_d; pwd; ls";
+	alias e="clear; cd $dev/exercises; pwd; ls";
+
+	alias f="clear; cd $42/finish; pwd; ls";
 	alias r="clear; cd $42/rendu; echo $msg_r; pwd; ls";
 	alias R="clear; cd $42/rendu/$NAME; echo $msg_R; pwd; ls";
-	alias e="clear; cd $dev/exercises; pwd; ls";
+	alias m="clear; cd $42/machine; pwd; ls";
 
 	alias g="clear; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
 ; git push";

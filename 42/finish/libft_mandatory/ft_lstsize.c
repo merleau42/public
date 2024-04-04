@@ -6,14 +6,14 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 17:25:13 by keunykim          #+#    #+#             */
-/*   Updated: 2024/04/04 17:45:24 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/04/04 21:48:21 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_lstsize(t_list *lst)
+int	ft_lstsize(t_list *lst)
 {
 	(void) lst;
-	return 0;
+	return (0);
 }

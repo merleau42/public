@@ -712,5 +712,17 @@ int main(void)
 	printf("%zu", ft_strlcat(dest, "lorem ipsum dolor sit amet", 5));
 	write(1, "\n", 1);
 	write(1, dest, 15);
+	return 0;
+}
 
+int	main2()
+{
+	char **a;
+
+	a = ft_split("   ab\n cd\n ef   ", ' ');
+	printf("%s", a[0]);
+	printf("%s", a[1]);
+	printf("%s", a[2]);
+	printf("%s", a[3]);
+	printf("%s", a[4]);
 }
