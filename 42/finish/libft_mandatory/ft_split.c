@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:49:00 by keunykim          #+#    #+#             */
-/*   Updated: 2024/03/19 20:30:20 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:22:35 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static	size_t	ft_word_count(char const *s, char c)
 	return (words);
 }
 
-char	**free_all(char **frame, size_t allocated)
+static	char	**free_all(char **frame, size_t allocated)
 {
 	size_t	i;
 
@@ -67,4 +67,16 @@ char	**ft_split(char const *s, char c)
 	if (frame)
 		frame[i] = (char *) 0;
 	return (frame);
+}
+
+#include <stdio.h>
+int	main()
+{
+	char *a[3];
+
+	a = ft_split("   ab  cd  ef   ", '');
+	printf("%s", a[0]);
+	printf("%s", a[1]);
+	printf("%s", a[2]);
+	printf("%s", a[3]);
 }
