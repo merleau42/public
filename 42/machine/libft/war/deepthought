@@ -3,7 +3,7 @@ $> hostname; uname -msr
 c2r2s3.42gyeongsan.kr
 Linux 6.5.0-21-generic x86_64
 $> date
-Thu Apr  4 03:14:07 PM KST 2024
+Thu Apr  4 04:49:01 PM KST 2024
 $> gcc --version
 gcc (Ubuntu 10.5.0-1ubuntu1~22.04) 10.5.0
 Copyright (C) 2020 Free Software Foundation, Inc.
@@ -60,10 +60,44 @@ cc -Werror -Wextra -Wall -c ft_putstr_fd.c -I./ -o ft_putstr_fd.o
 ar rc libft.a ft_atoi.o ft_itoa.o ft_bzero.o ft_memset.o ft_tolower.o ft_toupper.o ft_isalnum.o ft_isalpha.o ft_isdigit.o ft_isascii.o ft_isprint.o ft_strlen.o ft_memcpy.o ft_memmove.o ft_strlcpy.o ft_strlcat.o ft_strdup.o ft_substr.o ft_strjoin.o ft_strtrim.o ft_split.o ft_strchr.o ft_strrchr.o ft_memchr.o ft_strnstr.o ft_strmapi.o ft_striteri.o ft_memcmp.o ft_strncmp.o ft_calloc.o ft_putchar_fd.o ft_putendl_fd.o ft_putnbr_fd.o ft_putstr_fd.o
 
 $> make bonus
-make: *** No rule to make target 'bonus'.  Stop.
+cc -Werror -Wextra -Wall -c ft_atoi.c -I./ -o ft_atoi.o
+cc -Werror -Wextra -Wall -c ft_itoa.c -I./ -o ft_itoa.o
+cc -Werror -Wextra -Wall -c ft_bzero.c -I./ -o ft_bzero.o
+cc -Werror -Wextra -Wall -c ft_memset.c -I./ -o ft_memset.o
+cc -Werror -Wextra -Wall -c ft_tolower.c -I./ -o ft_tolower.o
+cc -Werror -Wextra -Wall -c ft_toupper.c -I./ -o ft_toupper.o
+cc -Werror -Wextra -Wall -c ft_isalnum.c -I./ -o ft_isalnum.o
+cc -Werror -Wextra -Wall -c ft_isalpha.c -I./ -o ft_isalpha.o
+cc -Werror -Wextra -Wall -c ft_isdigit.c -I./ -o ft_isdigit.o
+cc -Werror -Wextra -Wall -c ft_isascii.c -I./ -o ft_isascii.o
+cc -Werror -Wextra -Wall -c ft_isprint.c -I./ -o ft_isprint.o
+cc -Werror -Wextra -Wall -c ft_strlen.c -I./ -o ft_strlen.o
+cc -Werror -Wextra -Wall -c ft_memcpy.c -I./ -o ft_memcpy.o
+cc -Werror -Wextra -Wall -c ft_memmove.c -I./ -o ft_memmove.o
+cc -Werror -Wextra -Wall -c ft_strlcpy.c -I./ -o ft_strlcpy.o
+cc -Werror -Wextra -Wall -c ft_strlcat.c -I./ -o ft_strlcat.o
+cc -Werror -Wextra -Wall -c ft_strdup.c -I./ -o ft_strdup.o
+cc -Werror -Wextra -Wall -c ft_substr.c -I./ -o ft_substr.o
+cc -Werror -Wextra -Wall -c ft_strjoin.c -I./ -o ft_strjoin.o
+cc -Werror -Wextra -Wall -c ft_strtrim.c -I./ -o ft_strtrim.o
+cc -Werror -Wextra -Wall -c ft_split.c -I./ -o ft_split.o
+cc -Werror -Wextra -Wall -c ft_strchr.c -I./ -o ft_strchr.o
+cc -Werror -Wextra -Wall -c ft_strrchr.c -I./ -o ft_strrchr.o
+cc -Werror -Wextra -Wall -c ft_memchr.c -I./ -o ft_memchr.o
+cc -Werror -Wextra -Wall -c ft_strnstr.c -I./ -o ft_strnstr.o
+cc -Werror -Wextra -Wall -c ft_strmapi.c -I./ -o ft_strmapi.o
+cc -Werror -Wextra -Wall -c ft_striteri.c -I./ -o ft_striteri.o
+cc -Werror -Wextra -Wall -c ft_memcmp.c -I./ -o ft_memcmp.o
+cc -Werror -Wextra -Wall -c ft_strncmp.c -I./ -o ft_strncmp.o
+cc -Werror -Wextra -Wall -c ft_calloc.c -I./ -o ft_calloc.o
+cc -Werror -Wextra -Wall -c ft_putchar_fd.c -I./ -o ft_putchar_fd.o
+cc -Werror -Wextra -Wall -c ft_putendl_fd.c -I./ -o ft_putendl_fd.o
+cc -Werror -Wextra -Wall -c ft_putnbr_fd.c -I./ -o ft_putnbr_fd.o
+cc -Werror -Wextra -Wall -c ft_putstr_fd.c -I./ -o ft_putstr_fd.o
+ar rc libft.a ft_atoi.o ft_itoa.o ft_bzero.o ft_memset.o ft_tolower.o ft_toupper.o ft_isalnum.o ft_isalpha.o ft_isdigit.o ft_isascii.o ft_isprint.o ft_strlen.o ft_memcpy.o ft_memmove.o ft_strlcpy.o ft_strlcat.o ft_strdup.o ft_substr.o ft_strjoin.o ft_strtrim.o ft_split.o ft_strchr.o ft_strrchr.o ft_memchr.o ft_strnstr.o ft_strmapi.o ft_striteri.o ft_memcmp.o ft_strncmp.o ft_calloc.o ft_putchar_fd.o ft_putendl_fd.o ft_putnbr_fd.o ft_putstr_fd.o
 
 $> ls -la libft.a
--rw-r--r-- 1 keunykim 2023_42gyeongsan 45132 Apr  4 15:14 /home/keunykim/dev/42/machine/war/dirlibft/libft.a
+-rw-r--r-- 1 keunykim 2023_42gyeongsan 45132 Apr  4 16:49 /home/keunykim/dev/42/machine/libft/war/dirlibft/libft.a
 
 = Part1_functions ==============================================================
 
@@ -1300,52 +1334,52 @@ Diff OK :D
 $> norminette ft_lstnew_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstnew.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstnew.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstnew.c'
 
 = ft_lstdelone_bonus.c =========================================================
 $> norminette ft_lstdelone_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstdelone.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstdelone.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstdelone.c'
 
 = ft_lstclear_bonus.c ==========================================================
 $> norminette ft_lstclear_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstclear.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstclear.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstclear.c'
 
 = ft_lstadd_front_bonus.c ======================================================
 $> norminette ft_lstadd_front_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstadd_front.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstadd_front.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstadd_front.c'
 
 = ft_lstadd_back_bonus.c =======================================================
 $> norminette ft_lstadd_back_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstadd_back.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstadd_back.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstadd_back.c'
 
 = ft_lstsize_bonus.c ===========================================================
 $> norminette ft_lstsize_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstsize.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstsize.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstsize.c'
 
 = ft_lstiter_bonus.c ===========================================================
 $> norminette ft_lstiter_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstiter.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstiter.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstiter.c'
 
 = ft_lstmap_bonus.c ============================================================
 $> norminette ft_lstmap_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstmap.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstmap.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstmap.c'
 
 = ft_lstlast_bonus.c ===========================================================
 $> norminette ft_lstlast_bonus.c | grep -E '(Error|Warning)'
 $> clang -Wextra -Wall -Werror -g3 -fsanitize=address ft_lstlast.c main.c libft.a -o user_exe
 
-clang: error: no such file or directory: '/home/keunykim/dev/42/machine/war/dirlibft//ft_lstlast.c'
+clang: error: no such file or directory: '/home/keunykim/dev/42/machine/libft/war/dirlibft//ft_lstlast.c'
