@@ -40,7 +40,7 @@ bonus :
 	make $(NAME)
 
 clean :
-		rm -f $(OFILE)
+		rm -f $(CFILE:%.c=%.o) $(BFILE:%.c=%.o)
 
 fclean : clean
 		rm -f $(NAME)
@@ -48,7 +48,7 @@ fclean : clean
 re : fclean all
 
 so :
-	cc -nostartfiles -fPIC -Werror -Wextra -Wall $(CFILE)
+	cc -nostartfiles -fPIC -Werror -Wextra -Wall $(CFILE) $(BFILE)
 	gcc -nostartfiles -shared -o libft.so $(OFILE)
 
 .PHONY : all clean fclean re bonus
