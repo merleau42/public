@@ -1,15 +1,15 @@
 if status is-interactive
-	# 하드링크: ~/789ff
+	# 하드링크: ~/789ffwewe
 	export dev="~/dev";
 	export 42="~/dev/42";
 	export out="~/goinfre/out.out";
 	export FLAGS="-Werror -Wextra -Wall";
 
 	export msg_d="깃허브 git add, git push는 여기서";
-	export msg_r="git clone [주소] [과제폴더] -- 내부에서 작업할 것";
+	export msg_r="git clone 해서 폴더 만들기 -- 내부에서 작업하기";
 	export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
 	
-	export NAME="libft";
+	export NAME="get_next_line";
 
 	alias d="clear; cd $dev; echo $msg_d; pwd; ls";
 	alias r="clear; cd $42/rendu; echo $msg_r; pwd; ls";
