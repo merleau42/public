@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
-int main()
+int	main(void)
 {
-	char *a[4];
+	char buf[1 + 13 * 2];
+	int i;
 
-	a[0] = strdup("abc");
-	a[1] = strdup("def");
-	a[2] = strdup("ghi");
-	a[3] = (void *) 0;
-	printf("%s", a[0]);
-	printf("%s", a[1]);
-	printf("%s", a[2]);
-	printf("%s", a[3]);
+	i = -1;
+	while(++i + 'a' <= 'z')
+		buf[i] = i + 'a';
+	buf[i] = 0;
+	printf("%s", buf);
+	return (0);
 }

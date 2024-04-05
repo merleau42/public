@@ -641,9 +641,8 @@ void	ffn(unsigned int i, char *c)
 #include <string.h>
 #include <stdlib.h>
 
-int main()
+int main1()
 {
-	
 
 	return 0;
 }
@@ -728,16 +727,4 @@ int main2()
 	write(1, "\n", 1);
 	write(1, dest, 15);
 	return 0;
-}
-
-int	main3()
-{
-	char **a;
-
-	a = ft_split("   ab\n cd\n ef   ", ' ');
-	printf("%s", a[0]);
-	printf("%s", a[1]);
-	printf("%s", a[2]);
-	printf("%s", a[3]);
-	printf("%s", a[4]);
 }
