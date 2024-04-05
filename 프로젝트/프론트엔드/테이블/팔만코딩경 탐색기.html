@@ -259,7 +259,7 @@
 				rows = [...document.querySelectorAll('tbody tr')]
 				rows.forEach(row => row.style.display = "")
 				// display 옵션 ""은 비어있지만 "none"이 아니며 고유한 설정이 있음.
-				// 는래는 block을 넣어서 테이블이 깨지는 문제가 있었는데, 디폴트를 따라해서 ""을 넣으니 해결
+				// 원래는 block을 넣어서 테이블이 깨지는 문제가 있었는데, 디폴트를 따라해서 ""을 넣으니 해결
 				
 				plain = (filters.filter(x=>x[0] == ' ')[0]??"").slice(1)
 				author = (filters.filter(x=>x[0] == '@')[0]??"").slice(1)
