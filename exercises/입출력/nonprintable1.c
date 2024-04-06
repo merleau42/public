@@ -5,7 +5,7 @@
 int	main(void)
 {
 	int fd;
-	fd = open("sample.txt", O_RDWR);
+	fd = open("sample1.txt", O_RDWR);
 	write(fd,"\000 is nul:0\n", 11);
 	write(fd,"\037 is unprintable:31\n", 20);
 	write(fd,"\040 is printable:32\n", 18);
