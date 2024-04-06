@@ -19,6 +19,8 @@ if status is-interactive
 	alias R="clear; cd $42/rendu/$NAME; echo $msg_R; pwd; ls";
 	alias m="clear; cd $42/machine; pwd; ls";
 
+	alias fre="clear; cd ~/goinfre";
+
 	alias g="clear; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
 ; git push";
 
