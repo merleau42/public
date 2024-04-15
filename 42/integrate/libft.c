@@ -641,13 +641,18 @@ void	ffn(unsigned int i, char *c)
 #include <string.h>
 #include <stdlib.h>
 
-int main1()
+int main3()
+{
+	return 0;
+}
+
+int main2()
 {
 
 	return 0;
 }
 
-int main2()
+int main()
 {
 	const char *s = "11221abcd321EFGHI23mnZ33211";
 	printf("original:\n%s\n", s);

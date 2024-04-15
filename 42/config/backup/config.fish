@@ -13,6 +13,7 @@ if status is-interactive
 
 	alias d="clear; cd $dev; echo $msg_d; pwd; ls";
 	alias e="clear; cd $dev/exercises; pwd; ls";
+	alias b="clear; cd $dev/알고리즘/c; pwd; ls";
 
 	alias f="clear; cd $42/finish; pwd; ls";
 	alias r="clear; cd $42/rendu; echo $msg_r; pwd; ls";
