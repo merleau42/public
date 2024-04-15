@@ -45,7 +45,9 @@ clean :
 fclean : clean
 		rm -f $(NAME)
 
-re : fclean all
+re :
+	make fclean
+	make all
 
 so :
 	cc -nostartfiles -fPIC -Werror -Wextra -Wall $(CFILE) $(BFILE)
