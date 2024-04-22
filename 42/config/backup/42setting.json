@@ -1,0 +1,25 @@
+{
+    "editor.minimap.enabled": false,
+    "files.exclude": {
+        "**/.DS_Store": false,
+        "**/.git": false,
+        "**/.hg": false,
+        "**/.svn": false,
+        "**/CVS": false,
+        "**/Thumbs.db": false
+    },
+    "window.titleBarStyle": "custom",
+    "42header.username": "keunykim",
+    "42header.email": "keunykim@student.42gyeongsan.kr",
+    "editor.insertSpaces": false,
+    "editor.indentSize": "tabSize",
+    "git.openRepositoryInParentFolders": "never",
+    "editor.wordWrap": "on",
+    "launch": {
+        "configurations": [],
+        "compounds": []
+    },
+    "terminal.integrated.mouseWheelZoom": true,
+    "window.zoomLevel": -0.2,
+    "code-runner.runInTerminal": true
+}

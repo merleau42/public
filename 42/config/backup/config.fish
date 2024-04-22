@@ -31,5 +31,6 @@ if status is-interactive
 
 	alias a="clear; $out";
 
-	echo "진행중인 과제: $NAME";
+	echo "메일주소 복사 : keunykim@student.42gyeongsan.kr";
+	echo "진행중인 과제 : $NAME";
 end

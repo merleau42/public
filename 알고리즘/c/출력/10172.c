@@ -5,7 +5,7 @@ int main()
 	printf("|\\_/|\n|q p|   /}\n( 0 )\"\"\"\\\n|\"^\"`    |\n||_/=\\\\__|");
 }
 
-int main2()
+void main2()
 {
 
 	printf("|\\_/|\n");

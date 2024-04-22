@@ -174,18 +174,10 @@ if '셀레늄 조작법':
 }
 
 #코드 작성
-def 온전한페이지(driver):
-	for pgN in range(1,579):
-		driver.get('https://solved.ac/search?query=*&sort=level&direction=asc&page={pgN}')
-		time.sleep(10)
-		수프 = 끓이기(driver.page_source())
-		print (수프)
-		break
+driver = 구동(headless=True, linux=True)
 
-
-def main():
-	driver = 구동(headless=True, linux=True)
-	온전한페이지(driver)
-
-
-main()
+for pgN in range(1,2):
+	driver.get('https://solved.ac/search?query=*&sort=level&direction=asc&page={pgN}')
+	time.sleep(10)
+	수프 = 끓이기(driver.page_source())
+	print (수프)
