@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 import chromedriver_autoinstaller
 
@@ -18,19 +18,21 @@ if '셀레늄':
 	def 구동(headless=False, linux=False, gs42=False):
 		options = ChromeOptions()
 
+		options.add_argument("--single-process")
+		options.add_argument("--disable-dev-shm-usage")
 		if headless:
 			options.add_argument('--headless')
 		if linux:
 			options.add_argument('--no-sandbox')
 		if not gs42:
 			#path = 'chromedriver.exe'
+			options.binary_location=path
 			path = chromedriver_autoinstaller.install()
 		if gs42:
-			path = '/home/keunykim/dev/프로젝트/백엔드/크롤링/템플릿/chromedriver'
-		options.binary_location=path
-		# service = ChromeService(executable_path=path)
-		# launch = webdriver.Chrome(service=service, options=options)
-		launch = webdriver.Chrome(options=options)
+			path = '/home/keunykim/dev/프로젝트/백엔드/크롤링/템플릿/chromedriver119_linux'
+		service = ChromeService(executable_path=path)
+		launch = webdriver.Chrome(service=service, options=options)
+		# launch = webdriver.Chrome(options=options)
 		print ('크롬 구동 완료')
 		return launch
 	
