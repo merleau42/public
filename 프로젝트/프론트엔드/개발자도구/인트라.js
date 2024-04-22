@@ -7,4 +7,4 @@ try{if (tick ==  5) here=document.location.href.match(/.+\/users\/(.+)/)[1];
 tick++;}
 catch{tick = 0}
 
-// hyungyki(~4.30)
+// hyungyki(~4.30)(m1 ~7.12)(eta: 26.03.16)
