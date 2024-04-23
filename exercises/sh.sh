@@ -1,0 +1,1 @@
+curl --request GET --url 'https://solved.ac/api/v3/problem/show?problemId=234' --header 'Accept: application/json'
