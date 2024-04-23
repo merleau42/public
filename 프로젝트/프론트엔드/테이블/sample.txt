@@ -1,4 +1,5 @@
-`5ㅩ21965ㅩ드높은 남산 위에 우뚝 선ㅩ#구현@implementationㅩ458ㅩ1.91
+티어ㅩ번호ㅩ제목ㅩ태그ㅩ정답자ㅩ기여자
+5ㅩ21965ㅩ드높은 남산 위에 우뚝 선ㅩ#구현@implementationㅩ458ㅩ1.91
 3ㅩ6190ㅩAnother Cow Number Gameㅩ#사칙연산@arithmetic#구현@implementation#수학@mathㅩ380ㅩ1.56
 7ㅩ6545ㅩDrink, on Iceㅩ#많은 조건 분기@case_work#수학@math#물리학@physicsㅩ27ㅩ1.70
 1ㅩ24736ㅩFootball Scoringㅩ#사칙연산@arithmetic#수학@mathㅩ2,707ㅩ1.19
@@ -3247,7 +3248,6 @@ s1ㅩ11654ㅩ아스키 코드ㅩ#구현@implementationㅩ109,075ㅩ1.24
 1ㅩ8393ㅩ합ㅩ#구현@implementation#수학@mathㅩ152,928ㅩ1.56
 7ㅩ31108ㅩLaser Beamㅩ#사칙연산@arithmetic#기하학@geometry#수학@mathㅩ13ㅩ1.31
 4ㅩ23787ㅩCyanide Riversㅩ#구현@implementation#문자열@stringㅩ58ㅩ1.26
-{"ca-pub-0359268919701085":["ca-pub-0359268919701085",[[1]]]}
 4ㅩ21301ㅩComfy Deviationsㅩ#사칙연산@arithmetic#수학@mathㅩ86ㅩ1.15
 2ㅩ30791ㅩgahui and sousenkyo 1ㅩ#구현@implementationㅩ365ㅩ1.27
 6ㅩ3230ㅩ금메달, 은메달, 동메달은 누가?ㅩ#구현@implementationㅩ219ㅩ1.21
@@ -4548,4 +4548,4 @@ s1ㅩ2475ㅩ검증수ㅩ#구현@implementation#사칙연산@arithmetic#수학@ma
 5ㅩ30064ㅩKoncertasㅩ#구현@implementation#시뮬레이션@simulationㅩ23ㅩ1.09
 4ㅩ11606ㅩEgg Dropㅩ#구현@implementation#시뮬레이션@simulationㅩ137ㅩ1.92
 5ㅩ11544ㅩD as in Daedalusㅩ#사칙연산@arithmetic#구현@implementation#수학@math#시뮬레이션@simulationㅩ72ㅩ1.39
-2ㅩ24365ㅩПЧЕЛИЧКАТА МАЯㅩ#사칙연산@arithmetic#수학@mathㅩ704ㅩ1.49`
+2ㅩ24365ㅩПЧЕЛИЧКАТА МАЯㅩ#사칙연산@arithmetic#수학@mathㅩ704ㅩ1.49

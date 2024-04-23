@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<style>
+			body
+			{
+				margin: 0;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			tbody, table, tr, td
+			{
+				max-height: 0;
+				min-width: 5vw;
+				max-width: 30vw;
+				height: 100%;
+			}
+			table
+			{
+				margin-top: 30px;
+				border-collapse: collapse;
+				background-color: ghostwhite;
+				table-layout: fixed;
+				font-size: 14;
+			}
+			thead
+			{
+				background-color:aliceblue;
+			}
+			td
+			{
+				padding: 3px;
+				/* word-break: break-all; */
+			}
+			input, textarea
+			{
+				height: 100%;
+			}
+		</style>
+		<script>
+		window.addEventListener('DOMContentLoaded',	main)
+		function main()
+		{
+			db.addEventListener("load", ()=>{
+				DB = loadDB()
+				ARR = [...DB];
+				TABLE = array_to_table([...DB])
+				document.querySelector('body').appendChild(TABLE)
+			})
+		}
+		function loadDB()
+		{
+			return db.contentDocument.querySelector('html').textContent.split('\n').map(x=>x.split('ㅩ'))
+		}
+		function array_to_table(arr)
+		{
+			table = document.createElement('table')
+			table.innerHTML = arr.map((tr,row) =>
+				(row == 0)
+				? `<thead>${tr.map((th,col) => `<th row="${row}" col="${col+1}">${th}</th>`).join('')}</thead>`
+				: `<tr>${tr.map((td,col) => `<td row="${row}" col="${col+1}">${td}</td>`).join('')}</tr>`
+			).join('')
+			table.border = 1;
+			return table
+		}
+		</script>
+	</head>
+
+<body>
+<iframe id="db" style="display: none;" src="./sample2.txt"></iframe>
+</body>
+</html>
