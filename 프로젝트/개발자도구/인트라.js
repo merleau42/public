@@ -7,4 +7,13 @@ try{if (tick ==  5) here=document.location.href.match(/.+\/users\/(.+)/)[1];
 tick++;}
 catch{tick = 0}
 
-// hyungyki(~4.30)(m1 ~7.12)(eta: 26.03.16)
+/*
+m0 24.4.30
+m1 24.7.12
+m2 24.9.10
+m3 25.1.16
+m4 25.6.6
+m5 25.12.20
+m6 26.3.16
+eta: 26.03.16
+*/
