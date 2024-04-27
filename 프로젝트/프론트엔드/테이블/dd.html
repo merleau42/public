@@ -4,13 +4,16 @@
 		body {
 			margin: 0;
 		}
-		table, tbody, tr, td
-		{
+		table, tbody, tr, td {
 			max-height: 0;
 			height: 100%;
 		}
-		input
-		{
+		table {
+			width: 100%;
+			border: 1;
+			border-collapse: collapse;
+		}
+		input {
 			height: 100%;
 			background-color: inherit;
 		}
@@ -22,10 +25,6 @@
 			text-align: center;
 			background-color: inherit;
 			/*outline: none;*/
-		}
-		table {
-			border: 1;
-			border-collapse: collapse;
 		}
 		</style>
 	<script>
@@ -42,7 +41,9 @@
 			arr = [['ㅷyㆅ가나',	'ㆅ2',		'ㅷGㆅ3',		'ㅷr'],
 				   ['ㆅaaa',		'ㆅ6',		'ㅷgㆅ7',		'ㅷR'],
 				   ['ㅷYㆅ다라',	'ㅷyㆅ10',	'ㆅ11',			'ㆅ마바'],
-				   ['ㆅ마바',		'ㅷyㆅ사',	'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ']];
+				   ['ㆅ마바',		'ㅷyㆅ사',	'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ'],
+				   ['ㅷGㆅ보',		'ㅷRㆅ니',	'ㅷyㆅ쿠',		'ㅷYㆅ메롱']
+				];
 			body.appendChild(arr_to_table(arr));
 		}
 		function assgin_event_once()
@@ -79,7 +80,7 @@
 					input.className = "Cell";
 					parsed = parse('ㅷㆅ', col);
 					input.value = parsed['ㆅ'];
-					input.style.backgroundColor = preset_color[parsed['ㅷ']];
+					td.style.backgroundColor = preset_color[parsed['ㅷ']];
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
 					td.appendChild(input);
@@ -91,6 +92,16 @@
 			table.appendChild(tbody);
 			table.border = 1;
 			return table;
+		}
+		function arr_to_storage(arr, storage)
+		{
+			arr.forEach(x => localStorage[`${x[0]},${x[1]}`] = x[2])
+		}
+		function storage_to_arr(storage, arr)
+		{
+			keys(localStorage)
+			.reduce((s,c)=>[...s, [...c.split(','), localStorage[c]] ], [])
+			.toSorted()
 		}
 	</script>
 </head>
