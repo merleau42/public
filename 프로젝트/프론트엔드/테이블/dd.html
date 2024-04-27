@@ -1,0 +1,99 @@
+<html>
+<head>
+	<style>
+		body {
+			margin: 0;
+		}
+		table, tbody, tr, td
+		{
+			max-height: 0;
+			height: 100%;
+		}
+		input
+		{
+			height: 100%;
+			background-color: inherit;
+		}
+		.Cell {
+			height: 100%;
+			width: 100%;
+			/* resize: none; */
+			border: 0;
+			text-align: center;
+			background-color: inherit;
+			/*outline: none;*/
+		}
+		table {
+			border: 1;
+			border-collapse: collapse;
+		}
+		</style>
+	<script>
+		preset_color = {
+			'Y' : '#FFFF00', 'y' : '#FFFFBB',
+			'R' : '#FF8000', 'r' : '#FFB000',
+			'G' : '#00FF00', 'g' : '#B9FF00',
+			'B' : '#8080FF', 'b' : '#C0C0FF'
+		};
+		window.addEventListener('DOMContentLoaded',	main)
+		function main()
+		{
+			body = document.body;
+			arr = [['ㅷyㆅ가나',	'ㆅ2',		'ㅷGㆅ3',		'ㅷr'],
+				   ['ㆅaaa',		'ㆅ6',		'ㅷgㆅ7',		'ㅷR'],
+				   ['ㅷYㆅ다라',	'ㅷyㆅ10',	'ㆅ11',			'ㆅ마바'],
+				   ['ㆅ마바',		'ㅷyㆅ사',	'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ']];
+			body.appendChild(arr_to_table(arr));
+		}
+		function assgin_event_once()
+		{
+			;
+		}
+		function assgin_event_again()
+		{
+			;
+		}
+		function parse(category, keyword)
+		{
+			parsed = {};
+			category = `\x00${category}\x7F`;
+			keyword = `\x00${keyword}\x7F`;
+
+			[...category]
+			.map((x,i,a) => [keyword.indexOf(x), x])
+			.toSorted((x,y) => x[0] - y[0])
+			.forEach((x,i,a) => {if (i < a.length - 1) parsed[a[i][1]] = keyword.substring(a[i][0] + 1, a[i+1][0])});
+
+			return parsed;
+		}
+		function arr_to_table(arr)
+		{
+			table = document.createElement('table');
+			thead = document.createElement('thead');
+			tbody = document.createElement('tbody');
+			arr.forEach((row, i) => {
+				tr = document.createElement('tr');
+				row.forEach((col, j) => {
+					td = i > 0 ? document.createElement('td') : document.createElement('th');
+					input = document.createElement('input');
+					input.className = "Cell";
+					parsed = parse('ㅷㆅ', col);
+					input.value = parsed['ㆅ'];
+					input.style.backgroundColor = preset_color[parsed['ㅷ']];
+					td.setAttribute('row', i);
+					td.setAttribute('col', j);
+					td.appendChild(input);
+					tr.appendChild(td);
+				})
+				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
+			})
+			table.appendChild(thead);
+			table.appendChild(tbody);
+			table.border = 1;
+			return table;
+		}
+	</script>
+</head>
+<body>
+</body>
+</html>
