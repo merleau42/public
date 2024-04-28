@@ -3,6 +3,7 @@
 	<style>
 		body {
 			margin: 0;
+			background-color: white;
 		}
 		table, tbody, tr, td {
 			max-height: 0;
@@ -12,6 +13,9 @@
 			width: 100%;
 			border: 1;
 			border-collapse: collapse;
+		}
+		thead {
+			background-color: aliceblue;
 		}
 		input {
 			height: 100%;
@@ -28,7 +32,7 @@
 		}
 		</style>
 	<script>
-		preset_color = {
+		color_preset = {
 			'Y' : '#FFFF00', 'y' : '#FFFFBB',
 			'R' : '#FF8000', 'r' : '#FFB000',
 			'G' : '#00FF00', 'g' : '#B9FF00',
@@ -37,14 +41,19 @@
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
+			vec = Array.from({length:10000}, x=>[]);
+			arr =  [['ㅷblueㆅ가나',	'ㅷBㆅ12',		'ㅷGㆅ3',		'ㅷr'],
+					['ㆅaaa',			'ㆅ6',			'ㅷgㆅ7',		'ㅷR'],
+					['ㅷYㆅ다라',		'ㅷyㆅ10',		'ㆅ11',			'ㆅ마바'],
+					['ㆅ마바',			'ㅷyㆅ사',		'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ'],
+					['ㅷGㆅ보',			'ㅷRㆅ니',		'ㅷyㆅ쿠',		'ㅷYㆅ메롱']];
 			body = document.body;
-			arr = [['ㅷyㆅ가나',	'ㆅ2',		'ㅷGㆅ3',		'ㅷr'],
-				   ['ㆅaaa',		'ㆅ6',		'ㅷgㆅ7',		'ㅷR'],
-				   ['ㅷYㆅ다라',	'ㅷyㆅ10',	'ㆅ11',			'ㆅ마바'],
-				   ['ㆅ마바',		'ㅷyㆅ사',	'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ'],
-				   ['ㅷGㆅ보',		'ㅷRㆅ니',	'ㅷyㆅ쿠',		'ㅷYㆅ메롱']
-				];
-			body.appendChild(arr_to_table(arr));
+			table1 = arr_to_table(arr);
+			body.appendChild(table1);
+		}
+		function swap_key_value(map)
+		{
+			return JSON.parse(`{${keys(map).map(x=>`"${map[x]}":"${x}"`).join(',')}}`);
 		}
 		function assgin_event_once()
 		{
@@ -75,12 +84,12 @@
 			arr.forEach((row, i) => {
 				tr = document.createElement('tr');
 				row.forEach((col, j) => {
-					td = i > 0 ? document.createElement('td') : document.createElement('th');
+					parsed = parse('ㅱㅷㆅ', col);
+					td = parsed['ㅱ'] ? document.createElement('th') : document.createElement('td');
 					input = document.createElement('input');
 					input.className = "Cell";
-					parsed = parse('ㅷㆅ', col);
 					input.value = parsed['ㆅ'];
-					td.style.backgroundColor = preset_color[parsed['ㅷ']];
+					td.style.backgroundColor = color_preset[parsed['ㅷ']];
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
 					td.appendChild(input);
@@ -93,15 +102,28 @@
 			table.border = 1;
 			return table;
 		}
-		function arr_to_storage(arr, storage)
+		function table_to_vec(table)
 		{
-			arr.forEach(x => localStorage[`${x[0]},${x[1]}`] = x[2])
+			return table.querySelectorAll('tr').map(tr =>{
+				tr.querySelectorAll('td').map(td =>{
+					input = td.querySelector('input');
+					bg = td.style.backgroundColor;
+					//ㅷㆅ
+					return `ㅷ${bg}ㆅ${input.value}`;
+				})
+			})
 		}
-		function storage_to_arr(storage, arr)
+		function vec_to_map(map)
 		{
-			keys(localStorage)
-			.reduce((s,c)=>[...s, [...c.split(','), localStorage[c]] ], [])
+			return vec.forEach(x => map[`${x[0]},${x[1]}`] = x[2])
+		}
+		function map_to_vec(map) // map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
+		{
+			keys(map)
+			.map(x => [...x.split(','), map[x]])
 			.toSorted()
+			.forEach(x => vec[x[0]].push(x[2]));
+			return vec;
 		}
 	</script>
 </head>
