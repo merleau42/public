@@ -84,8 +84,8 @@
 			arr.forEach((row, i) => {
 				tr = document.createElement('tr');
 				row.forEach((col, j) => {
-					parsed = parse('ㅱㅷㆅ', col);
-					td = parsed['ㅱ'] ? document.createElement('th') : document.createElement('td');
+					parsed = parse('ㅷㆅ', col);
+					td = i > 0 ? document.createElement('td') : document.createElement('th');
 					input = document.createElement('input');
 					input.className = "Cell";
 					input.value = parsed['ㆅ'];
@@ -106,9 +106,8 @@
 		{
 			return table.querySelectorAll('tr').map(tr =>{
 				tr.querySelectorAll('td').map(td =>{
-					input = td.querySelector('input');
 					bg = td.style.backgroundColor;
-					//ㅷㆅ
+					input = td.querySelector('input');
 					return `ㅷ${bg}ㆅ${input.value}`;
 				})
 			})
