@@ -42,10 +42,10 @@
 		function main()
 		{
 			exam = [['ㆅ가나',		'ㆅ12',			'',				'ㆅ4'],
-			['ㆅaaa',		'ㆅ6',			'ㆅ7',			''],
-			['ㅷa3ㆅ다라',	'ㅷb3ㆅ10',		'ㅷc3ㆅ11',		'ㆅ마바'],
-			['ㅷa2ㆅ마바',	'ㅷb2ㆅ사',		'ㅷc2ㆅ자',		'ㆅㄱㄴㄷ'],
-			['ㅷa1ㆅ보',	'ㅷb1ㆅ니',		'ㅷc1ㆅ쿠',		'ㅷzㆅ메롱']];
+					['ㆅaaa',		'ㆅ6',			'ㆅ7',			''],
+					['ㅷa3ㆅ다라',	'ㅷb3ㆅ10',		'ㅷc3ㆅ11',		'ㆅ마바'],
+					['ㅷa2ㆅ마바',	'ㅷb2ㆅ사',		'ㅷc2ㆅ자',		'ㆅㄱㄴㄷ'],
+					['ㅷa1ㆅ보',	'ㅷb1ㆅ니',		'ㅷc1ㆅ쿠',		'ㅷzㆅ메롱']];
 
 			body = document.body;
 			table1 = vec_to_table(exam);
@@ -124,17 +124,23 @@
 		{
 			arr.forEach((row,i)=>{
 				row.forEach((col,j)=>{
-					map[`${i},${j}`] = col;
+					if (col)
+						map[`${i},${j}`] = col;
 				})
 			});
 			return map;
 		}
-		function map_to_vec(map, arr=Array.from({length:10000}, x=>[]))
+		function map_to_vec(map)
 		{
-			keys(map)
-			.map(x => [...x.split(','), map[x]])
-			.toSorted()
-			.forEach(x => arr[x[0]].push(x[2]));
+			points = keys(localStorage).map(x=>x.split(',').map(e=>e*1))
+			max_row = points.toSorted((a,b)=>b[0] - a[0])[0][0] + 1;
+			max_col = points.toSorted((a,b)=>b[1] - a[1])[0][1] + 1;
+			arr = Array.from({length:max_row}, x => Array.from({length:max_col}))
+			arr.forEach((row,i)=>{
+				row.forEach((col,j)=>{
+					arr[i][j] = map[`${i},${j}`]??'';
+				})
+			});
 			return arr;
 		}
 		function table_to_map(table, map={})
@@ -145,6 +151,8 @@
 		{
 			return vec_to_table(map_to_vec(map));
 		}
+		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
+		// exam.toSpliced(2,0,['added']) // 행 추가
 	</script>
 </head>
 <body>
