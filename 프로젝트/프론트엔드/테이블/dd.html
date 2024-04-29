@@ -3,53 +3,55 @@
 	<style>
 		body {
 			margin: 0;
-			background-color: white;
-		}
-		table, tbody, tr, td {
-			max-height: 0;
-			height: 100%;
+			/* background-color: #202020; */
+			background-color: ghostwhite;
 		}
 		table {
+			max-height: 0;
+			height: 100%;
 			width: 100%;
 			border: 1;
 			border-collapse: collapse;
+			
 		}
-		thead {
-			background-color: aliceblue;
+		th {
+			background-color: lightcyan;
+			padding: 3px;
 		}
-		input {
-			height: 100%;
-			background-color: inherit;
+		td {
+			padding: 3px;
 		}
 		.Cell {
 			height: 100%;
 			width: 100%;
-			/* resize: none; */
 			border: 0;
 			text-align: center;
 			background-color: inherit;
-			/*outline: none;*/
+			/* resize: none; */
+			/* outline: none; */
 		}
 		</style>
 	<script>
 		color_preset = {
-			'Y' : '#FFFF00', 'y' : '#FFFFBB',
-			'R' : '#FF8000', 'r' : '#FFB000',
-			'G' : '#00FF00', 'g' : '#B9FF00',
-			'B' : '#8080FF', 'b' : '#C0C0FF'
+			'a1' : 'rgb(255, 192, 0)',	 'a2' : 'rgb(255, 255, 0)',	  'a3' : 'rgb(255, 255, 170)',
+			'b1' : 'rgb(0, 204, 0)',	 'b2' : 'rgb(0, 255, 0)',	  'b3' : 'rgb(187, 255, 187)',
+			'c1' : 'rgb(255, 136, 255)', 'c2' : 'rgb(136, 136, 255)', 'c3' : 'rgb(192, 192, 255)',
+			'z' : 'rgb(192, 192, 192)', '':''
 		};
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
-			vec = Array.from({length:10000}, x=>[]);
-			arr =  [['ㅷblueㆅ가나',	'ㅷBㆅ12',		'ㅷGㆅ3',		'ㅷr'],
-					['ㆅaaa',			'ㆅ6',			'ㅷgㆅ7',		'ㅷR'],
-					['ㅷYㆅ다라',		'ㅷyㆅ10',		'ㆅ11',			'ㆅ마바'],
-					['ㆅ마바',			'ㅷyㆅ사',		'ㅷBㆅ자',		'ㅷbㆅㄱㄴㄷ'],
-					['ㅷGㆅ보',			'ㅷRㆅ니',		'ㅷyㆅ쿠',		'ㅷYㆅ메롱']];
+			exam = [['ㆅ가나',		'ㆅ12',			'',				'ㆅ4'],
+			['ㆅaaa',		'ㆅ6',			'ㆅ7',			''],
+			['ㅷa3ㆅ다라',	'ㅷb3ㆅ10',		'ㅷc3ㆅ11',		'ㆅ마바'],
+			['ㅷa2ㆅ마바',	'ㅷb2ㆅ사',		'ㅷc2ㆅ자',		'ㆅㄱㄴㄷ'],
+			['ㅷa1ㆅ보',	'ㅷb1ㆅ니',		'ㅷc1ㆅ쿠',		'ㅷzㆅ메롱']];
+
 			body = document.body;
-			table1 = arr_to_table(arr);
+			table1 = vec_to_table(exam);
 			body.appendChild(table1);
+
+			assgin_event_once();
 		}
 		function swap_key_value(map)
 		{
@@ -61,6 +63,7 @@
 		}
 		function assgin_event_again()
 		{
+
 			;
 		}
 		function parse(category, keyword)
@@ -76,7 +79,8 @@
 
 			return parsed;
 		}
-		function arr_to_table(arr)
+		// 테이블 <==> 벡터 <==> 맵
+		function vec_to_table(arr)
 		{
 			table = document.createElement('table');
 			thead = document.createElement('thead');
@@ -89,7 +93,8 @@
 					input = document.createElement('input');
 					input.className = "Cell";
 					input.value = parsed['ㆅ'];
-					td.style.backgroundColor = color_preset[parsed['ㅷ']];
+					bg = color_preset[parsed['ㅷ']];
+					td.style.backgroundColor = i > 0 ? bg : '';
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
 					td.appendChild(input);
@@ -104,25 +109,41 @@
 		}
 		function table_to_vec(table)
 		{
-			return table.querySelectorAll('tr').map(tr =>{
-				tr.querySelectorAll('td').map(td =>{
-					bg = td.style.backgroundColor;
-					input = td.querySelector('input');
-					return `ㅷ${bg}ㆅ${input.value}`;
+			return [...table.querySelectorAll('tr')].map(tr =>{
+				return [...tr.querySelectorAll('th, td')].map(td =>{
+					bg = swap_key_value(color_preset)[td.style.backgroundColor];
+					text = td.querySelector('input').value;
+					bg = bg ? `ㅷ${bg}` : ''
+					text = text ? `ㆅ${text}` : ''
+					return bg + text;
 				})
 			})
 		}
-		function vec_to_map(map)
+		// map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
+		function vec_to_map(arr, map={})
 		{
-			return vec.forEach(x => map[`${x[0]},${x[1]}`] = x[2])
+			arr.forEach((row,i)=>{
+				row.forEach((col,j)=>{
+					map[`${i},${j}`] = col;
+				})
+			});
+			return map;
 		}
-		function map_to_vec(map) // map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
+		function map_to_vec(map, arr=Array.from({length:10000}, x=>[]))
 		{
 			keys(map)
 			.map(x => [...x.split(','), map[x]])
 			.toSorted()
-			.forEach(x => vec[x[0]].push(x[2]));
-			return vec;
+			.forEach(x => arr[x[0]].push(x[2]));
+			return arr;
+		}
+		function table_to_map(table, map={})
+		{
+			return vec_to_map(table_to_vec(table), map);
+		}
+		function map_to_table(map)
+		{
+			return vec_to_table(map_to_vec(map));
 		}
 	</script>
 </head>
