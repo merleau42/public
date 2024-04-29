@@ -29,41 +29,49 @@
 			/* resize: none; */
 			/* outline: none; */
 		}
-		</style>
+	</style>
 	<script>
 		color_preset = {
 			'a1' : 'rgb(255, 192, 0)',	 'a2' : 'rgb(255, 255, 0)',	  'a3' : 'rgb(255, 255, 170)',
 			'b1' : 'rgb(0, 204, 0)',	 'b2' : 'rgb(0, 255, 0)',	  'b3' : 'rgb(187, 255, 187)',
 			'c1' : 'rgb(255, 136, 255)', 'c2' : 'rgb(136, 136, 255)', 'c3' : 'rgb(192, 192, 255)',
-			'z' : 'rgb(192, 192, 192)', '':''
+			'z' : 'rgb(192, 192, 192)',  '' : ''
 		};
+		exam = [['ㆅ가나',		'ㆅ12',			'',				'ㆅ4'],
+				['ㆅaaa',		'ㆅ6',			'ㆅ7',			''],
+				['ㅷa3ㆅ다라',	'ㅷb3ㆅ10',		'ㅷc3ㆅ11',		'ㆅ마바'],
+				['ㅷa2ㆅ마바',	'ㅷb2ㆅ사',		'ㅷc2ㆅ자',		'ㆅㄱㄴㄷ'],
+				['ㅷa1ㆅ보',	'ㅷb1ㆅ니',		'ㅷc1ㆅ쿠',		'ㅷzㆅ메롱']];
+
+		xhttp = new XMLHttpRequest();
+		files = {};
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
-			exam = [['ㆅ가나',		'ㆅ12',			'',				'ㆅ4'],
-					['ㆅaaa',		'ㆅ6',			'ㆅ7',			''],
-					['ㅷa3ㆅ다라',	'ㅷb3ㆅ10',		'ㅷc3ㆅ11',		'ㆅ마바'],
-					['ㅷa2ㆅ마바',	'ㅷb2ㆅ사',		'ㅷc2ㆅ자',		'ㆅㄱㄴㄷ'],
-					['ㅷa1ㆅ보',	'ㅷb1ㆅ니',		'ㅷc1ㆅ쿠',		'ㅷzㆅ메롱']];
-
 			body = document.body;
-			table1 = vec_to_table(exam);
-			body.appendChild(table1);
-
-			assgin_event_once();
+			load_table('저장.json')
+			// table1 = vec_to_table(exam);
+			// body.appendChild(table1);
+		}
+		function load_table(path)
+		{
+			read_file(path);
+			setTimeout()
+			console.log( files[path] );
+			// console.log( JSON.parse(files[path]) );
+		}
+		function read_file(path)
+		{
+			xhttp.open("GET", path, true);
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200)
+					files[path] = this.response;
+			};
+			xhttp.send();
 		}
 		function swap_key_value(map)
 		{
 			return JSON.parse(`{${keys(map).map(x=>`"${map[x]}":"${x}"`).join(',')}}`);
-		}
-		function assgin_event_once()
-		{
-			;
-		}
-		function assgin_event_again()
-		{
-
-			;
 		}
 		function parse(category, keyword)
 		{
