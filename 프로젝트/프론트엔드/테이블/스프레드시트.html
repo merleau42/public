@@ -3,8 +3,8 @@
 	<style>
 		body {
 			margin: 0;
-			/* background-color: #202020; */
 			background-color: ghostwhite;
+			font-family: Arial, Helvetica, sans-serif;
 		}
 		table {
 			max-height: 0;
@@ -13,11 +13,7 @@
 			border: 1;
 			border-collapse: collapse;
 		}
-		th {
-			background-color: lightcyan;
-			padding: 3px;
-		}
-		td {
+		th, td {
 			padding: 3px;
 		}
 		.Cell {
@@ -26,19 +22,37 @@
 			border: 0;
 			text-align: center;
 			background-color: inherit;
-			/* resize: none; */
-			/* outline: none; */
 		}
+		.P0 {background-color: rgb(192, 192, 192);}
+		.P1 {background-color: rgb(255, 192, 0);}
+		.P2 {background-color: rgb(255, 255, 0);}
+		.P3 {background-color: rgb(255, 255, 170);}
+		.P4 {background-color: rgb(0, 204, 0);}
+		.P5 {background-color: rgb(0, 255, 0);}
+		.P6 {background-color: rgb(187, 255, 187);}
+		.P7 {background-color: rgb(255, 136, 255);}
+		.P8 {background-color: rgb(136, 136, 255);}
+		.P9 {background-color: rgb(192, 192, 255);}
+		.index, .roof, .edge {
+			background-color: rgb(192, 192, 192);
+		}
+		.dragging{
+			background-color: red;
+		}
+		.index {
+			width: 4vw;
+			text-align: center;
+		}
+		.index:-moz-drag-over
+		{
+			background: #000;
+		}
+
 	</style>
 	<script>
-		color_preset = {
-			'a1' : 'rgb(255, 192, 0)',	 'a2' : 'rgb(255, 255, 0)',	  'a3' : 'rgb(255, 255, 170)',
-			'b1' : 'rgb(0, 204, 0)',	 'b2' : 'rgb(0, 255, 0)',	  'b3' : 'rgb(187, 255, 187)',
-			'c1' : 'rgb(255, 136, 255)', 'c2' : 'rgb(136, 136, 255)', 'c3' : 'rgb(192, 192, 255)',
-			'z' : 'rgb(192, 192, 192)',  '' : ''
-		};
-		xhttp = new XMLHttpRequest();
-		files = {};
+		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		let xhttp = new XMLHttpRequest();
+		let files = {};
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
@@ -47,6 +61,11 @@
 			load_file(path)
 			table1 = map_to_table( JSON.parse( files[path] ))
 			body.appendChild(table1);
+			assign_events_once();
+		}
+		function assign_events_once()
+		{
+			;
 		}
 		function load_file(path)
 		{
@@ -55,7 +74,6 @@
 			if (xhttp.readyState == 4 && xhttp.status == 200)
 				files[path] = xhttp.response;
 		}
-
 		function swap_key_value(map)
 		{
 			return JSON.parse(`{${keys(map).map(x=>`"${map[x]}":"${x}"`).join(',')}}`);
@@ -69,7 +87,9 @@
 			[...category]
 			.map((x,i,a) => [keyword.indexOf(x), x])
 			.toSorted((x,y) => x[0] - y[0])
-			.forEach((x,i,a) => {if (i < a.length - 1) parsed[a[i][1]] = keyword.substring(a[i][0] + 1, a[i+1][0])});
+			.forEach((x,i,a) =>{
+				if (i < a.length - 1) parsed[a[i][1]] = keyword.substring(a[i][0] + 1, a[i+1][0])
+			});
 
 			return parsed;
 		}
@@ -84,15 +104,32 @@
 				row.forEach((col, j) => {
 					parsed = parse('ㅷㆅ', col);
 					td = i > 0 ? document.createElement('td') : document.createElement('th');
-					input = document.createElement('input');
-					input.className = "Cell";
-					input.value = parsed['ㆅ'];
-					bg = color_preset[parsed['ㅷ']];
-					td.style.backgroundColor = i > 0 ? bg : '';
+					if (i > 0 && j > 0){
+						input = document.createElement('input');
+						input.classList.add( "Cell" );
+						input.value = parsed['ㆅ'];
+						td.appendChild(input);
+						if (parsed['ㅷ']) td.classList.add (parsed['ㅷ']);
+					}
+					else if (i != 0 && j == 0){
+						td.classList.add ("index");
+						td.innerText = i
+						td.setAttribute("draggable", true)
+						td.addEventListener('dragstart', e=> e.target.classList.add('dragging'))
+						td.addEventListener('dragend', e=> e.srcElement.classList.remove('dragging'))
+					}
+					else if (i == 0 && j != 0){
+						td.classList.add ("roof");
+						td.innerText=`${alpha[Math.floor((j-27)/26)]??""}${alpha[(j-1)%26]}`;
+						td.setAttribute("draggable", true)
+						td.addEventListener('dragstart', e=> e.target.classList.add('dragging'))
+						td.addEventListener('dragend', e=> e.srcElement.classList.remove('dragging'))
+					}
+					else if (i == 0 && j == 0)
+						td.classList.add ("edge");
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
-					td.appendChild(input);
-					tr.appendChild(td);
+					tr.appendChild(td);				
 				})
 				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
 			})
@@ -103,9 +140,9 @@
 		}
 		function table_to_vec(table)
 		{
-			return [...table.querySelectorAll('tr')].map(tr =>{
-				return [...tr.querySelectorAll('th, td')].map(td =>{
-					bg = swap_key_value(color_preset)[td.style.backgroundColor];
+			return [...table.querySelectorAll('tr')].map(tr => {
+				return [...tr.querySelectorAll('[col]')].map(td => {
+					bg = [...td.classList].filter(x=>x[0]=='P')[0];
 					text = td.querySelector('input').value;
 					bg = bg ? `ㅷ${bg}` : ''
 					text = text ? `ㆅ${text}` : ''
@@ -116,8 +153,8 @@
 		// map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
 		function vec_to_map(arr, map={})
 		{
-			arr.forEach((row,i)=>{
-				row.forEach((col,j)=>{
+			arr.forEach((row,i) => {
+				row.forEach((col,j) => {
 					if (col)
 						map[`${i},${j}`] = col;
 				})
@@ -145,10 +182,15 @@
 		{
 			return vec_to_table(map_to_vec(map));
 		}
+		function print(msg)
+		{
+			document.querySelector('#debug').innerText = msg;
+		}
 		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
 		// exam.toSpliced(2,0,['added']) // 행 추가
 	</script>
 </head>
 <body>
+	<div id="debug">print( msg )</div>
 </body>
 </html>
