@@ -37,7 +37,7 @@
 			background-color: rgb(192, 192, 192);
 		}
 		.dragging{
-			background-color: red;
+			background-color: rgb(160, 160, 160);
 		}
 		.index {
 			width: 4vw;
@@ -50,23 +50,8 @@
 
 	</style>
 	<script>
-		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		let xhttp = new XMLHttpRequest();
 		let files = {};
-		window.addEventListener('DOMContentLoaded',	main)
-		function main()
-		{
-			body = document.body;
-			path = '저장.json'
-			load_file(path)
-			table1 = map_to_table( JSON.parse( files[path] ))
-			body.appendChild(table1);
-			assign_events_once();
-		}
-		function assign_events_once()
-		{
-			;
-		}
 		function load_file(path)
 		{
 			xhttp.open("GET", path, false);
@@ -93,6 +78,30 @@
 
 			return parsed;
 		}
+		function debug(msg)
+		{
+			if (!document.querySelector('debug'))
+				document.querySelector('body').appendChild(document.createElement('debug'));
+			document.querySelector('debug').innerText = msg;
+		}
+	</script>
+	<script>
+		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		window.addEventListener('DOMContentLoaded',	main)
+		function main()
+		{
+			body = document.body;
+			path = '저장.json'
+			load_file(path)
+			table1 = map_to_table( JSON.parse( files[path] ))
+			body.appendChild(table1);
+			assign_event_once();
+		}
+		function assign_event_once() {
+			document.addEventListener('dragstart', e => e.target.classList.add('dragging'))
+			document.addEventListener('dragend', e => e.target.classList.remove('dragging'))
+
+		}
 		// 테이블 <==> 벡터 <==> 맵
 		function vec_to_table(arr)
 		{
@@ -114,22 +123,18 @@
 					else if (i != 0 && j == 0){
 						td.classList.add ("index");
 						td.innerText = i
-						td.setAttribute("draggable", true)
-						td.addEventListener('dragstart', e=> e.target.classList.add('dragging'))
-						td.addEventListener('dragend', e=> e.srcElement.classList.remove('dragging'))
 					}
 					else if (i == 0 && j != 0){
 						td.classList.add ("roof");
 						td.innerText=`${alpha[Math.floor((j-27)/26)]??""}${alpha[(j-1)%26]}`;
-						td.setAttribute("draggable", true)
-						td.addEventListener('dragstart', e=> e.target.classList.add('dragging'))
-						td.addEventListener('dragend', e=> e.srcElement.classList.remove('dragging'))
 					}
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
-					tr.appendChild(td);				
+					td.setAttribute("draggable", true)
+					td.addEventListener('drop', e => {console.log(1)} )
+					tr.appendChild(td);
 				})
 				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
 			})
@@ -182,15 +187,14 @@
 		{
 			return vec_to_table(map_to_vec(map));
 		}
-		function print(msg)
+		function swap_row(tr1, tr2)
 		{
-			document.querySelector('#debug').innerText = msg;
+			console.log(tr1, tr2);
 		}
 		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
 		// exam.toSpliced(2,0,['added']) // 행 추가
 	</script>
 </head>
 <body>
-	<div id="debug">print( msg )</div>
 </body>
 </html>
