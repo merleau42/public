@@ -98,9 +98,14 @@
 			assign_event_once();
 		}
 		function assign_event_once() {
+			
 			document.addEventListener('dragstart', e => e.target.classList.add('dragging'))
 			document.addEventListener('dragend', e => e.target.classList.remove('dragging'))
-
+			document.addEventListener('dragover', e => e.preventDefault()) // 'over' 있어야 'drop' 가능
+			document.addEventListener('drop', e => {
+				if (document.querySelector('.dragging').classList.contains('index'))
+					console.log(e.target, document.querySelector('.dragging'));
+			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
 		function vec_to_table(arr)
@@ -133,7 +138,6 @@
 					td.setAttribute('row', i);
 					td.setAttribute('col', j);
 					td.setAttribute("draggable", true)
-					td.addEventListener('drop', e => {console.log(1)} )
 					tr.appendChild(td);
 				})
 				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
