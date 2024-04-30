@@ -115,6 +115,7 @@
 			})
 			document.addEventListener('dragleave', e => {
 				e.target.parentNode.classList.remove('dropable');
+				console.log('leave', e.target, document.querySelector('.dropable'))
 			})
 			document.addEventListener('drop', e => {
 				e.target.parentNode.classList.remove('dropable');
