@@ -34,7 +34,7 @@
 		.P8 {background-color: rgb(136, 136, 255);}
 		.P9 {background-color: rgb(192, 192, 255);}
 		.index, .roof, .edge {
-			background-color: rgb(192, 192, 192);
+			background-color: rgb(200, 200, 200);
 		}
 		.dragging{
 			background-color: rgb(160, 160, 160);
@@ -43,15 +43,13 @@
 			width: 4vw;
 			text-align: center;
 		}
-		.index:-moz-drag-over
-		{
-			background: #000;
-		}
 
 	</style>
 	<script>
 		let xhttp = new XMLHttpRequest();
 		let files = {};
+		let vecs = {};
+		let tabs = {};
 		function load_file(path)
 		{
 			xhttp.open("GET", path, false);
@@ -87,14 +85,18 @@
 	</script>
 	<script>
 		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var zzz;
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
 			body = document.body;
-			path = '저장.json'
-			load_file(path)
-			table1 = map_to_table( JSON.parse( files[path] ))
-			body.appendChild(table1);
+
+			path1 = '저장.json';
+			load_file(path1);
+			vecs[1] = map_to_vec( JSON.parse( files[path1] ) );
+			tabs[1] = vec_to_table( vecs[1] );
+			body.appendChild(tabs[1]);
+
 			assign_event_once();
 		}
 		function assign_event_once() {
@@ -103,8 +105,10 @@
 			document.addEventListener('dragend', e => e.target.classList.remove('dragging'))
 			document.addEventListener('dragover', e => e.preventDefault()) // 'over' 있어야 'drop' 가능
 			document.addEventListener('drop', e => {
-				if (document.querySelector('.dragging').classList.contains('index'))
-					console.log(e.target, document.querySelector('.dragging'));
+				dragging = document.querySelector('.dragging');
+				if (dragging.classList.contains('index') && e.target.classList.contains('index')){
+					swap_table_row(dragging.parentNode, e.target.parentNode);
+				}
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
@@ -149,8 +153,8 @@
 		}
 		function table_to_vec(table)
 		{
-			return [...table.querySelectorAll('tr')].map(tr => {
-				return [...tr.querySelectorAll('[col]')].map(td => {
+			return [...table.querySelectorAll('tbody tr')].map(tr => {
+				return [...tr.querySelectorAll('td:not(.index)')].map(td => {
 					bg = [...td.classList].filter(x=>x[0]=='P')[0];
 					text = td.querySelector('input').value;
 					bg = bg ? `ㅷ${bg}` : ''
@@ -191,9 +195,12 @@
 		{
 			return vec_to_table(map_to_vec(map));
 		}
-		function swap_row(tr1, tr2)
+		function swap_table_row(tr1, tr2)
 		{
-			console.log(tr1, tr2);
+			if (tr1.rowIndex > tr2.rowIndex)
+				tr2.before(tr1);
+			else if (tr1.rowIndex < tr2.rowIndex)
+				tr2.after(tr1);
 		}
 		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
 		// exam.toSpliced(2,0,['added']) // 행 추가
