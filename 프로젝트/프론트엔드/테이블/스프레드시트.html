@@ -3,8 +3,8 @@
 	<style>
 		body {
 			margin: 0;
-			background-color: ghostwhite;
 			font-family: Arial, Helvetica, sans-serif;
+			background-color: rgb(255, 255, 245);
 		}
 		table {
 			max-height: 0;
@@ -14,7 +14,8 @@
 			border-collapse: collapse;
 		}
 		th, td {
-			padding: 3px;
+			padding: 2px;
+			font-size: 15;
 		}
 		.Cell {
 			height: 100%;
@@ -34,13 +35,16 @@
 		.P8 {background-color: rgb(136, 136, 255);}
 		.P9 {background-color: rgb(192, 192, 255);}
 		.index, .roof, .edge {
-			background-color: rgb(200, 200, 200);
+			background-color: rgb(210, 210, 210);
+		}
+		.dropable{
+			background-color:rgb(240, 240, 240);
 		}
 		.dragging{
 			background-color: rgb(160, 160, 160);
 		}
 		.index {
-			width: 4vw;
+			width: 5vw;
 			text-align: center;
 		}
 
@@ -80,7 +84,7 @@
 		{
 			if (!document.querySelector('debug'))
 				document.querySelector('body').appendChild(document.createElement('debug'));
-			document.querySelector('debug').innerText = msg;
+			document.querySelector('debug').innerText += `${msg}\n`;
 		}
 	</script>
 	<script>
@@ -104,10 +108,22 @@
 			document.addEventListener('dragstart', e => e.target.classList.add('dragging'))
 			document.addEventListener('dragend', e => e.target.classList.remove('dragging'))
 			document.addEventListener('dragover', e => e.preventDefault()) // 'over' 있어야 'drop' 가능
+			document.addEventListener('dragenter', e => {
+				dragging = document.querySelector('.dragging');
+				if (dragging.classList.contains('index') && e.target.classList.contains('index')){
+					e.target.classList.add('dropable');
+				}
+			})
+			document.addEventListener('dragleave', e => {
+				e.target.classList.remove('dropable');
+			})
 			document.addEventListener('drop', e => {
+				e.target.classList.remove('dropable');
 				dragging = document.querySelector('.dragging');
 				if (dragging.classList.contains('index') && e.target.classList.contains('index')){
 					swap_table_row(dragging.parentNode, e.target.parentNode);
+					tabs[5] = tabs[1];
+					body.appendChild(tabs[5]);
 				}
 			})
 		}
@@ -139,10 +155,11 @@
 					}
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
-					td.setAttribute('row', i);
-					td.setAttribute('col', j);
+					// td.setAttribute('row', i);
+					// td.setAttribute('col', j);
 					td.setAttribute("draggable", true)
 					tr.appendChild(td);
+					tr.setAttribute('row', i);
 				})
 				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
 			})
@@ -201,6 +218,10 @@
 				tr2.before(tr1);
 			else if (tr1.rowIndex < tr2.rowIndex)
 				tr2.after(tr1);
+			[...document.querySelectorAll('tbody tr')].forEach(tr => {
+				tr.setAttribute('row', tr.rowIndex);
+				tr.querySelector('.index').innerText = tr.rowIndex;
+			})
 		}
 		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
 		// exam.toSpliced(2,0,['added']) // 행 추가
