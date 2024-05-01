@@ -36,12 +36,12 @@
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
-		.dropable{
-			border-top: 2px dotted;
-			background-color: rgb(240, 240, 240);
-		}
 		.dragging{
 			background-color: rgb(160, 160, 160);
+		}
+		.dropable{
+			border-top: 3px dotted;
+			background-color: rgb(240, 240, 240);
 		}
 		.index {
 			width: 5vw;
@@ -56,12 +56,12 @@
 		let tabs = {};
 		let Q = (x, y=document) => y.querySelector(x);
 		let QQ = (x, y=document) => y.querySelectorAll(x);
-		function load_file(path)
+		function load_file(fd, path)
 		{
 			xhttp.open("GET", path, false);
 			xhttp.send();
 			if (xhttp.readyState == 4 && xhttp.status == 200)
-				files[path] = xhttp.response;
+				files[fd] = xhttp.response;
 		}
 		function swap_key_value(map)
 		{
@@ -101,12 +101,13 @@
 		{
 			body = document.body;
 
-			path1 = '저장.json';
-			load_file(path1);
-			vecs[1] = map_to_vec( JSON.parse( files[path1] ) );
+			load_file(1, '저장.json');
+			vecs[1] = map_to_vec( JSON.parse( files[1] ) );
 			tabs[1] = vec_to_table( vecs[1] );
 			body.appendChild(tabs[1]);
 
+			debug(files[1]);
+			debug(parse('ㅷ', 'ㅷP4ㆅ녕하'));
 			drag_listner();
 		}
 		function drag_listner() {
@@ -125,6 +126,7 @@
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					swap_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
 			})
+			// debug(table_to_vec(tabs[1]).join('\n'));
 		}
 		// 테이블 <==> 벡터 <==> 맵
 		function vec_to_table(arr)
@@ -135,11 +137,13 @@
 			arr.forEach((row, i) => {
 				tr = document.createElement('tr');
 				row.forEach((col, j) => {
+					// ;; parsed = parse('ㅷ', col);
 					parsed = parse('ㅷㆅ', col);
 					td = i > 0 ? document.createElement('td') : document.createElement('th');
 					if (i > 0 && j > 0){
 						input = document.createElement('input');
 						input.classList.add( "Cell" );
+						// ;; input.value = parsed['\0'];
 						input.value = parsed['ㆅ'];
 						td.appendChild(input);
 						if (parsed['ㅷ']) td.classList.add (parsed['ㅷ']);
@@ -171,11 +175,11 @@
 		{
 			return [...table.querySelectorAll('tbody tr')].map(tr => {
 				return [...tr.querySelectorAll('td:not(.index)')].map(td => {
-					bg = [...td.classList].filter(x=>x[0]=='P')[0];
 					text = td.querySelector('input').value;
-					bg = bg ? `ㅷ${bg}` : ''
 					text = text ? `ㆅ${text}` : ''
-					return bg + text;
+					bg = [...td.classList].filter(x=>x[0]=='P')[0];
+					bg = bg ? `ㅷ${bg}` : ''
+					return text + bg;
 				})
 			})
 		}
