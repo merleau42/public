@@ -7,10 +7,57 @@
 		}
 		.slot {
 			margin: auto;
-			margin-top: 25;
+			margin-top: 30;
 			min-height: 10%;
-			width: 99%;
 			text-align: center;
+		}
+		.container
+		{
+			margin-top: -30px;
+			height: 30px;
+			width: 100%;
+			position: fixed;
+			background-color: ghostwhite;
+			opacity: 70%;
+			text-align: center;
+		}
+		#Search, #Clear, #Total, #Bin, #Refresh, #Save, #Load
+		{
+			display: inline-block;
+			text-align: center;
+			font-size: large;
+			background: 0;
+		}
+		#Search
+		{
+			width: 40%;
+		}
+		#Clear
+		{
+			opacity: 60%;
+		}
+		#Bin, #Refresh, #Save, #Load
+		{
+			padding-right: 0;
+			border: 0;
+			cursor: pointer;
+		}
+		#Bin
+		{
+			padding-left: 3;
+			color: red;
+		}
+		#Refresh
+		{
+			padding-left: 4;
+			color: darkgreen;
+			font-size: small;
+			font-weight: bold;
+			opacity: 80%;
+		}
+		#Total
+		{
+			opacity: 80%;
 		}
 		table {
 			max-height: 0;
@@ -108,6 +155,7 @@
 		}
 	</script>
 	<script>
+		let category = "@#$%^&*";
 		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
@@ -191,7 +239,8 @@
 					}
 					else if (i == 0 && j != 0){
 						td.classList.add ("roof");
-						td.innerText=`${alpha[Math.floor((j-27)/26)]??""}${alpha[(j-1)%26]}`;
+						td.innerText = j < 8 ? category[j - 1] : ''
+						td.innerText += `${alpha[Math.floor((j-27)/26)]??""}${alpha[(j-1)%26]}`;
 					}
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
@@ -270,7 +319,10 @@
 	</script>
 </head>
 <body>
-<div class="floating"></div>
+<div class="container">
+<input id="Search" type="text" placeholder="검색어@작성자#태그%메모"><input id="Clear" type="button" value="X">
+<div id="Total"></div><a download="80000.json"><input id="Save" type="button" value="💾"></a><input id="Load" type="button" value="📂"><input id="Bin" type="button" value="🗑"><input id="Refresh" type="button" value="새로고침">
+</div>
 <div class="slot" id="slot1">1</div>
 <div class="slot" id="slot2">2</div>
 <div class="slot" id="slot3">3</div>
