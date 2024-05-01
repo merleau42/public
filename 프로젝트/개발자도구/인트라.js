@@ -16,3 +16,10 @@ m4 25.6.7		b4
 m5 25.12.21		b5 
 m6 26.3.17		b6 
 */
+
+
+
+
+
+/* 마지막 문장만 수정하면 됨 */
+try { div.innerText = $(".console-view-pinpane").shadowRoot.querySelector(".console-pin-preview").innerText; div.style.fontSize = "20px"; div.style.backgroundColor="RGB(255, 255, 255, 1)"; div.style.color="black"} catch { div = document.createElement('div'); div.style.width="100%"; div.style.height="100%"; div.style.zIndex="99999"; if(document.title.includes("DevTools")) $('.widget').appendChild(div); } $('[href*=slot]').parentNode.parentNode.parentNode.querySelector('.h-full').innerText
