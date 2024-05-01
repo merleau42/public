@@ -43,10 +43,13 @@
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
-		.dragging{
+		.index:hover {
+			background-color: rgb(230, 230, 230);
+		}
+		.dragging {
 			background-color: rgb(160, 160, 160);
 		}
-		.dropable{
+		.dropable {
 			border-top: 3px dotted;
 			background-color: rgb(240, 240, 240);
 		}
@@ -54,8 +57,8 @@
 			width: 5vw;
 			text-align: center;
 		}
-		.index.mousedown {
-			background-color: rgb(160, 160, 160);
+		.floating {
+			content: '➕';
 		}
 
 	</style>
@@ -129,12 +132,20 @@
 		}
 		function mouse_listner()
 		{
+			document.addEventListener('dblclick', e => {
+				e.target.classList.add('dblclick')
+				table = Q('table:has(.dblclick)');
+				new_row = vec_to_table( [[], [...QQ('th', table)].map(x=>'')] ).querySelector('tbody tr');
+				move_table_row( new_row, Q('tr:has(.dblclick.index)') );
+				free_class(['dblclick']);
+			})
 			document.addEventListener('contextmenu', e => {
 				event.preventDefault();
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
 				Q('tr:has(.mousedown.index)').classList.add('dropable');
+				
 			})
 			document.addEventListener('mouseup', e => {
 				free_class(['dropable','mousedown'])
@@ -153,7 +164,7 @@
 			document.addEventListener('drop', e => {
 				e.target.classList.add('to_drop')
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
-					swap_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
+					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
@@ -243,7 +254,7 @@
 		{
 			return vec_to_table(map_to_vec(map), fd);
 		}
-		function swap_table_row(tr1, tr2)
+		function move_table_row(tr1, tr2)
 		{
 			if (tr1.rowIndex > tr2.rowIndex)
 				tr2.before(tr1);
@@ -259,6 +270,7 @@
 	</script>
 </head>
 <body>
+<div class="floating"></div>
 <div class="slot" id="slot1">1</div>
 <div class="slot" id="slot2">2</div>
 <div class="slot" id="slot3">3</div>
