@@ -8,6 +8,8 @@ if status is-interactive
 	export msg_d="깃허브 git add, git push는 여기서";
 	export msg_r="git clone 해서 폴더 만들기 -- 내부에서 작업하기";
 	export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
+	export msg_w="완료될 때까지 터미널을 닫지마세요";
+	alias warn="echo $msg_w";
 	
 	export NAME="get_next_line";
 
@@ -22,8 +24,8 @@ if status is-interactive
 
 	alias fre="clear; cd ~/goinfre";
 
-	alias g="clear; echo '완료될 때까지 터미널을 닫지마세요'; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
-; git push";
+	alias g="clear; warn; git add .; warn; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
+; warn; git push";
 	alias z="d; g";
 
 	alias c="clear; cc $FLAGS *.c -o $out";
