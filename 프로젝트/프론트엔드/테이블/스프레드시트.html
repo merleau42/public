@@ -106,10 +106,10 @@
 			width: 5vw;
 			text-align: center;
 		}
-		.index.Rclick_ {
+		.index.Rclick_, .roof.Rclick_ {
 			background: coral;
 		}
-		.index.Rclick__ {
+		.index.Rclick__, .roof.Rclick__ {
 			background: crimson;
 		}
 		.floating {
@@ -158,18 +158,26 @@
 
 			return parsed;
 		}
-		function debug(msg)
+		function debug(...msg)
 		{
 			if (!document.querySelector('debug'))
 				document.querySelector('body').appendChild(document.createElement('debug'));
-			document.querySelector('debug').innerText += `${msg}\n\n`;
+			document.querySelector('debug').innerText += `${msg}\n`;
 		}
 		function free_class(classNames, wildcard=false)
 		{
-			let dummy = E('dummy')
-			// classNames.forEach(x => (Q(`.${x}`)??dummy).classList.remove(x))
-			find = wildcard ? '*=' : '==';
-			classNames.forEach(cn => (Q(`[class${find}${cn}]`)??dummy).classList.remove(x))
+			// [...QQ('[class*=Rclick]')].forEach(el => {
+				// [...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
+			// })
+			if (wildcard){
+				classNames.forEach(cn => {
+					if (el = Q(`[class*=${cn}]`))
+						[...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
+				})
+			}
+			else{
+				classNames.forEach(cn => (Q(`.${cn}`)??Q('html')).classList.remove(cn));
+			}
 		}
 	</script>
 	<script>
@@ -206,14 +214,14 @@
 				free_class(['dblclick']);
 			})
 			document.addEventListener('contextmenu', e => {
-				event.preventDefault();
+				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안 뜸.
 				if (!e.target.className.match('Rclick')){
 					// [...QQ('[class*=Rclick]')].forEach(el => {
 						// [...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
-					// })
-					free_class(['Rclick__', 'Rclick_'])
-					e.target.classList.add('Rclick_');
-				}
+						// })
+						free_class(['Rclick'], wildcard = true);
+						e.target.classList.add('Rclick_');
+					}
 				else
 					e.target.className = e.target.className.replace(/Rclick(_*)/, 'Rclick$1_');
 				if (Q('.Rclick___.index'))
@@ -357,6 +365,5 @@
 </div>
 <div class="slot" id="slot1">1</div>
 <div class="slot" id="slot2">2</div>
-<div class="slot" id="slot3">3</div>
 </body>
 </html>
