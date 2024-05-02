@@ -89,7 +89,7 @@
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
-		.mousedown {
+		.mousedown, .dragging {
 			background-color: rgb(160, 160, 160);
 		}
 		.index:hover:not(.mousedown, [class*=Rclick]) {
@@ -98,9 +98,6 @@
 		.dropable {
 			border-top: 3px dotted;
 			background-color: rgb(240, 240, 240);
-		}
-		.dragging {
-			background-color: rgb(160, 160, 160);
 		}
 		.index {
 			width: 5vw;
@@ -111,6 +108,10 @@
 		}
 		.index.Rclick__, .roof.Rclick__ {
 			background: crimson;
+		}
+		tr:has(.index.Rclick__) td:not(.index){
+			/* content: '삭제'; */
+			background: coral;
 		}
 		.floating {
 			content: '➕';
@@ -166,18 +167,11 @@
 		}
 		function free_class(classNames, wildcard=false)
 		{
-			// [...QQ('[class*=Rclick]')].forEach(el => {
-				// [...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
-			// })
-			if (wildcard){
-				classNames.forEach(cn => {
-					if (el = Q(`[class*=${cn}]`))
-						[...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
-				})
-			}
-			else{
-				classNames.forEach(cn => (Q(`.${cn}`)??Q('html')).classList.remove(cn));
-			}
+			if (wildcard)
+				classNames.forEach(cn => [...QQ(`[class*=${cn}]`)].forEach(el =>
+					[...el.classList].forEach(c => {if(c.includes(cn)) el.classList.remove(c)})))
+			else
+				classNames.forEach(cn => [...QQ(`.${cn}`)].forEach(el => el.classList.remove(cn)));
 		}
 	</script>
 	<script>
@@ -201,27 +195,24 @@
 			slot2.appendChild( tabs[2] );
 
 			mouse_listner();
-			// debug(vecs[1])
-			// debug(vecs[2])
 		}
 		function mouse_listner()
 		{
 			document.addEventListener('dblclick', e => {
 				e.target.classList.add('dblclick')
 				table = Q('table:has(.dblclick)');
-				newr = vec_to_table( [[], [...QQ('th', table)].map(x=>'')] ).querySelector('tbody tr');
-				move_table_row( newr, Q('tr:has(.dblclick.index)') );
+				if (Q('.index.dblclick')){
+					newr = vec_to_table( [[], [...QQ('th', table)].map(x=>'')] ).querySelector('tbody tr');
+					move_table_row( newr, Q('tr:has(.dblclick.index)') );
+				}
 				free_class(['dblclick']);
 			})
 			document.addEventListener('contextmenu', e => {
-				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안 뜸.
+				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안뜨도록.
 				if (!e.target.className.match('Rclick')){
-					// [...QQ('[class*=Rclick]')].forEach(el => {
-						// [...el.classList].forEach(cn => {if(cn.includes('Rclick')) el.classList.remove(cn)})
-						// })
-						free_class(['Rclick'], wildcard = true);
-						e.target.classList.add('Rclick_');
-					}
+					free_class(['Rclick'], wildcard = true);
+					e.target.classList.add('Rclick_');
+				}
 				else
 					e.target.className = e.target.className.replace(/Rclick(_*)/, 'Rclick$1_');
 				if (Q('.Rclick___.index'))
@@ -229,17 +220,24 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
+				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
+					free_class(['Rclick'], wildcard = true);
 				Q('tr:has(.mousedown.index)').classList.add('dropable');
 			})
 			document.addEventListener('mouseup', e => {
-				free_class(['dropable','mousedown'])
+				free_class(['dropable','mousedown','dblclick']);
 			})
-			document.addEventListener('dragstart', e => e.target.classList.add('dragging'))
+			document.addEventListener('dragstart', e => {
+				free_class(['Rclick'], true);
+				e.target.classList.add('dragging')
+			})
 			document.addEventListener('dragend', e => {
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
-			document.addEventListener('dragover', e => e.preventDefault()) // 'over' 있어야 'drop' 가능
-			document.addEventListener('dragenter', e => {
+			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+				e.preventDefault();
+			})
+			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
@@ -360,7 +358,7 @@
 </head>
 <body>
 <div class="container">
-<input id="Search" type="text" placeholder="검색어@작성자#태그%메모"><input id="Clear" type="button" value="X">
+<input id="Search" type="text" placeholder="검색어 (필드에서 찾기: @#$%^&)"><input id="Clear" type="button" value="X">
 <div id="Total"></div><a download="80000.json"><input id="Save" type="button" value="💾"></a><input id="Load" type="button" value="📂"><input id="Bin" type="button" value="🗑"><input id="Refresh" type="button" value="새로고침">
 </div>
 <div class="slot" id="slot1">1</div>

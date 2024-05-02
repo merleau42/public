@@ -22,8 +22,9 @@ if status is-interactive
 
 	alias fre="clear; cd ~/goinfre";
 
-	alias g="clear; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
+	alias g="clear; echo '완료될 때까지 터미널을 닫지마세요'; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m
 ; git push";
+	alias z="d; g";
 
 	alias c="clear; cc $FLAGS *.c -o $out";
 	alias sc="clear; cc $FLAGS $42/integrate/$NAME.c -o $out";
