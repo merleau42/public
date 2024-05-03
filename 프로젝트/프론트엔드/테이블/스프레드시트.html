@@ -4,6 +4,7 @@
 		body {
 			margin: 0;
 			font-family: Arial, Helvetica, sans-serif;
+			background-color: inherit !important;
 		}
 		.slot {
 			margin: auto;
@@ -76,16 +77,16 @@
 			text-align: center;
 			background-color: inherit;
 		}
-		.P0 {background-color: rgb(192, 192, 192);}
-		.P1 {background-color: rgb(255, 192, 0);}
-		.P2 {background-color: rgb(255, 255, 0);}
-		.P3 {background-color: rgb(255, 255, 170);}
-		.P4 {background-color: rgb(0, 204, 0);}
-		.P5 {background-color: rgb(0, 255, 0);}
-		.P6 {background-color: rgb(187, 255, 187);}
-		.P7 {background-color: rgb(255, 136, 255);}
-		.P8 {background-color: rgb(136, 136, 255);}
-		.P9 {background-color: rgb(192, 192, 255);}
+		.P0 {background-color: rgb(192, 192, 192) !important;}
+		.P1 {background-color: rgb(255, 192, 0) !important;}
+		.P2 {background-color: rgb(255, 255, 0) !important;}
+		.P3 {background-color: rgb(255, 255, 170) !important;}
+		.P4 {background-color: rgb(0, 204, 0) !important;}
+		.P5 {background-color: rgb(0, 255, 0) !important;}
+		.P6 {background-color: rgb(187, 255, 187) !important;}
+		.P7 {background-color: rgb(255, 136, 255) !important;}
+		.P8 {background-color: rgb(136, 136, 255) !important;}
+		.P9 {background-color: rgb(192, 192, 255) !important;}
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
@@ -95,8 +96,12 @@
 		.index:hover:not(.mousedown, [class*=Rclick]) {
 			background-color: rgb(230, 230, 230);
 		}
-		.dropable {
+		tr.dropable {
 			border-top: 3px dotted;
+			background-color: rgb(240, 240, 240);
+		}
+		td.dropable {
+			border-left: 3px dotted;
 			background-color: rgb(240, 240, 240);
 		}
 		.index {
@@ -115,6 +120,17 @@
 		.floating {
 			content: '➕';
 		}
+		.debug {
+			padding: 1px;
+			display: inline-flex;
+			font-size: 13px;
+		}
+		.debug[channel='1'] {
+			background: lavender;
+		}
+		.debug[channel='2'] {
+			background: floralwhite;
+		}
 
 	</style>
 	<script>
@@ -128,13 +144,13 @@
 		let E = x => document.createElement(x);
 		let dummy = E('dummy');
 		let Q = (x, y=document) => y.querySelector(x);
-		let QQ = (x, y=document) => y.querySelectorAll(x);
+		let QQ = (x, y=document) => [...y.querySelectorAll(x)];
 		function leak(className='')
 		{
 			if (!className)
-				return [...QQ('[class]')].reduce((s,c)=>[...s, [...c.classList].filter(x=>!s.includes(x))].flat(), []).toSorted();
+				return QQ('[class]').reduce((s,c)=>[...s, [...c.classList].filter(x=>!s.includes(x))].flat(), []).toSorted();
 			else
-				return [...QQ(`[class*=${className}]`)]
+				return QQ(`[class*=${className}]`)
 		}
 		function load_file(fd, path)
 		{
@@ -162,23 +178,30 @@
 
 			return parsed;
 		}
-		function debug(msg, ...argvs)
+		function debug(channel, msg, ...argvs)
 		{
-			if (!Q('debug'))
-				Q('body').appendChild(E('debug')).style.fontSize="14";
+			if (!Q(`.debug[channel='${channel}']`))
+			{
+				div = Q('body').appendChild(E('div'))
+				div.classList.add('debug');
+				div.setAttribute('channel', channel);
+			}
+			dbg = Q(`.debug[channel='${channel}']`);
 			if (typeof(msg) == typeof(Object()))
 				if (attrs = msg.getAttributeNames().toSorted()
 							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
-					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value::${msg.value}]` : ''}`;
-			Q('debug').innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
+					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
+			if(dbg.innerText.split('\n').length > 25)
+				dbg.innerText = '';
+			dbg.innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
 		}
 		function free_class(classNames, wildcard=false)
 		{
 			if (wildcard)
-				classNames.forEach(cn => [...QQ(`[class*=${cn}]`)].forEach(el =>
+				classNames.forEach(cn => QQ(`[class*=${cn}]`).forEach(el =>
 					[...el.classList].forEach(c => {if(c.includes(cn)) el.classList.remove(c)})))
 			else
-				classNames.forEach(cn => [...QQ(`.${cn}`)].forEach(el => el.classList.remove(cn)));
+				classNames.forEach(cn => QQ(`.${cn}`).forEach(el => el.classList.remove(cn)));
 		}
 	</script>
 	<script>
@@ -207,8 +230,9 @@
 			document.addEventListener('dblclick', e => {
 				e.target.classList.add('dblclick')
 				table = Q('table:has(.dblclick)');
+				debug(1, e.target, 'dblclick');
 				if (Q('.index.dblclick')) {
-					newr = vec_to_table( [[], [...QQ('th', table)].map(x=>'')] ).querySelector('tbody tr');
+					newr = vec_to_table( [[], QQ('th', table).map(x=>'')] ).querySelector('tbody tr');
 					move_table_row( newr, Q('tr:has(.dblclick.index)') );
 				}
 				free_class(['dblclick']);
@@ -229,14 +253,18 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				debug(e.target);
+				debug(2, e.target, 'mousedown');
 				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
 					free_class(['Rclick'], wildcard = true);
 				if (Q('.mousedown.index'))
 					Q('tr:has(.mousedown.index)').classList.add('dropable');
+				if (Q('.mousedown.roof')){
+					col_line = Q('.mousedown.roof').getAttribute('col');
+					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
+				}
 			})
 			document.addEventListener('dragstart', e => {
-				free_class(['Rclick'], true);
+				free_class(['Rclick'], wildcard = true);
 				e.target.classList.add('dragging')
 			})
 			document.addEventListener('dragend', e => {
@@ -244,12 +272,18 @@
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
 				e.preventDefault();
+				console.log(e.target);
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
+				if (Q('.mousedown.roof')){
+					col_line = Q('td:has(.enter)').getAttribute('col');
+					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
+					QQ(`table:has(.mousedown.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'))
+				}
 			})
 			document.addEventListener('drop', e => {
 				e.target.classList.add('to_drop')
