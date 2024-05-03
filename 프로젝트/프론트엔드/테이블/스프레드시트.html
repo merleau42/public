@@ -77,16 +77,16 @@
 			text-align: center;
 			background-color: inherit;
 		}
-		.P0 {background-color: rgb(192, 192, 192) !important;}
-		.P1 {background-color: rgb(255, 192, 0) !important;}
-		.P2 {background-color: rgb(255, 255, 0) !important;}
-		.P3 {background-color: rgb(255, 255, 170) !important;}
-		.P4 {background-color: rgb(0, 204, 0) !important;}
-		.P5 {background-color: rgb(0, 255, 0) !important;}
-		.P6 {background-color: rgb(187, 255, 187) !important;}
-		.P7 {background-color: rgb(255, 136, 255) !important;}
-		.P8 {background-color: rgb(136, 136, 255) !important;}
-		.P9 {background-color: rgb(192, 192, 255) !important;}
+		.P0 {background-color: rgb(192, 192, 192);}
+		.P1 {background-color: rgb(255, 192, 0);}
+		.P2 {background-color: rgb(255, 255, 0);}
+		.P3 {background-color: rgb(255, 255, 170);}
+		.P4 {background-color: rgb(0, 204, 0);}
+		.P5 {background-color: rgb(0, 255, 0);}
+		.P6 {background-color: rgb(187, 255, 187);}
+		.P7 {background-color: rgb(255, 136, 255);}
+		.P8 {background-color: rgb(136, 136, 255);}
+		.P9 {background-color: rgb(192, 192, 255);}
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
@@ -121,10 +121,12 @@
 			content: '➕';
 		}
 		.debug {
+			border-bottom: 1px dotted;
+			/* border-right: 1px dotted; */
 			border-left: 1px dotted;
-			display: inline-flex;
+			/* display: inline-flex; */
+			display: inline-table;
 			font-size: 13px;
-			min-width: 4%;
 		}
 	</style>
 	<script>
@@ -173,7 +175,7 @@
 
 			return parsed;
 		}
-		function debug(channel, msg, ...argvs)
+		function debug(channel, curtain, msg, ...argvs)
 		{
 			if (!Q(`.debug[channel='${channel}']`))
 			{
@@ -188,19 +190,27 @@
 				div.style.color = `#${red}${grn}${blu}`;
 			}
 			dbg = Q(`.debug[channel='${channel}']`);
-			QQ('.debug').forEach(x => x.style.width='');
-			QQ('.debug')
-			.map((x,i,db) => Math.floor( 10000000 * x.offsetWidth / body.offsetWidth) )
-			.map((x,i,arr)=> Math.floor( 100 * x / arr.reduce((s,c)=>s+c)) + '%' )
-			.forEach((x,i) => QQ('.debug')[i].style.width = x)
+			// 반응형 가로 길이
+			// QQ('.debug').forEach(x => x.style.width='');
+			// QQ('.debug')
+			// .map((x,i,db) => Math.floor( 10000000 * x.offsetWidth / body.offsetWidth) )
+			// .map((x,i,arr)=> Math.floor( 100 * x / arr.reduce((s,c)=>s+c)) - 1 + '%' )
+			// .forEach((x,i) => QQ('.debug')[i].style.width = x)
 			if (typeof(msg) == typeof(Object()))
 				if (attrs = msg.getAttributeNames().toSorted()
 							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
 					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
-			if(dbg.innerText.split('\n').length > 17)
-				dbg.innerText = `Debug ${channel}\n`;
-			dbg.innerText += dbg.getAttribute('icon');
-			dbg.innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
+			tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
+			spl = dbg.innerText.replace(/\n$/,'').split('\n');
+			if (spl.length >= 13)
+			{
+				if (curtain)
+					spl = [spl[0]];
+				else
+					spl = [spl[0], ...spl.splice(2)];
+			}
+			spl.push(tail);
+			dbg.innerText = spl.join('\n');
 		}
 		function free_class(classNames, wildcard=false)
 		{
@@ -231,11 +241,12 @@
 			slot2.appendChild( tabs[2] );
 
 			mouse_listner();
-			setInterval(monitor, 400);
+			setInterval(monitor, 300);
 		}
 		function monitor()
 		{
-			debug(1, [leak().length, leak().join(', ')].join(': '));
+			debug(1, false, [leak().length, leak().join(' ')].join(': '));
+			debug(2, false, '213213');
 		}
 		function mouse_listner()
 		{
@@ -284,6 +295,7 @@
 				e.preventDefault();
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
+				debug(2, true, e.target);
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
