@@ -121,14 +121,15 @@
 			content: '➕';
 		}
 		.debug {
-			padding: 1px;
+			border-left: 1px dotted;
 			display: inline-flex;
 			font-size: 13px;
-			border-left: 0.5px solid;
+			min-width: 4%;
 		}
 	</style>
 	<script>
 		let xhttp = new XMLHttpRequest();
+		let bugs = ['🐌','🦋','🐛','🐜','🐝','🪲','🐞','🦗','🪳','🦟','🪰','🪱'];
 		let files = {};
 		let vecs = {};
 		let tabs = {};
@@ -179,19 +180,26 @@
 				div = Q('body').appendChild(E('div'))
 				div.classList.add('debug');
 				div.setAttribute('channel', channel);
-				div.innerText = `### Debug Channel ${channel} ###\n`;
-				red = Math.round(Math.random() * 0x80 + 0x40).toString(16);
-				grn = Math.round(Math.random() * 0x80 + 0x40).toString(16);
-				blu = Math.round(Math.random() * 0x80 + 0x40).toString(16);
+				div.setAttribute('icon', bugs[Math.round(Math.random() * 9999) % 12]);
+				div.innerText = `Debug ${channel}\n`;
+				red = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+				grn = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+				blu = Math.round(Math.random() * 0x50 + 0x30).toString(16);
 				div.style.color = `#${red}${grn}${blu}`;
 			}
 			dbg = Q(`.debug[channel='${channel}']`);
+			QQ('.debug').forEach(x => x.style.width='');
+			QQ('.debug')
+			.map((x,i,db) => Math.floor( 10000000 * x.offsetWidth / body.offsetWidth) )
+			.map((x,i,arr)=> Math.floor( 100 * x / arr.reduce((s,c)=>s+c)) + '%' )
+			.forEach((x,i) => QQ('.debug')[i].style.width = x)
 			if (typeof(msg) == typeof(Object()))
 				if (attrs = msg.getAttributeNames().toSorted()
 							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
 					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
-			if(dbg.innerText.split('\n').length > 25)
-				dbg.innerText = `### Debug Channel: ${channel} ###\n`;
+			if(dbg.innerText.split('\n').length > 17)
+				dbg.innerText = `Debug ${channel}\n`;
+			dbg.innerText += dbg.getAttribute('icon');
 			dbg.innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
 		}
 		function free_class(classNames, wildcard=false)
@@ -270,19 +278,19 @@
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
 				e.preventDefault();
-				debug(1, e.target);
-				debug(2, !!Q('td:has(.enter), input:has(.enter)'));
-				debug(3, );
+				debug(1, e.target );
+				debug(2, Q('.dropable')??'dropable없음' );
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
 				free_class(['enter', 'dropable']);
+				debug(3, e.target, 'dragenter');
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
 				if (Q('.dragging.roof')){
-					col_line = Q('td:has(.enter)').getAttribute('col');
-					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
-					// QQ(`table:has(.mousedown.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'));
+					col_line = Q('td.enter, input.enter').getAttribute('col');
+					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
+					QQ(`table:has(.dragging.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('drop', e => {
