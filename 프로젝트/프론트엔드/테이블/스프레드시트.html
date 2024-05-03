@@ -233,10 +233,7 @@
 				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
 					free_class(['Rclick'], wildcard = true);
 				if (Q('.mousedown.index'))
-				{
 					Q('tr:has(.mousedown.index)').classList.add('dropable');
-					debug(e.target);
-				}
 			})
 			document.addEventListener('dragstart', e => {
 				free_class(['Rclick'], true);
