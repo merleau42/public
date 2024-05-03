@@ -124,14 +124,8 @@
 			padding: 1px;
 			display: inline-flex;
 			font-size: 13px;
+			border-left: 0.5px solid;
 		}
-		.debug[channel='1'] {
-			background: lavender;
-		}
-		.debug[channel='2'] {
-			background: floralwhite;
-		}
-
 	</style>
 	<script>
 		let xhttp = new XMLHttpRequest();
@@ -185,6 +179,11 @@
 				div = Q('body').appendChild(E('div'))
 				div.classList.add('debug');
 				div.setAttribute('channel', channel);
+				div.innerText = `### Debug Channel ${channel} ###\n`;
+				red = Math.round(Math.random() * 0x80 + 0x40).toString(16);
+				grn = Math.round(Math.random() * 0x80 + 0x40).toString(16);
+				blu = Math.round(Math.random() * 0x80 + 0x40).toString(16);
+				div.style.color = `#${red}${grn}${blu}`;
 			}
 			dbg = Q(`.debug[channel='${channel}']`);
 			if (typeof(msg) == typeof(Object()))
@@ -192,7 +191,7 @@
 							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
 					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
 			if(dbg.innerText.split('\n').length > 25)
-				dbg.innerText = '';
+				dbg.innerText = `### Debug Channel: ${channel} ###\n`;
 			dbg.innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
 		}
 		function free_class(classNames, wildcard=false)
@@ -230,7 +229,6 @@
 			document.addEventListener('dblclick', e => {
 				e.target.classList.add('dblclick')
 				table = Q('table:has(.dblclick)');
-				debug(1, e.target, 'dblclick');
 				if (Q('.index.dblclick')) {
 					newr = vec_to_table( [[], QQ('th', table).map(x=>'')] ).querySelector('tbody tr');
 					move_table_row( newr, Q('tr:has(.dblclick.index)') );
@@ -253,7 +251,7 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				debug(2, e.target, 'mousedown');
+				debug(1, e.target);
 				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
 					free_class(['Rclick'], wildcard = true);
 				if (Q('.mousedown.index'))
@@ -265,24 +263,26 @@
 			})
 			document.addEventListener('dragstart', e => {
 				free_class(['Rclick'], wildcard = true);
-				e.target.classList.add('dragging')
+				e.target.classList.add('dragging');
 			})
 			document.addEventListener('dragend', e => {
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
 				e.preventDefault();
-				console.log(e.target);
+				debug(1, e.target);
+				debug(2, !!Q('td:has(.enter), input:has(.enter)'));
+				debug(3, );
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
-				if (Q('.mousedown.roof')){
+				if (Q('.dragging.roof')){
 					col_line = Q('td:has(.enter)').getAttribute('col');
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
-					QQ(`table:has(.mousedown.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'))
+					// QQ(`table:has(.mousedown.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('drop', e => {
