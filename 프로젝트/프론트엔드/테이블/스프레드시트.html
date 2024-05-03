@@ -231,6 +231,11 @@
 			slot2.appendChild( tabs[2] );
 
 			mouse_listner();
+			setInterval(monitor, 400);
+		}
+		function monitor()
+		{
+			debug(1, [leak().length, leak().join(', ')].join(': '));
 		}
 		function mouse_listner()
 		{
@@ -259,14 +264,13 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				debug(1, e.target);
 				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
 					free_class(['Rclick'], wildcard = true);
 				if (Q('.mousedown.index'))
 					Q('tr:has(.mousedown.index)').classList.add('dropable');
 				if (Q('.mousedown.roof')){
 					col_line = Q('.mousedown.roof').getAttribute('col');
-					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
+					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('dragstart', e => {
@@ -278,19 +282,15 @@
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
 				e.preventDefault();
-				debug(1, e.target );
-				debug(2, Q('.dropable')??'dropable없음' );
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
 				free_class(['enter', 'dropable']);
-				debug(3, e.target, 'dragenter');
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
 				if (Q('.dragging.roof')){
-					col_line = Q('td.enter, input.enter').getAttribute('col');
-					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'))
-					QQ(`table:has(.dragging.roof) [col="${col_line}"] .Cell`).forEach(td => td.classList.add('dropable'));
+					col_line = Q('td.enter, td:has(.enter)').getAttribute('col');
+					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('drop', e => {
