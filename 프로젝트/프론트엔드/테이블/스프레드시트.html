@@ -110,7 +110,6 @@
 			background: crimson;
 		}
 		tr:has(.index.Rclick__) td:not(.index){
-			/* content: '삭제'; */
 			background: coral;
 		}
 		.floating {
@@ -123,9 +122,13 @@
 		let files = {};
 		let vecs = {};
 		let tabs = {};
+		let html = document.querySelector('html');
+		let head = document.querySelector('head');
+		let body = document.querySelector('body');
+		let E = x => document.createElement(x);
+		let dummy = E('dummy');
 		let Q = (x, y=document) => y.querySelector(x);
 		let QQ = (x, y=document) => y.querySelectorAll(x);
-		let E = (x) => document.createElement(x);
 		function leak(className='')
 		{
 			if (!className)
@@ -159,11 +162,15 @@
 
 			return parsed;
 		}
-		function debug(...msg)
+		function debug(msg, ...argvs)
 		{
-			if (!document.querySelector('debug'))
-				document.querySelector('body').appendChild(document.createElement('debug'));
-			document.querySelector('debug').innerText += `${msg}\n`;
+			if (!Q('debug'))
+				Q('body').appendChild(E('debug')).style.fontSize="14";
+			if (typeof(msg) == typeof(Object()))
+				if (attrs = msg.getAttributeNames().toSorted()
+							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
+					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value::${msg.value}]` : ''}`;
+			Q('debug').innerText += `${msg}${argvs.length ? `, ${argvs}` : ''}\n`;
 		}
 		function free_class(classNames, wildcard=false)
 		{
@@ -181,7 +188,6 @@
 		function main()
 		{
 			body = document.body;
-
 			load_file(1, '저장.json');
 			vecs[1] = map_to_vec( JSON.parse( files[1] ) );
 			tabs[1] = vec_to_table( vecs[1], 1 );
@@ -201,7 +207,7 @@
 			document.addEventListener('dblclick', e => {
 				e.target.classList.add('dblclick')
 				table = Q('table:has(.dblclick)');
-				if (Q('.index.dblclick')){
+				if (Q('.index.dblclick')) {
 					newr = vec_to_table( [[], [...QQ('th', table)].map(x=>'')] ).querySelector('tbody tr');
 					move_table_row( newr, Q('tr:has(.dblclick.index)') );
 				}
@@ -216,16 +222,21 @@
 				else
 					e.target.className = e.target.className.replace(/Rclick(_*)/, 'Rclick$1_');
 				if (Q('.Rclick___.index'))
+				{
 					Q('tr:has(.Rclick___.index)').remove();
+					refresh_table_index();
+				}
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
+				debug(e.target);
 				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
 					free_class(['Rclick'], wildcard = true);
-				Q('tr:has(.mousedown.index)').classList.add('dropable');
-			})
-			document.addEventListener('mouseup', e => {
-				free_class(['dropable','mousedown','dblclick']);
+				if (Q('.mousedown.index'))
+				{
+					Q('tr:has(.mousedown.index)').classList.add('dropable');
+					debug(e.target);
+				}
 			})
 			document.addEventListener('dragstart', e => {
 				free_class(['Rclick'], true);
@@ -247,6 +258,9 @@
 				e.target.classList.add('to_drop')
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
+			})
+			document.addEventListener('mouseup', e => {
+				free_class(['dropable','mousedown','dblclick']);
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
@@ -279,7 +293,7 @@
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
 					// td.setAttribute('row', i);
-					// td.setAttribute('col', j);
+					td.setAttribute('col', j);
 					td.setAttribute("draggable", true)
 					tr.appendChild(td);
 					tr.setAttribute('row', i);
