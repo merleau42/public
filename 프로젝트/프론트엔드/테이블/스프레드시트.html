@@ -65,6 +65,7 @@
 			width: 100%;
 			border: 1;
 			border-collapse: collapse;
+			text-align: center;
 		}
 		th, td {
 			padding: 2px;
@@ -87,46 +88,40 @@
 		[paint=P7] {background-color: rgb(255, 136, 255);}
 		[paint=P8] {background-color: rgb(136, 136, 255);}
 		[paint=P9] {background-color: rgb(192, 192, 255);}
+		.index {
+			width: 5vw;
+		}
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
+		.mousedown:not([rclick]), .dragging {
+			background-color: rgb(160, 160, 160) !important;
+		}
+		tr.dropable .index:not([rclick]),	.dropable:not([paint]),
 		.index:hover:not(.mousedown, [rclick]),
 		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
 		}
-		.mousedown, .dragging {
-			background-color: rgb(160, 160, 160) !important;
-		}
 		tr.dropable { /* tr은 td,th보다 css 우선 순위가 낮음*/
 			border-top: 3px dotted;
-			background-color: rgb(240, 240, 240);
 		}
 		td.dropable, th.dropable {
 			border-left: 3px dotted;
-			background-color: rgb(240, 240, 240);
 		}
-		.index {
-			width: 5vw;
-			text-align: center;
-		}
+		tr:has([rclick="2"].index) td:not(.index),
 		[rclick="1"].index, [rclick="1"].roof {
 			background: coral;
 		}
 		[rclick="2"].index, [rclick="2"].roof {
 			background: crimson;
 		}
-		tr:has([rclick="2"].index) td:not(.index){
-			background: coral;
-		}
 		.debug {
 			margin: 2;
 			border-bottom: 1px dotted;
-			/* border-right: 1px dotted; */
 			border-left: 1px dotted;
-			/* display: inline-flex; */
 			display: inline-table;
-			/* display: inline-grid; */
-			width: 49%;
+			min-width: 40%;
+			max-width: 60%;
 			font-size: 12px;
 		}
 	</style>
@@ -215,7 +210,7 @@
 					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
 			tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
 			spl = dbg.innerText.replace(/\n$/,'').split('\n');
-			if (spl.length >= 13)
+			if (spl.length >= 10)
 			{
 				if (curtain)
 					spl = [spl[0]];
@@ -262,8 +257,8 @@
 		}
 		function monitor()
 		{
-			debug(": 클래스 정의", false, [leak('class').length, leak('class').join(' ')].join(': '));
-			debug(": 속성 정의", false, [leak('attr').length, leak('attr').join(' ')].join(': '));
+			debug(": 활성화된 클래스", false, [leak('class').length, leak('class').join(' ')].join(': '));
+			debug(": 활성화된 속성", false, [leak('attr').length, leak('attr').join(' ')].join(': '));
 		}
 		function mouse_listner()
 		{
@@ -290,7 +285,8 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				debug(': 클릭한 대상', false, e.target);
+				if (Q('.debug[channel=": 드래그 오버"]'))
+					debug(': 클릭한 대상', false, e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
 				if (Q('.mousedown.index'))
@@ -299,6 +295,15 @@
 					col_line = Q('.mousedown.roof').getAttribute('col');
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
+			})
+			document.addEventListener('mouseup', e => {
+				free_class(['dropable','mousedown','dblclick']);
+			})
+			document.addEventListener('mouseover', e => {
+				debug(': 마우스 오버', false, e.target);
+				free_class(['mouseover']);
+				e.target.classList.add('mouseover');
+				free_attr(['rclick']);
 			})
 			document.addEventListener('dragstart', e => {
 				free_attr(['rclick']);
@@ -317,7 +322,7 @@
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
 				if (Q('.dragging.roof')){
-					col_line = Q('td.enter, td:has(.enter)').getAttribute('col');
+					col_line = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
 					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
@@ -325,9 +330,6 @@
 				e.target.classList.add('to_drop')
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
-			})
-			document.addEventListener('mouseup', e => {
-				free_class(['dropable','mousedown','dblclick']);
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
