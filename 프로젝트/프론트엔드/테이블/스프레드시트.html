@@ -77,30 +77,31 @@
 			text-align: center;
 			background-color: inherit;
 		}
-		.P0 {background-color: rgb(192, 192, 192);}
-		.P1 {background-color: rgb(255, 192, 0);}
-		.P2 {background-color: rgb(255, 255, 0);}
-		.P3 {background-color: rgb(255, 255, 170);}
-		.P4 {background-color: rgb(0, 204, 0);}
-		.P5 {background-color: rgb(0, 255, 0);}
-		.P6 {background-color: rgb(187, 255, 187);}
-		.P7 {background-color: rgb(255, 136, 255);}
-		.P8 {background-color: rgb(136, 136, 255);}
-		.P9 {background-color: rgb(192, 192, 255);}
+		[paint=P0] {background-color: rgb(192, 192, 192);}
+		[paint=P1] {background-color: rgb(255, 192, 0);}
+		[paint=P2] {background-color: rgb(255, 255, 0);}
+		[paint=P3] {background-color: rgb(255, 255, 170);}
+		[paint=P4] {background-color: rgb(0, 204, 0);}
+		[paint=P5] {background-color: rgb(0, 255, 0);}
+		[paint=P6] {background-color: rgb(187, 255, 187);}
+		[paint=P7] {background-color: rgb(255, 136, 255);}
+		[paint=P8] {background-color: rgb(136, 136, 255);}
+		[paint=P9] {background-color: rgb(192, 192, 255);}
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
-		.mousedown, .dragging {
-			background-color: rgb(160, 160, 160);
-		}
-		.index:hover:not(.mousedown, [class*=Rclick]) {
+		.index:hover:not(.mousedown, [rclick]),
+		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
 		}
-		tr.dropable {
+		.mousedown, .dragging {
+			background-color: rgb(160, 160, 160) !important;
+		}
+		tr.dropable { /* tr은 td,th보다 css 우선 순위가 낮음*/
 			border-top: 3px dotted;
 			background-color: rgb(240, 240, 240);
 		}
-		td.dropable {
+		td.dropable, th.dropable {
 			border-left: 3px dotted;
 			background-color: rgb(240, 240, 240);
 		}
@@ -108,25 +109,25 @@
 			width: 5vw;
 			text-align: center;
 		}
-		.index.Rclick_, .roof.Rclick_ {
+		[rclick="1"].index, [rclick="1"].roof {
 			background: coral;
 		}
-		.index.Rclick__, .roof.Rclick__ {
+		[rclick="2"].index, [rclick="2"].roof {
 			background: crimson;
 		}
-		tr:has(.index.Rclick__) td:not(.index){
+		tr:has([rclick="2"].index) td:not(.index){
 			background: coral;
 		}
-		.floating {
-			content: '➕';
-		}
 		.debug {
+			margin: 2;
 			border-bottom: 1px dotted;
 			/* border-right: 1px dotted; */
 			border-left: 1px dotted;
 			/* display: inline-flex; */
 			display: inline-table;
-			font-size: 13px;
+			/* display: inline-grid; */
+			width: 49%;
+			font-size: 12px;
 		}
 	</style>
 	<script>
@@ -142,12 +143,24 @@
 		let dummy = E('dummy');
 		let Q = (x, y=document) => y.querySelector(x);
 		let QQ = (x, y=document) => [...y.querySelectorAll(x)];
-		function leak(className='')
+		function leak(kind, name='')
 		{
-			if (!className)
-				return QQ('[class]').reduce((s,c)=>[...s, [...c.classList].filter(x=>!s.includes(x))].flat(), []).toSorted();
-			else
-				return QQ(`[class*=${className}]`)
+			if (kind.includes('class'))
+			{
+				if (!name)
+					return QQ('[class]').reduce((s,c)=>[...s, [...c.classList].filter(x=>!s.includes(x))].flat(), []).toSorted();
+				else
+					return QQ(`[class*=${name}]`)
+			}
+			if (kind.includes('attr'))
+			{
+				not_special = ['border', 'class', 'placeholder', 'id', 'src', 'style', 'type', 'value'];
+				if (!name)
+					return QQ(`*`).reduce((s,c)=>[...s, [...c.getAttributeNames()]
+							.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []);
+				else
+					return QQ(`[${name}]`)
+			}			
 		}
 		function load_file(fd, path)
 		{
@@ -220,6 +233,10 @@
 			else
 				classNames.forEach(cn => QQ(`.${cn}`).forEach(el => el.classList.remove(cn)));
 		}
+		function free_attr(attrNames)
+		{
+			attrNames.forEach(attr => QQ(`[${attr}]`).forEach(el => el.removeAttribute(attr)));
+		}
 	</script>
 	<script>
 		let category = "@#$%^&*";
@@ -241,12 +258,12 @@
 			slot2.appendChild( tabs[2] );
 
 			mouse_listner();
-			setInterval(monitor, 300);
+			setInterval(monitor, 100);
 		}
 		function monitor()
 		{
-			debug(1, false, [leak().length, leak().join(' ')].join(': '));
-			debug(2, false, '213213');
+			debug(": 클래스 정의", false, [leak('class').length, leak('class').join(' ')].join(': '));
+			debug(": 속성 정의", false, [leak('attr').length, leak('attr').join(' ')].join(': '));
 		}
 		function mouse_listner()
 		{
@@ -261,41 +278,40 @@
 			})
 			document.addEventListener('contextmenu', e => {
 				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안뜨도록.
-				if (!e.target.className.match('Rclick')){
-					free_class(['Rclick'], wildcard = true);
-					e.target.classList.add('Rclick_');
-				}
-				else
-					e.target.className = e.target.className.replace(/Rclick(_*)/, 'Rclick$1_');
-				if (Q('.Rclick___.index'))
+				count = e.target.getAttribute('rclick') * 1;
+				if (!count)
+					QQ('[rclick]').forEach(el => el.removeAttribute('rclick'));
+				e.target.setAttribute('rclick', ++count);
+				if (Q('.index[rclick="3"]'))
 				{
-					Q('tr:has(.Rclick___.index)').remove();
+					Q('tr:has(.index[rclick="3"])').remove();
 					refresh_table_index();
 				}
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				if ([...e.target.classList].filter(cn=>cn.includes('Rclick')).length == 0)
-					free_class(['Rclick'], wildcard = true);
+				debug(': 클릭한 대상', false, e.target);
+				if (!e.target.getAttribute('rclick'))
+					free_attr(['rclick']);
 				if (Q('.mousedown.index'))
 					Q('tr:has(.mousedown.index)').classList.add('dropable');
-				if (Q('.mousedown.roof')){
+				if (Q('.mousedown.roof')) {
 					col_line = Q('.mousedown.roof').getAttribute('col');
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('dragstart', e => {
-				free_class(['Rclick'], wildcard = true);
+				free_attr(['rclick']);
 				e.target.classList.add('dragging');
 			})
 			document.addEventListener('dragend', e => {
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+				debug(': 드래그 오버', false, e.target);
 				e.preventDefault();
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
-				debug(2, true, e.target);
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
@@ -330,7 +346,8 @@
 						input.classList.add( "Cell" );
 						input.value = parsed['\x00'];
 						td.appendChild(input);
-						if (parsed['ㅷ']) td.classList.add (parsed['ㅷ']);
+						// if (parsed['ㅷ']) td.classList.add (parsed['ㅷ']);
+						;; if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
 					}
 					else if (i != 0 && j == 0){
 						td.classList.add ("index");
@@ -343,7 +360,6 @@
 					}
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
-					// td.setAttribute('row', i);
 					td.setAttribute('col', j);
 					td.setAttribute("draggable", true)
 					tr.appendChild(td);
@@ -364,7 +380,8 @@
 					if (i==0 || j==0)
 						return '';
 					text = td.querySelector('.Cell').value;
-					bg = [...td.classList].filter(x=>x[0]=='P')[0];
+					// bg = [...td.classList].filter(x=>x[0]=='P')[0];
+					;; bg = td.getAttribute('paint');
 					bg = bg ? `ㅷ${bg}` : ''
 					return text + bg;
 				})
