@@ -1,6 +1,9 @@
 <html>
 <head>
 	<style>
+		:root {
+			--abc: 5;
+		}
 		body {
 			margin: 0;
 			font-family: Arial, Helvetica, sans-serif;
@@ -97,7 +100,7 @@
 		.mousedown:not([rclick]), .dragging {
 			background-color: rgb(160, 160, 160) !important;
 		}
-		tr.dropable .index:not([rclick]),	.dropable:not([paint]),
+		tr.dropable .index:not([rclick]),	.dropable:not([paint], .warn),
 		.index:hover:not(.mousedown, [rclick]),
 		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
@@ -108,6 +111,7 @@
 		td.dropable, th.dropable {
 			border-left: 3px dotted;
 		}
+		.warn,
 		tr:has([rclick="2"].index) td:not(.index),
 		[rclick="1"].index, [rclick="1"].roof {
 			background: coral;
@@ -120,7 +124,7 @@
 			border-bottom: 1px dotted;
 			border-left: 1px dotted;
 			display: inline-table;
-			min-width: 40%;
+			min-width: 42%;
 			max-width: 60%;
 			font-size: 12px;
 		}
@@ -254,6 +258,12 @@
 
 			mouse_listner();
 			setInterval(monitor, 100);
+			debug(": 활성화된 클래스", false);
+			debug(": 활성화된 속성", false);
+			debug(": 마우스 오버", false);
+			debug(": 드래그 오버", false);
+			debug(": 클릭한 대상", false);
+			debug(": 기타", false);
 		}
 		function monitor()
 		{
@@ -266,8 +276,16 @@
 				e.target.classList.add('dblclick')
 				table = Q('table:has(.dblclick)');
 				if (Q('.index.dblclick')) {
-					newr = vec_to_table( [[], QQ('th', table).map(x=>'')] ).querySelector('tbody tr');
-					move_table_row( newr, Q('tr:has(.dblclick.index)') );
+					new_row = vec_to_table( [[], QQ('th', table).map(x=>'')] ).querySelector('tbody tr');
+					move_table_row( new_row, Q('tr:has(.dblclick.index)') );
+				}
+				if (Q('.roof.dblclick')) {
+					// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
+					// exam.toSpliced(2,0,['added']) // 행 추가
+					insert = Q('.roof.dblclick').getAttribute('col') * 1;
+					new_table = table_to_vec( table ).map(x=>x.toSpliced(insert + 1, 0, ''));
+					table.remove();
+					slot1.appendChild( vec_to_table(new_table) );
 				}
 				free_class(['dblclick']);
 			})
@@ -281,6 +299,17 @@
 				{
 					Q('tr:has(.index[rclick="3"])').remove();
 					refresh_table_index();
+				}
+				if (Q('.roof[rclick="2"]'))
+				{
+					col_line = Q('.roof[rclick="2"]').getAttribute('col');
+					table = Q(`table:has(.roof[rclick="2"])`);
+					QQ(`td[col="${col_line}"]`, table).forEach(td => td.classList.add('warn'));
+				}
+				if (Q('.roof[rclick="3"]'))
+				{
+					QQ('.roof[rclick="3"], .warn').forEach(col => col.remove());
+					refresh_table_index();					
 				}
 			})
 			document.addEventListener('mousedown', e => {
@@ -296,12 +325,12 @@
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
-			document.addEventListener('mouseup', e => {
+			document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을때
 				free_class(['dropable','mousedown','dblclick']);
 			})
 			document.addEventListener('mouseover', e => {
 				debug(': 마우스 오버', false, e.target);
-				free_class(['mouseover']);
+				free_class(['mouseover', 'warn']);
 				e.target.classList.add('mouseover');
 				free_attr(['rclick']);
 			})
@@ -436,8 +465,7 @@
 				tr.querySelector('.index').innerText = tr.rowIndex;
 			})
 		}
-		// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
-		// exam.toSpliced(2,0,['added']) // 행 추가
+
 	</script>
 </head>
 <body>
