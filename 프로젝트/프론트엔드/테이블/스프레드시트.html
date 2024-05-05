@@ -305,8 +305,7 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				if (Q('.debug[channel="드래그 오버"]'))
-					debug('클릭한 대상', e.target);
+				debug('클릭한 대상', e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
 				if (Q('.mousedown.index'))
