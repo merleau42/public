@@ -24,6 +24,8 @@
 			background-color: ghostwhite;
 			opacity: 70%;
 			text-align: center;
+			font-size: 0;
+			/* font-size: 0 --- HTML 코드의 개행/공백 크기를 없애서 메뉴들이 다닥다닥 달라붙게함 */
 		}
 		#Search, #Clear, #Total, #Bin, #Refresh, #Save, #Load
 		{
@@ -44,8 +46,8 @@
 		{
 			padding-left: 3;
 			padding-right: 0;
-			border: 0;
 			cursor: pointer;
+			border: 0;
 		}
 		#Bin
 		{
@@ -143,6 +145,7 @@
 		let dummy = E('dummy');
 		let Q = (x, y=document) => y.querySelector(x);
 		let QQ = (x, y=document) => [...y.querySelectorAll(x)];
+		let RND = x => QQ('*')[ Math.ceil( Math.random() * (QQ('*').length - 1) ) ];
 		function leak(kind, name='')
 		{
 			if (kind.includes('class'))
@@ -255,6 +258,9 @@
 			debug("클릭한 대상");
 			debug("마우스 오버");
 			debug("드래그 오버");
+
+			// slot1.insertBefore(menu1, slot1.firstChild);
+			// slot2.insertBefore(menu1, slot2.firstChild);
 		}
 		function monitor()
 		{
@@ -460,9 +466,14 @@
 	</script>
 </head>
 <body>
-<div class="container">
-<input id="Search" type="text" placeholder="검색어!제외#필드"><input id="Clear" type="button" value="X">
-<div id="Total"></div><a download="80000.json"><input id="Save" type="button" value="💾"></a><input id="Load" type="button" value="📂"><input id="Bin" type="button" value="🗑"><input id="Refresh" type="button" value="새로고침">
+<div id="menu1" class="container">
+	<input id="Search" type="text" placeholder="검색어!제외#필드내검색">
+	<input id="Clear" type="button" value="X">
+	<div id="Total"></div>
+	<a download="80000.json"><input id="Save" type="button" value="💾"></a>
+	<input id="Load" type="button" value="📂">
+	<input id="Bin" type="button" value="🗑">
+	<input id="Refresh" type="button" value="새로고침">
 </div>
 <div class="slot" id="slot1">1</div>
 <div class="slot" id="slot2">2</div>
