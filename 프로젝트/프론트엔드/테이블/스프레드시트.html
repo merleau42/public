@@ -281,7 +281,7 @@
 				free_class(['dblclick']);
 			})
 			document.addEventListener('contextmenu', e => {
-				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안뜨도록.
+				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안 뜨도록.
 				count = e.target.getAttribute('rclick') * 1;
 				if (!count)
 					QQ('[rclick]').forEach(el => el.removeAttribute('rclick'));
@@ -315,7 +315,7 @@
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
-			document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을때
+			document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을 때
 				free_class(['dropable','mousedown','dblclick']);
 			})
 			document.addEventListener('mouseover', e => {
