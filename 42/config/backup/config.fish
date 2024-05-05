@@ -1,12 +1,14 @@
-export dev='~/dev';
-export 42='~/dev/42';
-export out='~/goinfre/out.out';
-export FLAGS='-Werror -Wextra -Wall';
+export PS1='\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-export msg_d='깃허브 git add, git push는 여기서';
-export msg_r='git clone 해서 폴더 만들기 -- 내부에서 작업하기';
-export msg_R='제출시 git ls-files 확인. git set_url 리트주소';
-alias warn='echo 업로드가 끝날 때까지 터미널을 닫지마세요';
+export dev="~/dev";
+export 42="~/dev/42";
+export out="~/goinfre/out.out";
+export FLAGS="-Werror -Wextra -Wall";
+
+export msg_d="깃허브 git add, git push는 여기서";
+export msg_r="git clone 해서 폴더 만들기 -- 내부에서 작업하기";
+export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
+alias warn="echo 업로드가 끝날 때까지 터미널을 닫지마세요";
 
 export NAME="get_next_line";
 
@@ -41,4 +43,6 @@ echo "진행중인 과제 : $NAME";
 # 원본 PS1='\[\]\s-\v\$ \[\]'
 # 구문 :: \[ 부터 \] 까지
 # 색상넣기 :: \033
-# 색상값 :: [0;00m]
+# 색상값 :: [0;00m]z
+# -----if status is-interactive <동작> end
+# 터미널 명령어로서 fish가 아니라, 콘솔로서의 fish를 실행할때 동작하는 내용.. 이지만 지웠음
