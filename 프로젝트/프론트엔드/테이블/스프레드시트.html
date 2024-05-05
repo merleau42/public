@@ -102,7 +102,8 @@
 		.mousedown:not([rclick], .Cell), .dragging:not(.Cell) {
 			background-color: rgb(160, 160, 160) !important;
 		}
-		tr.dropable .index:not([rclick]),	.dropable:not([paint], .warn),
+		tr.dropable .index:not([rclick]),
+		.dropable:not([paint], .Cell, .warn),
 		.index:hover:not(.mousedown, [rclick]),
 		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
@@ -258,7 +259,6 @@
 			debug("클릭한 대상");
 			debug("마우스 오버");
 			debug("드래그 오버");
-
 			// slot1.insertBefore(menu1, slot1.firstChild);
 			// slot2.insertBefore(menu1, slot2.firstChild);
 		}
@@ -330,18 +330,12 @@
 				e.target.classList.add('mouseover');
 				free_attr(['rclick']);
 			})
+			// dragstart ---> drag(움직임) ---> dragenter ---> dragover ---> drop ---> dragend
 			document.addEventListener('dragstart', e => {
 				free_attr(['rclick']);
 				e.target.classList.add('dragging');
 			})
-			document.addEventListener('dragend', e => {
-				free_class(['enter','dropable','dragging','to_drop','mousedown'])
-			})
-			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
-				debug('드래그 오버', e.target);
-				e.preventDefault();
-			})
-			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
+			document.addEventListener('dragenter', e => {
 				free_class(['enter', 'dropable']);
 				e.target.classList.add('enter');
 				if (Q('.dragging.index'))
@@ -349,14 +343,26 @@
 				if (Q('.dragging.roof')){
 					col_line = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
 					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+					// debug("기타", '-----이하-----');
+					// debug("기타", `dropable & entered : ${Q('.dropable.enter').tagName}${Q('.dropable.enter').getAttribute('col')}`);
 				}
 			})
-			document.addEventListener('drop', e => {
+			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+				debug('드래그 오버', e.target);
+				e.preventDefault();
+			})
+			document.addEventListener('drop', e => { // 'over' 있어야 'drop' 가능
 				e.target.classList.add('to_drop')
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
-				if (Q('.dragging.roof') && Q('tbody tr:has(.to_drop)'))
+				if (Q('.dragging.roof') && Q('.dropable.to_drop')) {
+					// debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
 					debug("기타", 777);
+				}
+			})
+			document.addEventListener('dragend', e => {
+				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
@@ -372,6 +378,7 @@
 					td = i > 0 ? document.createElement('td') : document.createElement('th');
 					if (i > 0 && j > 0){
 						input = document.createElement('input');
+						;; input.setAttribute('col', j);
 						input.classList.add( "Cell" );
 						input.value = parsed['\x00'];
 						td.appendChild(input);
