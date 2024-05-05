@@ -343,9 +343,6 @@
 				if (Q('.dragging.roof')){
 					col_line = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
 					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
-					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
-					// debug("기타", '-----이하-----');
-					// debug("기타", `dropable & entered : ${Q('.dropable.enter').tagName}${Q('.dropable.enter').getAttribute('col')}`);
 				}
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
@@ -357,8 +354,7 @@
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
 				if (Q('.dragging.roof') && Q('.dropable.to_drop')) {
-					// debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
-					debug("기타", 777);
+					debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
 				}
 			})
 			document.addEventListener('dragend', e => {
