@@ -1,4 +1,4 @@
-export PS1='\[\033[01;34m\]\w\[\033[00m\]\$ '
+export PS1='\[\033[01;31m\]\w\[\033[00m\]\$ '
 
 export dev="~/dev";
 export FT="~/dev/42";
@@ -26,6 +26,7 @@ alias fre="clear; cd ~/goinfre";
 alias g="clear; warn; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m; git push";
 alias z="d; g";
 alias ㅋ="d; g";
+alias ㅊ="clear";
 
 alias c="clear; cc $FLAGS *.c -o $out";
 alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $out";
