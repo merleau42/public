@@ -92,12 +92,12 @@
 		[paint=P8] {background-color: rgb(136, 136, 255);}
 		[paint=P9] {background-color: rgb(192, 192, 255);}
 		.index {
-			width: 5vw;
+			width: 4vw;
 		}
 		.index, .roof, .edge {
 			background-color: rgb(210, 210, 210);
 		}
-		.mousedown:not([rclick]), .dragging {
+		.mousedown:not([rclick], .Cell), .dragging:not(.Cell) {
 			background-color: rgb(160, 160, 160) !important;
 		}
 		tr.dropable .index:not([rclick]),	.dropable:not([paint], .warn),
@@ -120,18 +120,19 @@
 			background: crimson;
 		}
 		.debug {
-			margin: 2;
-			border-bottom: 1px dotted;
-			border-left: 1px dotted;
+			padding: 2;
+			border-top: 1px dotted;
+			border-right: 1px dotted;
 			display: inline-table;
-			min-width: 35%;
-			max-width: 63%;
+			min-width: 34%;
+			max-width: 65%;
 			font-size: 12px;
 		}
 	</style>
 	<script>
 		let xhttp = new XMLHttpRequest();
 		let bugs = ['🐌','🦋','🐛','🐜','🐝','🪲','🐞','🦗','🪳','🦟','🪰','🪱'];
+		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		let files = {};
 		let vecs = {};
 		let tabs = {};
@@ -146,8 +147,10 @@
 		{
 			if (kind.includes('class'))
 			{
+				not_special = ['debug'];
 				if (!name)
-					return QQ('[class]').reduce((s,c)=>[...s, [...c.classList].filter(x=>!s.includes(x))].flat(), []).toSorted();
+					return QQ('[class]').reduce((s,c)=>[...s, [...c.classList]
+							.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []).toSorted();
 				else
 					return QQ(`[class*=${name}]`)
 			}
@@ -187,7 +190,7 @@
 
 			return parsed;
 		}
-		function debug(channel, curtain, msg, ...argvs)
+		function debug(channel, msg, ...argvs)
 		{
 			if (!Q(`.debug[channel='${channel}']`))
 			{
@@ -195,19 +198,13 @@
 				div.classList.add('debug');
 				div.setAttribute('channel', channel);
 				div.setAttribute('icon', bugs[Math.round(Math.random() * 9999) % 12]);
-				div.innerText = `Debug ${channel}\n`;
+				div.innerText = `Debug : ${channel}\n`;
 				red = Math.round(Math.random() * 0x50 + 0x30).toString(16);
 				grn = Math.round(Math.random() * 0x50 + 0x30).toString(16);
 				blu = Math.round(Math.random() * 0x50 + 0x30).toString(16);
 				div.style.color = `#${red}${grn}${blu}`;
 			}
 			dbg = Q(`.debug[channel='${channel}']`);
-			// 반응형 가로 길이
-			// QQ('.debug').forEach(x => x.style.width='');
-			// QQ('.debug')
-			// .map((x,i,db) => Math.floor( 10000000 * x.offsetWidth / body.offsetWidth) )
-			// .map((x,i,arr)=> Math.floor( 100 * x / arr.reduce((s,c)=>s+c)) - 1 + '%' )
-			// .forEach((x,i) => QQ('.debug')[i].style.width = x)
 			if (typeof(msg) == typeof(Object()))
 				if (attrs = msg.getAttributeNames().toSorted()
 							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
@@ -215,12 +212,7 @@
 			tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
 			spl = dbg.innerText.replace(/\n$/,'').split('\n');
 			if (spl.length >= 10)
-			{
-				if (curtain)
-					spl = [spl[0]];
-				else
-					spl = [spl[0], ...spl.splice(2)];
-			}
+				spl = [spl[0], ...spl.splice(2)];
 			spl.push(tail);
 			dbg.innerText = spl.join('\n');
 		}
@@ -239,7 +231,6 @@
 	</script>
 	<script>
 		let category = "@#$%^&*";
-		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		window.addEventListener('DOMContentLoaded',	main)
 		function main()
 		{
@@ -258,17 +249,17 @@
 
 			mouse_listner();
 			setInterval(monitor, 100);
-			debug(": 활성화된 클래스", false);
-			debug(": 활성화된 속성", false);
-			debug(": 마우스 오버", false);
-			debug(": 드래그 오버", false);
-			debug(": 클릭한 대상", false);
-			debug(": 기타", false);
+			debug("활성화된 클래스");
+			debug("기타");
+			debug("활성화된 속성");
+			debug("클릭한 대상");
+			debug("마우스 오버");
+			debug("드래그 오버");
 		}
 		function monitor()
 		{
-			debug(": 활성화된 클래스", false, [leak('class').length, leak('class').join(' ')].join(': '));
-			debug(": 활성화된 속성", false, [leak('attr').length, leak('attr').join(' ')].join(': '));
+			debug("활성화된 클래스", [leak('class').length, leak('class').join(' ')].join(': '));
+			debug("활성화된 속성", [leak('attr').length, leak('attr').join(' ')].join(': '));
 		}
 		function mouse_listner()
 		{
@@ -314,8 +305,8 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				if (Q('.debug[channel=": 드래그 오버"]'))
-					debug(': 클릭한 대상', false, e.target);
+				if (Q('.debug[channel="드래그 오버"]'))
+					debug('클릭한 대상', e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
 				if (Q('.mousedown.index'))
@@ -329,7 +320,7 @@
 				free_class(['dropable','mousedown','dblclick']);
 			})
 			document.addEventListener('mouseover', e => {
-				debug(': 마우스 오버', false, e.target);
+				debug('마우스 오버', e.target);
 				free_class(['mouseover', 'warn']);
 				e.target.classList.add('mouseover');
 				free_attr(['rclick']);
@@ -342,7 +333,7 @@
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
-				debug(': 드래그 오버', false, e.target);
+				debug('드래그 오버', e.target);
 				e.preventDefault();
 			})
 			document.addEventListener('dragenter', e => { // 'over' 있어야 'drop' 가능
@@ -360,7 +351,7 @@
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
 				if (Q('.dragging.roof') && Q('tbody tr:has(.to_drop)'))
-					;
+					debug("기타", 777);
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
@@ -388,8 +379,7 @@
 					}
 					else if (i == 0 && j != 0){
 						td.classList.add ("roof");
-						td.innerText = j < 8 ? category[j - 1] : ''
-						td.innerText += `${alpha[Math.floor((j-27)/26)]??""}${alpha[(j-1)%26]}`;
+						td.innerText = j
 					}
 					else if (i == 0 && j == 0)
 						td.classList.add ("edge");
