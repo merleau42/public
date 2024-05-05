@@ -1,7 +1,7 @@
 export PS1='\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 export dev="~/dev";
-export 42="~/dev/42";
+export FT="~/dev/42";
 export out="~/goinfre/out.out";
 export FLAGS="-Werror -Wextra -Wall";
 
@@ -16,10 +16,10 @@ alias d="clear; cd $dev; echo $msg_d; pwd; ls";
 alias e="clear; cd $dev/exercises; pwd; ls";
 alias b="clear; cd $dev/알고리즘/c; pwd; ls";
 
-alias f="clear; cd $42/finish; pwd; ls";
-alias r="clear; cd $42/rendu; echo $msg_r; pwd; ls";
-alias R="clear; cd $42/rendu/$NAME; echo $msg_R; pwd; ls";
-alias m="clear; cd $42/machine; pwd; ls";
+alias f="clear; cd $FT/finish; pwd; ls";
+alias r="clear; cd $FT/rendu; echo $msg_r; pwd; ls";
+alias R="clear; cd $FT/rendu/$NAME; echo $msg_R; pwd; ls";
+alias m="clear; cd $FT/machine; pwd; ls";
 
 alias fre="clear; cd ~/goinfre";
 
@@ -28,7 +28,7 @@ alias z="d; g";
 alias ㅋ="d; g";
 
 alias c="clear; cc $FLAGS *.c -o $out";
-alias sc="clear; cc $FLAGS $42/integrate/$NAME.c -o $out";
+alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $out";
 alias ec="clear; cc $FLAGS $dev/exercises/*.c -o $out";
 
 alias a="clear; $out";
