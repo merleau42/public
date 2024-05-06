@@ -243,24 +243,24 @@
 			vecs[1] = map_to_vec( JSON.parse( files[1] ) );
 			tabs[1] = vec_to_table( vecs[1], 1 );
 			slot1.innerText = '';
-			slot1.appendChild(tabs[1]);
+			slot1.appendChild( tabs[1] );
+			slot1.insertBefore(menu, slot1.firstChild);
 
 			load_file(2, '저장.txt')
 			vecs[2] = (files[2].split('\n').map(x=>x.split(',')));
 			tabs[2] = vec_to_table( vecs[2], 2 );
 			slot2.innerText = '';
 			slot2.appendChild( tabs[2] );
+			// slot2.insertBefore(menu, slot2.firstChild);
 
 			mouse_listner();
-			setInterval(monitor, 100);
+			setInterval(monitor, 200);
 			debug("활성화된 클래스");
 			debug("기타");
 			debug("활성화된 속성");
 			debug("클릭한 대상");
 			debug("마우스 오버");
 			debug("드래그 오버");
-			// slot1.insertBefore(menu1, slot1.firstChild);
-			// slot2.insertBefore(menu1, slot2.firstChild);
 		}
 		function monitor()
 		{
@@ -315,8 +315,8 @@
 				debug('클릭한 대상', e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
-				//! if (Q('.mousedown.index'))
-				//! 	Q('tr:has(.mousedown.index)').classList.add('dropable');
+				/// if (Q('.mousedown.index'))
+				/// 	Q('tr:has(.mousedown.index)').classList.add('dropable');
 				if (Q('.mousedown.roof')) {
 					col_line = Q('.mousedown.roof').getAttribute('col');
 					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
@@ -481,7 +481,7 @@
 	</script>
 </head>
 <body>
-<div id="menu1" class="container">
+<div id="menu" class="container">
 	<input id="Search" type="text" placeholder="검색어!제외#필드, ...">
 	<input id="Clear" type="button" value="X">
 	<div id="Total"></div>
