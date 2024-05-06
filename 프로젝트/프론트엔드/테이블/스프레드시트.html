@@ -109,7 +109,8 @@
 		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
 		}
-		tr.dropable { /* tr은 td,th보다 css 우선 순위가 낮음*/
+		tr.dropable { /*
+			tr은 td,th보다 css 우선 순위가 낮음*/
 			border-top: 3px dotted;
 		}
 		td.dropable, th.dropable {
@@ -386,7 +387,7 @@
 					td = i > 0 ? document.createElement('td') : document.createElement('th');
 					if (i > 0 && j > 0){
 						input = document.createElement('input');
-						;;; input.setAttribute('col', j);
+						input.setAttribute('col', j); // input.value대신에 td.innerText를 쓰게될 수 있음
 						input.classList.add( "Cell" );
 						input.value = parsed['\x00'];
 						td.appendChild(input);
@@ -428,7 +429,7 @@
 				})
 			})
 		}
-		// map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
+		//	map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
 		function vec_to_map(arr, map={})
 		{
 			arr.forEach((row,i) => {
