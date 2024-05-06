@@ -2,7 +2,8 @@
 <head>
 	<style>
 		:root {
-			--abc: 5;
+			--to_small: 3px dotted;
+			--to_big: 1px solid;
 		}
 		body {
 			margin: 0;
@@ -107,12 +108,13 @@
 		.roof:hover:not(.mousedown, [rclick]) {
 			background-color: rgb(230, 230, 230);
 		}
-		tr.dropable { /*
-			tr은 td,th보다 css 우선 순위가 낮음*/
-			border-top: 3px dotted;
+		tr.dropable { /* tr은 td,th보다 css 우선 순위가 낮음 */
+			border-top: var(--to_small);
+			border-bottom: var(--to_big);
 		}
 		td.dropable, th.dropable {
-			border-left: 3px dotted;
+			border-left: var(--to_small);
+			border-right: var(--to_big);
 		}
 		.warn,
 		tr:has([rclick="2"].index) td:not(.index),
