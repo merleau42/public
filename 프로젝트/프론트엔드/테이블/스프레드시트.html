@@ -167,7 +167,7 @@
 							.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []);
 				else
 					return QQ(`[${name}]`)
-			}			
+			}
 		}
 		function load_file(fd, path)
 		{
@@ -358,16 +358,20 @@
 				if (Q('.dragging.roof') && Q('.dropable.to_drop')) 
 				{
 					table = Q('table:has(.dragging.roof)');
-					insert_to = e.target.getAttribute('col') * 1;
-					debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
-
-					col_value = QQ('dropable', table).map(x=>x.value);
-
-					new_table = table_to_vec( table ).map((x,i)=>x.toSpliced(insert, 0, col_value[i]));
-					// table.remove();
-					// slot2.appendChild( vec_to_table(new_table) );
-					;; slot2.append( vec_to_table(new_table) );
+					insert_val = QQ(`.Cell[col="${Q('.dragging.roof').getAttribute('col')}"]`, table).map(x=>x.value);
+					insert_col = e.target.getAttribute('col') * 1;
+					debug("기타", `insert_val : ${insert_val}`);
+					debug("기타", `insert_col : ${e.target.tagName}${insert_col}`);
+//! dsdasasdasd
+// !
+//  !
+///! 
+					new_table = table_to_vec( table ).map((x,i)=>x.toSpliced(insert_col, 0, insert_val[i]));
+					table.remove();
+					slot2.appendChild( vec_to_table(new_table) );
+					// ;; slot2.append( vec_to_table(new_table) );
 				}
+				debug("기타", `dropped : ${e.target.tagName}`);
 			})
 			document.addEventListener('dragend', e => {
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
@@ -386,12 +390,11 @@
 					td = i > 0 ? document.createElement('td') : document.createElement('th');
 					if (i > 0 && j > 0){
 						input = document.createElement('input');
-						;; input.setAttribute('col', j);
+						;;; input.setAttribute('col', j);
 						input.classList.add( "Cell" );
 						input.value = parsed['\x00'];
 						td.appendChild(input);
-						// if (parsed['ㅷ']) td.classList.add (parsed['ㅷ']);
-						;; if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
+						if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
 					}
 					else if (i != 0 && j == 0){
 						td.classList.add ("index");
@@ -423,8 +426,7 @@
 					if (i==0 || j==0)
 						return '';
 					text = td.querySelector('.Cell').value;
-					// bg = [...td.classList].filter(x=>x[0]=='P')[0];
-					;; bg = td.getAttribute('paint');
+					bg = td.getAttribute('paint');
 					bg = bg ? `ㅷ${bg}` : ''
 					return text + bg;
 				})
@@ -482,7 +484,7 @@
 </head>
 <body>
 <div id="menu1" class="container">
-	<input id="Search" type="text" placeholder="검색어!제외#필드내검색">
+	<input id="Search" type="text" placeholder="검색어!제외#필드, ...">
 	<input id="Clear" type="button" value="X">
 	<div id="Total"></div>
 	<a download="80000.json"><input id="Save" type="button" value="💾"></a>
