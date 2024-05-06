@@ -280,8 +280,6 @@
 					move_table_row( new_row, Q('tr:has(.dblclick.index)') );
 				}
 				if (Q('.roof.dblclick')) {
-					// exam.map(x=>x.toSpliced(2,0,'added')) // 열 추가
-					// exam.toSpliced(2,0,['added']) // 행 추가
 					col_index = Q('.roof.dblclick').getAttribute('col') * 1;
 					new_table = table_to_vec( table ).map(x=>x.toSpliced(col_index + 1, 0, ''));
 					table.remove();
@@ -349,7 +347,11 @@
 				}
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+				e.target.classList.add('dragover');
 				debug('드래그 오버', e.target);
+				if (Q('table:has(.dragging):not(:has(.dragover))'))
+					free_class(['enter','dropable','dragging','to_drop','mousedown', 'dblclick', 'dragover']);
+				free_class(['dragover']);
 				e.preventDefault();
 			})
 			document.addEventListener('drop', e => { // 'over' 있어야 'drop' 가능
@@ -374,7 +376,7 @@
 				debug("기타", `dropped : ${e.target.tagName}`);
 			})
 			document.addEventListener('dragend', e => {
-				free_class(['enter','dropable','dragging','to_drop','mousedown'])
+				free_class(['enter','dropable','dragging','to_drop','mousedown', 'dblclick'])
 			})
 		}
 		// 테이블 <==> 벡터 <==> 맵
