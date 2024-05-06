@@ -102,6 +102,7 @@
 		.mousedown:not([rclick], .Cell), .dragging:not(.Cell) {
 			background-color: rgb(160, 160, 160) !important;
 		}
+		tr:has(.mousedown.index),
 		tr.dropable .index:not([rclick]),
 		.dropable:not([paint], .Cell, .warn),
 		.index:hover:not(.mousedown, [rclick]),
@@ -314,12 +315,12 @@
 				debug('클릭한 대상', e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
-				if (Q('.mousedown.index'))
-					Q('tr:has(.mousedown.index)').classList.add('dropable');
-				if (Q('.mousedown.roof')) {
-					col_line = Q('.mousedown.roof').getAttribute('col');
-					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
-				}
+				// if (Q('.mousedown.index'))
+				// 	Q('tr:has(.mousedown.index)').classList.add('dropable');
+				// if (Q('.mousedown.roof')) {
+				// 	col_line = Q('.mousedown.roof').getAttribute('col');
+				// 	QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+				// }
 			})
 			document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을 때
 				free_class(['dropable','mousedown','dblclick']);
@@ -341,8 +342,8 @@
 				if (Q('.dragging.index'))
 					Q('tr:has(.enter)').classList.add('dropable');
 				if (Q('.dragging.roof')){
-					col_line = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
-					QQ(`table:has(.dragging.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+					insert_to = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
+					QQ(`table:has(.dragging.roof) [col="${insert_to}"]`).forEach(td => td.classList.add('dropable'));
 				}
 			})
 			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
@@ -350,22 +351,19 @@
 				e.preventDefault();
 			})
 			document.addEventListener('drop', e => { // 'over' 있어야 'drop' 가능
-				e.target.classList.add('to_drop')
-				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
-					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
+				e.target.classList.add('to_drop');
+				
+				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop):not(:has(.dragging.index))'))
+					move_table_row(Q('tr:has(.dragging)'), Q('tbody tr:has(.to_drop)'));
 				if (Q('.dragging.roof') && Q('.dropable.to_drop')) 
 				{
 					table = Q('table:has(.dragging.roof)');
-					col_line = Q('.dropable', table).getAttribute('col');
-					insert = e.target.getAttribute('col') * 1;
+					insert_to = e.target.getAttribute('col') * 1;
 					debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
 
-					col_origin = QQ(`[col="${col_line}"]`);
-					console.log(col_origin);
-					// debug("기타", col_origin);
+					col_value = QQ('dropable', table).map(x=>x.value);
 
-					col_origin.forEach(x=>x.setAttribute('paint', 'P3'));
-					new_table = table_to_vec( table ).map(x=>x.toSpliced(insert, 0, 'new_cell'));
+					new_table = table_to_vec( table ).map((x,i)=>x.toSpliced(insert, 0, col_value[i]));
 					// table.remove();
 					// slot2.appendChild( vec_to_table(new_table) );
 					;; slot2.append( vec_to_table(new_table) );
