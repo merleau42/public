@@ -256,18 +256,15 @@
 			// slot2.insertBefore(menu, slot2.firstChild);
 
 			mouse_listner();
-			setInterval(monitor, 200);
-			debug("활성화된 클래스");
-			debug("기타");
-			debug("활성화된 속성");
-			debug("클릭한 대상");
-			debug("마우스 오버");
-			debug("드래그 오버");
+			setInterval(debug_monitor, 100);
 		}
-		function monitor()
+		function debug_monitor()
 		{
 			debug("활성화된 클래스", [leak('class').length, leak('class').join(' ')].join(': '));
 			debug("활성화된 속성", [leak('attr').length, leak('attr').join(' ')].join(': '));
+			debug("마우스 오버", Q('.mouseover'));
+			debug("클릭한 대상", Q('.mousedown'));
+			// debug("드래그 오버", Q('.dargover')); 이벤트 내에서 실행할 것
 		}
 		function mouse_listner()
 		{
@@ -312,7 +309,6 @@
 			})
 			document.addEventListener('mousedown', e => {
 				e.target.classList.add('mousedown');
-				debug('클릭한 대상', e.target);
 				if (!e.target.getAttribute('rclick'))
 					free_attr(['rclick']);
 				/// if (Q('.mousedown.index'))
@@ -326,7 +322,6 @@
 				free_class(['dropable','mousedown','dblclick']);
 			})
 			document.addEventListener('mouseover', e => {
-				debug('마우스 오버', e.target);
 				free_class(['mouseover', 'warn']);
 				e.target.classList.add('mouseover');
 				free_attr(['rclick']);
