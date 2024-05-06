@@ -217,7 +217,7 @@
 					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
 			tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
 			spl = dbg.innerText.replace(/\n$/,'').split('\n');
-			if (spl.length >= 10)
+			if (spl.length >= 8)
 				spl = [spl[0], ...spl.splice(2)];
 			spl.push(tail);
 			dbg.innerText = spl.join('\n');
