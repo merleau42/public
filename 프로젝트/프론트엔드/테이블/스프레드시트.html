@@ -362,10 +362,6 @@
 					insert_col = e.target.getAttribute('col') * 1;
 					debug("기타", `insert_val : ${insert_val}`);
 					debug("기타", `insert_col : ${e.target.tagName}${insert_col}`);
-//! dsdasasdasd
-// !
-//  !
-///! 
 					new_table = table_to_vec( table ).map((x,i)=>x.toSpliced(insert_col, 0, insert_val[i]));
 					table.remove();
 					slot2.appendChild( vec_to_table(new_table) );
@@ -377,7 +373,7 @@
 				free_class(['enter','dropable','dragging','to_drop','mousedown'])
 			})
 		}
-		// 테이블 <==> 벡터 <==> 맵
+		// ! ! 테이블 <==> 벡터 <==> 맵
 		function vec_to_table(arr, fd=null)
 		{
 			table = document.createElement('table');
