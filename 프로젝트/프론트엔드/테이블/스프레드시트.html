@@ -299,8 +299,8 @@
 				}
 				if (Q('.roof[rclick="2"]'))
 				{
-					col_line = Q('.roof[rclick="2"]').getAttribute('col');
 					table = Q(`table:has(.roof[rclick="2"])`);
+					col_line = Q('.roof[rclick="2"]').getAttribute('col');
 					QQ(`td[col="${col_line}"]`, table).forEach(td => td.classList.add('warn'));
 				}
 				if (Q('.roof[rclick="3"]'))
@@ -353,8 +353,22 @@
 				e.target.classList.add('to_drop')
 				if (Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
 					move_table_row(Q('.dragging').parentNode, Q('tbody tr:has(.to_drop)'));
-				if (Q('.dragging.roof') && Q('.dropable.to_drop')) {
+				if (Q('.dragging.roof') && Q('.dropable.to_drop')) 
+				{
+					table = Q('table:has(.dragging.roof)');
+					col_line = Q('.dropable', table).getAttribute('col');
+					insert = e.target.getAttribute('col') * 1;
 					debug("기타", `dropped : ${e.target.tagName}${e.target.getAttribute('col')}`);
+
+					col_origin = QQ(`[col="${col_line}"]`);
+					console.log(col_origin);
+					// debug("기타", col_origin);
+
+					col_origin.forEach(x=>x.setAttribute('paint', 'P3'));
+					new_table = table_to_vec( table ).map(x=>x.toSpliced(insert, 0, 'new_cell'));
+					// table.remove();
+					// slot2.appendChild( vec_to_table(new_table) );
+					;; slot2.append( vec_to_table(new_table) );
 				}
 			})
 			document.addEventListener('dragend', e => {
