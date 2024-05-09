@@ -24,8 +24,8 @@ alias m="clear; cd $FT/machine; pwd; ls";
 alias fre="clear; cd ~/goinfre";
 
 alias g="clear; warn; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m; git push";
-alias z="d; g";
-alias ㅋ="d; g";
+alias z="d; g; pwd; cd -";
+alias ㅋ="d; g; pwd; cd -";
 alias x="clear";
 
 alias c="clear; cc $FLAGS *.c -o $out";
