@@ -41,22 +41,18 @@ int i, j, k;
 int n, m;
 int scanned;
 
-void 파싱1()
+void 파싱()
 {
-	parsed = split(str, '-');
-	if (atoi(parsed[1]) <= 90)
-		count++;
-}
 
-void 파싱2()
-{
-	if (!strcmp(str, "P=NP"))
-	{
-		printf("skipped\n");
-		// continue;
-	}
-	parsed = split(str, '+');
-	printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
+
+	//: 기호 +를 기준으로 양옆의 숫자를 파싱하고, 정수로 변환해서 합산
+	// parsed = split(str, '+');
+	// printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
+
+	//: 기호 -를 기준으로 뒤에 오는 숫자를 파싱하고, 정수로 변환해서 합산
+	// parsed = split(str, '-');
+	// if (atoi(parsed[1]) <= 90)
+	// 	count++;
 }
 
 void 수열()
@@ -90,7 +86,7 @@ void 수열()
 	printf("%d", seri[i]);
 }
 
-void 단어세기()
+void 단어갯수()
 {
 	count = word_count(str, ',');
 	printf("%d", count);
@@ -149,15 +145,19 @@ void 포함()
 
 void 문자열비교()
 {
-	int i;
+	//: 짧은 문자열이나, 아스키코드로 앞서는 문자열을 출력
+	// scanf("%s\n%s", str1, str2);
+	// if (strcmp(str1, str2) > 0)
+	// 	printf("str2");
+	// else
+	// 	printf("str1");
 
-	scanf("%s\n%s", str, str2);
-
-	if (strcmp(str, str2) > 0)
-		printf("no");
-	else
-		printf("go");
-	
+	//: 문자열에 따라 다르게 출력
+	// if (strcmp(str, "P=NP") == 0)
+	// {
+	//	printf("skipped\n");
+	//	return ;
+	// }
 }
 
 void 문자판독()
@@ -175,8 +175,8 @@ void 문자판독()
 		// 	printf("%c", str[i]);
 
 		//:	알파벳 모음 갯수
-		// if (strchr("aeiouAEIOU", str[i]) != NULL)
-		// 	count++;
+		if (strchr("aeiouAEIOU", str[i]) != NULL)
+			count++;
 
 		//: 일부 알파벳만 대소문자 전환 (e,E) <---> (i,I)
 		// if ('e' == str[i] || 'E' == str[i])
@@ -186,8 +186,8 @@ void 문자판독()
 		// else
 		// 	printf("%c", str[i]);
 	}
-	printf("\n");
-	// printf("%d\n", count);
+	// printf("\n");
+	printf("%d\n", count);
 }
 
 void 순서뒤집기() // 스택으로 다시 풀어보기
@@ -202,18 +202,27 @@ void 순서뒤집기() // 스택으로 다시 풀어보기
 	printf("\n");
 }
 
-void 단어뒤집기()
+void 문자열뒤집기()
 {
-	scanf("%s", str);
-
 	len = strlen(str);
 	while(--len >= 0)
 		printf("%c", str[len]);
+	printf("\n");
 }
 
 void 계수()
 {
-	;
+	i = 0;
+	while(str[i])
+	{
+		exist[str[i]]++;
+		i++;
+	}
+	i = 'a';
+	while(i <= 'z')
+	{
+		printf("%d ", exist[i++]);
+	}
 }
 
 void 축약()
@@ -238,29 +247,26 @@ void 축약()
 
 // sorting, greedy, data_structures
 
-int main()
-{	// T = 테스트 케이스 유형
+int main() {
+	scanf("%d", &n);
+	// T = 테스트 케이스의 유형 (자료형 size_t)
 	// -1: 사실상 무한대, 종료 신호까지  /  0: 수동 조작
-	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수 주어짐
-	T = 2;
-	if (T >= 1)	{
-		if (T == 2)
-		{
-			scanf("%d", &T);
-			getchar();
-		}
-		t = 0;
-		while (++t <= T) {
-			if (t > 1) getchar();
-			scanned = scanf("%[^\n]s", str);
-			if (scanned == EOF || strcmp(str, "#") == 0)
-				break;
-			문자판독();
-			// printf("~~~");
-		}
+	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수가 주어짐
+	T = 1;
+	if (T == 2)	{
+		scanf("%d", &T);
+		getchar();
+	}
+	t = 0;
+	while (++t <= T) {
+		if (t > 1) getchar();
+		scanned = scanf("%[^\n]s", str);
+		if (scanned == EOF || strcmp(str, "END") == 0)
+			break;
+		문자열뒤집기();
+		// printf("%d. %s\n", t, str);
 	}
 }
-
 
 // 문자열 모음에 str이 존재하면 처음 발견한 인덱스를 리턴
 int includes(char **strs, char *str)
@@ -277,7 +283,7 @@ int includes(char **strs, char *str)
 	return -1; // str이 strs에 포함되지 않는 경우
 }
 
-// 문자열 dest에 src를 size-1 바이트 덮어쓰고 쟁여둔 한 자리 널을넣는 함수
+// 문자열 dest에 src를 size-1 바이트 덮어쓰고 쟁여둔 한 자리 널을 넣는 함수
 size_t strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t i;
