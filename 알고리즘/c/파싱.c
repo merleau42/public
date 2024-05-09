@@ -219,7 +219,17 @@ void p29731() // 문자열 비교:
 // Never gonna say goodbye
 }
 
-void pNONE() // 문자열 입출력:
+void p4470() // 문자열 가공
+{
+	scanf("%d", &T);
+	while (++t <= T)
+	{
+		scanf(" %[^\n]s", str);
+		printf("%s\n", str);
+	}	
+}
+
+void input1() //+ 정해진 횟수만큼 입력받기
 {
 	scanf("%d", &T);
 	while (++t <= T)
@@ -229,26 +239,35 @@ void pNONE() // 문자열 입출력:
 	}
 }
 
-void p2744() // 문자 판독: 18409, 15000
+void input2() // EOF 까지 입력받기
 {
-	int i;
-
-	scanf("%d", &i);
-	scanf("%s", str1);
-
-	i = 0;
-	count = 0;
-	while(str1[i])
+	while ( scanf(" %[^\n]s", str) != EOF )
 	{
-		// if('A' <= str1[i] && str1[i] <= 'Z')
-			// printf("%c", str1[i] + 32);
-		// else if('a' <= str1[i] && str1[i] <= 'z')
-			// printf("%c", str1[i] - 32);
-		if (strchr("aeiou", str1[i]) != NULL)
-			count++;
-		i++;
+		printf("%s\n", str);
 	}
-	printf("%d", count);
+}
+
+void p1264b4() // 문자 판독: b5(18409, 15000, 2744), b4(1264)
+{
+	while (1)
+	{
+		scanf(" %[^\n]s", str);
+		if (*str == '#')
+			break;
+		i = 0;
+		count = 0;
+		while(str[i])
+		{
+			// if('A' <= str[i] && str[i] <= 'Z')
+				// printf("%c", str[i] + 32);
+			// else if('a' <= str[i] && str[i] <= 'z')
+				// printf("%c", str[i] - 32);
+			if (strchr("aeiouAEIOU", str[i]) != NULL)
+				count++;
+			i++;
+		}
+		printf("%d\n", count);
+	}
 }
 
 void p4999()
@@ -289,7 +308,7 @@ void p9086() // 첫글자 끝글자
 // 한 문장에 공백 포함시 scanf(" %[^\n]s", str1);
 int main()
 {
-	p29731();
+	NONE2();
 	// sorting, greedy
 	// data_structures: linked_list stack queue deque
 }
