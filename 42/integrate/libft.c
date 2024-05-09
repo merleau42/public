@@ -731,5 +731,11 @@ int main()
 	printf("%zu", ft_strlcat(dest, "lorem ipsum dolor sit amet", 5));
 	write(1, "\n", 1);
 	write(1, dest, 15);
+
+	printf("\n-----split more test-----\n");
+	char **sp;
+	sp = ft_split("my name is hiroo", ' ');
+	while(*sp)
+		printf("%s!", *sp++);
 	return 0;
 }
