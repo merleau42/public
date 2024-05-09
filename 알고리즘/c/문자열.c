@@ -39,48 +39,24 @@ char *entered[1000000];
 char enter;
 int i, j, k;
 int n, m;
-
-void 입출력()
-{
-	scanf("%d", &T);
-	while (++t <= T)
-	{
-		getchar(); // 이전 scanf가 '\n' 직전까지만 가져왔기 때문에, 버퍼에 남게된 '\n'을 제거함
-		scanf("%[^\n]s", str);
-		printf("%d. %s\n", t, str);
-	}
-}
+int scanned;
 
 void 파싱1()
 {
-	scanf("%d", &T);
-	count = 0;
-	while (T--)
-	{
-		getchar();
-		scanf("%[^\n]s", str);
-		parsed = split(str, '-');
-		if (atoi(parsed[1]) <= 90)
-			count++;
-	}
-	printf("%d", count);
+	parsed = split(str, '-');
+	if (atoi(parsed[1]) <= 90)
+		count++;
 }
 
 void 파싱2()
 {
-	scanf("%d", &T);
-	while (++t <= T)
+	if (!strcmp(str, "P=NP"))
 	{
-		getchar();
-		scanf("%[^\n]s", str);
-		if (!strcmp(str, "P=NP"))
-		{
-			printf("skipped\n");
-			continue;
-		}
-		parsed = split(str, '+');
-		printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
+		printf("skipped\n");
+		continue;
 	}
+	parsed = split(str, '+');
+	printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
 }
 
 void 수열()
@@ -116,21 +92,17 @@ void 수열()
 
 void 단어세기()
 {
-	scanf("%[^\n]s", str);
 	count = word_count(str, ',');
 	printf("%d", count);
 }
 
 void 길이()
 {
-	scanf("%d", &i);
-	while (scanf("%s", str) != EOF) { // i를 더미로 삼을 경우, ctrl + D 로 EOF 전달 가능
-		len = strlen(str);
-		if (6 <= len && len <= 9)
-			printf("yes\n");
-		else
-			printf("no\n");
-	}
+	len = strlen(str);
+	if (6 <= len && len <= 9)
+		printf("yes\n");
+	else
+		printf("no\n");
 }
 
 void 인덱싱()
@@ -141,7 +113,6 @@ void 인덱싱()
 
 void 분류하기()
 {
-	scanf("%[^\n]s", str);
 	if (!strcmp(str, "NLCS"))
 		printf("North London Collegiate School");
 	if (!strcmp(str, "BHA"))
@@ -174,10 +145,6 @@ void 포함()
 			msg = "Yes";
 	}
 	printf("%s", msg);
-
-// 2
-// Never gonna give you up
-// Never gonna say goodbye
 }
 
 void 문자열비교()
@@ -195,21 +162,30 @@ void 문자열비교()
 
 void 문자판독()
 {
-	if (*str == '#')
-		return;
-	i = 0;
+	i = -1;
 	count = 0;
-	while(str[i])
+	while(str[++i])
 	{
+		//: 대문자를 소문자로 출력, 소문자를 대문자로 출력
 		// if('A' <= str[i] && str[i] <= 'Z')
-			// printf("%c", str[i] + 32);
+		// 	printf("%c", str[i] + 32);
 		// else if('a' <= str[i] && str[i] <= 'z')
-			// printf("%c", str[i] - 32);
-		if (strchr("aeiouAEIOU", str[i]) != NULL)
-			count++;
-		i++;
+		// 	printf("%c", str[i] - 32);
+
+		//:	알파벳 모음 세기
+		// if (strchr("aeiouAEIOU", str[i]) != NULL)
+		// 	count++;
+
+		//: (e,E) <---> (i,I)
+		if ('e' == str[i] || 'E' == str[i])
+			printf("%c", str[i] - 5 + 9);
+		else if ('i' == str[i] || 'I' == str[i])
+			printf("%c", str[i] - 9 + 5);
+		else
+			printf("%c", str[i]);
 	}
-	printf("%d\n", count);
+	printf("\n");
+	// printf("%d\n", count);
 }
 
 void 순서뒤집기() // 스택으로 다시 풀어보기
@@ -261,13 +237,10 @@ void 축약()
 // sorting, greedy, data_structures
 
 int main()
-{
-	int scanned;
-	// T = 테스트 케이스 유형
-	// -1: EOF 혹은 종료 신호까지  /  1: 입력이 한 줄만 있음   /  2: 입력 횟수가 주어짐  /  0: 수동 조작
-	T = 0;
-	if (T == 0)
-		;
+{	// T = 테스트 케이스 유형
+	// -1: 사실상 무한대, 종료 신호까지  /  0: 수동 조작
+	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수 주어짐
+	T = -1;
 	if (T == 2)
 		scanf("%d", &T);
 	if (T >= 1)	{
@@ -275,17 +248,12 @@ int main()
 		while (++t <= T) {
 			if (t > 1) getchar();
 			scanned = scanf("%[^\n]s", str);
-			축약();
-		}
-	}
-	if (T == -1)
-		while (++t) {
-			if (t > 1) getchar();
-			scanned = scanf("%[^\n]s", str);
-			if (scanned == EOF || strcmp(str, "#"));
+			if (scanned == EOF || strcmp(str, "#") == 0)
 				break;
 			문자판독();
+			// printf("~~~");
 		}
+	}
 }
 
 
