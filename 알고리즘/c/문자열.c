@@ -247,7 +247,7 @@ void 문자열뒤집기()
 
 void 계수()
 {
-	//: 존재 배열에 문자의 갯수를 기록
+	//: 존재 배열에 문자의 갯수를 카운팅
 	i = -1;
 	while(str[++i])
 		exist[str[i]]++;
@@ -293,6 +293,11 @@ void 형식문자열()
 		printf("NO");
 }
 
+void 슬라이딩윈도우()
+{
+	// https://www.acmicpc.net/problem/29766
+}
+
 // sorting, greedy, data_structures
 
 int main() {
@@ -309,13 +314,12 @@ int main() {
 		scanf("%d", &T);
 		getchar();
 	}
-	t = 1;
-	while (++t <= T) {
+	for (int t=1; t <= T; t++) {
 		if (t > 1) getchar();
 		scanned = scanf("%[^\n]s", str);
 		if (scanned == EOF || strcmp(str, "END") == 0)
 			break;
-		계수();
+		슬라이딩윈도우();
 		// printf("%d. %s\n", t, str);
 	}
 	// printf("%d", count);
@@ -324,7 +328,7 @@ int main() {
 		for (int i = 1; i <= r; i++) {
 			if (i > 1) getchar();
 			scanf("%[^\n]s", str);
-			문자열뒤집기();
+			파싱();
 			// for (int j = 1; i <= c; j++){
 			// 	;
 			// }
