@@ -38,6 +38,7 @@ int seri[1000000];
 char *entered[1000000];
 char enter;
 int i, j, k;
+int r, c, h;
 int n, m;
 int scanned;
 
@@ -53,14 +54,20 @@ void 파싱()
 	// 	count++;
 }
 
+void 누적()
+{
+	sum = 0;
+	i = 0;
+	while (i < n)
+	{
+		sum += str[i] - '0';
+		i++;
+	}
+	printf("%d", sum);
+}
+
 void 수열()
 {
-	int n, k;
-	
-	scanf("%d %d", &n, &k);
-	getchar();
-	scanf("%[^\n]s", str);
-
 	parsed = split(str, ',');
 
 	i = -1;
@@ -246,11 +253,14 @@ void 축약()
 // sorting, greedy, data_structures
 
 int main() {
-	scanf("%d", &n);
 	// T = 테스트 케이스의 유형 (자료형 size_t)
-	// -1: 사실상 무한대, 종료 신호까지  /  0: 수동 조작
+	// -1: 사실상 무한대, 종료 신호까지  /  0: 스킵
 	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수가 주어짐
-	T = 1;
+	
+	// (r,c,h) (n,m,k) 등 주어지는 경우 먼저 받음.
+	scanf("%d %d", &r, &c); getchar();
+
+	T = 0;
 	if (T == 2)	{
 		scanf("%d", &T);
 		getchar();
@@ -261,9 +271,21 @@ int main() {
 		scanned = scanf("%[^\n]s", str);
 		if (scanned == EOF || strcmp(str, "END") == 0)
 			break;
-		문자열뒤집기();
+		누적();
 		// printf("%d. %s\n", t, str);
 	}
+
+	if (r > 0 && c > 0) { // 행렬이 주어짐
+		for (int i = 1; i <= r; i++) {
+			if (i > 1) getchar();
+			scanf("%[^\n]s", str);
+			문자열뒤집기();
+			// for (int j = 1; i <= c; j++){
+			// 	;
+			// }
+		}
+	}
+
 }
 
 // 문자열 배열에서 str이 존재하면 처음 발견한 인덱스를 리턴

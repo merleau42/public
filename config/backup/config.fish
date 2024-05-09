@@ -27,6 +27,7 @@ alias g="clear; pwd; warn; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | 
 alias z="d; g; cd -";
 alias ㅋ="d; g; cd -";
 alias x="clear";
+alias ㅌ="clear";
 
 alias c="clear; cc $FLAGS *.c -o $out";
 alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $out";
