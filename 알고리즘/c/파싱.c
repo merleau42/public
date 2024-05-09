@@ -2,9 +2,6 @@
 // 출력 ㅡ 영역(값)▶콘솔 ㅡ printf
 // 입력 ㅡ 영역(값)▶변수 ㅡ scanf
 
-#include <unistd.h>
-// 출력 ㅡ 문자열▶FD ㅡ write
-
 #include <stdlib.h>
 // 변환 ㅡ 배열▶정수 ㅡ atoi
 // 변환 ㅡ 정수▶배열 ㅡ itoa
@@ -16,8 +13,7 @@
 // 비교 ㅡ 영역▶영역 ㅡ strncmp, memcmp, strnstr
 // 복제 ㅡ 영역▶영역 ㅡ strdup, memmove, strlcpy, strlcat
 
-#include <limits.h>
-
+int includes(char **strs, char *str);
 size_t word_count(char const *s, char c);
 char *substr(char const *s, unsigned int start, size_t len);
 char **split(char const *s, char c);
@@ -29,17 +25,31 @@ size_t strlcpy(char *dst, const char *src, size_t size);
 size_t strlcat(char *dst, const char *src, size_t size);
 
 //: 전역 변수는 0으로 초기화 됨.
-int T=1, t=0; // 테스트 케이스
+size_t T, t; // 테스트 케이스
 char **parsed;
-char  str[1000000]; int len;
-char str[1000000]; int len1;
+char str[1000000]; int len;
+char str1[1000000]; int len1;
 char str2[1000000]; int len2;
+char exist[256];
 int count;
 int sum;
 void *rewind_;
 int seri[1000000];
-int n;
-int i;
+char *entered[1000000];
+char enter;
+int i, j, k;
+int n, m;
+
+void 입출력()
+{
+	scanf("%d", &T);
+	while (++t <= T)
+	{
+		getchar(); // 이전 scanf가 '\n' 직전까지만 가져왔기 때문에, 버퍼에 남게된 '\n'을 제거함
+		scanf("%[^\n]s", str);
+		printf("%d. %s\n", t, str);
+	}
+}
 
 void 파싱1()
 {
@@ -56,27 +66,24 @@ void 파싱1()
 	printf("%d", count);
 }
 
-
-void 거꾸로() // 스택으로 다시 풀어보기
+void 파싱2()
 {
 	scanf("%d", &T);
 	while (++t <= T)
 	{
 		getchar();
 		scanf("%[^\n]s", str);
-		parsed = split(str, ' ');
-		rewind_ = parsed;
-		while (*parsed)
-			parsed++;
-		printf("Case #%d: ", t);
-		while (parsed != rewind_)
-			printf("%s ", *--parsed);
-		// scanf("%d", &dummy);
-		printf("\n");
+		if (!strcmp(str, "P=NP"))
+		{
+			printf("skipped\n");
+			continue;
+		}
+		parsed = split(str, '+');
+		printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
 	}
 }
 
-void 수열() // https://www.acmicpc.net/problem/1551
+void 수열()
 {
 	int n, k;
 	
@@ -90,9 +97,9 @@ void 수열() // https://www.acmicpc.net/problem/1551
 	while(parsed[++i] != NULL)
 	{
 		seri[i] = atoi( parsed[i] );
-		// sum += atoi(*parsed++); 수열의 합
+		// sum += atoi( parsed[i] ); 수열의 합
 	}
-	
+
 	while(k--)
 	{
 		i = -1;
@@ -107,16 +114,6 @@ void 수열() // https://www.acmicpc.net/problem/1551
 	printf("%d", seri[i]);
 }
 
-void p10822()
-{
-	// getchar();
-	scanf("%[^\n]s", str);
-	parsed = split(str, ',');
-	while (*parsed != NULL)
-		sum += atoi(*parsed++);
-	printf("%d", sum);
-}
-
 void 단어세기()
 {
 	scanf("%[^\n]s", str);
@@ -124,7 +121,7 @@ void 단어세기()
 	printf("%d", count);
 }
 
-void 길이() // 25372, 2743
+void 길이()
 {
 	scanf("%d", &i);
 	while (scanf("%s", str) != EOF) { // i를 더미로 삼을 경우, ctrl + D 로 EOF 전달 가능
@@ -136,29 +133,13 @@ void 길이() // 25372, 2743
 	}
 }
 
-void 인덱싱() // 29699, 27866, 9086
+void 인덱싱()
 {
 	scanf("%d", &n);
 	printf("%c", "WelcomeToSMUPC"[(n - 1) % 14]);
 }
 
-
-void p9086() // 첫글자 끝글자
-{
-	scanf("%d", &T);
-	while (++t <= T)
-	{
-		getchar();
-		scanf("%[^\n]s", str);
-		printf("%c", *str);
-		i = 0;
-		while(str[i])
-			i++;
-		printf("%c\n", str[i - 1]);
-	}
-}
-
-void p27889() // 문자열 분류: 28691, 
+void 분류하기()
 {
 	scanf("%[^\n]s", str);
 	if (!strcmp(str, "NLCS"))
@@ -171,21 +152,7 @@ void p27889() // 문자열 분류: 28691,
 		printf("St. Johnsbury Academy");
 }
 
-int includes(char **strs, char *str)
-{
-	int index;
-
-	index = 0;
-	while(strs[index] != NULL)
-	{
-		if (strcmp(strs[index], str) == 0)
-			return index;
-		index++;
-	}
-	return -1; // str이 strs에 포함되지 않는 경우
-}
-
-void p29731() // 문자열 비교:
+void 포함()
 {
 	char *said[8] =
 		{"Never gonna give you up",
@@ -213,60 +180,7 @@ void p29731() // 문자열 비교:
 // Never gonna say goodbye
 }
 
-
-void p5026() // p10953
-{
-	scanf("%d", &T);
-	while (++t <= T)
-	{
-		getchar();
-		scanf("%[^\n]s", str);
-		if (!strcmp(str, "P=NP"))
-		{
-			printf("skipped\n");
-			continue;
-		}
-		parsed = split(str, '+');
-		printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
-	}
-}
-
-void p4470() // 문자열 출력 :
-{
-	scanf("%d", &T);
-	while (++t <= T)
-	{
-		getchar(); // 직전의 scanf가 '\n' 이전까지만 가져왔기 때문에, 버퍼에 남아있는 \n 를 제거함.
-		scanf("%[^\n]s", str);
-		printf("%d. %s\n", t, str);
-	}
-}
-
-void p1264() // 문자 판독: b5(18409, 15000, 2744), b4(1264)
-{
-	while (1)
-	{
-		getchar();
-		scanf("%[^\n]s", str);
-		if (*str == '#')
-			break;
-		i = 0;
-		count = 0;
-		while(str[i])
-		{
-			// if('A' <= str[i] && str[i] <= 'Z')
-				// printf("%c", str[i] + 32);
-			// else if('a' <= str[i] && str[i] <= 'z')
-				// printf("%c", str[i] - 32);
-			if (strchr("aeiouAEIOU", str[i]) != NULL)
-				count++;
-			i++;
-		}
-		printf("%d\n", count);
-	}
-}
-
-void p4999()
+void 문자열비교()
 {
 	int i;
 
@@ -279,7 +193,38 @@ void p4999()
 	
 }
 
-void p8545() // 거꾸로 출력 (b2: 8545)
+void 문자판독()
+{
+	if (*str == '#')
+		return;
+	i = 0;
+	count = 0;
+	while(str[i])
+	{
+		// if('A' <= str[i] && str[i] <= 'Z')
+			// printf("%c", str[i] + 32);
+		// else if('a' <= str[i] && str[i] <= 'z')
+			// printf("%c", str[i] - 32);
+		if (strchr("aeiouAEIOU", str[i]) != NULL)
+			count++;
+		i++;
+	}
+	printf("%d\n", count);
+}
+
+void 순서뒤집기() // 스택으로 다시 풀어보기
+{
+	parsed = split(str, ' ');
+	rewind_ = parsed;
+	while (*parsed)
+		parsed++;
+	printf("Case #%d: ", t);
+	while (parsed != rewind_)
+		printf("%s ", *--parsed);
+	printf("\n");
+}
+
+void 단어뒤집기()
 {
 	scanf("%s", str);
 
@@ -288,27 +233,76 @@ void p8545() // 거꾸로 출력 (b2: 8545)
 		printf("%c", str[len]);
 }
 
-// 한 문장에 공백 포함시 scanf(" %[^\n]s", str);
-int main()
+void 계수()
 {
-	인덱싱();
-	// sorting, greedy
-	// data_structures: linked_list stack queue deque
+	;
 }
 
-//: 테스트 케이스 갯수만큼 입력받기
-//	scanf("%d", &T);
-//	while (++t <= T)
-//	{
-//		getchar();
-//		scanf(" %[^\n]s", str);
-//		printf("%s\n", str);
-//	}
-//
-///: EOF 까지 입력받기
-///	while ( scanf(" %[^\n]s", str) != EOF )
-///		printf("%s\n", str);
-///
+void 축약()
+{
+	enter = '\0';
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if(enter != str[i])
+		{
+			enter = str[i];
+			entered[j++] = &str[i];
+		}
+		entered[j] = "\n";
+		i++;
+	}
+	k = 0;
+	while (k <= j)
+		printf("%c", *entered[k++]);
+}
+
+// sorting, greedy, data_structures
+
+int main()
+{
+	int scanned;
+	// T = 테스트 케이스 유형
+	// -1: EOF 혹은 종료 신호까지  /  1: 입력이 한 줄만 있음   /  2: 입력 횟수가 주어짐  /  0: 수동 조작
+	T = 0;
+	if (T == 0)
+		;
+	if (T == 2)
+		scanf("%d", &T);
+	if (T >= 1)	{
+		t = 0;
+		while (++t <= T) {
+			if (t > 1) getchar();
+			scanned = scanf("%[^\n]s", str);
+			축약();
+		}
+	}
+	if (T == -1)
+		while (++t) {
+			if (t > 1) getchar();
+			scanned = scanf("%[^\n]s", str);
+			if (scanned == EOF || strcmp(str, "#"));
+				break;
+			문자판독();
+		}
+}
+
+
+// 문자열 모음에 str이 존재하면 처음 발견한 인덱스를 리턴
+int includes(char **strs, char *str)
+{
+	int index;
+
+	index = 0;
+	while(strs[index] != NULL)
+	{
+		if (strcmp(strs[index], str) == 0)
+			return index;
+		index++;
+	}
+	return -1; // str이 strs에 포함되지 않는 경우
+}
 
 // 문자열 dest에 src를 size-1 바이트 덮어쓰고 쟁여둔 한 자리 널을넣는 함수
 size_t strlcpy(char *dst, const char *src, size_t size)
