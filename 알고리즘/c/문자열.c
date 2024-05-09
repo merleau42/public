@@ -43,8 +43,6 @@ int scanned;
 
 void 파싱()
 {
-
-
 	//: 기호 +를 기준으로 양옆의 숫자를 파싱하고, 정수로 변환해서 합산
 	// parsed = split(str, '+');
 	// printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
@@ -145,7 +143,7 @@ void 포함()
 
 void 문자열비교()
 {
-	//: 짧은 문자열이나, 아스키코드로 앞서는 문자열을 출력
+	//: 더 짧은 문자열 혹은 아스키코드상 앞서는 문자열을 출력
 	// scanf("%s\n%s", str1, str2);
 	// if (strcmp(str1, str2) > 0)
 	// 	printf("str2");
@@ -268,7 +266,7 @@ int main() {
 	}
 }
 
-// 문자열 모음에 str이 존재하면 처음 발견한 인덱스를 리턴
+// 문자열 배열에서 str이 존재하면 처음 발견한 인덱스를 리턴
 int includes(char **strs, char *str)
 {
 	int index;
