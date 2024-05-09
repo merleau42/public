@@ -32,7 +32,7 @@ size_t strlcat(char *dst, const char *src, size_t size);
 int T=1, t=0; // 테스트 케이스
 char **parsed;
 char  str[1000000]; int len;
-char str1[1000000]; int len1;
+char str[1000000]; int len1;
 char str2[1000000]; int len2;
 int count;
 int sum;
@@ -41,43 +41,30 @@ int seri[1000000];
 int n;
 int i;
 
-void p26068()
+void 파싱1()
 {
 	scanf("%d", &T);
 	count = 0;
 	while (T--)
 	{
-		scanf("%s", str1);
-		parsed = split(str1, '-');
+		getchar();
+		scanf("%[^\n]s", str);
+		parsed = split(str, '-');
 		if (atoi(parsed[1]) <= 90)
 			count++;
 	}
 	printf("%d", count);
 }
 
-void p5026() // p10953
-{
-	scanf("%d", &T);
-	while (T--)
-	{
-		scanf("%s", str1);
-		if (!strcmp(str1, "P=NP"))
-		{
-			printf("skipped\n");
-			continue;
-		}
-		parsed = split(str1, '+');
-		printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
-	}
-}
 
-void p12605v1() /// 스택으로 다시 풀어보기
+void 거꾸로() // 스택으로 다시 풀어보기
 {
 	scanf("%d", &T);
 	while (++t <= T)
 	{
-		scanf(" %[^\n]s", str1);
-		parsed = split(str1, ' ');
+		getchar();
+		scanf("%[^\n]s", str);
+		parsed = split(str, ' ');
 		rewind_ = parsed;
 		while (*parsed)
 			parsed++;
@@ -89,18 +76,22 @@ void p12605v1() /// 스택으로 다시 풀어보기
 	}
 }
 
-void p1551() // https://www.acmicpc.net/problem/1551
+void 수열() // https://www.acmicpc.net/problem/1551
 {
 	int n, k;
 	
 	scanf("%d %d", &n, &k);
-	scanf("%s", str1);
+	getchar();
+	scanf("%[^\n]s", str);
 
-	parsed = split(str1, ',');
+	parsed = split(str, ',');
 
 	i = -1;
 	while(parsed[++i] != NULL)
+	{
 		seri[i] = atoi( parsed[i] );
+		// sum += atoi(*parsed++); 수열의 합
+	}
 	
 	while(k--)
 	{
@@ -118,38 +109,26 @@ void p1551() // https://www.acmicpc.net/problem/1551
 
 void p10822()
 {
-	scanf("%s", str1);
-	parsed = split(str1, ',');
+	// getchar();
+	scanf("%[^\n]s", str);
+	parsed = split(str, ',');
 	while (*parsed != NULL)
 		sum += atoi(*parsed++);
 	printf("%d", sum);
 }
 
-void p10821()
+void 단어세기()
 {
-	scanf("%s", str1);
-	count = word_count(str1, ',');
+	scanf("%[^\n]s", str);
+	count = word_count(str, ',');
 	printf("%d", count);
 }
 
-// void p3447() //: 버그왕
-// {
-// 	char* parsed[101];
-// 	rewind_ = parsed;
-// 	while(scanf("%s", str1) != EOF) 
-// 	{
-// 		*(parsed++) = str1;
-// 	}
-// 	parsed = rewind_;
-// 	while(*parsed != NULL)
-// 		printf("%s", *parsed++);
-// }
-
-void p25372() // 단어 길이 관련: 2743(길이출력)
+void 길이() // 25372, 2743
 {
 	scanf("%d", &i);
-	while (scanf("%s", str1) != EOF) { // i를 더미로 삼을 경우, ctrl + D 로 EOF 전달 가능
-		len = strlen(str1);
+	while (scanf("%s", str) != EOF) { // i를 더미로 삼을 경우, ctrl + D 로 EOF 전달 가능
+		len = strlen(str);
 		if (6 <= len && len <= 9)
 			printf("yes\n");
 		else
@@ -157,25 +136,39 @@ void p25372() // 단어 길이 관련: 2743(길이출력)
 	}
 }
 
-void p29699() // 인덱싱:27866()
+void 인덱싱() // 29699, 27866, 9086
 {
 	scanf("%d", &n);
 	printf("%c", "WelcomeToSMUPC"[(n - 1) % 14]);
 }
 
+
+void p9086() // 첫글자 끝글자
+{
+	scanf("%d", &T);
+	while (++t <= T)
+	{
+		getchar();
+		scanf("%[^\n]s", str);
+		printf("%c", *str);
+		i = 0;
+		while(str[i])
+			i++;
+		printf("%c\n", str[i - 1]);
+	}
+}
+
 void p27889() // 문자열 분류: 28691, 
 {
-	scanf("%s", str1);
-	if (!strcmp(str1, "M"))
-		printf("MatKor");
-	if (!strcmp(str1, "W"))
-		printf("WiCys");
-	if (!strcmp(str1, "C"))
-		printf("CyKor");
-	if (!strcmp(str1, "A"))
-		printf("AlKor");
-	if (!strcmp(str1, "$"))
-		printf("$clear");
+	scanf("%[^\n]s", str);
+	if (!strcmp(str, "NLCS"))
+		printf("North London Collegiate School");
+	if (!strcmp(str, "BHA"))
+		printf("Branksome Hall Asia");
+	if (!strcmp(str, "KIS"))
+		printf("Korea International School");
+	if (!strcmp(str, "SJA"))
+		printf("St. Johnsbury Academy");
 }
 
 int includes(char **strs, char *str)
@@ -208,7 +201,8 @@ void p29731() // 문자열 비교:
 	scanf("%d", &T);
 	while (++t <= T)
 	{
-		scanf(" %[^\n]s", str);
+		getchar();
+		scanf("%[^\n]s", str);
 		if (includes(said, str) == -1)
 			msg = "Yes";
 	}
@@ -219,39 +213,41 @@ void p29731() // 문자열 비교:
 // Never gonna say goodbye
 }
 
-void p4470() // 문자열 가공
+
+void p5026() // p10953
 {
 	scanf("%d", &T);
 	while (++t <= T)
 	{
-		scanf(" %[^\n]s", str);
-		printf("%s\n", str);
-	}	
+		getchar();
+		scanf("%[^\n]s", str);
+		if (!strcmp(str, "P=NP"))
+		{
+			printf("skipped\n");
+			continue;
+		}
+		parsed = split(str, '+');
+		printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
+	}
 }
 
-void input1() //+ 정해진 횟수만큼 입력받기
+void p4470() // 문자열 출력 :
 {
 	scanf("%d", &T);
 	while (++t <= T)
 	{
-		scanf(" %[^\n]s", str);
-		printf("%s\n", str);
+		getchar(); // 직전의 scanf가 '\n' 이전까지만 가져왔기 때문에, 버퍼에 남아있는 \n 를 제거함.
+		scanf("%[^\n]s", str);
+		printf("%d. %s\n", t, str);
 	}
 }
 
-void input2() // EOF 까지 입력받기
-{
-	while ( scanf(" %[^\n]s", str) != EOF )
-	{
-		printf("%s\n", str);
-	}
-}
-
-void p1264b4() // 문자 판독: b5(18409, 15000, 2744), b4(1264)
+void p1264() // 문자 판독: b5(18409, 15000, 2744), b4(1264)
 {
 	while (1)
 	{
-		scanf(" %[^\n]s", str);
+		getchar();
+		scanf("%[^\n]s", str);
 		if (*str == '#')
 			break;
 		i = 0;
@@ -274,44 +270,45 @@ void p4999()
 {
 	int i;
 
-	scanf("%s\n%s", str1, str2);
+	scanf("%s\n%s", str, str2);
 
-	if (strcmp(str1, str2) > 0)
+	if (strcmp(str, str2) > 0)
 		printf("no");
 	else
 		printf("go");
 	
 }
 
-void p8545() // 거꾸로 출력
+void p8545() // 거꾸로 출력 (b2: 8545)
 {
-	scanf("%s", str1);
+	scanf("%s", str);
 
-	len = strlen(str1);
+	len = strlen(str);
 	while(--len >= 0)
-		printf("%c", str1[len]);
+		printf("%c", str[len]);
 }
 
-void p9086() // 첫글자 끝글자
-{
-	scanf("%d", &T);
-	while (++t <= T)
-	{
-		scanf(" %[^\n]s", str1);
-		printf("%c", *str1);
-		i = 0;
-		while(str1[i])
-			i++;
-		printf("%c\n", str1[i - 1]);
-	}
-}
-// 한 문장에 공백 포함시 scanf(" %[^\n]s", str1);
+// 한 문장에 공백 포함시 scanf(" %[^\n]s", str);
 int main()
 {
-	NONE2();
+	인덱싱();
 	// sorting, greedy
 	// data_structures: linked_list stack queue deque
 }
+
+//: 테스트 케이스 갯수만큼 입력받기
+//	scanf("%d", &T);
+//	while (++t <= T)
+//	{
+//		getchar();
+//		scanf(" %[^\n]s", str);
+//		printf("%s\n", str);
+//	}
+//
+///: EOF 까지 입력받기
+///	while ( scanf(" %[^\n]s", str) != EOF )
+///		printf("%s\n", str);
+///
 
 // 문자열 dest에 src를 size-1 바이트 덮어쓰고 쟁여둔 한 자리 널을넣는 함수
 size_t strlcpy(char *dst, const char *src, size_t size)
