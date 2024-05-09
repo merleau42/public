@@ -1,3 +1,6 @@
+#include <unistd.h>
+// 출력 ㅡ 영역(값)▶콘솔 ㅡ write
+
 #include <stdio.h>
 // 출력 ㅡ 영역(값)▶콘솔 ㅡ printf
 // 입력 ㅡ 영역(값)▶변수 ㅡ scanf
@@ -39,6 +42,7 @@ char *entered[1000000];
 char enter;
 int i, j, k;
 int r, c, h;
+int x, y, z;
 int n, m;
 int scanned;
 
@@ -108,8 +112,23 @@ void 길이()
 
 void 인덱싱()
 {
-	scanf("%d", &n);
-	printf("%c", "WelcomeToSMUPC"[(n - 1) % 14]);
+	//: 반복되는 문자열 전체에서 n번째 접근
+	// printf("%c", "WelcomeToSMUPC"[(n - 1) % 14]);
+	// printf("%c", str[(n - 1) % strlen(str)]);
+
+	//: 문자열 끝에서 다섯 글자만 출력
+	// write(1, str + len - 5, 5);
+
+	//: 마침표 없는 문장에 마침표 찍기
+	// if (str[strlen(str) - 1] == '.')
+	// 	printf("%s\n", str);
+	// else
+	// 	printf("%s.\n", str);
+}
+
+void 가공()
+{
+	;
 }
 
 void 분류하기()
@@ -151,7 +170,6 @@ void 포함()
 void 문자열비교()
 {
 	//: 더 짧은 문자열 혹은 아스키코드상 앞서는 문자열을 출력
-	// scanf("%s\n%s", str1, str2);
 	// if (strcmp(str1, str2) > 0)
 	// 	printf("str2");
 	// else
@@ -163,13 +181,17 @@ void 문자열비교()
 	//	printf("skipped\n");
 	//	return ;
 	// }
+
+	//: 일치하는 문자열의 갯수
+	// if (strcmp(str1, str2) == 0)
+	// 	count++;
 }
 
 void 문자판독()
 {
 	i = -1;
 	count = 0;
-	while(str[++i])
+	while(str[++i]) //: 문자열 순회중
 	{
 		//: 대문자를 소문자로 전환, 소문자를 대문자로 전환
 		// if('A' <= str[i] && str[i] <= 'Z')
@@ -180,8 +202,8 @@ void 문자판독()
 		// 	printf("%c", str[i]);
 
 		//:	알파벳 모음 갯수
-		if (strchr("aeiouAEIOU", str[i]) != NULL)
-			count++;
+		// if (strchr("aeiouAEIOU", str[i]) != NULL)
+		// 	count++;
 
 		//: 일부 알파벳만 대소문자 전환 (e,E) <---> (i,I)
 		// if ('e' == str[i] || 'E' == str[i])
@@ -190,6 +212,14 @@ void 문자판독()
 		// 	printf("%c", str[i] - 9 + 5);
 		// else
 		// 	printf("%c", str[i]);
+
+		//: 문자마다 가중치를 달리하여서 합산
+		// if (':' == str[i])
+		// 	count += 2;
+		// else if ('_' == str[i])
+		// 	count += 6;
+		// else
+		// 	count += 1;
 	}
 	// printf("\n");
 	printf("%d\n", count);
@@ -217,17 +247,21 @@ void 문자열뒤집기()
 
 void 계수()
 {
-	i = 0;
-	while(str[i])
-	{
+	//: 존재 배열에 문자의 갯수를 기록
+	i = -1;
+	while(str[++i])
 		exist[str[i]]++;
-		i++;
-	}
-	i = 'a';
-	while(i <= 'z')
-	{
-		printf("%d ", exist[i++]);
-	}
+
+	//: 알파벳 소문자의 수집 상태를 표시
+	// i = 'a';
+	// while(i <= 'z')
+	// 	printf("%d ", exist[i++]);
+	
+	//: 문자들의 수집 여부를 확인
+	if (exist['M'] * exist['O'] * exist['B'] * exist['I'] * exist['S'])
+		printf("YES");
+	else
+		printf("NO");
 }
 
 void 축약()
@@ -250,6 +284,15 @@ void 축약()
 		printf("%c", *entered[k++]);
 }
 
+void 형식문자열()
+{
+	scanf("%d + %d = %d", &x, &y, &z); getchar();
+	if (x + y == z)
+		printf("YES");
+	else
+		printf("NO");
+}
+
 // sorting, greedy, data_structures
 
 int main() {
@@ -257,23 +300,25 @@ int main() {
 	// -1: 사실상 무한대, 종료 신호까지  /  0: 스킵
 	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수가 주어짐
 	
-	// (r,c,h) (n,m,k) 등 주어지는 경우 먼저 받음.
-	scanf("%d %d", &r, &c); getchar();
-
-	T = 0;
+	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 받음.
+	// 비교 문자열이 주어지면, str1 str2로 사용후 복구하기.
+	// scanf("%s", str1); getchar();
+	
+	T = 1;
 	if (T == 2)	{
 		scanf("%d", &T);
 		getchar();
 	}
-	t = 0;
+	t = 1;
 	while (++t <= T) {
 		if (t > 1) getchar();
 		scanned = scanf("%[^\n]s", str);
 		if (scanned == EOF || strcmp(str, "END") == 0)
 			break;
-		누적();
+		계수();
 		// printf("%d. %s\n", t, str);
 	}
+	// printf("%d", count);
 
 	if (r > 0 && c > 0) { // 행렬이 주어짐
 		for (int i = 1; i <= r; i++) {
@@ -285,7 +330,6 @@ int main() {
 			// }
 		}
 	}
-
 }
 
 // 문자열 배열에서 str이 존재하면 처음 발견한 인덱스를 리턴
