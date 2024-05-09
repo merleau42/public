@@ -53,7 +53,7 @@ void 파싱2()
 	if (!strcmp(str, "P=NP"))
 	{
 		printf("skipped\n");
-		continue;
+		// continue;
 	}
 	parsed = split(str, '+');
 	printf("%d\n", atoi(parsed[0]) + atoi(parsed[1]));
@@ -166,23 +166,25 @@ void 문자판독()
 	count = 0;
 	while(str[++i])
 	{
-		//: 대문자를 소문자로 출력, 소문자를 대문자로 출력
+		//: 대문자를 소문자로 전환, 소문자를 대문자로 전환
 		// if('A' <= str[i] && str[i] <= 'Z')
 		// 	printf("%c", str[i] + 32);
 		// else if('a' <= str[i] && str[i] <= 'z')
 		// 	printf("%c", str[i] - 32);
+		// else
+		// 	printf("%c", str[i]);
 
-		//:	알파벳 모음 세기
+		//:	알파벳 모음 갯수
 		// if (strchr("aeiouAEIOU", str[i]) != NULL)
 		// 	count++;
 
-		//: (e,E) <---> (i,I)
-		if ('e' == str[i] || 'E' == str[i])
-			printf("%c", str[i] - 5 + 9);
-		else if ('i' == str[i] || 'I' == str[i])
-			printf("%c", str[i] - 9 + 5);
-		else
-			printf("%c", str[i]);
+		//: 일부 알파벳만 대소문자 전환 (e,E) <---> (i,I)
+		// if ('e' == str[i] || 'E' == str[i])
+		// 	printf("%c", str[i] - 5 + 9);
+		// else if ('i' == str[i] || 'I' == str[i])
+		// 	printf("%c", str[i] - 9 + 5);
+		// else
+		// 	printf("%c", str[i]);
 	}
 	printf("\n");
 	// printf("%d\n", count);
@@ -240,10 +242,13 @@ int main()
 {	// T = 테스트 케이스 유형
 	// -1: 사실상 무한대, 종료 신호까지  /  0: 수동 조작
 	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수 주어짐
-	T = -1;
-	if (T == 2)
-		scanf("%d", &T);
+	T = 2;
 	if (T >= 1)	{
+		if (T == 2)
+		{
+			scanf("%d", &T);
+			getchar();
+		}
 		t = 0;
 		while (++t <= T) {
 			if (t > 1) getchar();
