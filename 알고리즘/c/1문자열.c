@@ -1,9 +1,9 @@
 #include <unistd.h>
-// 출력 ㅡ 영역(값)▶콘솔 ㅡ write
+// 출력 ㅡ write
 
 #include <stdio.h>
-// 출력 ㅡ 영역(값)▶콘솔 ㅡ printf
-// 입력 ㅡ 영역(값)▶변수 ㅡ scanf
+// 출력 ㅡ printf
+// 입력 ㅡ scanf
 
 #include <stdlib.h>
 // 변환 ㅡ atoi, itoa
