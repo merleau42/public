@@ -34,6 +34,7 @@ int i, j, k;
 int r, c, h;
 int x, y, z;
 int scanned;
+char ch;
 
 void 중첩반복문()
 {
@@ -90,17 +91,14 @@ void 정수론()
 		printf("0");
 }
 
-void 비교()
+void 대소비교()
 {
-	if (90 <= a && a <= 100)		printf("A");
-	else if (80 <= a && a <= 89)	printf("B");
-	else if (70 <= a && a <= 79)	printf("C");
-	else if (60 <= a && a <= 69)	printf("D");
-	else 							printf("F");
+	if (x )
+}
 
-	if (a > b)		printf(">");
-	if (a == b)		printf("==");
-	if (a < b)		printf("<");
+void 서식지정자()
+{
+	printf("%d", ch);
 }
 
 void 단순출력()
@@ -119,11 +117,11 @@ void 단순출력()
 	printf("||_/=\\\\__|\n");
 }
 
-void 수열()
-{
-	if (m < x)
-	printf("%d ", x)
-	;
+void 수열() {
+	i = 1;
+	while (i <= x)
+		printf("%d\n", i++);
+
 }
 
 int main() {
@@ -133,38 +131,44 @@ int main() {
 	
 	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 앞에서 받음.
 	// 비교 문자열이 주어지면, str1 str2로 쓰고 str로 복원하기.
-	scanf("%d %d", &n, &m); getchar();
+	// scanf("%d", &n); getchar();
+	// scanf("%d %d", &n, &m); getchar();
 	// scanf("%s", str1); getchar();
 
-	T = -1;
+	T = 2;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
 	}
-	for (size_t t=1; t <= T; t++) {
+	for (size_t t = 1; t <= T; t++) {
+		//: scanf가 버퍼에 남겨놓은 공백 제거
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		scanned = scanf("%d", &x);
-		if (scanned == EOF || x != 'sign')
+		if (scanf("%d", &x) == EOF) // || x = '종료신호')
 			break;
-		
+
 		//: 테스트 케이스를 라인으로 구분하는 경우
-		// scanned = scanf("%[^\n]s", str);
-		// if (scanned == EOF || strcmp(str, "종료신호") == 0)
-			// break;
-		
-		//: 입력 받아서 실행할 내용
-		수열();
+		// if (scanf("%[^\n]s", str) == EOF || strcmp(str, "종료신호") == 0)
+		// 	break;
+
+		//: 테스트 케이스마다 실행할 내용
+		// 대소비교();
 		// printf("%d. %s\n", t, str);
+		
+		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
+		scanf("%d", &seri[t - 1]);
+		getchar();
 	}
+	//: 입력이 완료되었거나, 비정형적으로 입력받는 경우 (T = 0)
 	// printf("%d", count);
 
+	//: 
 	if (r > 0 && c > 0) { // 행렬이 주어짐
 		for (int i = 1; i <= r; i++) {
 			if (i > 1) getchar();
 			scanf("%[^\n]s", str);
-			비교();
+			대소비교();
 			// for (int j = 1; i <= c; j++){
 			// 	;
 			// }
