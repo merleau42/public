@@ -177,6 +177,11 @@ void 단순출력()
 
 }
 
+void 제목없음() {
+	str2 = ":fan:";
+	printf("%s%s%s\n%s%s%s\n%s%s%s",str1,str1,str1,str1,str2,str1,str1,str1,str1)
+}
+
 void 수열() {
 	i = 1;
 	while (i <= x)
@@ -193,12 +198,13 @@ int main() {
 	// scanf("%d, %d", r, c);
 	// scanf("%d, %d, %d", r, c, h);
 	// scanf("%d", &n);
-	scanf("%d %d", &n, &m);
+	// scanf("%d %d", &n, &m);
 	// scanf("%d %d %d", &n, &m, &k);
 	// getchar();
 
 	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 되돌리기.
-	// scanf("%s", str1);
+	// scanf("%s", str);
+	scanf("%s", str1);
 	// getchar();
 
 	T = 0;
@@ -230,7 +236,7 @@ int main() {
 	// scanf("%d", &x);
 
 	//: 입력이 종료되면 실행할 내용
-	비교();
+	제목없음();
 
 	//: 테스트 케이스가 행렬로 주어지는 경우
 	if (r > 0 && c > 0) {
