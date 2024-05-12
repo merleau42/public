@@ -21,6 +21,7 @@ char **parsed;
 char str[1000000]; int len;
 char str1[1000000]; int len1;
 char str2[1000000]; int len2;
+char *words[10000];
 char exist[256];
 int count;
 int sum;
@@ -62,12 +63,14 @@ void 중첩반복문()
 
 void 사칙연산()
 {
-
-	while ()
+	int i;
+	i = 0;
+	while (i < x/4)
 	{
-
+		printf("long ");
+		i++;
 	}
-	
+	printf("int");
 }
 
 void 정밀도()
@@ -78,13 +81,21 @@ void 정밀도()
 void 정수론()
 {
 	// 윤년은 연도가 4의 배수이면서, 100의 배수가 아닐 때 또는 400의 배수일 때이다.
-	if (year % 4 == 0 && ( year % 100 != 0 || year % 400 == 0 ))
+	if (y % 4 == 0 && ( y % 100 != 0 || y % 400 == 0 ))
 		printf("1");
 	else 
 		printf("0");
 }
 
-void 대소비교()
+void 비교()
+{
+	if (n == m)
+		printf("1");
+	else
+		printf("0");
+}
+
+void 수열순회()
 {
 	int i;
 
@@ -104,11 +115,16 @@ void 서식지정자()
 	printf("%d", ch);
 }
 
+void 케이스()
+{
+	if (n == 0)
+		printf("YONSEI");
+	if (n == 1)
+		printf("Leading the Way to the Future");
+}
+
 void 단순출력()
 {
-	//: 강아지1
-	// printf("|\\_/|\n|?q p|   /}\n( 0 )\"\"\"\\\n|\"^\"`    |\n||_/=\\\\__|");
-
 	//: 강아지2
 	// printf("|\\_/|\n");
 	// printf("|q p|   /}\n");
@@ -117,12 +133,48 @@ void 단순출력()
 	// printf("||_/=\\\\__|\n");
 
 	//: 새싹
-	printf("         ,r'\"7\n");
-	printf("r`-_   ,'  ,/\n");
-	printf(" \\. \". L_r'\n");
-	printf("   `~\\/\n");
-	printf("      |\n");
-	printf("      |");
+	// printf("         ,r'\"7\n");
+	// printf("r`-_   ,'  ,/\n");
+	// printf(" \\. \". L_r'\n");
+	// printf("   `~\\/\n");
+	// printf("      |\n");
+	// printf("      |");
+
+	//: 분해해서 출력
+	// words[1] = "       ";
+	// words[2] = "_.-;;-._";
+	// words[3] = "'-..-'";
+	// words[4] = "|   ||   |";
+	// words[5] = "|_.-;;-._|";
+	// words[6] = "|_.-''-._|";
+
+	// printf("%s%s\n%s%s\n%s%s\n%s%s\n%s%s",
+	// 	words[1], words[2], words[3], words[4], words[3], words[5], words[3], words[4], words[3], words[6]);
+
+	//: 스타워즈
+	// printf("    8888888888  888    88888\n");
+	// printf("   88     88   88 88   88  88\n");
+	// printf("    8888  88  88   88  88888\n");
+	// printf("       88 88 888888888 88   88\n");
+	// printf("88888888  88 88     88 88    888888\n\n");
+	// printf("88  88  88   888    88888    888888\n");
+	// printf("88  88  88  88 88   88  88  88\n");
+	// printf("88 8888 88 88   88  88888    8888\n");
+	// printf(" 888  888 888888888 88  88      88\n");
+	// printf("  88  88  88     88 88   88888888");
+
+	//: 콜센터
+	// printf("     /~\\\n");
+	// printf("    ( oo|\n");
+	// printf("    _\\=/_\n");
+	// printf("   /  _  \\\n");
+	// printf("  //|/.\\|\\\\\n");
+	// printf(" ||  \\ /  ||\n");
+	// printf("============\n");
+	// printf("|          |\n");
+	// printf("|          |\n");
+	// printf("|          |\n");
+
 }
 
 void 수열() {
@@ -141,7 +193,7 @@ int main() {
 	// scanf("%d, %d", r, c);
 	// scanf("%d, %d, %d", r, c, h);
 	// scanf("%d", &n);
-	// scanf("%d %d", &n, &m);
+	scanf("%d %d", &n, &m);
 	// scanf("%d %d %d", &n, &m, &k);
 	// getchar();
 
@@ -149,7 +201,7 @@ int main() {
 	// scanf("%s", str1);
 	// getchar();
 
-	T = 1;
+	T = 0;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
@@ -159,7 +211,7 @@ int main() {
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		if (scanf("%d", &x) == EOF) // || x = '종료신호')
+		if (scanf("%d", &n) == EOF)// || (x == 0) && (y == 0))
 			break;
 
 		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
@@ -170,6 +222,7 @@ int main() {
 		// 	break;
 
 		//: 테스트 케이스마다 실행할 내용
+		// 단순출력();
 		// printf("%d. %s\n", t, str);
 		
 	}
@@ -177,14 +230,14 @@ int main() {
 	// scanf("%d", &x);
 
 	//: 입력이 종료되면 실행할 내용
-	단순출력();
+	비교();
 
-	//: 행렬이 주어지는 경우
+	//: 테스트 케이스가 행렬로 주어지는 경우
 	if (r > 0 && c > 0) {
 		for (int i = 1; i <= r; i++) {
 			if (i > 1) getchar();
 			scanf("%[^\n]s", str);
-			대소비교();
+			비교();
 			// for (int j = 1; i <= c; j++){
 			// 	;
 			// }
