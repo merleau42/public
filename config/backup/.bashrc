@@ -14,7 +14,7 @@ export NAME="get_next_line";
 
 alias d="clear; cd $dev; echo $msg_d; pwd; ls";
 alias e="clear; cd $dev/exercises; pwd; ls";
-alias b="clear; cd $dev/알고리즘/c; pwd; ls";
+alias alc="clear; cd $dev/알고리즘/c; pwd; ls";
 
 alias f="clear; cd $FT/finish; pwd; ls";
 alias r="clear; cd $FT/rendu; echo $msg_r; pwd; ls";
