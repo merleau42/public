@@ -34,7 +34,7 @@ int x, y, z;
 int n, m;
 int scanned;
 
-int 반복문중첩()
+int 중첩반복문()
 {
 	int i, mini, maxi;
 	int j, minj, maxj;
@@ -130,17 +130,22 @@ void 단순출력()
 	printf("||_/=\\\\__|\n");
 }
 
-
+void 수열()
+{
+	
+	;
+}
 
 int main() {
 	// T = 테스트 케이스의 유형 (자료형 size_t)
 	// -1: 사실상 무한대, 종료 신호까지  /  0: 스킵
 	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수가 주어짐
 	
-	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 받음.
-	// 비교 문자열이 주어지면, str1 str2로 사용후 복구하기.
+	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 앞에서 받음.
+	// 비교 문자열이 주어지면, str1 str2로 쓰고 str로 복원하기.
+	scanf("%d, %d", &n, &m);
 	// scanf("%s", str1); getchar();
-	
+
 	T = 1;
 	if (T == 2)	{
 		scanf("%zd", &T);
@@ -151,7 +156,7 @@ int main() {
 		scanned = scanf("%[^\n]s", str);
 		if (scanned == EOF || strcmp(str, "END") == 0)
 			break;
-		포함2();
+		수열();
 		// printf("%d. %s\n", t, str);
 	}
 	// printf("%d", count);
@@ -160,7 +165,7 @@ int main() {
 		for (int i = 1; i <= r; i++) {
 			if (i > 1) getchar();
 			scanf("%[^\n]s", str);
-			파싱();
+			비교();
 			// for (int j = 1; i <= c; j++){
 			// 	;
 			// }
