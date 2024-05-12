@@ -110,9 +110,17 @@ void 수열순회()
 	printf("%d", count);
 }
 
-void 서식지정자()
+void 서식()
 {
-	printf("%d", ch);
+	//: char 변수를 %d로 출력
+	// printf("%d", ch);
+
+
+	//: 팬들에게 둘러쌓인 홍준
+	// char *fan;
+	// fan = ":fan:";
+	// printf("%s%s%s\n%s:%s:%s\n%s%s%s",fan,fan,fan,fan,str1,fan,fan,fan,fan);
+	printf(":fan::fan::fan:\n:fan::%s::fan:\n:fan::fan::fan:",str1);
 }
 
 void 케이스()
@@ -174,12 +182,9 @@ void 단순출력()
 	// printf("|          |\n");
 	// printf("|          |\n");
 	// printf("|          |\n");
-
 }
 
 void 제목없음() {
-	str2 = ":fan:";
-	printf("%s%s%s\n%s%s%s\n%s%s%s",str1,str1,str1,str1,str2,str1,str1,str1,str1)
 }
 
 void 수열() {
@@ -204,7 +209,7 @@ int main() {
 
 	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 되돌리기.
 	// scanf("%s", str);
-	scanf("%s", str1);
+	// scanf("%s", str1);
 	// getchar();
 
 	T = 0;
@@ -236,7 +241,8 @@ int main() {
 	// scanf("%d", &x);
 
 	//: 입력이 종료되면 실행할 내용
-	제목없음();
+	// 한별이();
+	printf("#  # #### #### #  #\n#### #  # #  # # #\n#### #  # #  # # #\n#  # #### #### #  #");
 
 	//: 테스트 케이스가 행렬로 주어지는 경우
 	if (r > 0 && c > 0) {
