@@ -3,5 +3,6 @@
 // 완전탐색
 number.anagrams.filter('30의배수').filter(max)
 
+
 // 조건을 활용한 그리디
 number.filter('30의배수').anagrams.filter(max)

@@ -6,15 +6,14 @@
 // 입력 ㅡ 영역(값)▶변수 ㅡ scanf
 
 #include <stdlib.h>
-// 변환 ㅡ 배열▶정수 ㅡ atoi
-// 변환 ㅡ 정수▶배열 ㅡ itoa
-// 할당 ㅡ 배열▶영역 ㅡ malloc, calloc
+// 변환 ㅡ atoi, itoa
+// 할당 ㅡ malloc, calloc
 
 #include <string.h>
-// 대입 ㅡ 값▶영역 ㅡ memset, bzero
-// 비교 ㅡ 값▶값 ㅡ strlen, strchr, strrchr, memchr
-// 비교 ㅡ 영역▶영역 ㅡ strncmp, memcmp, strnstr
-// 복제 ㅡ 영역▶영역 ㅡ strdup, memmove, strlcpy, strlcat
+// 대입 ㅡ memset, bzero
+// 탐색 ㅡ strlen, strchr, strrchr, memchr, strstr
+// 비교 ㅡ strncmp, memcmp
+// 복제 ㅡ strdup, memmove, strlcpy, strlcat
 
 int includes(char **strs, char *str);
 size_t word_count(char const *s, char c);
@@ -143,7 +142,7 @@ void 분류하기()
 		printf("St. Johnsbury Academy");
 }
 
-void 포함()
+void 포함1()
 {
 	char *said[8] =
 		{"Never gonna give you up",
@@ -156,15 +155,31 @@ void 포함()
 		NULL};
 
 	char *msg = "No";
-	scanf("%d", &T);
-	while (++t <= T)
+	if (includes(said, str) == -1)
+		msg = "Yes";
+}
+
+void 포함2()
+{
+	// DKKSSH
+	// HDKSHDDKS
+	// SDKSHSSDKSHS
+	char *new_str;
+
+	count = 0;
+	new_str = str;
+	while (strlen(new_str) >= 4)
 	{
-		getchar();
-		scanf("%[^\n]s", str);
-		if (includes(said, str) == -1)
-			msg = "Yes";
+		new_str = strstr(new_str, "DKSH");
+		if (new_str)
+		{
+			new_str += 4;
+			count++;
+		}
+		else
+			break;
 	}
-	printf("%s", msg);
+	printf("%d", count);
 }
 
 void 문자열비교()
@@ -231,7 +246,7 @@ void 순서뒤집기() // 스택으로 다시 풀어보기
 	rewind_ = parsed;
 	while (*parsed)
 		parsed++;
-	printf("Case #%d: ", t);
+	printf("Case #%zd: ", t);
 	while (parsed != rewind_)
 		printf("%s ", *--parsed);
 	printf("\n");
@@ -250,7 +265,7 @@ void 계수()
 	//: 존재 배열에 문자의 갯수를 카운팅
 	i = -1;
 	while(str[++i])
-		exist[str[i]]++;
+		exist[(int) str[i]]++;
 
 	//: 알파벳 소문자의 수집 상태를 표시
 	// i = 'a';
@@ -311,15 +326,15 @@ int main() {
 	
 	T = 1;
 	if (T == 2)	{
-		scanf("%d", &T);
+		scanf("%zd", &T);
 		getchar();
 	}
-	for (int t=1; t <= T; t++) {
+	for (size_t t=1; t <= T; t++) {
 		if (t > 1) getchar();
 		scanned = scanf("%[^\n]s", str);
 		if (scanned == EOF || strcmp(str, "END") == 0)
 			break;
-		슬라이딩윈도우();
+		포함2();
 		// printf("%d. %s\n", t, str);
 	}
 	// printf("%d", count);
@@ -337,6 +352,7 @@ int main() {
 }
 
 // 문자열 배열에서 str이 존재하면 처음 발견한 인덱스를 리턴
+// srtstr은 문자열에 str이 존재하는지, include는 문자열 모임에 존재하는지 확인
 int includes(char **strs, char *str)
 {
 	int index;
