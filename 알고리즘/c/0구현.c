@@ -62,28 +62,21 @@ void 중첩반복문()
 
 void 사칙연산()
 {
-	int a, b;
-	scanf("%d %d", &a, &b);
 
-	printf("%d\n", a + b);
-	printf("%d\n", a - b);
-	printf("%d\n", a * b);
-	printf("%d\n", a / b);
-	printf("%d", a % b);
+	while ()
+	{
+
+	}
+	
 }
 
 void 정밀도()
 {
-	int a,b;
-	scanf("%d %d", &a, &b);
 	printf("%.10f", (double)a / b);
 }
 
 void 정수론()
 {
-	int year;
-	scanf("%d", &year);
-	
 	// 윤년은 연도가 4의 배수이면서, 100의 배수가 아닐 때 또는 400의 배수일 때이다.
 	if (year % 4 == 0 && ( year % 100 != 0 || year % 400 == 0 ))
 		printf("1");
@@ -93,8 +86,17 @@ void 정수론()
 
 void 대소비교()
 {
-	// if (x )
-	;
+	int i;
+
+	i = 0;
+	while(i < T)
+	{
+		if (seri[i] == x)
+			count++;
+		i++;
+	}
+	
+	printf("%d", count);
 }
 
 void 서식지정자()
@@ -104,18 +106,23 @@ void 서식지정자()
 
 void 단순출력()
 {
-	// 고양이
-	printf("\\    /\\\n )  ( ')\n(  /  )\n \\(__)|");
+	//: 강아지1
+	// printf("|\\_/|\n|?q p|   /}\n( 0 )\"\"\"\\\n|\"^\"`    |\n||_/=\\\\__|");
 
-	// 강아지1
-	printf("|\\_/|\n|q p|   /}\n( 0 )\"\"\"\\\n|\"^\"`    |\n||_/=\\\\__|");
+	//: 강아지2
+	// printf("|\\_/|\n");
+	// printf("|q p|   /}\n");
+	// printf("( 0 )\"\"\"\\\n");
+	// printf("|\"^\"`    |\n");
+	// printf("||_/=\\\\__|\n");
 
-	// 강아지2
-	printf("|\\_/|\n");
-	printf("|q p|   /}\n");
-	printf("( 0 )\"\"\"\\\n");
-	printf("|\"^\"`    |\n");
-	printf("||_/=\\\\__|\n");
+	//: 새싹
+	printf("         ,r'\"7\n");
+	printf("r`-_   ,'  ,/\n");
+	printf(" \\. \". L_r'\n");
+	printf("   `~\\/\n");
+	printf("      |\n");
+	printf("      |");
 }
 
 void 수열() {
@@ -142,21 +149,21 @@ int main() {
 	// scanf("%s", str1);
 	// getchar();
 
-	T = 2;
+	T = 1;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
 	}
 	for (size_t t = 1; t <= T; t++) {
-		//: scanf가 버퍼에 남겨놓은 공백 제거
+		//: scanf가 버퍼에 남겨놓은 공백이 있다면 제거
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		// if (scanf("%d", &x) == EOF) // || x = '종료신호')
-		// 	break;
+		if (scanf("%d", &x) == EOF) // || x = '종료신호')
+			break;
 
 		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
-		scanf("%d", &seri[t - 1]);
+		// scanf("%d", &seri[t - 1]);
 
 		//: 테스트 케이스를 라인으로 구분하는 경우
 		// if (scanf("%[^\n]s", str) == EOF || strcmp(str, "종료신호") == 0)
@@ -167,10 +174,10 @@ int main() {
 		
 	}
 	//: 추가적으로 입력을 받거나, 위의 방식으로 입력을 받지 않는 경우 (T = 0)
-	scanf("%d", &x);
+	// scanf("%d", &x);
 
 	//: 입력이 종료되면 실행할 내용
-	대소비교();
+	단순출력();
 
 	//: 행렬이 주어지는 경우
 	if (r > 0 && c > 0) {

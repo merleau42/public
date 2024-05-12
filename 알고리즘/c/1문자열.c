@@ -316,34 +316,58 @@ void 슬라이딩윈도우()
 // sorting, greedy, data_structures
 
 int main() {
-	// T = 테스트 케이스의 유형 (자료형 size_t)
-	// -1: 사실상 무한대, 종료 신호까지  /  0: 스킵
-	//  1: 한 줄의 입력만 주어짐  /  2: 입력 횟수가 주어짐
-	
-	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 받음.
-	// 비교 문자열이 주어지면, str1 str2로 사용후 복구하기.
-	// scanf("%s", str1); getchar();
-	
-	T = 1;
+	//: T의 값을 달리하여 테스트 케이스의 유형에 대응함
+	// -1: 사실상 무한대, 종료 신호까지 입력받음 /  0: 스킵
+	//  1: 한 줄의 입력만 주어짐  /  2: 입력받는 횟수가 주어짐
+
+	//: (r,c,h) (n,m,k) (x,y,z) 등이 주어지는 경우 앞에서 먼저 받음.
+	// scanf("%d, %d", r, c);
+	// scanf("%d, %d, %d", r, c, h);
+	// scanf("%d", &n);
+	// scanf("%d %d", &n, &m);
+	// scanf("%d %d %d", &n, &m, &k);
+	// getchar();
+
+	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 되돌리기.
+	// scanf("%s", str1);
+	// getchar();
+
+	T = 2;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
 	}
-	for (size_t t=1; t <= T; t++) {
+	for (size_t t = 1; t <= T; t++) {
+		//: scanf가 버퍼에 남겨놓은 공백 제거
 		if (t > 1) getchar();
-		scanned = scanf("%[^\n]s", str);
-		if (scanned == EOF || strcmp(str, "END") == 0)
-			break;
-		포함2();
-		// printf("%d. %s\n", t, str);
-	}
-	// printf("%d", count);
 
-	if (r > 0 && c > 0) { // 행렬이 주어짐
+		//: 테스트 케이스를 공백으로 구분하는 경우
+		// if (scanf("%d", &x) == EOF) // || x = '종료신호')
+		// 	break;
+
+		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
+		scanf("%d", &seri[t - 1]);
+
+		//: 테스트 케이스를 라인으로 구분하는 경우
+		// if (scanf("%[^\n]s", str) == EOF || strcmp(str, "종료신호") == 0)
+		// 	break;
+
+		//: 테스트 케이스마다 실행할 내용
+		// printf("%d. %s\n", t, str);
+		
+	}
+	//: 추가적으로 입력을 받거나, 위의 방식으로 입력을 받지 않는 경우 (T = 0)
+	scanf("%d", &x);
+
+	//: 입력이 종료되면 실행할 내용
+	대소비교();
+
+	//: 행렬이 주어지는 경우
+	if (r > 0 && c > 0) {
 		for (int i = 1; i <= r; i++) {
 			if (i > 1) getchar();
 			scanf("%[^\n]s", str);
-			파싱();
+			대소비교();
 			// for (int j = 1; i <= c; j++){
 			// 	;
 			// }
