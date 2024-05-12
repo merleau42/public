@@ -132,7 +132,7 @@ void 단순출력()
 
 void 수열()
 {
-	
+	printf("%d ", )
 	;
 }
 
@@ -143,7 +143,7 @@ int main() {
 	
 	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 앞에서 받음.
 	// 비교 문자열이 주어지면, str1 str2로 쓰고 str로 복원하기.
-	scanf("%d, %d", &n, &m);
+	scanf("%d", &n);
 	// scanf("%s", str1); getchar();
 
 	T = 1;
@@ -152,10 +152,19 @@ int main() {
 		getchar();
 	}
 	for (size_t t=1; t <= T; t++) {
-		if (t > 1) getchar();
-		scanned = scanf("%[^\n]s", str);
-		if (scanned == EOF || strcmp(str, "END") == 0)
-			break;
+		if (t > 1)getchar();
+
+		//: 테스트 케이스를 공백으로 구분하는 경우
+		scanned = scanf("%d", x);
+		if (scanned == EOF || x == '#')
+			break
+		
+		//: 테스트 케이스를 한 줄로 구분하는 경우
+		// scanned = scanf("%[^\n]s", str);
+		// if (scanned == EOF || strcmp(str, "END") == 0)
+			// break;
+		
+		//: 입력 받고 실행할 내용
 		수열();
 		// printf("%d. %s\n", t, str);
 	}

@@ -79,7 +79,11 @@
         "cpp": "c",
         "PRF.C": "cpp",
         "stddef.h": "c",
-        "암호": "c"
+        "암호": "c",
+        "*.yrf": "json",
+        "*.rpx": "xml",
+        "*.stl": "json",
+        "unistd.h": "c"
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",
