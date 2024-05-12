@@ -28,13 +28,14 @@ void *rewind_;
 int seri[1000000];
 char *entered[1000000];
 char enter;
+int a, b;
+int n, m;
 int i, j, k;
 int r, c, h;
 int x, y, z;
-int n, m;
 int scanned;
 
-int 중첩반복문()
+void 중첩반복문()
 {
 	int i, mini, maxi;
 	int j, minj, maxj;
@@ -58,7 +59,7 @@ int 중첩반복문()
 	}
 }
 
-int 사칙연산()
+void 사칙연산()
 {
 	int a, b;
 	scanf("%d %d", &a, &b);
@@ -70,14 +71,14 @@ int 사칙연산()
 	printf("%d", a % b);
 }
 
-int 정밀도()
+void 정밀도()
 {
 	int a,b;
 	scanf("%d %d", &a, &b);
 	printf("%.10f", (double)a / b);
 }
 
-int 정수론()
+void 정수론()
 {
 	int year;
 	scanf("%d", &year);
@@ -91,27 +92,15 @@ int 정수론()
 
 void 비교()
 {
-	int a, b;
+	if (90 <= a && a <= 100)		printf("A");
+	else if (80 <= a && a <= 89)	printf("B");
+	else if (70 <= a && a <= 79)	printf("C");
+	else if (60 <= a && a <= 69)	printf("D");
+	else 							printf("F");
 
-	scanf("%d", &a);
-	if (90 <= a && a <= 100)
-		printf("A");
-	else if (80 <= a && a <= 89)
-		printf("B");
-	else if (70 <= a && a <= 79)
-		printf("C");
-	else if (60 <= a && a <= 69)
-		printf("D");
-	else 
-		printf("F");
-
-	scanf("%d %d", &a, &b);
-	if (a > b)
-		printf(">");
-	if (a == b)
-		printf("==");
-	if (a < b)
-		printf("<");
+	if (a > b)		printf(">");
+	if (a == b)		printf("==");
+	if (a < b)		printf("<");
 }
 
 void 단순출력()
@@ -132,7 +121,8 @@ void 단순출력()
 
 void 수열()
 {
-	printf("%d ", )
+	if (m < x)
+	printf("%d ", x)
 	;
 }
 
@@ -143,28 +133,28 @@ int main() {
 	
 	// (r,c,h) (n,m,k) (x,y,z) 등 주어지는 경우 앞에서 받음.
 	// 비교 문자열이 주어지면, str1 str2로 쓰고 str로 복원하기.
-	scanf("%d", &n);
+	scanf("%d %d", &n, &m); getchar();
 	// scanf("%s", str1); getchar();
 
-	T = 1;
+	T = -1;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
 	}
 	for (size_t t=1; t <= T; t++) {
-		if (t > 1)getchar();
+		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		scanned = scanf("%d", x);
-		if (scanned == EOF || x == '#')
-			break
+		scanned = scanf("%d", &x);
+		if (scanned == EOF || x != 'sign')
+			break;
 		
-		//: 테스트 케이스를 한 줄로 구분하는 경우
+		//: 테스트 케이스를 라인으로 구분하는 경우
 		// scanned = scanf("%[^\n]s", str);
-		// if (scanned == EOF || strcmp(str, "END") == 0)
+		// if (scanned == EOF || strcmp(str, "종료신호") == 0)
 			// break;
 		
-		//: 입력 받고 실행할 내용
+		//: 입력 받아서 실행할 내용
 		수열();
 		// printf("%d. %s\n", t, str);
 	}
