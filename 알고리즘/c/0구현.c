@@ -24,9 +24,10 @@ char str2[1000000]; int len2;
 char *words[10000];
 char exist[256];
 int count;
+int found;
 int sum;
 void *rewind_;
-int seri[1000000];
+int ser[1000000];
 char *entered[1000000];
 char enter;
 int a, b;
@@ -51,7 +52,10 @@ void 중첩반복문()
 		while (j < max_j)
 		{
 			// printf("%d * %d = %d\n", i, j, i*j); // 구구단
-			printf("*"); // 별찍기
+
+			if (i >= j)
+			printf("*");
+
 			j++;
 		}
 		printf("\n");
@@ -124,37 +128,53 @@ void 범위()
 
 void 케이스()
 {
-	if (strcmp(str, "SONGDO") == 0 )
-		printf("HIGHSCHOOL");
+	//: 문자열에 대응하는 문자열을 출력 (키-밸류 방식)
+	// char *a[] = { "Algorithm", "DataAnalysis", "ArtificialIntelligence",
+	// 			"CyberSecurity", "Network",	"Startup", "TestStrategy" };
+	// char *b[] = { "204", "207", "302", "B101", "303", "501", "105" };
+	
+	// for (int i = 0; i < 7; i++)
+	// 	if (strcmp(str, a[i]) == 0 )
+	// 		printf("%s\n", b[i]);
 
-	else if (strcmp(str, "CODE") == 0 )
-		printf("MASTER");
-
-	else if (strcmp(str, "2023") == 0 )
-		printf("0611");
-
-	else if (strcmp(str, "ALGORITHM") == 0 )
-		printf("CONTEST");
-
+	//: 숫자에 대응하는 문자열을 출력
+	char *a[] = { "", "12 1600", "11 894", "11 1327", "10 1311", "9 1004", "9 1178", "9 1357", "8 837", "7 1055", "6 556", "6 773" };
+	printf("%s", a[x]);
 }
 
-void 수열순회()
+void 수열()
 {
-	int i;
+	int i, end;
 
-	i = 0;
-	while(i < T)
-	{
-		if (seri[i] == x) count++; // 수열의 원소 갯수
-		printf("%d\n"); // 
+	//: 수열의 순회
+	i = 0; end = T;
+	while (i < end) {
+
+		//: 값 비교
+		if (ser[i] != 0 && ser[i] != 1) {
+			// found++;		// 일치하는 값의 갯수
+			// count++;		// 일치하는 상태의 수
+			printf("F");		// 일치하는 경우 출력
+			// break;		// 일치하는 경우 종료
+			return;		// 일치하는 경우 종료
+		}
+
+		//: 원소 출력
+		// printf("%d ", ser[i]);
+
 		i++;
 	}
 	
-	printf("%d", count);
+	//: 수열의 정보 출력
+	// printf("%d", i);			// 수열의 원소 갯수
+	// printf("%d", found);		// 일치하는 값의 갯수
+	// printf("%d", count);		// 일치하는 상태의 수
+	printf("S");
 }
 
+// 4 1 1 3 0 9 6 7
 
-void 수열() {
+void 수열2() {
 	i = 1;
 	while (i <= x)
 		printf("%d\n", i++);
@@ -232,13 +252,16 @@ void 그대로출력()
 	// printf("|          |\n");
 	// printf("|          |\n");
 
+
+}
+
+void 반복()
+{
+	while(x--)
+		그대로출력();
 }
 
 int main() {
-	//: T의 값을 달리하여 테스트 케이스의 유형에 대응함
-	// -1: 사실상 무한대, 종료 신호까지 입력받음 /  0: 스킵
-	//  1: 한 줄의 입력만 주어짐  /  2: 입력받는 횟수가 주어짐
-
 	//: (r,c,h) (n,m,k) (x,y,z) 등이 주어지는 경우 앞에서 먼저 받음.
 	// scanf("%d %d", &r, &c);
 	// scanf("%d %d %d", &r, &c, &h);
@@ -250,29 +273,37 @@ int main() {
 	// scanf("%d %d %d", &x, &y, &z);
 	// getchar();
 
-	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 되돌리기.
+	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 돌려놓기.
 	// scanf("%s", str);
 	// scanf("%s", str1);
 	// getchar();
 
+	//: T의 값을 달리하여 테스트 케이스의 유형에 대응함
+	//  1: 한 줄의 입력만 주어짐 (T = 1)
+	//	0: 정형화되지 않은 입력 방식 (T = 0)
+	// -1: 사실상 무한대, 종료 신호까지 입력받음 (공E)
+	// -2: 입력받는 횟수가 주어짐 (공N)
+
 	T = 1;
-	if (T == 2)	{
+	if (T == -2) {
 		scanf("%zd", &T);
 		getchar();
 	}
-	for (size_t t = 1; t <= T; t++) {
+	t = 1;
+	while (t <= T) {
 		//: scanf가 버퍼에 남겨놓은 공백이 있다면 제거
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
 		if (scanf("%d", &x) == EOF) break;
 		// if (scanf("%s", str) == EOF || !strcmp(str, "END")) break;
-
-		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
-		scanf("%d", &seri[t - 1]);
+		// if (scanf("%d", &ser[t - 1]) == EOF) break; // 배열에 차곡차곡
 
 		//: 테스트 케이스를 라인으로 구분하는 경우
 		// if (scanf("%[^\n]s", str) == EOF || !strcmp(str, "0")) break;
+
+		//: 테스트 케이스를 서식대로 파싱하는 경우
+		// if()
 
 		//: 테스트 케이스마다 실행할 내용
 		// 중첩반복문();
@@ -281,16 +312,35 @@ int main() {
 		// 정수론();
 		// 중간값();
 		// 비교();
-		// 케이스();
-		// 수열순회();
+		케이스();
 		// 수열();
+		// 수열2();
 		// 비교();
 		// 범위();
+		// 반복();
 		// 그대로출력();
 		
+		//: 다음 테스트 케이스
+		t++;
 	}
-	//: 추가적으로 입력을 받거나, 위의 방식으로 입력을 받지 않는 경우
+	//: 추가로 입력을 받거나, 정형화되지 않은 방식으로 입력받는 경우
 	// scanf("%d", &x);
+
+	//: 입력을 마치면 실행할 내용
+	// 중첩반복문();
+	// 사칙연산();
+	// 정밀도();
+	// 정수론();
+	// 중간값();
+	// 비교();
+	// 케이스();
+	// 수열();
+	// 수열2();
+	// 비교();
+	// 범위();
+	// 반복();
+	// printf("%d", t - 1);		// 줄의 갯수
+	// 그대로출력();
 
 	//: 테스트 케이스가 행렬로 주어지는 경우
 	// for (int row = 1; row <= r; i++) {
@@ -298,19 +348,4 @@ int main() {
 	// 		;
 	// 	}
 	// }
-
-	//: 입력을 마치면 실행할 내용
-		// 중첩반복문();
-		// 사칙연산();
-		// 정밀도();
-		// 정수론();
-		// 중간값();
-		// 비교();
-		// 케이스();
-		// 수열순회();
-		// 수열();
-		// 비교();
-		// 범위();
-		// 그대로출력();
-
 }
