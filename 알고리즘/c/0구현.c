@@ -34,29 +34,27 @@ int n, m;
 int i, j, k;
 int r, c, h;
 int x, y, z;
-int scanned;
 char ch;
+char *tmp;
 
 void 중첩반복문()
 {
-	int i, mini, maxi;
-	int j, minj, maxj;
-	int row, col;
-	int a, b;
+	int i;
+	int j;
+	int min_j = 0, max_j = c;
+	int min_i = 0, max_i = r;
 
-	scanf("%d", &a);
-
-	i = mini;
-	while (i <= maxi)
+	i = min_i;
+	while (i < max_i)
 	{
-		j = minj;
-		while (j <= maxj)
+		j = min_j;
+		while (j < max_j)
 		{
-			printf("%d * %d = %d\n", i, j, i*j); // 구구단
+			// printf("%d * %d = %d\n", i, j, i*j); // 구구단
 			printf("*"); // 별찍기
 			j++;
 		}
-		// printf("\n");
+		printf("\n");
 		i++;
 	}
 }
@@ -65,12 +63,11 @@ void 사칙연산()
 {
 	int i;
 	i = 0;
-	while (i < x/4)
+	while (i < x)
 	{
-		printf("long ");
+		printf("SciComLove\n");
 		i++;
 	}
-	printf("int");
 }
 
 void 정밀도()
@@ -87,12 +84,58 @@ void 정수론()
 		printf("0");
 }
 
+int 중간값()
+{
+	int max;
+	max = -2147483647;
+
+	if (x == y || x == z)
+		return printf("%d", x);
+	if (y == x || y == z)
+		return printf("%d", y);
+	if (z == x || z == y)
+		return printf("%d", z);
+	if ((x > y && y > z) || (z > y && y > x))
+		return printf("%d", y);
+	if ((y > z && z > x) || (x > z && z > y))
+		return printf("%d", z);
+	if ((z > x && x > y) || (y > x && x > z))
+		return printf("%d", x);
+}
+
 void 비교()
 {
-	if (n == m)
-		printf("1");
+	if (x == 'N' || x == 'n')
+		printf("Naver D2");
 	else
-		printf("0");
+		printf("Naver Whale");
+}
+
+void 범위()
+{
+	if (620 <= x && x <= 780) printf("Red");
+	if (590 <= x && x < 620) printf("Orange");
+	if (570 <= x && x < 590) printf("Yellow");
+	if (495 <= x && x < 570) printf("Green");
+	if (450 <= x && x < 495) printf("Blue");
+	if (425 <= x && x < 450) printf("Indigo");
+	if (380 <= x && x < 425) printf("Violet");
+}
+
+void 케이스()
+{
+	if (strcmp(str, "SONGDO") == 0 )
+		printf("HIGHSCHOOL");
+
+	else if (strcmp(str, "CODE") == 0 )
+		printf("MASTER");
+
+	else if (strcmp(str, "2023") == 0 )
+		printf("0611");
+
+	else if (strcmp(str, "ALGORITHM") == 0 )
+		printf("CONTEST");
+
 }
 
 void 수열순회()
@@ -102,36 +145,42 @@ void 수열순회()
 	i = 0;
 	while(i < T)
 	{
-		if (seri[i] == x)
-			count++;
+		if (seri[i] == x) count++; // 수열의 원소 갯수
+		printf("%d\n"); // 
 		i++;
 	}
 	
 	printf("%d", count);
 }
 
-void 서식()
+
+void 수열() {
+	i = 1;
+	while (i <= x)
+		printf("%d\n", i++);
+
+}
+
+void 서식(int t)
 {
+	//: 변수의 원본과 복사본을 나란히 출력
+	printf("%d %d\n", x, x);
+
 	//: char 변수를 %d로 출력
 	// printf("%d", ch);
-
 
 	//: 팬들에게 둘러쌓인 홍준
 	// char *fan;
 	// fan = ":fan:";
 	// printf("%s%s%s\n%s:%s:%s\n%s%s%s",fan,fan,fan,fan,str1,fan,fan,fan,fan);
-	printf(":fan::fan::fan:\n:fan::%s::fan:\n:fan::fan::fan:",str1);
+	// printf(":fan::fan::fan:\n:fan::%s::fan:\n:fan::fan::fan:",str1);
+
+	//: 입력받은 행 번호를 출력
+	// printf("Case %d: Sorting... done!\n", t);
+	// printf("%d. %s\n", t, str);
 }
 
-void 케이스()
-{
-	if (n == 0)
-		printf("YONSEI");
-	if (n == 1)
-		printf("Leading the Way to the Future");
-}
-
-void 단순출력()
+void 그대로출력()
 {
 	//: 강아지2
 	// printf("|\\_/|\n");
@@ -182,15 +231,6 @@ void 단순출력()
 	// printf("|          |\n");
 	// printf("|          |\n");
 	// printf("|          |\n");
-}
-
-void 제목없음() {
-}
-
-void 수열() {
-	i = 1;
-	while (i <= x)
-		printf("%d\n", i++);
 
 }
 
@@ -200,11 +240,14 @@ int main() {
 	//  1: 한 줄의 입력만 주어짐  /  2: 입력받는 횟수가 주어짐
 
 	//: (r,c,h) (n,m,k) (x,y,z) 등이 주어지는 경우 앞에서 먼저 받음.
-	// scanf("%d, %d", r, c);
-	// scanf("%d, %d, %d", r, c, h);
-	// scanf("%d", &n);
+	// scanf("%d %d", &r, &c);
+	// scanf("%d %d %d", &r, &c, &h);
+	// scanf("%d, &n);
 	// scanf("%d %d", &n, &m);
 	// scanf("%d %d %d", &n, &m, &k);
+	// scanf("%d", &x);
+	// scanf("%d %d", &x, &y);
+	// scanf("%d %d %d", &x, &y, &z);
 	// getchar();
 
 	//: 비교할 문자열이 주어지면, (str1, str2)로 썼다가 str로 되돌리기.
@@ -212,7 +255,7 @@ int main() {
 	// scanf("%s", str1);
 	// getchar();
 
-	T = 0;
+	T = 1;
 	if (T == 2)	{
 		scanf("%zd", &T);
 		getchar();
@@ -222,37 +265,52 @@ int main() {
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		if (scanf("%d", &n) == EOF)// || (x == 0) && (y == 0))
-			break;
+		if (scanf("%d", &x) == EOF) break;
+		// if (scanf("%s", str) == EOF || !strcmp(str, "END")) break;
 
 		//: 테스트 케이스를 파싱하여 배열에 기록하는 경우
-		// scanf("%d", &seri[t - 1]);
+		scanf("%d", &seri[t - 1]);
 
 		//: 테스트 케이스를 라인으로 구분하는 경우
-		// if (scanf("%[^\n]s", str) == EOF || strcmp(str, "종료신호") == 0)
-		// 	break;
+		// if (scanf("%[^\n]s", str) == EOF || !strcmp(str, "0")) break;
 
 		//: 테스트 케이스마다 실행할 내용
-		// 단순출력();
-		// printf("%d. %s\n", t, str);
+		// 중첩반복문();
+		// 사칙연산();
+		// 정밀도();
+		// 정수론();
+		// 중간값();
+		// 비교();
+		// 케이스();
+		// 수열순회();
+		// 수열();
+		// 비교();
+		// 범위();
+		// 그대로출력();
 		
 	}
-	//: 추가적으로 입력을 받거나, 위의 방식으로 입력을 받지 않는 경우 (T = 0)
+	//: 추가적으로 입력을 받거나, 위의 방식으로 입력을 받지 않는 경우
 	// scanf("%d", &x);
 
-	//: 입력이 종료되면 실행할 내용
-	// 한별이();
-	printf("#  # #### #### #  #\n#### #  # #  # # #\n#### #  # #  # # #\n#  # #### #### #  #");
-
 	//: 테스트 케이스가 행렬로 주어지는 경우
-	if (r > 0 && c > 0) {
-		for (int i = 1; i <= r; i++) {
-			if (i > 1) getchar();
-			scanf("%[^\n]s", str);
-			비교();
-			// for (int j = 1; i <= c; j++){
-			// 	;
-			// }
-		}
-	}
+	// for (int row = 1; row <= r; i++) {
+	// 	for (int col = 1; i <= c; j++) {
+	// 		;
+	// 	}
+	// }
+
+	//: 입력을 마치면 실행할 내용
+		// 중첩반복문();
+		// 사칙연산();
+		// 정밀도();
+		// 정수론();
+		// 중간값();
+		// 비교();
+		// 케이스();
+		// 수열순회();
+		// 수열();
+		// 비교();
+		// 범위();
+		// 그대로출력();
+
 }
