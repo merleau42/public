@@ -23,7 +23,7 @@
     "code-runner.runInTerminal": true,
 
     "terminal.external.osxExec": "/bin/sh",
-    "terminal.external.linuxExec": "/bin/sh",
+    "terminal.external.linuxExec": "/bin/bash",
     "python.terminal.launchArgs": [],
     "workbench.activityBar.location": "top",
     "window.customTitleBarVisibility": "auto",
@@ -115,28 +115,36 @@
         "*.stl": "json"
     },
     "editor.minimap.enabled": false,
+    "terminal.integrated.defaultProfile.linux": "bash",
     "terminal.integrated.profiles.linux": {
-        "bash": {
-            "path": "bash",
-            "icon": "terminal-bash"
-        },
-        "zsh": {
-            "path": "zsh"
-        },
-        "fish": {
-            "path": "/usr/bin/fish"
-        },
-        "tmux": {
-            "path": "tmux",
-            "icon": "terminal-tmux"
-        },
-        "pwsh": {
-            "path": "pwsh",
-            "icon": "terminal-powershell"
-        },
-        "bash (2)": {
-            "path": "/usr/bin/bash"
-        }
+      "bash": {
+        "path": "host-spawn",
+        "args": ["bash"]
+      }
     },
-    "terminal.integrated.defaultProfile.linux": "bash (2)"
+    "colorful-comments.tags": [
+        {
+          "tag": "!",
+          "color": "red",
+          "strikethrough": false,
+          "backgroundColor": "transparent",
+          "bold": false,
+          "italic": false
+        },
+        {
+          "tag": ":",
+          "color": "yellow",
+          "backgroundColor": "transparent",
+          "bold": false,
+          "italic": false
+        },
+        {
+          "tag": "/:",
+          "color": "yellow",
+          "backgroundColor": "transparent",
+          "bold": false,
+          "italic": false
+        }
+      ],
+      "terminal.integrated.enableMultiLinePasteWarning": false
 }
