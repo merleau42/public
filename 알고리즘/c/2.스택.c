@@ -37,6 +37,7 @@ char exist[256];
 int count;
 int found;
 int sum;
+int min, max;
 void *rewind_;
 int ser[1000000];
 char *entered[1000000];
@@ -59,32 +60,25 @@ void push(Stack *st, int x) {
 	st -> data[st -> top] = x;
 }
 
-void pop(Stack *st) {
-	if (st -> top >= 0) {
-		printf("%d\n", st -> data[st -> top] );
-		(st -> top)--;
-	}
-	else 
-		printf("-1\n");
-}
-
-void size(Stack *st) {
-	printf("%d\n", (st -> top)  + 1);
-}
-
-void empty(Stack *st) {
+int pop(Stack *st) {
 	if (st -> top == -1)
-		printf("1\n");
-	else
-		printf("0\n");
-
+		return -1;
+	(st -> top)--;
+	return st -> data[st -> top + 1];
 }
 
-void top(Stack *st) {
+int size(Stack *st) {
+	return (st -> top) + 1;
+}
+
+int empty(Stack *st) {
+	return (st -> top == -1);
+}
+
+int top(Stack *st) {
 	if (st -> top == -1)
-		printf("-1\n");
-	else
-		printf("%d\n", st -> data[st -> top]);
+		return -1;
+	return st -> data[st -> top];
 }
 
 Stack *new_stack(int size) {
@@ -96,25 +90,37 @@ Stack *new_stack(int size) {
 	return &instance;
 }
 
-void main2()
+void 명령어(Stack *st)
 {
-	Stack *st;
-	st = new_stack(100000);
+	char **input;
 
-	push(st, 1);
-	push(st, 2);
-	top(st);
-	size(st);
-	empty(st);
-	pop(st);
-	pop(st);
-	pop(st);
-	size(st);
-	empty(st);
-	pop(st);
-	push(st, 3);
-	empty(st);
-	top(st);
+	input = split(str, ' ');
+	if (strcmp(input[0], "push") == 0)
+		push(st, atoi(input[1]));
+	else if (strcmp(input[0], "pop") == 0)
+		printf("%d\n", pop(st));
+	else if (strcmp(input[0], "size") == 0)
+		printf("%d\n", size(st));
+	else if (strcmp(input[0], "empty") == 0)
+		printf("%d\n", empty(st));
+	else if (strcmp(input[0], "top") == 0)
+		printf("%d\n", top(st));
+}
+
+void 계단(Stack *st)
+{
+	min = top(st);
+	count = 1;
+	while (!empty(st))
+	{
+		if (top(st) > min)
+		{
+			min = top(st);
+			count++;
+		}
+		pop(st);
+	}
+	printf("%d", count);
 }
 
 int main() {
@@ -150,43 +156,34 @@ int main() {
 	//: 입력을 시작하기 전에 선언할 변수들
 	Stack *st;
 	st = new_stack(T);
+
 	while (t <= T) {
 		//: scanf가 버퍼에 남겨놓은 공백이 있다면 제거
 		if (t > 1) getchar();
 
 		//: 테스트 케이스를 공백으로 구분하는 경우
-		// if (scanf("%d", &x) == EOF) break;
+		if (scanf("%d", &x) == EOF) break;
 		// if (scanf("%s", str) == EOF || !strcmp(str, "END")) break;
 		// if (scanf("%d", &ser[t - 1]) == EOF) break; // 배열에 차곡차곡
 
 		//: 테스트 케이스를 라인으로 구분하는 경우
-		if (scanf("%[^\n]s", str) == EOF || !strcmp(str, "0")) break;
+		// if (scanf("%[^\n]s", str) == EOF || !strcmp(str, "$")) break;
 
 		//: 테스트 케이스를 서식대로 파싱하는 경우
 		// if()
 
 		//: 테스트 케이스마다 실행할 내용
-		char **input;
+		push(st, x);
+		// 명령어(st);
 
-		input = split(str, ' ');
-		if (strcmp(input[0], "push"))
-			push(st, atoi(input[1]));
-		if (strcmp(input[0], "pop"))
-			pop(st);
-		if (strcmp(input[0], "size"))
-			size(st);
-		if (strcmp(input[0], "empty"))
-			empty(st);
-		if (strcmp(input[0], "top"))
-			top(st);
-		//: 다음 테스트 케이스
+		//: 다음 테스트 케이스 진행
 		t++;
 	}
 	//: 추가로 입력을 받거나, 정형화되지 않은 방식으로 입력받는 경우
 	// scanf("%d", &x);
 
 	//: 입력을 마치면 실행할 내용
-	// 
+	계단(st);
 
 	//: 테스트 케이스가 행렬로 주어지는 경우
 	// for (int row = 1; row <= r; i++) {
