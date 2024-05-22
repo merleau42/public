@@ -22,8 +22,8 @@ alias R="clear; cd $FT/rendu/$NAME; echo $msg_R; pwd; ls";
 alias m="clear; cd $FT/machine; pwd; ls";
 
 alias fre="clear; cd ~/goinfre";
-alias tree="pwd && find . | sed -n '2~1p' | sed 's/[^\/]\+\?\//\//g' | sed 's/\/\([^\/]\)/└─\1/g' | sed 's/\//  /g'";
-alias tree2="pwd && du -h | sed 's|\(.\+\)\t\(.\+\)|\2   \(\1\)|g' | sort | sed 's/[^\/]\+\?\//\//g' | sed 's/\/\([^\/]\)/└─\1/g' | sed 's/\//  /g'";
+alias tree="pwd && find . | sed -n '2~1p' | grep '\/\.' -v  | sed 's/[^\/]\+\?\//\//g' | sed 's/\/\([^\/]\)/└─\1/g' | sed 's/\//  /g'";
+alias tree2="pwd && du -ha | grep '\/\.' -v | sed 's|\(.\+\)\t\(.\+\)|\2   \(\1\)|' | sort | sed 's/[^\/]\+\?\//\//g' | sed 's/\/\([^\/]\)/└─\1/g' | sed 's/\//  /g'";
 
 alias g="clear; pwd; warn; git add .; date | sed 's/ [AP]M.\+//' | tr ' ' '_' | xargs git commit -m; git push";
 alias z="d; g; cd -";
