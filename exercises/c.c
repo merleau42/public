@@ -1,20 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+size_t Exist[67108864];
+
 int main()
 {
-	unsigned long long color;
-	color = 0x11223344;
-
-	printf("%.8llx\n", color);
-	printf("%.8llx\n", color>>8);
-	printf("%.8llx\n", color>>16);
-	printf("%.8llx\n", color>>24);
-
-	printf("%f\n", 7 / (float)2);
+	// printf("%lu", sizeof(Exist));
+	printf("%lu", 0x8000000000000000);
 }
 
+// 1바이트보다 작은 자료형으로 계수 정렬하기
+142를 존재 명부에 등록하려면? 64로 나눈 몫(2), 나머지(14)
+Exist[2] = Exist[2] | (size_t)(-1) >> 14;
 
-// 시작색 + (도달색 - 시작색) * 비율
-// ㄴ 비율0 == 시작색
-// ㄴ 비율1 == 도달색
+777을 존재 명부에 등록하려면? 64로 나눈 몫(12), 나머지(9)
+Exist[12] = Exist[12] | (size_t)(-1) >> 9;
+
+등록된 숫자를 꺼내려면?
+size_t i;
+i = 0;
