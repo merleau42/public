@@ -33,6 +33,11 @@ pixel(iso_x, iso_y, color);
 // 0xAARRGGBB  &  0x0000FF00  ==  0xGG
 // 0xAARRGGBB  &  0x000000FF  ==  0xBB
 
+// AARRGGBB>>  0  ==  AARRGGBB
+// AARRGGBB>>  8  ==  00AARRGG
+// AARRGGBB>> 16  ==  0000AARR
+// AARRGGBB>> 24  ==  000000RR
+
 // 0xAARRGGBB		&  0xFF	  ==  0xBB
 // 0xAARRGGBB>>8	&  0xFF	  ==  0xGG
 // 0xAARRGGBB>>16	&  0xFF	  ==  0xRR

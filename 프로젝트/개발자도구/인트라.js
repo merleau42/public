@@ -7,17 +7,6 @@ try{if (tick ==  5) here=document.location.href.match(/.+\/users\/(.+)/)[1];
 tick++;}
 catch{tick = 0}
 
-/*
-[마일스톤1] 24.6.24
-[마일스톤2] 24.8.23
-[마일스톤3] 24.12.29
-[마일스톤4] 25.5.19
-[마일스톤5] 25.12.2
-[마일스톤6] 26.2.26
-*/
-
-
-
 
 /* 마지막 문장만 수정하면 됨 */
 try { div.innerText = $(".console-view-pinpane").shadowRoot.querySelector(".console-pin-preview").innerText; div.style.fontSize = "20px"; div.style.backgroundColor="RGB(255, 255, 255, 1)"; div.style.color="black"} catch { div = document.createElement('div'); div.style.width="100%"; div.style.height="100%"; div.style.zIndex="99999"; if(document.title.includes("DevTools")) $('.widget').appendChild(div); } $('[href*=slot]').parentNode.parentNode.parentNode.querySelector('.h-full').innerText
