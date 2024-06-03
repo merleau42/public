@@ -1,0 +1,325 @@
+<html>
+<head>
+<style>
+	*
+	{
+		text-align: center;
+		font-size: 16;
+		padding: 0;
+	}
+	div
+	{
+		margin-bottom: 20px;
+		display: flex;
+        align-items: center;
+    }
+	div *, table
+	{
+		min-width: 35px;
+		height: 25px;
+	}
+	textarea
+	{
+		width: 450px;
+		resize: none;
+	}
+	input
+	{
+		color: green;
+		margin-left: 4px;
+	}
+	table
+	{
+		margin-bottom: 10px;
+		/* border-collapse: collapse; */
+		border-spacing: 15px 0;
+		border: 0;
+	}
+	td
+	{
+		border: 1px solid cornflowerblue;
+		background: aliceblue;
+		padding: 2;
+		min-width: 30px;
+		height: 30px;
+		user-select: none;
+	}
+	td.mouseover
+	{
+		background-color: lightcyan;
+	}
+	td.dragging
+	{
+		border: 2px red solid;
+	}
+	.debug {
+		padding: 2;
+		border-top: 1px dotted;
+		border-right: 1px dotted;
+		display: inline-table;
+		width: 49%;
+		font-size: 12px;
+	}
+</style>
+<script>
+	let bugs = ['🐌','🦋','🐛','🐜','🐝','🪲','🐞','🦗','🪳','🦟','🪰','🪱'];
+	let body = document.querySelector('body');
+	let E = x => document.createElement(x);
+	let Q = (x, y=document) => y.querySelector(x);
+	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
+	function leak(kind, name='')
+	{
+		if (kind.includes('class'))
+		{
+			not_special = ['debug'];
+			if (!name)
+				return QQ('[class]').reduce((s,c)=>[...s, [...c.classList]
+						.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []).toSorted();
+			else
+				return QQ(`[class*=${name}]`)
+		}
+		if (kind.includes('attr'))
+		{
+			not_special = ['border', 'class', 'placeholder', 'id', 'src', 'style', 'type', 'value'];
+			if (!name)
+				return QQ(`*`).reduce((s,c)=>[...s, [...c.getAttributeNames()]
+						.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []);
+			else
+				return QQ(`[${name}]`)
+		}
+	}
+	function debug(channel, msg, ...argvs)
+	{
+		if (!Q(`.debug[channel='${channel}']`))
+		{
+			div = Q('body').appendChild(E('div'))
+			div.classList.add('debug');
+			div.setAttribute('channel', channel);
+			div.setAttribute('icon', bugs[Math.round(Math.random() * 9999) % 12]);
+			div.innerText = `Debug : ${channel}\n`;
+			red = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+			grn = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+			blu = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+			div.style.color = `#${red}${grn}${blu}`;
+		}
+		dbg = Q(`.debug[channel='${channel}']`);
+		if (typeof(msg) == typeof(Object()))
+			if (attrs = msg.getAttributeNames().toSorted()
+						   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
+				msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
+		tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
+		spl = dbg.innerText.replace(/\n$/,'').split('\n');
+		if (spl.length >= 8)
+			spl = [spl[0], ...spl.splice(2)];
+		spl.push(tail);
+		dbg.innerText = spl.join('\n');
+	}
+	function free_class(classNames)
+	{
+		classNames.forEach(cn => QQ(`.${cn}`).forEach(el => el.classList.remove(cn)));
+	}
+	function free_attr(attrNames)
+	{
+		attrNames.forEach(attr => QQ(`[${attr}]`).forEach(el => el.removeAttribute(attr)));
+	}
+</script>
+<script>
+	window.addEventListener('DOMContentLoaded',	main)
+	function main()
+	{
+		arr_to_tr([], tr_A, false);
+		arr_to_tr([], tr_B, false);
+		arr_origin.value = '888,454,45,6,4442,1,54,5,1,3,6546,54,337,999';
+		arr0 = arr_origin.value.split(',');
+
+		Q('input[value=시작]').addEventListener('click', restart);
+		Q('input[value=간격]').addEventListener('click', collapse);
+
+		Q('input[value=pa]').addEventListener('click', pa);
+		Q('input[value=sa]').addEventListener('click', sa);
+
+		Q('input[value=sb]').addEventListener('click', sb);
+
+		mouse_listner();
+		setInterval(debug_monitor, 100);
+
+
+		debug('test', ...''.split(','), 7777);
+	}
+	function debug_monitor()
+	{
+		debug("활성화된 클래스", [leak('class').length, leak('class').join(' ')].join(': '));
+		// debug("활성화된 속성", [leak('attr').length, leak('attr').join(' ')].join(': '));
+		debug("마우스 오버", Q('.mouseover'));
+		debug("클릭한 대상", Q('.mousedown'));
+		debug("드래그 대상", Q('.dragging'));
+		debug("드래그 오버", Q('.dargover'));
+	}
+	function mouse_listner()
+	{
+		document.addEventListener('mousedown', e => {
+			e.target.classList.add('mousedown');
+			if (Q('.mousedown.roof')) {
+				col_line = Q('.mousedown.roof').getAttribute('col');
+				QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+			}
+		})
+		document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을 때
+			free_class(['dropable','mousedown','dblclick']);
+		})
+		document.addEventListener('mouseover', e => {
+			free_class(['mouseover', 'warn']);
+			e.target.classList.add('mouseover');
+		})
+		// dragstart ---> drag(움직임) ---> dragenter ---> dragover ---> drop ---> dragend
+		document.addEventListener('dragstart', e => {
+			e.target.classList.add('dragging');
+		})
+		document.addEventListener('dragenter', e => {
+			free_class(['enter', 'dropable']);
+			e.target.classList.add('enter');
+			if (Q('.dragging.index'))
+				Q('tr:has(.enter)').classList.add('dropable');
+			if (Q('.dragging.roof')){
+				insert_to = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
+				QQ(`table:has(.dragging.roof) [col="${insert_to}"]`).forEach(td => td.classList.add('dropable'));
+			}
+		})
+		document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+			e.target.classList.add('dragover');
+			debug('드래그 오버', e.target);
+			if (Q('table:has(.dragging):not(:has(.dragover))'))
+				free_class(['enter','dropable','to_drop','mousedown', 'dblclick', 'dragover']);
+			free_class(['dragover']);
+			e.preventDefault();
+		})
+		document.addEventListener('drop', e => { // 'over' 있어야 'drop' 가능
+			e.target.classList.add('to_drop');
+			slot = Q('.slot:has(.dragging):has(.to_drop)');
+			table = Q('table:has(.dragging):has(.to_drop)');
+
+			if (table && Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
+				move_table_row(Q('tr:has(.dragging)'), Q('tbody tr:has(.to_drop)'));
+			if (table && Q('.dragging.roof') && Q('.dropable.to_drop')) 
+			{
+				copy_col = Q('.dragging').getAttribute('col') * 1;
+				paste_col = e.target.getAttribute('col') * 1;
+
+				new_vec = table_to_vec( table )
+						.map((x,i,a)=>x.toSpliced(paste_col + (copy_col < paste_col), 0, a[i][copy_col]))
+						.map(x=>x.toSpliced(copy_col + (copy_col > paste_col), 1))
+				
+				table.remove();
+				slot.appendChild( vec_to_table(new_vec) );
+			}
+		})
+		document.addEventListener('dragend', e => {
+			free_class(['enter','dropable','dragging','to_drop','mousedown', 'dblclick'])
+		})
+	}
+	function restart()
+	{
+		arr_A.value='';
+		arr_B.value='';
+
+		arr_A.value = arr_origin.value;
+		arr_to_tr(arr_A.value.split(','), tr_A, true);
+		arr_to_tr(arr_B.value.split(','), tr_B, true);
+
+	}
+	function arr_to_tr(arr, tr, draggable)
+	{
+		tr.innerHTML='';
+		start = document.createElement('td')
+		start.innerText="...";
+		tr.appendChild( start )
+		arr.forEach(x => {
+			td = document.createElement('td');
+			td.innerText = x;
+			td.setAttribute("draggable", draggable)
+			tr.appendChild(td);
+		});
+		end = document.createElement('td')
+		end.innerText="...";
+		tr.appendChild( end )
+		return tr;
+	}
+	function sa()
+	{
+		arr = arr_A.value.split(',');
+		if (arr[1] == undefined || arr[1] == '')
+			return ;
+		tmp = arr[1]
+		arr[1] = arr[0];
+		arr[0] = tmp;
+		arr_A.value = arr.join(',');
+		arr_to_tr(arr, tr_A);
+	}
+	function sb()
+	{
+		arr = arr_B.value.split(',');
+		if (arr[1] == undefined || arr[1] == '')
+			return ;
+		tmp = arr[1]
+		arr[1] = arr[0];
+		arr[0] = tmp;
+		arr_B.value = arr.join(',');
+		arr_to_tr(arr, tr_B);
+	}
+	function pa()
+	{
+		if (arr_A.value.length < 1)
+			return ;
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+		debug('pa', 123);
+		B.push(A.pop());
+		
+		arr_A.value = A;
+		arr_B.value = B;
+		arr_to_tr(A, tr_A);
+		arr_to_tr(B, tr_B);
+	}
+	function collapse()
+	{
+		toggle = {'collapse':'', '':'collapse'};
+		document.querySelectorAll('table').forEach(x => x.style.borderCollapse= toggle[x.style.borderCollapse]);
+	}
+</script>
+</head>
+<body>
+<div>
+	<textarea id="arr_origin"></textarea>
+	<input type="button" value="시작">
+	<input type="button" value="정규화">
+	<input type="button" value="간격">
+</div>
+<table>
+	<tr id="tr_A"></tr>
+</table>
+<table>
+	<tr id="tr_B"></tr>
+</table>
+<div></div>
+<div>
+	<textarea id="arr_A"></textarea>
+	<input type="button" value="pa">&nbsp;/
+	<input type="button" value="sa">
+	<input type="button" value="ss">&nbsp;/
+	<input type="button" value="ra">
+	<input type="button" value="rr">&nbsp;/
+	<input type="button" value="rra">
+	<input type="button" value="rrr">
+</div>
+<div>
+	<textarea id="arr_B"></textarea>
+	<input type="button" value="pb">&nbsp;/
+	<input type="button" value="sb">
+	<input type="button" value="ss">&nbsp;/
+	<input type="button" value="rb">
+	<input type="button" value="rr">&nbsp;/
+	<input type="button" value="rrb">
+	<input type="button" value="rrr">
+</div>
+</body>
+</html>
