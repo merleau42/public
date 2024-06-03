@@ -1,0 +1,376 @@
+<html>
+<head>
+<style>
+	*
+	{
+		text-align: center;
+		font-size: 15;
+		padding: 0;
+	}
+	div
+	{
+		margin-bottom: 20px;
+		display: flex;
+        align-items: center;
+    }
+	div *
+	{
+		min-width: 35px;
+		height: 25px;
+	}
+	input[type=text]
+	{
+		width: 350px;
+	}
+	input[type=button]
+	{
+		color: green;
+		margin-left: 4px;
+	}
+	input[value=초기화]
+	{
+		color: red;
+	}
+	table
+	{
+		margin-bottom: 10px;
+		border-spacing: 15px 0;
+		border: 0;
+	}
+	td
+	{
+		border: 1px solid cornflowerblue;
+		background:  rgba(0, 0, 255, 0.05);
+		padding: 2;
+		min-width: 30px;
+		height: 30px;
+		user-select: none;
+	}
+	td:hover
+	{
+		background-color: lightcyan;
+	}
+</style>
+<script>
+	let Q = (x, y=document) => y.querySelector(x);
+	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
+	let rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+	window.addEventListener('DOMContentLoaded',	main)
+	function main()
+	{
+		arr_to_tr([], tr_A);
+		arr_to_tr([], tr_B);
+
+		Q('input[value=초기화]').addEventListener('click', restart);
+		Q('input[value=무작위]').addEventListener('click', random);
+		Q('input[value=정규화]').addEventListener('click', normailize);
+		Q('input[value=표간격]').addEventListener('click', collapse);
+		Q('input[value=새로고침').addEventListener('click', ()=>location.reload());
+
+		Q('input[value=pb]').addEventListener('click', pb);
+		Q('input[value=sa]').addEventListener('click', sa);
+		QQ('input[value=ss]')[0].addEventListener('click', ss);
+		Q('input[value=ra]').addEventListener('click', ra);
+		QQ('input[value=rr]')[0].addEventListener('click', rr);
+		Q('input[value=rra]').addEventListener('click', rra);
+		QQ('input[value=rrr]')[0].addEventListener('click', rrr);
+		
+		Q('input[value=pa]').addEventListener('click', pa);
+		Q('input[value=sb]').addEventListener('click', sb);
+		QQ('input[value=ss]')[1].addEventListener('click', ss);
+		Q('input[value=rb]').addEventListener('click', rb);
+		QQ('input[value=rr]')[1].addEventListener('click', rr);
+		Q('input[value=rrb]').addEventListener('click', rrb);
+		QQ('input[value=rrr]')[1].addEventListener('click', rrr);
+
+		mouse_listner();
+	}
+	function restart()
+	{
+		if (arr_origin.value.length < 1)
+			return ;
+		arr_A.value='';
+		arr_B.value='';
+
+		arr_A.value = arr_origin.value;
+		arr_to_tr(arr_A.value.split(','), tr_A);
+		arr_to_tr(arr_B.value.split(','), tr_B);
+
+		logged.innerText = 'START\n명령　　　A스택　　　B스택';
+	}
+	function random()
+	{
+		arr_origin.value = (new Array( rand(4,8) )).fill().map(x => rand(-10, 30)).join(', ');
+
+	}
+	function normailize()
+	{
+		if (arr_origin.value.length < 1)
+			return ;
+		origin = arr_origin.value.split(',');
+		norm = new Array( origin.length );
+		origin.map((x,i) => [x*1, i]).toSorted((a,b) => a[0] - b[0]).forEach((x,i) => norm[x[1]] = i);
+		arr_origin.value = norm.join(', ');
+	}
+	function arr_to_tr(arr, tr)
+	{
+		tr.innerHTML='';
+		start = document.createElement('td')
+		start.innerText="FRONT\nㅡ>";
+		start.style.fontSize="10";
+		start.style.color = 'gray';
+		tr.appendChild( start )
+		if (arr.length==1 && arr[0] == '')
+			arr = [];
+		arr.forEach(x => {
+			td = document.createElement('td');
+			td.innerText = x;
+			td.setAttribute("draggable", true)
+			tr.appendChild(td);
+		});
+		end = document.createElement('td')
+		end.style.color = 'gray';
+		end.style.fontSize="10";
+		end.innerText="TOP\n<ㅡ";
+		tr.appendChild( end )
+		return tr;
+	}
+	function log(pre)
+	{
+		logged.innerText += `\n${pre}　　　${arr_A.value.replace(/,/g,', ')}　　　${arr_B.value.replace(/,/g,', ')}`;
+	}
+	function sa()
+	{
+		A = arr_A.value.split(',');
+		if (A.length < 2)
+			return ;
+		
+		tmp1 = A.pop();
+		tmp2 = A.pop();
+		A.push(tmp1);
+		A.push(tmp2);
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		log('sa');
+	}
+	function sb()
+	{
+		B = arr_B.value.split(',');
+		if (B.length < 2)
+			return ;
+		
+		tmp1 = B.pop();
+		tmp2 = B.pop();
+		B.push(tmp1);
+		B.push(tmp2);
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		log('sb');
+	}
+	function ss()
+	{
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+		if (A.length < 2 || B.length < 2)
+			return ;
+
+		tmp1 = A.pop();
+		tmp2 = A.pop();
+		A.push(tmp1);
+		A.push(tmp2);
+
+		tmp1 = B.pop();
+		tmp2 = B.pop();
+		B.push(tmp1);
+		B.push(tmp2);
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		log('ss');
+	}
+	function ra()
+	{
+		A = arr_A.value.split(',');
+		if (A.length < 2)
+			return ;
+		A.push( A[0] );
+		A.shift();
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		log('ra');
+	}
+	function rb()
+	{
+		B = arr_B.value.split(',');
+		if (B.length < 2)
+			return ;
+		B.push( B[0] );
+		B.shift();
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		log('rb');
+	}
+	function rr()
+	{
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+		if (A.length < 2 || B.length < 2)
+			return ;
+
+		A.push( A[0] );
+		A.shift();
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		B.push( B[0] );
+		B.shift();
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		log('rr');
+	}
+	function rra()
+	{
+		A = arr_A.value.split(',');
+		if (A.length < 2)
+			return ;
+
+		A.unshift(A.pop());
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		log('rra');
+	}
+	function rrb()
+	{
+		B = arr_B.value.split(',');
+		if (B.length < 2)
+			return ;
+
+		B.unshift(B.pop());
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		log('rrb');
+	}
+	function rrr()
+	{
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+		if (A.length < 2 || B.length < 2)
+			return ;
+
+		A.unshift(A.pop());
+
+		arr_A.value = A;
+		arr_to_tr(A, tr_A);
+
+		B.unshift(B.pop());
+
+		arr_B.value = B;
+		arr_to_tr(B, tr_B);
+
+		log('rrr');
+	}
+	function pb()
+	{
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+
+		if (A.length==1 && A[0] == '')
+			return ;
+
+		if (B.length==1 && B[0] == '')
+			B = [];
+
+		B.push(A.pop());
+		
+		arr_A.value = A;
+		arr_B.value = B;
+		arr_to_tr(A, tr_A);
+		arr_to_tr(B, tr_B);
+
+		log('pb');
+	}
+	function pa()
+	{
+		A = arr_A.value.split(',');
+		B = arr_B.value.split(',');
+
+		if (A.length==1 && A[0] == '')
+			A = [];
+		
+		if (B.length==1 && B[0] == '')
+			return ;
+
+		A.push(B.pop());
+		
+		arr_A.value = A;
+		arr_B.value = B;
+		arr_to_tr(A, tr_A);
+		arr_to_tr(B, tr_B);
+
+		log('pa');
+	}
+	function collapse()
+	{
+		toggle = {'collapse':'', '':'collapse'};
+		document.querySelectorAll('table').forEach(x => x.style.borderCollapse = toggle[x.style.borderCollapse]);
+	}
+</script>
+</head>
+<body>
+<div>
+	<input type="text", id="arr_origin" placeholder="argv: 쉼표로 구분해주세요">
+	<input type="button" value="초기화">
+	<input type="button" value="정규화">
+	<input type="button" value="무작위">&nbsp;/
+	<input type="button" value="표간격">
+	<input type="button" value="새로고침">
+</div>
+<table>
+	<tr id="tr_A"></tr>
+</table>
+<table>
+	<tr id="tr_B"></tr>
+</table>
+<div></div>
+<div>
+	<input type="text" id="arr_A">
+	<input type="button" value="pb">&nbsp;/
+	<input type="button" value="sa">
+	<input type="button" value="ss">&nbsp;/
+	<input type="button" value="ra">
+	<input type="button" value="rr">&nbsp;/
+	<input type="button" value="rra">
+	<input type="button" value="rrr">
+</div>
+<div>
+	<input type="text" id="arr_B">
+	<input type="button" value="pa">&nbsp;/
+	<input type="button" value="sb">
+	<input type="button" value="ss">&nbsp;/
+	<input type="button" value="rb">
+	<input type="button" value="rr">&nbsp;/
+	<input type="button" value="rrb">
+	<input type="button" value="rrr">
+</div>
+<div id="logged"></div>
+</body>
+</html>
