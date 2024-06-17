@@ -1,0 +1,29 @@
+this is first line
+abcdefghijklmnopqrstuvwxyz
+
+
+this is some line
+
+
+
+
+
+1
+12
+123
+1234
+12345
+123456
+1234567
+12345678
+123456789
+123456789A
+123456789AB
+
+b     b+6
+|     |
+123456N89AB\0 : remain=11
+_______89AB\0 : remain=11
+89AB56N89AB\0 : remain=4
+
+this is last line bye bye
