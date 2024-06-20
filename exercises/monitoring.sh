@@ -44,17 +44,20 @@ ss --tcp | grep ESTAB | wc -l | awk '{printf "%d ESTABLISHED\n", $1}'
 printf "#User log: "
 who | wc -l
 
-# 현재시스템의 IP 주소를 개행 없이 출력하는 명령어이다.
 # ip link show는 시스템에 설치된 네트워크 인터페이스의 정보를 출력하는 명령어이다.
-# 그 후는 출력된 결과 중에서, 첫 번째 필드가 "link/ether"인 라인의 두번째 필드를 출력한다. 여기서 "link/ether"는 이더넷 인터페이스의 물리적 주소(MAC 주소)를 나타내는 키워드이다.
+# 첫번째 필드가 "link/ether" 인 라인의 두번째 필드를 출력한다.
+# 여기서 "link/ether"는 이더넷 인터페이스의 물리적 주소를(MAC) 나타내는 키워드이다.
 printf "#Network: IP "
-hostname -I | awk '{printf "%s (", $1}'
-ip link show | awk '$1 == "link/ether" {print $2}' | sed '2, $d' | tr -d '\n'
-printf ")\n"
+hip=$(hostname -I)
+mac=$(ip a | sed -E 's/^[0-9]+: +/뷁/' | tr -d '\n' | tr '뷁' '\n' | grep $hip | sed -E 's/.+ether ([^ ]+?).+/\1/')
+printf "${hip}(${mac})\n"
 
 # journalctl을 써보려고 했지만, 불필요한 라인을 걸러내야해서 다른 방법을 찾아봄.
 printf "#Sudo : "
-ls -lR /var/log/sudo | grep 'log$' | wc -l | awk '{printf "%d cmd\n", $1}'
+journalctl _COMM=sudo | grep COMMAND | grep TSID= | wc -l | awk '{printf "%d cmd\n", $1}'
+# journalctl _COMM=sudo | grep COMMAND | grep -v 'user NOT in sudoers' | wc -l | awk '{printf "%d cmd\n", $1}'
+# ls -lR /var/log/sudo | grep 'log$' | wc -l | awk '{printf "%d cmd\n", $1}'
+
 
 
 
