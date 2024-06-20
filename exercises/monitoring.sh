@@ -2,7 +2,7 @@ vi /root/monitoring.sh
 apt install sysstat
 
 # 현재 시스템의 아키텍처 정보를 출력하기
-# uname ㅡ 커널(Linux) 호스트(kky) 배포판(6.1.0-amd) 커널버전(#상세) 아키텍쳐(x86_64) 운영체제(GNL/Linux)
+# uname ㅡ 커널(Linux) 호스트(kky) 커널릴리즈(6.1.0-amd) 커널버전(#상세) 아키텍쳐(x86_64) 운영체제(GNL/Linux)
 printf "#Architecture: "
 uname -a
 
@@ -69,7 +69,7 @@ chmod +x monitoring.sh
 # cron은 리눅스에서 백그라운드에서 동작하는 작업 스케줄러이다.
 # -e옵션은 현재 사용자의 cron 작업을 편집 모드로 열어주는 옵션이다.
 crontab -e
-*/10 * * * * /root/monitoring.sh | wall
+/10 * * * * /root/monitoring.sh | wall
 
 ##############################
 

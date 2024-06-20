@@ -59,7 +59,7 @@
 	}
 	function new_ring(index)
 	{
-		names = ["초성화", "이니셜", "공백제거", "함수1", "함수2", "함수..."];
+		names = ["초성화", "이니셜", "공백제거", "그대로", "함수2", "함수..."];
 		binds = [conv_cho, conv_init, conv_space, conv_1, conv_2, conv_3];
 
 		div = document.createElement('div');
@@ -134,13 +134,20 @@
 
 		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
 	}
-	function conv_1(){
+	function conv_1(index){
+		if (!Q(`.ring[index="${index*1+1}"]`))
+			Q('body').append( new_ring(index*1+1) );
+
+		Q(`textarea[index="${index*1+1}"]`).value = Q(`textarea[index="${index*1}"]`).value;
+
+		Q(`p[index="${index*1+1}"]`).innerText = `연쇄${index*1+1}: 그대로`;
+
+		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
+	}
+	function conv_2(index){
 		;
 	}
-	function conv_2(){
-		;
-	}
-	function conv_3(){
+	function conv_3(index){
 		;
 	}
 </script>
