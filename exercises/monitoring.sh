@@ -72,17 +72,6 @@ crontab -e
 */10 * * * * /root/monitoring.sh | wall
 
 ##############################
-groupadd user42
-usermod -aG sudo,user42 <사용자이름>
-usermod -g user42 <사용자이름>
-
-vm을 상태 저장하면서 종료
-스냅샷을 남긴다.
-터미널에서 cd /goinfre/intra id/vm 이름으로 가상머신이 설치된 폴더로 진입
-shasum vm이름.vdi 를 실행
-잠시 기다리면 가상머신의 서명이 나옴
-여러차례 실행하면서 바뀌는지 확인
-shasum vm이름.vdi > signature.txt 에 넣고 git push 해서 평가준비
 
 https://velog.io/@joonpark/Born2BeRoot
 https://velog.io/@kyj93790/Born2beroot-4.-Vim-%EC%84%A4%EC%B9%98-%EB%B0%8F-SSH-%EC%84%A4%EC%A0%95
