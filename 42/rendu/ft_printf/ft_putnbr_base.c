@@ -24,7 +24,7 @@ int	vaild_base(char *base)
   return (i);
 }
 
-void	ft_putnbr_base(long long nbr, char *base)
+void	ft_putnbr_base(int nbr, char *base)
 {
   char		conv[65];
   char		front;
