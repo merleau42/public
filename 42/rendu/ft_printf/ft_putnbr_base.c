@@ -1,5 +1,6 @@
 #include "ft_printf.h"
 
+// 피신때 풋넘버 베이스
 int	vaild_base(char *base)
 {
   int				i;
