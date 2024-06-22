@@ -32,7 +32,7 @@ static char	*ft_insert_num(char *str, long long n_cpy, int digit)
 	return (str);
 }
 
-char	*ft_itoa_unsigned(size_t int n)
+char	*ft_utoa(unsigned int n)
 {
 	unsigned int	n_cpy;
 	int				digit;
