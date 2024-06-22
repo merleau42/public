@@ -83,7 +83,8 @@
         "*.yrf": "json",
         "*.rpx": "xml",
         "*.stl": "json",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "ft_printf.h": "c"
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",

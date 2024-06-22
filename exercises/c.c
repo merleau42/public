@@ -6,9 +6,10 @@
 
 int main()
 {
-	// printf("%lu", sizeof(Exist));
-	// printf("%lu", 0x8000000000000000);
-	printf("%d", printf("%d\n"));
+	char tmp[100];
+
+	itoa(-42972951, tmp, 10);
+	printf("%s\n", tmp);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
