@@ -32,6 +32,14 @@ size_t	ft_process(va_list paras, const char *s)
 		len += write(1, str, ft_strlen(str));
 		free(str);
 	}
+	else if (*(s + 1) == 'u')
+	{
+		str = ft_utoa(va_arg(paras, unsigned int));
+		if (!str)
+			return -1;
+		len += write(1, str, ft_strlen(str));
+		free(str);
+	}
 	else if (*(s + 1) == 'x')
 		return ft_putnbr_base(va_arg(paras, int), "0123456789abcdef");
 	else if (*(s + 1) == 'X')
@@ -42,14 +50,6 @@ size_t	ft_process(va_list paras, const char *s)
 		if (!ptr)
 			return write(1, "(nil)", 5);
 		return write(1, "0x", 2) + ft_putnbr_base_size_t((size_t)ptr, "0123456789abcdef");
-	}
-	else if (*(s + 1) == 'u')
-	{
-		ptr = ft_utoa(va_arg(paras, unsigned int));
-		if (!ptr)
-			return -1;
-		len += write(1, ptr, ft_strlen(ptr));
-		free(ptr);
 	}
 	else if (*(s + 1) == '%')
 		return write(1, "%", 1);
