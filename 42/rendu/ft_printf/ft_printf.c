@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
+/*   Updated: 2024/06/22 17:57:04 by keunykim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 size_t	ft_strlen(const char *s)
@@ -32,7 +44,7 @@ size_t	ft_putchar(int nbr)
 	return (write(1, &nbr, 1));
 }
 
-void ft_process(va_list paras, const char *s, int *len)
+void	ft_process(va_list paras, const char *s, int *len)
 {
 	void	*ptr;
 
@@ -58,8 +70,7 @@ void ft_process(va_list paras, const char *s, int *len)
 		*len += write(1, "(null)", 6);
 	if (*(s + 1) == 'p' && !ptr)
 		*len += write(1, "(nil)", 5);
-	if (!ft_strchr("duxXcsp%", *(s + 1)))
-		*len = -1;
+	*len = (ft_strchr("diuxXcsp%", *(s + 1)) != NULL) * (*len + 1) - 1;
 }
 
 int	ft_printf(const char *s, ...)
@@ -87,34 +98,4 @@ int	ft_printf(const char *s, ...)
 	}
 	va_end(paras);
 	return (len);
-}
-
-int main()
-{
-	//: %d
-	// ft_printf("꾸%d%d이지롱\n", 9990, 777);
-	// ft_printf("%d이지롱\n", 1);
-	// ft_printf("%d이거든\n", 2);
-	// ft_printf("%d이거든\n", 10);
-	// ft_printf("%d이궈거든\n", 12);
-	// ft_printf("%d이궈거든\n", 7777);
-	// ft_printf("%d이지\n", 2147483646);
-	// ft_printf("%d이지\n", 2147483647);
-	// ft_printf("%d이렴\n", -1);
-	// ft_printf("%d이렴\n", -2);
-	// ft_printf("%d이런\n", -10);
-	// ft_printf("%d이런\n", -12);
-	// ft_printf("%d이다\n", -7777);
-	// ft_printf("%d이다\n", -2147483647);
-	// ft_printf("%d입니다\n", -2147483648);
-
-	//: %c
-	// ft_printf("%c", 'H');
-	// ft_printf("%c", 'E');
-	// ft_printf("%c", 'L');
-	// ft_printf("%c", 'L');
-	// ft_printf("%c", 'O');
-	// ft_printf("%c", '\n');
-	// ft_printf("%c", '!');
-	// ft_printf("%c", '?');
 }
