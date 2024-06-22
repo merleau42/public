@@ -8,9 +8,7 @@ size_t	ft_putnbr_base(int nbr, char *base)
   int			index;
   int			nary;
 
-  nary = vaild_base(base);
-  if (nary < 2)
-    return ;
+  nary = ft_strlen(base);
   if (nbr < 0)
   {
     write(1, "-", 1);
@@ -35,9 +33,7 @@ size_t	ft_putnbr_base_unsigned(unsigned int nbr, char *base)
   int			index;
   int			nary;
 
-  nary = vaild_base(base);
-  if (nary < 2)
-    return ;
+  nary = ft_strlen(base);
   index = 65;
   front = index - 1;
   while (index--)
@@ -57,9 +53,7 @@ size_t	ft_putnbr_base_size_t(size_t nbr, char *base)
   int			index;
   int			nary;
 
-  nary = vaild_base(base);
-  if (nary < 2)
-    return ;
+  nary = ft_strlen(base);
   index = 65;
   front = index - 1;
   while (index--)
