@@ -1,87 +1,12 @@
 #include "ft_printf.h"
 
-static void	print_percent_4(va_list paras, char c, size_t *len)
-{
-	unsigned int	nums_unsign;
-	void			*ptr;
-
-	if (c == 'u')
-	{
-		nums_unsign = va_arg(paras, unsigned int);
-		ptr = ft_utoa(nums_unsign);
-		if (!ptr)
-		{
-			*len = -1;
-			return ;
-		}
-		write(1, ptr, ft_strlen(ptr));
-		*len += ft_strlen(ptr);
-		free(ptr);
-	}
-	else if (c == '%')
-	{
-		write(1, "%", 1);
-		*len += 1;
-	}
-	else
-		*len = -1;
-}
-
-static void	print_percent_3(va_list paras, char c, size_t *len)
-{
-	void			*ptr;
-	size_t			arg_addr;
-	size_t			addr_len;
-
-	if (c == 'p')
-	{
-		ptr = va_arg(paras, void *);
-		if (!ptr)
-		{
-			write(1, "(nil)", 5);
-			*len += 5;
-			return ;
-		}
-		arg_addr = (size_t)ptr;
-		write(1, "0x", 2);
-		addr_len = ft_putnbr_base_size_t(arg_addr, SMALL);
-		*len += addr_len + 2;
-	}
-	else
-		print_percent_4(paras, c, len);
-}
-
-static void	print_percent_2(va_list paras, char c, size_t *len)
-{
-	int			nums_int;
-	char		*str;
-
-	if (c != 'd' && c != 'i' && c != 'x' && c != 'X')
-		return (print_percent_3(paras, c, len));
-	nums_int = va_arg(paras, int);
-	if (c == 'd' || c == 'i')
-	{
-		str = ft_itoa(nums_int);
-		if (!str)
-		{
-			*len = -1;
-			return ;
-		}
-		write(1, str, ft_strlen(str));
-		*len += ft_strlen(str);
-		free(str);
-	}
-	else if (c == 'x')
-		*len += ft_putnbr_base(nums_int, SMALL);
-	else if (c == 'X')
-		*len += ft_putnbr_base(nums_int, BIG);
-}
-
-static void	print_percent_1(va_list paras, const char *s, size_t *len)
+static void	ft_process(va_list paras, const char *s, size_t *len)
 {
 	char	c;
 	char	*str;
 	char	chr;
+	int	nums_int;
+	char *ptr;
 
 	c = *(s + 1);
 	if (c == 'c')
@@ -102,8 +27,54 @@ static void	print_percent_1(va_list paras, const char *s, size_t *len)
 		write(1, "(null)", 6);
 		*len += 6;
 	}
+	else if (c == 'd' || c == 'i')
+	{
+		str = ft_itoa(va_arg(paras, int));
+		if (!str)
+		{
+			*len = -1;
+			return ;
+		}
+		write(1, str, ft_strlen(str));
+		*len += ft_strlen(str);
+		free(str);
+	}
+	else if (c == 'x')
+		*len += ft_putnbr_base(va_arg(paras, int), "0123456789abcdef");
+	else if (c == 'X')
+		*len += ft_putnbr_base(va_arg(paras, int), "0123456789ABCDEF");
+	else if (c == 'p')
+	{
+		ptr = va_arg(paras, void *);
+		if (!ptr)
+		{
+			write(1, "(nil)", 5);
+			*len += 5;
+			return ;
+		}
+		write(1, "0x", 2);
+		*len += 2 + ft_putnbr_base_size_t((size_t)ptr, "0123456789abcdef");
+	}
+	else if (c == 'u')
+	{
+		nums_unsign = ;
+		ptr = ft_utoa(va_arg(paras, unsigned int));
+		if (!ptr)
+		{
+			*len = -1;
+			return ;
+		}
+		write(1, ptr, ft_strlen(ptr));
+		*len += ft_strlen(ptr);
+		free(ptr);
+	}
+	else if (c == '%')
+	{
+		write(1, "%", 1);
+		*len += 1;
+	}
 	else
-		print_percent_2(paras, c, len);
+		*len = -1;
 }
 
 int	ft_printf(const char *s, ...)
@@ -117,7 +88,7 @@ int	ft_printf(const char *s, ...)
 	{
 		if (*s == '%')
 		{
-			print_percent_1(paras, s, &len);
+			ft_process(paras, s, &len);
 			s++;
 		}
 		else
