@@ -22,17 +22,17 @@ size_t	ft_process(va_list paras, const char *s)
 	if (*(s + 1) == 's')
 	{
 		byte8 = va_arg(paras, char *);
-		if (byte8)
-			return write(1, str, ft_strlen(str));
-		return write(1, "(null)", 6);
+		if (!byte8)
+			return write(1, "(null)", 6);
+		return write(1, byte8, ft_strlen(byte8));
 	}
 	if (*(s + 1) == 'd' || *(s + 1) == 'i')
 	{
-		byte4 = itoa(va_arg(paras, int));
-		if (!byte4)
-			return -1;
+		// byte4 = itoa(va_arg(paras, int));
+		// if (!byte4)
+			// return -1;
 		len += write(1, byte4, ft_strlen(byte4));
-		free(byte4);
+		// free(byte4);
 	}
 	if (*(s + 1) == 'u')
 	{

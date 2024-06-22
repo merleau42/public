@@ -8,7 +8,7 @@ int main()
 {
 	// printf("%lu", sizeof(Exist));
 	// printf("%lu", 0x8000000000000000);
-	printf("%zd\n", write(1,"0000000",7));
+	printf("%d", printf("%d\n"));
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
