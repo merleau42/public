@@ -41,8 +41,7 @@ size_t	ft_process(va_list paras, const char *s)
 		ptr = va_arg(paras, void *);
 		if (!ptr)
 			return write(1, "(nil)", 5);
-		write(1, "0x", 2);
-		return 2 + ft_putnbr_base_size_t((size_t)ptr, "0123456789abcdef");
+		return write(1, "0x", 2) + ft_putnbr_base_size_t((size_t)ptr, "0123456789abcdef");
 	}
 	else if (*(s + 1) == 'u')
 	{
