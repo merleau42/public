@@ -8,7 +8,7 @@ static void	print_percent_4(va_list paras, char c, size_t *len)
 	if (c == 'u')
 	{
 		nums_unsign = va_arg(paras, unsigned int);
-		ptr = ft_itoa_unsigned(nums_unsign);
+		ptr = ft_utoa(nums_unsign);
 		if (!ptr)
 		{
 			*len = -1;
@@ -61,7 +61,7 @@ static void	print_percent_2(va_list paras, char c, size_t *len)
 	nums_int = va_arg(paras, int);
 	if (c == 'd' || c == 'i')
 	{
-		str = ft_itoa_signed(nums_int);
+		str = ft_itoa(nums_int);
 		if (!str)
 		{
 			*len = -1;
