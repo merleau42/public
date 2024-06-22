@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-// 피신때 풋넘버 베이스 개조
+// 피신 풋넘버 베이스 개조
 size_t	ft_putnbr_base(int nbr, char *base)
 {
   char		conv[65];
@@ -9,6 +9,8 @@ size_t	ft_putnbr_base(int nbr, char *base)
   int			nary;
 
   nary = ft_strlen(base);
+  if (nbr == -2147483648)
+    return write(1,"-2147483648",11);
   if (nbr < 0)
   {
     write(1, "-", 1);
