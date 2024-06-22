@@ -47,7 +47,7 @@ void	ft_process(va_list paras, const char *s, size_t *len)
 		write(1, "0x", 2);
 		*len += 2 + ft_putnbr_base_size_t((size_t)ptr, "0123456789abcdef");
 	}
-	else if (c == 'u')
+	else if (*(s + 1) == 'u')
 	{
 		nums_unsign = ;
 		ptr = ft_utoa(va_arg(paras, unsigned int));
@@ -59,7 +59,7 @@ void	ft_process(va_list paras, const char *s, size_t *len)
 		*len += write(1, ptr, ft_strlen(ptr));
 		free(ptr);
 	}
-	else if (c == '%')
+	else if (*(s + 1) == '%')
 		*len += write(1, "%", 1);
 	else
 		*len = -1;
