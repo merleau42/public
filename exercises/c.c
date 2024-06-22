@@ -8,8 +8,8 @@ int main()
 {
 	char tmp[100];
 
-	itoa(-42972951, tmp, 10);
-	printf("%s\n", tmp);
+	printf("%p\n", tmp);
+	printf("%llu\n", (unsigned long long)tmp);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기

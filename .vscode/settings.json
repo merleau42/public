@@ -84,7 +84,8 @@
         "*.rpx": "xml",
         "*.stl": "json",
         "unistd.h": "c",
-        "ft_printf.h": "c"
+        "ft_printf.h": "c",
+        "stdint.h": "c"
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",
