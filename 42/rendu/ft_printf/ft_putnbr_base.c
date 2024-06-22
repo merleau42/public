@@ -1,7 +1,7 @@
 #include "ft_printf.h"
 
 // 피신때 풋넘버 베이스 개조
-void	ft_putnbr_base(int nbr, char *base)
+size_t	ft_putnbr_base(int nbr, char *base)
 {
   char		conv[65];
   char		front;
@@ -25,10 +25,10 @@ void	ft_putnbr_base(int nbr, char *base)
     if (conv[index] != base[0])
       front = index;
   }
-  write(1, conv + front, 65 - front);
+  return write(1, conv + front, 65 - front);
 }
 
-void	ft_putnbr_base_unsigned(unsigned int nbr, char *base)
+size_t	ft_putnbr_base_unsigned(unsigned int nbr, char *base)
 {
   char		conv[65];
   char		front;
@@ -47,10 +47,10 @@ void	ft_putnbr_base_unsigned(unsigned int nbr, char *base)
     if (conv[index] != base[0])
       front = index;
   }
-  write(1, conv + front, 65 - front);
+  return write(1, conv + front, 65 - front);
 }
 
-void	ft_putnbr_base_size_t(size_t nbr, char *base)
+size_t	ft_putnbr_base_size_t(size_t nbr, char *base)
 {
   char		conv[65];
   char		front;
@@ -69,5 +69,5 @@ void	ft_putnbr_base_size_t(size_t nbr, char *base)
     if (conv[index] != base[0])
       front = index;
   }
-  write(1, conv + front, 65 - front);
+  return write(1, conv + front, 65 - front);
 }
