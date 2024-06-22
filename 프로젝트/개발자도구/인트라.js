@@ -8,24 +8,16 @@ tick++;}
 catch{tick = 0}
 
 // 본투비 남음
-'junseyun 프겟'
-'chjeong 프겟'
 'sangseo 프겟'
-'esong 프겟'
-'jehbae 프겟'
 'taegkang 프겟'
-
-// 프엪남음
-'huylee 겟본'
-'geonyole 겟본'
 
 // 겟넥라 남음
 'sanbaek 프본'
+'keunykim 본'
+'inam 프'
 
-// 
+// 본겟 남음
 'hyunjiki 프'
-'keunykim'
-'inam'
 
 
 /* 마지막 문장만 수정하면 됨 */
