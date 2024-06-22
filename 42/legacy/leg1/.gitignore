@@ -1,6 +1,0 @@
-main.c
-a.out
-srcs/*.o
-libft/*.o
-srcs/.*.swp
-libft/.*.swp

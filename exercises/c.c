@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 
 // size_t Exist[67108864];
@@ -7,9 +8,7 @@ int main()
 {
 	// printf("%lu", sizeof(Exist));
 	// printf("%lu", 0x8000000000000000);
-	printf("%u\n", -1);
-	printf("%d\n", 2147483647);
-	printf("%d\n", 2147483647 + 1);
+	printf("%zd\n", write(1,"0000000",7));
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기

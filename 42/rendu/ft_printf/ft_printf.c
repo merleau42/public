@@ -1,33 +1,27 @@
 #include "ft_printf.h"
 
-static void	ft_process(va_list paras, const char *s, size_t *len)
+void	ft_process(va_list paras, const char *s, size_t *len)
 {
-	char	c;
 	char	*str;
 	char	chr;
-	int	nums_int;
-	char *ptr;
+	int		nums_int;
+	char	*ptr;
 
 	c = *(s + 1);
-	if (c == 'c')
-	{
-		chr = va_arg(paras, int);
-		write(1, &chr, 1);
-		*len += 1;
-	}
-	else if (c == 's')
+	if (*(s + 1) == 'c')
+		*len += write(1, &va_arg(paras, int), 1);
+	else if (*(s + 1) == 's')
 	{
 		str = va_arg(paras, char *);
 		if (str)
 		{
-			write(1, str, ft_strlen(str));
-			*len += ft_strlen(str);
+			*len += write(1, str, ft_strlen(str));
 			return ;
 		}
 		write(1, "(null)", 6);
 		*len += 6;
 	}
-	else if (c == 'd' || c == 'i')
+	else if (*(s + 1) == 'd' || *(s + 1) == 'i')
 	{
 		str = ft_itoa(va_arg(paras, int));
 		if (!str)
@@ -35,21 +29,19 @@ static void	ft_process(va_list paras, const char *s, size_t *len)
 			*len = -1;
 			return ;
 		}
-		write(1, str, ft_strlen(str));
-		*len += ft_strlen(str);
+		*len += write(1, str, ft_strlen(str));
 		free(str);
 	}
-	else if (c == 'x')
+	else if (*(s + 1) == 'x')
 		*len += ft_putnbr_base(va_arg(paras, int), "0123456789abcdef");
-	else if (c == 'X')
+	else if (*(s + 1) == 'X')
 		*len += ft_putnbr_base(va_arg(paras, int), "0123456789ABCDEF");
-	else if (c == 'p')
+	else if (*(s + 1) == 'p')
 	{
 		ptr = va_arg(paras, void *);
 		if (!ptr)
 		{
-			write(1, "(nil)", 5);
-			*len += 5;
+			*len += write(1, "(nil)", 5);
 			return ;
 		}
 		write(1, "0x", 2);
@@ -64,15 +56,11 @@ static void	ft_process(va_list paras, const char *s, size_t *len)
 			*len = -1;
 			return ;
 		}
-		write(1, ptr, ft_strlen(ptr));
-		*len += ft_strlen(ptr);
+		*len += write(1, ptr, ft_strlen(ptr));
 		free(ptr);
 	}
 	else if (c == '%')
-	{
-		write(1, "%", 1);
-		*len += 1;
-	}
+		*len += write(1, "%", 1);
 	else
 		*len = -1;
 }
