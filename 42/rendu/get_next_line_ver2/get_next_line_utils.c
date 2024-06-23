@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils___.c                           :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:54 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 11:35:03 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 12:43:50 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ size_t	ft_strlen(const char *s)
 }
 
 // 
-char	*ft_strjoin(char **repo, char *buf, size_t repo_size, size_t buf_size)
+char	*ft_strjoin(char *repo, char *buf, size_t repo_size, size_t buf_size)
 {
 	char	*concat;
 	size_t	index;
 
-	if (*repo == NULL || buf == NULL)
+	if (repo == NULL || buf == NULL)
 		return (NULL);
 	concat = (char *) malloc(sizeof(char) * (repo_size + buf_size + 1));
 	if (!concat)
@@ -58,52 +58,57 @@ char	*ft_strjoin(char **repo, char *buf, size_t repo_size, size_t buf_size)
 	while (index < repo_size + buf_size)
 	{
 		if (index < repo_size)
-			concat[index] = (*repo)[index];
+			concat[index] = repo[index];
 		else
 			concat[index] = buf[index - repo_size];
 		index++;
 	}
 	concat[index] = '\0';
-	free(*repo);
+	free(repo);
 	return (concat);
 }
 
-char	*ft_strnright(char *repo, size_t repo_size, size_t line_size)
-{
-	char	*left_repo;
-	size_t	left_size;
-	size_t	index;
-
-	left_size = repo_size - line_size;
-	if (repo == NULL || left_size == 0)
-		return (NULL);
-	left_repo = (char *)malloc((left_size + 1) * sizeof(char));
-	if (left_repo == NULL)
-		return (NULL);
-	index = 0;
-	while (index + line_size < repo_size)
-	{
-		left_repo[index] = repo[index + line_size];
-		index ++;
-	}
-	left_repo[index] = '\0';
-	return (left_repo);
-}
 // 문자열에서 len개의 문자만 복제하여 새로운 문자열을 반환함 (dragon,4 ---> drag)
-char	*ft_strndup(const char *s, size_t len)
-{
-	size_t		index;
-	char		*dest;
+// char	*ft_strndup(const char *s, size_t len)
+// {
+// 	size_t		index;
+// 	char		*dest;
 
-	dest = (char *) malloc(sizeof (char) * (len + 1));
-	if (!dest)
+// 	dest = (char *) malloc(sizeof (char) * (len + 1));
+// 	if (!dest)
+// 		return (NULL);
+// 	index = 0;
+// 	while (index < len)
+// 	{
+// 		dest[index] = s[index];
+// 		index++;
+// 	}
+// 	dest[index] = '\0';
+// 	return (dest);
+// }
+
+// s[start + 0] 부터 s[start + len - 1] 까지, 총 len 바이트의 부분 문자열 추출
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	remain;
+	size_t	s_len;
+	char	*sub;
+
+	if (!s)
 		return (NULL);
-	index = 0;
-	while (index < len)
+	s_len = ft_strlen(s);
+	if (s_len > start)
+		remain = s_len - start;
+	else
 	{
-		dest[index] = s[index];
-		index++;
+		start = 0;
+		remain = 0;
 	}
-	dest[index] = '\0';
-	return (dest);
+	if (len > remain)
+		len = remain;
+	sub = (char *) malloc(sizeof(char) * (len + 1));
+	if (!sub)
+		return (NULL);
+	ft_strlcpy(sub, s + start, len + 1);
+	return (sub);
 }
