@@ -1,21 +1,20 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 // size_t Exist[67108864];
 
-int a()
-{
-	printf("a\n");
-	return 1;
-}
-
 int main()
 {
-	if ("b" && a())
-		printf("b");
-	else
-		printf("c");
+	int		fd;
+	char	buff[10000];
+	int		shovel;
+
+	fd = open("sample.txt", O_RDONLY);
+	shovel = read(fd, buff, 333);
+
+	printf("샤벨레오몬: %d", shovel);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
