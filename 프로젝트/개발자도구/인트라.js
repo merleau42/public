@@ -7,18 +7,8 @@ try{if (tick ==  5) here=document.location.href.match(/.+\/users\/(.+)/)[1];
 tick++;}
 catch{tick = 0}
 
-// 본투비 남음
-'sangseo 프겟'
-'taegkang 프겟'
-
-// 겟넥라 남음
-'sanbaek 프본'
-'keunykim 본'
 'inam 프'
-
-// 본겟 남음
-'hyunjiki 프'
-
+'sanbaek 프본'
 
 /* 마지막 문장만 수정하면 됨 */
 try { div.innerText = $(".console-view-pinpane").shadowRoot.querySelector(".console-pin-preview").innerText; div.style.fontSize = "20px"; div.style.backgroundColor="RGB(255, 255, 255, 1)"; div.style.color="black"} catch { div = document.createElement('div'); div.style.width="100%"; div.style.height="100%"; div.style.zIndex="99999"; if(document.title.includes("DevTools")) $('.widget').appendChild(div); } $('[href*=slot]').parentNode.parentNode.parentNode.querySelector('.h-full').innerText
