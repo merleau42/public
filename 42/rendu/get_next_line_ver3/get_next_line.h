@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:06:04 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 16:26:53 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:55:35 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@
 # include <stdlib.h>
 
 char	*get_next_line(int fd);
-void	ft_read_fd(int fd, char *storage);
 
 char	*ft_strchr(char *s, int c);
 size_t	ft_strlen(char *s);
 
-// s[start + 0] 부터 s[start + len - 1] 까지, 총 len 바이트의 부분 문자열 추출
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2)
 
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, size_t start, size_t len); // [start + 0]부터 [start + len-1]까지, len만큼 부분 문자열 추출
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
-# endif /* BUFFER_SIZE */
+# endif
 
-#endif /* GET_NEXT_LINE_H */
+#endif

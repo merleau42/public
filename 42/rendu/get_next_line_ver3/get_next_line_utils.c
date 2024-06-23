@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:54 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 16:28:46 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:56:48 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 }
 
 // s[start + 0] 부터 s[start + len - 1] 까지, 총 len 바이트의 부분 문자열 추출
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, size_t start, size_t len)
 {
 	size_t	remain;
 	size_t	s_len;

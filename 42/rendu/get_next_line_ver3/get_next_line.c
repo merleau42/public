@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 17:15:43 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 18:07:53 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,34 +22,30 @@
 char	*get_next_line(int fd)
 {
 	static char	*storage;
+	ssize_t		shovel; // 파일은 '파여질' 이라는 뜻. that would be shovled. 한번에 파낸 분량.
+	char		*cart;
+	char		*tmp;
 	char		*leftovers;
 	char		*piece;
 	size_t		len;
-	ssize_t		shovel; // 파일은 '파여질' 이라는 뜻. that would be shovled. 
-	char		*buff;
-	char		*tmp;
 
-	buff = (char *) malloc(((size_t)BUFFER_SIZE + 1) * sizeof (char));
-	shovel = read(fd, buff, BUFFER_SIZE);
-	while (shovel > 0) // 파일의 끝이거나(0) 오류가 발생하면(-1) 삽질 종료
+	if (fd < 0 || BUFFER_SIZE <= 0) // 비정상적인 호출시 종료.
+		return (NULL);
+	if (storage == NULL) // 함수의 최초 호출시 스토리지 생성.
+		storage = ft_strjoin("","");
+	cart = (char *) malloc(((size_t)BUFFER_SIZE + 1) * sizeof (char)); // 이번 호출에서 사용될 버퍼를 생성. (광부)
+	shovel = read(fd, cart, BUFFER_SIZE); // BUFFER_SIZE 만큼 파일에서(광산) 퍼오기 시도. BUFFER_SIZE는 카트의 최대 용량.
+	while (shovel > 0 && !ft_strchr(cart, '\n')) // 파일끝(0) 오류발생(-1) 개행문자발견시(\n) 퍼오기 종료.
 	{
-		// shovel = read(fd, buff, BUFFER_SIZE);
-		// if (shovel < 1) // 파일의 끝이거나(0) 오류가 발생하면(-1) 삽질 종료
-			// break;
-		buff[shovel] = '\0'; // 버퍼의 유효한 분량만 이어붙이기 위하여.
-		tmp = ft_strjoin(storage, buff);
+		cart[shovel] = '\0'; // 파일의 분량이 BUFFER_SIZE 보다 모자를 수도 있음. (자투리)
+		tmp = ft_strjoin(storage, cart); // 퍼온 만큼 저장고에 쌓기.
 		free(storage);
 		storage = tmp;
-		if (ft_strchr(buff, '\n') != NULL)
-			break ;
+		shovel = read(fd, cart, BUFFER_SIZE); // 계속되는 삽질과 운반.
 	}
-	free(buff);
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	free(cart); // 광부의 오늘 일감 종료.
+	if (!storage || shovel <= 0)
 		return (NULL);
-	if (storage == NULL)
-		storage = ft_strjoin("","");
-	ft_read_fd(fd, storage);
 	if (ft_strchr(storage, '\n'))
 		len = ft_strchr(storage, '\n') - storage + 1;
 	else
