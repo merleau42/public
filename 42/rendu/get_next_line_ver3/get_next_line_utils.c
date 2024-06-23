@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:54 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 15:27:25 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:04:47 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,48 +44,23 @@ size_t	ft_strlen(const char *s)
 }
 
 // 
-char	*ft_strjoin(char *storage, char *buf, size_t storage_size, size_t buf_size)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
+	size_t	len_s1;
+	size_t	len_s2;
 	char	*concat;
-	size_t	index;
 
-	if (storage == NULL || buf == NULL)
+	if (!s1 || !s2)
 		return (NULL);
-	concat = (char *) malloc(sizeof(char) * (storage_size + buf_size + 1));
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	concat = (char *) malloc(sizeof(char) * (len_s1 + len_s2 + 1));
 	if (!concat)
 		return (NULL);
-	index = 0;
-	while (index < storage_size + buf_size)
-	{
-		if (index < storage_size)
-			concat[index] = storage[index];
-		else
-			concat[index] = buf[index - storage_size];
-		index++;
-	}
-	concat[index] = '\0';
-	free(storage);
+	ft_strlcpy(concat, s1, len_s1 + 1);
+	ft_strlcat(concat, s2, len_s1 + len_s2 + 1);
 	return (concat);
 }
-
-// 문자열에서 len개의 문자만 복제하여 새로운 문자열을 반환함 (dragon,4 ---> drag)
-// char	*ft_strndup(const char *s, size_t len)
-// {
-// 	size_t		index;
-// 	char		*dest;
-
-// 	dest = (char *) malloc(sizeof (char) * (len + 1));
-// 	if (!dest)
-// 		return (NULL);
-// 	index = 0;
-// 	while (index < len)
-// 	{
-// 		dest[index] = s[index];
-// 		index++;
-// 	}
-// 	dest[index] = '\0';
-// 	return (dest);
-// }
 
 // s[start + 0] 부터 s[start + len - 1] 까지, 총 len 바이트의 부분 문자열 추출
 char	*ft_substr(char const *s, unsigned int start, size_t len)
