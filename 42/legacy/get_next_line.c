@@ -6,13 +6,13 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 11:32:32 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 12:04:26 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	ft_read_fd(int fd, char **repo)
+int	ft_read_fd(int fd, char **repo)
 {
 	size_t		repo_size;
 	ssize_t		response;
@@ -39,12 +39,19 @@ void	ft_read_fd(int fd, char **repo)
 		}
 	}
 	free(buff);
+	return (1);
 }
 
-char	*ft_get_line(char *repo)
+char	*get_next_line(int fd)
 {
-	char	*line;
-	size_t	index;
+	static char	*repo;
+	char		*left_repo;
+	char		*submit;
+	size_t		index;
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || (ft_read_fd(fd, &repo) && !repo))
+		return (NULL);
+
 
 	index = 0;
 	while (1)
@@ -55,45 +62,18 @@ char	*ft_get_line(char *repo)
 			break ;
 		}
 		if (repo[index] == '\0')
-		{
 			break ;
-		}
 		index ++;
 	}
-	line = ft_strndup(repo, index);
-	return (line);
-}
+	submit = ft_strndup(repo, index);
 
-void	ft_remove_line(char **repo, char *line)
-{
-	char	*left_repo;
-	size_t	repo_size;
-	size_t	line_size;
 
-	repo_size = ft_strlen(*repo);
-	line_size = ft_strlen(line);
-	left_repo = ft_strnright(*repo, repo_size, line_size);
-	free(*repo);
-	*repo = NULL;
+
+
+	left_repo = ft_strnright(repo, ft_strlen(repo), ft_strlen(submit));
+	free(repo);
+	repo = NULL;
 	if (left_repo != NULL)
-	{
-		*repo = left_repo;
-	}
-}
-
-char	*get_next_line(int fd)
-{
-	static char	*repo;
-	char		*line;
-
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	ft_read_fd(fd, &repo);
-	if (repo == NULL)
-	{
-		return (NULL);
-	}
-	line = ft_get_line(repo);
-	ft_remove_line(&repo, line);
-	return (line);
+		repo = left_repo;
+	return (submit);
 }
