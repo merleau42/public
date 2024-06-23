@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 18:07:53 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 18:21:35 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*get_next_line(int fd)
 		shovel = read(fd, cart, BUFFER_SIZE); // 계속되는 삽질과 운반.
 	}
 	free(cart); // 광부의 오늘 일감 종료.
-	if (!storage || shovel <= 0)
+	if (shovel <= 0)
 		return (NULL);
 	if (ft_strchr(storage, '\n'))
 		len = ft_strchr(storage, '\n') - storage + 1;
