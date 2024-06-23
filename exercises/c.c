@@ -4,12 +4,18 @@
 
 // size_t Exist[67108864];
 
+int a()
+{
+	printf("a\n");
+	return 1;
+}
+
 int main()
 {
-	char tmp[100];
-
-	printf("%p\n", tmp);
-	printf("%llu\n", (unsigned long long)tmp);
+	if ("b" && a())
+		printf("b");
+	else
+		printf("c");
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기

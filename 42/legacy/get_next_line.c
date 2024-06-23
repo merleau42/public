@@ -6,33 +6,33 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 12:04:26 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 13:01:52 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_read_fd(int fd, char **repo)
+int	ft_read_fd(int fd, char *repo)
 {
 	size_t		repo_size;
 	ssize_t		response;
 	char		*buff;
 
-	response = 1;
-	if (*repo == NULL)
+	if (repo == NULL)
 	{
-		*repo = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
-		**repo = '\0';
+		repo = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
+		*repo = '\0';
 	}
-	repo_size = ft_strlen(*repo);
+	repo_size = ft_strlen(repo);
+	response = 1;
 	buff = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
-	while (*repo && response > 0)
+	while (repo && response > 0)
 	{
 		response = read(fd, buff, BUFFER_SIZE);
 		if (response > 0)
 		{
 			buff[response] = '\0';
-			*repo = ft_strjoin(repo, buff, repo_size, response);
+			repo = ft_strjoin(repo, buff, repo_size, response);
 			repo_size += BUFFER_SIZE;
 			if (ft_strchr(buff, '\n') != NULL)
 				break ;
@@ -42,38 +42,59 @@ int	ft_read_fd(int fd, char **repo)
 	return (1);
 }
 
+char	*ft_strnright(char *repo, size_t line_size)
+{
+	char	*left_repo;
+	size_t	left_size;
+	size_t	repo_size;
+	size_t	index;
+
+	repo_size = ft_strlen(repo);
+	left_size = repo_size - line_size;
+	if (repo == NULL || left_size == 0)
+		return (NULL);
+	left_repo = (char *)malloc((left_size + 1) * sizeof(char));
+	if (!left_repo)
+		return (NULL);
+	index = 0;
+	while (index + line_size < repo_size)
+	{
+		left_repo[index] = repo[index + line_size];
+		index ++;
+	}
+	left_repo[index] = '\0';
+	return (left_repo);
+}
 char	*get_next_line(int fd)
 {
 	static char	*repo;
-	char		*left_repo;
-	char		*submit;
-	size_t		index;
+	char		*tmp;
+	char		*one_line;
+	size_t		len;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || (ft_read_fd(fd, &repo) && !repo))
+	if (fd < 0 || BUFFER_SIZE <= 0 || (ft_read_fd(fd, repo) && !repo))
 		return (NULL);
-
-
-	index = 0;
+	len = strchr(repo, '\n') - repo + 1;
+	len = 0;
 	while (1)
 	{
-		if (repo[index] == '\n')
+		if (repo[len] == '\n')
 		{
-			index ++;
+			len++;
 			break ;
 		}
-		if (repo[index] == '\0')
+		if (repo[len] == '\0')
 			break ;
-		index ++;
+		len++;
 	}
-	submit = ft_strndup(repo, index);
-
-
-
-
-	left_repo = ft_strnright(repo, ft_strlen(repo), ft_strlen(submit));
+	//최종적으로 len의 값은,
+	//	repo에 \n이 존재하면 search(\n) - repo + 1
+	//	repo에 \n이 존재하지않으면 strlen(repo) 혹은 search(\0) )
+	one_line = ft_substr(repo, 0, len); //snd(repo, len)
+	tmp = ft_strnright(repo, len);
 	free(repo);
 	repo = NULL;
-	if (left_repo != NULL)
-		repo = left_repo;
-	return (submit);
+	if (tmp != NULL)
+		repo = tmp;
+	return (one_line);
 }

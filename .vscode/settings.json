@@ -85,7 +85,8 @@
         "*.stl": "json",
         "unistd.h": "c",
         "ft_printf.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "get_next_line.h": "c"
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",
