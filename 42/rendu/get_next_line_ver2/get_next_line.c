@@ -6,34 +6,34 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 14:26:29 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:53:33 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_read_fd(int fd, char *repo)
+int	ft_read_fd(int fd, char *storage)
 {
-	size_t		repo_size;
+	size_t		storage_size;
 	ssize_t		response;
 	char		*buff;
 
-	if (repo == NULL)
+	if (storage == NULL)
 	{
-		repo = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
-		*repo = '\0';
+		storage = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
+		*storage = '\0';
 	}
-	repo_size = ft_strlen(repo);
+	storage_size = ft_strlen(storage);
 	response = 1;
 	buff = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
-	while (repo && response > 0)
+	while (storage && response > 0)
 	{
 		response = read(fd, buff, BUFFER_SIZE);
 		if (response > 0)
 		{
 			buff[response] = '\0';
-			repo = ft_strjoin(repo, buff, repo_size, response);
-			repo_size += BUFFER_SIZE;
+			storage = ft_strjoin(storage, buff, storage_size, response);
+			storage_size += BUFFER_SIZE;
 			if (ft_strchr(buff, '\n') != NULL)
 				break ;
 		}
@@ -41,48 +41,48 @@ int	ft_read_fd(int fd, char *repo)
 	free(buff);
 	return (1);
 }
-
-char	*ft_strnright(char *repo, size_t line_size)
+// 기존 저장고에서 나머지 구하기
+char	*ft_strnright(char *storage, size_t line_size)
 {
-	char	*left_repo;
+	char	*left_storage;
 	size_t	left_size;
-	size_t	repo_size;
+	size_t	storage_size;
 	size_t	index;
 
-	repo_size = ft_strlen(repo);
-	left_size = repo_size - line_size;
-	if (repo == NULL || left_size == 0)
+	storage_size = ft_strlen(storage);
+	left_size = storage_size - line_size;
+	if (storage == NULL || left_size == 0)
 		return (NULL);
-	left_repo = (char *)malloc((left_size + 1) * sizeof(char));
-	if (!left_repo)
+	left_storage = (char *)malloc((left_size + 1) * sizeof(char));
+	if (!left_storage)
 		return (NULL);
 	index = 0;
-	while (index + line_size < repo_size)
+	while (index + line_size < storage_size)
 	{
-		left_repo[index] = repo[index + line_size];
+		left_storage[index] = storage[index + line_size];
 		index ++;
 	}
-	left_repo[index] = '\0';
-	return (left_repo);
+	left_storage[index] = '\0';
+	return (left_storage);
 }
 char	*get_next_line(int fd)
 {
-	static char	*repo;
+	static char	*storage;
 	char		*tmp;
 	char		*one_line;
 	size_t		len;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || (ft_read_fd(fd, repo) && !repo))
+	if (fd < 0 || BUFFER_SIZE <= 0 || (ft_read_fd(fd, storage) && !storage))
 		return (NULL);
-	if (strchr(repo, '\n'))
-		len = strchr(repo, '\n') - repo + 1;
+	if (strchr(storage, '\n'))
+		len = strchr(storage, '\n') - storage + 1;
 	else
-		len = strchr(repo, '\0');
-	one_line = ft_substr(repo, 0, len); //snd(repo, len)
-	tmp = ft_strnright(repo, len);
-	free(repo);
-	repo = NULL;
+		len = strchr(storage, '\0');
+	one_line = ft_substr(storage, 0, len); //snd(storage, len)
+	tmp = ft_strnright(storage, len);
+	free(storage);
+	storage = NULL;
 	if (tmp != NULL)
-		repo = tmp;
+		storage = tmp;
 	return (one_line);
 }
