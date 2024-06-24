@@ -1,20 +1,23 @@
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-
+#define BUFFER_SIZE 13000000000
 // size_t Exist[67108864];
 
 int main()
 {
-	int		fd;
-	char	buff[10000];
-	int		shovel;
+	char *a;
+	size_t len;
 
-	fd = open("sample.txt", O_RDONLY);
-	shovel = read(fd, buff, 333);
+	a = (char *) malloc(BUFFER_SIZE + 1);
+	memset(a, 'x', BUFFER_SIZE);
+	a[BUFFER_SIZE] = '\0';
 
-	printf("샤벨레오몬: %d", shovel);
+	len = strlen(a);
+
+	printf("%zu", len);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기

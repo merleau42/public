@@ -45,8 +45,7 @@ printf "#User log: "
 who | wc -l
 
 # ip link show는 시스템에 설치된 네트워크 인터페이스의 정보를 출력하는 명령어이다.
-# 첫번째 필드가 "link/ether" 인 라인의 두번째 필드를 출력한다.
-# 여기서 "link/ether"는 이더넷 인터페이스의 물리적 주소를(MAC) 나타내는 키워드이다.
+# "link/ether"는 이더넷 인터페이스의 물리적 주소를(MAC) 나타낸다.
 printf "#Network: IP "
 hip=$(hostname -I)
 mac=$(ip a | sed -E 's/^[0-9]+: +/뷁/' | tr -d '\n' | tr '뷁' '\n' | grep $hip | sed -E 's/.+ether ([^ ]+?).+/\1/')
@@ -57,24 +56,3 @@ printf "#Sudo : "
 journalctl _COMM=sudo | grep COMMAND | grep TSID= | wc -l | awk '{printf "%d cmd\n", $1}'
 # journalctl _COMM=sudo | grep COMMAND | grep -v 'user NOT in sudoers' | wc -l | awk '{printf "%d cmd\n", $1}'
 # ls -lR /var/log/sudo | grep 'log$' | wc -l | awk '{printf "%d cmd\n", $1}'
-
-
-
-
-###############################
-
-#파일에 실행 권한을 추가
-chmod +x monitoring.sh 
-
-# cron은 리눅스에서 백그라운드에서 동작하는 작업 스케줄러이다.
-# -e옵션은 현재 사용자의 cron 작업을 편집 모드로 열어주는 옵션이다.
-crontab -e
-/10 * * * * /root/monitoring.sh | wall
-
-##############################
-
-https://velog.io/@joonpark/Born2BeRoot
-https://velog.io/@kyj93790/Born2beroot-4.-Vim-%EC%84%A4%EC%B9%98-%EB%B0%8F-SSH-%EC%84%A4%EC%A0%95
-https://velog.io/@tmdgks2222/42seoul-born2beroot-cron-monitoring.sh
-https://velog.io/@kyj93790/Born2beroot-6.-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%A0%95%EB%B3%B4-%EC%B6%9C%EB%A0%A5-cron-tab
-https://velog.io/@garoulata/Born2beRoot

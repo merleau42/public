@@ -1,10 +1,12 @@
+임시적으로 .gite 파일을 .git으로 바꿔서 사용했다가, 다시 .gite로 바꿔놓기
+
 libft
 	war
 	unit
 	tester
 
 printf
-	paulo
+	paulo		ㅡ 메이크파일 수정(LIBFTPRINTF_DIR = printf 절대 경로 기입), 테스터 폴더에서 sh test m
 	tripouile
 
 get_next_line
