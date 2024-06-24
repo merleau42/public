@@ -6,13 +6,13 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 21:18:53 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/24 11:43:55 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*new_line(char **strg)
+char	*take_off(char **strg)
 {
 	char		*leftovers;
 	char		*piece;
@@ -55,5 +55,5 @@ char	*get_next_line(int fd)
 	free(cart);
 	if (shovel == -1)
 		return (NULL);
-	return (new_line(&storage));
+	return (take_off(&storage));
 }

@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:06:04 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/23 21:21:54 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/23 21:21:37 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
-char	*get_next_line(int fd);
 char	*new_line(char **strg);
+char	*get_next_line(int fd);
 
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);

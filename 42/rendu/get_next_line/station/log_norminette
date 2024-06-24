@@ -1,3 +1,0 @@
-../get_next_line.c: Error!
-Error: LINE_TOO_LONG        (line:  26, col:  84):	line too long
-Error: SPACE_AFTER_KW       (line:  52, col:  13):	Missing space after keyword
