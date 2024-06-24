@@ -1,4 +1,4 @@
-LIBFTPRINTF_DIR = /home/keunykim/goinfre/yebiprintf
+LIBFTPRINTF_DIR = /home/keunykim/dev/42/rendu/printf_5/
 ERROR_LIMIT = 0
 
 SHELL = /bin/sh
