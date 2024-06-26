@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/26 13:01:34 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/26 11:13:51 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,16 @@ size_t	ft_putchar(int nbr)
 
 size_t	ft_putnbr(size_t nbr, char *base, int type)
 {
-	const int	nary = ft_strchr(base, '\0') - base;
 	char		conv[65];
+	char		front;
 	int			index;
-	int			front;
-	int			negative;
+	const int	nary = ft_strchr(base, '\0') - base;
+	const int	negative = (type == 'd' || type == 'i') && nbr >= 2147483648;
 
 	if (type == 'd' || type == 'i' || type == 'u')
 		nbr = (unsigned int) nbr;
 	if ((type == 'd' || type == 'i') && nbr == 2147483648)
 		return (write(1, "-2147483648", 11));
-	negative = (type == 'd' || type == 'i') && nbr >= 2147483648;
 	if (negative)
 		nbr = 0xFFFFFFFF - nbr + 1;
 	index = 65;
@@ -64,30 +63,31 @@ size_t	ft_putnbr(size_t nbr, char *base, int type)
 
 void	ft_process(va_list paras, const char *s, int *len)
 {
-	void		*p;
-	const char	ch = *(s + 1);
+	void	*p;
 
-	if (ch == '%')
+	if (*(s + 1) == '%')
 		*len += write(1, "%", 1);
-	if (ch == 'd' || ch == 'i')
+	if (*(s + 1) == 'd' || *(s + 1) == 'i')
 		*len += ft_putnbr(va_arg(paras, int), "0123456789", 'i');
-	if (ch == 'u')
+	if (*(s + 1) == 'u')
 		*len += ft_putnbr(va_arg(paras, int), "0123456789", 'u');
-	if (ch == 'x')
+	if (*(s + 1) == 'x')
 		*len += ft_putnbr(va_arg(paras, int), "0123456789abcdef", 'u');
-	if (ch == 'X')
+	if (*(s + 1) == 'X')
 		*len += ft_putnbr(va_arg(paras, int), "0123456789ABCDEF", 'u');
-	if (ch == 'c')
+	if (*(s + 1) == 'c')
 		*len += ft_putchar(va_arg(paras, int));
-	if (ch == 's' || ch == 'p')
+	if (*(s + 1) == 's' || *(s + 1) == 'p')
 		p = va_arg(paras, void *);
-	if (ch == 's' && p)
+	if (*(s + 1) == 's' && p)
 		*len += write(1, p, ft_strchr(p, '\0') - (char *) p);
-	if (ch == 'p' && p)
+	if (*(s + 1) == 'p' && p)
 		*len += write(1, "0x", 2) + ft_putnbr((size_t)p, "0123456789abcdef", 0);
-	if (ft_strchr("sp", ch) && !p)
-		*len += write(1, &"(null)(nil)"[6 * (ch == 'p')], 6 - (ch == 'p'));
-	*len = (ft_strchr("diuxXcsp%", ch) != NULL) * (*len + 1) - 1;
+	if (*(s + 1) == 's' && !p)
+		*len += write(1, "(null)", 6);
+	if (*(s + 1) == 'p' && !p)
+		*len += write(1, "(nil)", 5);
+	*len = (ft_strchr("diuxXcsp%", *(s + 1)) != NULL) * (*len + 1) - 1;
 }
 
 int	ft_printf(const char *s, ...)

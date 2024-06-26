@@ -5,14 +5,9 @@
 #include <fcntl.h>
 // size_t Exist[67108864];
 
-#include "/home/keunykim/dev/42/rendu/printf_5/ft_printf.h"
-
 int main()
 {
-	size_t a;
-	a = (unsigned int)3147983649;
-	printf("%u\n", a);
-	ft_printf("%u\n", a);
+	write(1, &"(null)(nil)"[6* (*())], 6);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
