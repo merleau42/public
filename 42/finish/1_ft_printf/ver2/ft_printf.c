@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/26 11:13:51 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/26 14:32:42 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,18 @@ size_t	ft_putchar(int nbr)
 
 size_t	ft_putnbr(size_t nbr, char *base, int type)
 {
-	char		conv[65];
-	char		front;
-	int			index;
-	const int	nary = ft_strchr(base, '\0') - base;
-	const int	negative = (type == 'd' || type == 'i') && nbr >= 2147483648;
-
+	char	conv[65];
+	char	front;
+	int		index;
+	int		nary; 
+	int		negative;
+	
+	nary = ft_strchr(base, '\0') - base;
 	if (type == 'd' || type == 'i' || type == 'u')
 		nbr = (unsigned int) nbr;
 	if ((type == 'd' || type == 'i') && nbr == 2147483648)
 		return (write(1, "-2147483648", 11));
+	negative = (type == 'd' || type == 'i') && nbr >= 2147483648;
 	if (negative)
 		nbr = 0xFFFFFFFF - nbr + 1;
 	index = 65;
