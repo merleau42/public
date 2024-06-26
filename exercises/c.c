@@ -3,21 +3,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#define BUFFER_SIZE 13000000000
 // size_t Exist[67108864];
 
 int main()
 {
-	char *a;
-	size_t len;
-
-	a = (char *) malloc(BUFFER_SIZE + 1);
-	memset(a, 'x', BUFFER_SIZE);
-	a[BUFFER_SIZE] = '\0';
-
-	len = strlen(a);
-
-	printf("%zu", len);
+	size_t a;
+	a = (unsigned int)3147983649;
+	printf("%u", a);
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기

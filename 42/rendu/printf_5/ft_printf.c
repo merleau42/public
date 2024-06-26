@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/24 21:50:57 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/26 09:01:53 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_process(va_list paras, const char *s, int *len)
 		// *len += ft_putnbr_base(va_arg(paras, int), "0123456789");
 		*len += putnbr_base(va_arg(paras, int), "0123456789", 'i');
 	if (*(s + 1) == 'u')
-		*len += putnbr_base(va_arg(paras, int), "0123456789", 'u');
+		*len += putnbr_base(va_arg(paras, int), "0123456789", 't');
 	if (*(s + 1) == 'x')
 		*len += putnbr_base(va_arg(paras, int), HEXLOWER, 'u');
 	if (*(s + 1) == 'X')
