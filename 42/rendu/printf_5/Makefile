@@ -1,7 +1,6 @@
 NAME = libftprintf.a
-SRCS = ft_printf.c ft_putnbr_base.c
-
-OBJS = $(SRCS:.c=.o)
+SRCS = ft_printf.c
+OBJS = ft_printf.o
 
 all: $(NAME)
 

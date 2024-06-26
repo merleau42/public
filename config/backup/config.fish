@@ -34,6 +34,7 @@ alias ㅌ="clear";
 alias c="clear; cc $FLAGS *.c -o $out";
 alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $out";
 alias ec="clear; cc $FLAGS $dev/exercises/*.c -o $out";
+alias ecc="clear; cc $dev/exercises/*.c -o $out";
 
 alias a="clear; $out";
 

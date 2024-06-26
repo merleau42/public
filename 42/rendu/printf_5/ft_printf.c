@@ -6,11 +6,12 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/26 09:01:53 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/26 11:00:32 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include <stdarg.h>
+#include <unistd.h>
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -34,32 +35,57 @@ size_t	ft_putchar(int nbr)
 	return (write(1, &nbr, 1));
 }
 
+size_t	ft_putnbr(size_t nbr, char *base, int type)
+{
+	char		conv[65];
+	char		front;
+	int			index;
+	const int	nary = ft_strchr(base, '\0') - base;
+	const int	negative = (type == 'd' || type == 'i') && nbr > 2147483648;
+
+	if (type == 'd' || type == 'i' || type == 'u')
+		nbr = (unsigned int) nbr;
+	if ((type == 'd' || type == 'i') && nbr == 2147483648)
+		return (write(1, "-2147483648", 11));
+	if (negative)
+		nbr = 0xFFFFFFFF - nbr + 1;
+	index = 65;
+	front = index - 1;
+	while (index--)
+	{
+		conv[index] = base[nbr % nary];
+		nbr = nbr / nary;
+		if (conv[index] != base[0])
+			front = index;
+	}
+	return (write(1, "-", negative) + write(1, conv + front, 65 - front));
+}
+
 void	ft_process(va_list paras, const char *s, int *len)
 {
-	void	*ptr;
+	void	*p;
 
 	if (*(s + 1) == '%')
 		*len += write(1, "%", 1);
 	if (*(s + 1) == 'd' || *(s + 1) == 'i')
-		// *len += ft_putnbr_base(va_arg(paras, int), "0123456789");
-		*len += putnbr_base(va_arg(paras, int), "0123456789", 'i');
+		*len += ft_putnbr(va_arg(paras, int), "0123456789", 'i');
 	if (*(s + 1) == 'u')
-		*len += putnbr_base(va_arg(paras, int), "0123456789", 't');
+		*len += ft_putnbr(va_arg(paras, int), "0123456789", 'u');
 	if (*(s + 1) == 'x')
-		*len += putnbr_base(va_arg(paras, int), HEXLOWER, 'u');
+		*len += ft_putnbr(va_arg(paras, int), "0123456789abcdef", 'u');
 	if (*(s + 1) == 'X')
-		*len += putnbr_base(va_arg(paras, int), HEXUPPER, 'u');
+		*len += ft_putnbr(va_arg(paras, int), "0123456789ABCDEF", 'u');
 	if (*(s + 1) == 'c')
 		*len += ft_putchar(va_arg(paras, int));
 	if (*(s + 1) == 's' || *(s + 1) == 'p')
-		ptr = va_arg(paras, void *);
-	if (*(s + 1) == 's' && ptr)
-		*len += write(1, ptr, ft_strchr(ptr, '\0') - (char *) ptr);
-	if (*(s + 1) == 'p' && ptr)
-		*len += write(1, "0x", 2) + putnbr_base((size_t)ptr, HEXLOWER, 't');
-	if (*(s + 1) == 's' && !ptr)
+		p = va_arg(paras, void *);
+	if (*(s + 1) == 's' && p)
+		*len += write(1, p, ft_strchr(p, '\0') - (char *) p);
+	if (*(s + 1) == 'p' && p)
+		*len += write(1, "0x", 2) + ft_putnbr((size_t)p, "0123456789abcdef", 0);
+	if (*(s + 1) == 's' && !p)
 		*len += write(1, "(null)", 6);
-	if (*(s + 1) == 'p' && !ptr)
+	if (*(s + 1) == 'p' && !p)
 		*len += write(1, "(nil)", 5);
 	*len = (ft_strchr("diuxXcsp%", *(s + 1)) != NULL) * (*len + 1) - 1;
 }
