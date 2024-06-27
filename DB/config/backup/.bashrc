@@ -1,11 +1,11 @@
 export PS1='\[\033[01;31m\]\w\[\033[00m\]\$ '
 
-export dev="~/dev";
-export FT="~/dev/42";
+export dev="~/dev/DB";
+export FT="~/dev/DB/42";
 export out="~/goinfre/out.out";
 export FLAGS="-Werror -Wextra -Wall";
 
-export msg_d="깃허브 git add, git push는 여기서";
+export msg_d="깃허브 git add, GIT PULL, git push는 여기서";
 export msg_r="git clone 해서 폴더 만들기 -- 내부에서 작업하기";
 export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
 alias warn="echo 업로드가 끝날 때까지 터미널을 닫지마세요";
