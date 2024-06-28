@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 23:42:24 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/28 23:42:24 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/06/28 23:44:25 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <signal.h>
 # include <stdint.h>
 # include <stdio.h> // 지워라
-# include "libftprintf/ft_printf.h"
 # define BINARY "01"
 
 typedef struct s_data {
