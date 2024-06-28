@@ -2,198 +2,121 @@
 #include	"mlx.h"
 #include	"mlx_int.h"
 
-#define	WIN1_SX		242
-#define	WIN1_SY		242
-#define	IM1_SX		42
-#define	IM1_SY		42
-#define	IM3_SX		242
-#define	IM3_SY		242
-
 void *mlx;
-void *win1;
-void *win2;
-void *win3;
-void *im1;
-void *im2;
-void *im3;
-void *im4;
-int	bpp1;
-int	bpp2;
-int	bpp3;
-int	bpp4;
-int	sl1;
-int	sl2;
-int	sl3;
-int	sl4;
-int	endian1;
-int	endian2;
-int	endian3;
-int	endian4;
-char *data1;
-char *data2;
-char *data3;
-char *data4;
-int	xpm1_x;
-int	xpm1_y;
+void *win1, *win2, *win3;
+void *img1, *img2, *img3, *img4;
+
+int	bpp1, bpp2,	bpp3, bpp4;
+int	sl1, sl2, sl3, sl4;
+int	endian1, endian2, endian3, endian4;
+char *data1, *data2, *data3, *data4;
+int	xpm1_x,	xpm1_y;
 
 int	local_endian;
 
 int	color_map_1(void *win,int w,int h);
 int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int type);
 
-int	expose_win1(void *p)
-{
-	mlx_put_image_to_window(mlx,win1,im3,0,0);
-}
+int	expose_win1(void *p){ mlx_put_image_to_window(mlx,win1,img3,0,0); }
+int	expose_win2(void *p){ mlx_put_image_to_window(mlx,win2,img4,0,0); mlx_put_image_to_window(mlx,win2,img2,0,0); }
 
-int	expose_win2(void *p)
-{
-	mlx_put_image_to_window(mlx,win2,im4,0,0);
-	mlx_put_image_to_window(mlx,win2,im2,0,0);
-}
+int	key_win1(int key,void *p){ printf("Key in Win1 : %d\n",key); if (key==0xFF1B) exit(0); }
+int	key_win2(int key,void *p){ printf("Key in Win2 : %d\n",key); if (key==0xFF1B) exit(0); }
+int	key_win3(int key,void *p){ printf("Key in Win3 : %d\n",key); if (key==0xFF1B) mlx_destroy_window(mlx,win3); }
 
-int	key_win1(int key,void *p)
-{
-	printf("Key in Win1 : %d\n",key);
-	if (key==0xFF1B)
-		exit(0);
-}
+int	mouse_win1(int button,int x,int y, void *p){ printf("Mouse in Win1, button %d at %dx%d.\n",button,x,y); }
+int	mouse_win2(int button,int x,int y, void *p){ printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y); }
+int	mouse_win3(int x,int y, void *p){ printf("Mouse moving in Win3, at %dx%d.\n",x,y); }
 
-int	key_win2(int key,void *p)
-{
-	printf("Key in Win2 : %d\n",key);
-	if (key==0xFF1B)
-		exit(0);
-}
-
-int	key_win3(int key,void *p)
-{
-	printf("Key in Win3 : %d\n",key);
-	if (key==0xFF1B)
-		mlx_destroy_window(mlx,win3);
-}
-
-int	mouse_win1(int button,int x,int y, void *p)
-{
-	printf("Mouse in Win1, button %d at %dx%d.\n",button,x,y);
-}
-
-int	mouse_win2(int button,int x,int y, void *p)
-{
-	printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y);
-}
-
-int	mouse_win3(int x,int y, void *p)
-{
-	printf("Mouse moving in Win3, at %dx%d.\n",x,y);
-}
+void message(int wait, char *msg){ printf("%s", msg); sleep(wait); }
 
 int	main()
 {
-	int	a;
+	//:	변동 사항 적용 방법 → 테스트 폴더에서 실행:   make -C ../; clear; ./mlx-test
 
-	a = 0x11223344;
-	local_endian = ((unsigned char *)&a)[0] == 0x11;
-	printf("이 컴퓨터의 엔디안: %d\n",local_endian);
+	message(0, "#### 엔디안 유형 확인");
+		int	a = 0x11223344; // a = 287454020  ---->  unsigned char* [0]  0x11  0x44
+		local_endian = (&a)[0] == 0x11;
+		printf("\n결과: %d\n", local_endian);
 
-	printf("\n------mlx 초기화------");
-	mlx = mlx_init();
-	printf("완료 (use_xshm %d pshm_format %d)\n",((t_xvar *)mlx)->use_xshm,((t_xvar *)mlx)->pshm_format);
+	message(1, "\n#### mlx 초기화");
+		mlx = mlx_init();
+		printf("\nuse_xshm %d pshm_format %d\n",((t_xvar *)mlx)->use_xshm,((t_xvar *)mlx)->pshm_format);
 
-	printf("\n------첫번째 창 생성------");
-	win1 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title1");
+	message(2, "\n#### 첫번째 창 생성");
+		win1 = mlx_new_window(mlx, 300, 300, "1st");
 
-	printf("\n------첫번째 창 색칠하기------");
-	color_map_1(win1,WIN1_SX,WIN1_SY);
-	sleep(2);
+	message(2, "\n#### 첫번째 창 칠하기");
+		color_map_1(win1, 250, 250);
 
-	printf("\n------첫번째 창 비우기------");
-	mlx_clear_window(mlx,win1);
-	sleep(2);
+	message(2, "\n#### 첫번째 창 비우기");
+		mlx_clear_window(mlx, win1);
 
-	printf(" => Image1 ZPixmap %dx%d ...",IM1_SX,IM1_SY);
-	im1 = mlx_new_image(mlx,IM1_SX,IM1_SY);
-	data1 = mlx_get_data_addr(im1,&bpp1,&sl1,&endian1);
-	printf("OK (bpp1: %d, sizeline1: %d endian: %d type: %d)\n",bpp1,sl1,endian1, ((t_img *)im1)->type);
+	message(2, "\n\n#### 이미지 객체1 생성");
+		img1 = mlx_new_image(mlx, 42, 42);
+		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
+		printf("\nbpp1: %d, sizeline1: %d endian: %d type: %d",bpp1,sl1,endian1, ((t_img *)img1)->type);
 
-	printf(" => Fill Image1 ...");
-	color_map_2(data1,bpp1,sl1,IM1_SX,IM1_SY,endian1, 1);
-	printf("OK (pixmap : %d)\n",(int)((t_img *)im1)->pix);
+	message(2, "\n#### 이미지 객체1 채우기");
+		color_map_2(data1,bpp1,sl1,42,42,endian1, 1);
+		printf("  //  pixmap : %d",(int)((t_img *)img1)->pix);
 
-	printf(" => Put Image1 ...");
-	mlx_put_image_to_window(mlx,win1,im1,20,20);
-	printf("OK\n");
-	sleep(2);
+	message(2, "\n#### 이미지 객체1 화면에 뿌리기");
+		mlx_put_image_to_window(mlx,win1,img1,20,20);
 
-	printf(" => Destroy Image1 ... ");
-	mlx_destroy_image(mlx, im1);
-	printf("OK\n");
-	sleep(2);
+	message(2, "\n#### 이미지 객체1 삭제 (뿌려진 픽셀은 그대로 남음)");
+		mlx_destroy_image(mlx, img1);
 
-	printf(" => Image3 ZPixmap %dx%d ...",IM3_SX,IM3_SY);
-	im3 = mlx_new_image(mlx,IM3_SX,IM3_SY);
-	if (!im3)
-		exit(1);
-	data3 = mlx_get_data_addr(im3,&bpp3,&sl3,&endian3);
-	printf("OK (bpp3 %d, sizeline3 %d endian3 %d type %d)\n",bpp3,sl3,endian3, ((t_img *)im3)->type);
+	message(3, "\n\n#### 이미지 객체3 생성");
+		img3 = mlx_new_image(mlx,242,242);
+		data3 = mlx_get_data_addr(img3,&bpp3,&sl3,&endian3);
+		printf("\nbpp3 %d, sizeline3 %d endian3 %d type %d",bpp3,sl3,endian3, ((t_img *)img3)->type);
 
-	printf(" => Fill Image3 ...");
-	color_map_2(data3,bpp3,sl3,IM3_SX,IM3_SY,endian3, 1);
-	printf("OK (pixmap : %d)\n",(int)((t_img *)im3)->pix);
+	message(2, "\n#### 이미지 객체3 채우기");
+		color_map_2(data3,bpp3,sl3,242,242,endian3, 1);
+		printf("  //  pixmap : %d",(int)((t_img *)img3)->pix);
 
-	printf(" => Put Image3 ...");
-	mlx_put_image_to_window(mlx,win1,im3,20,20);
-	printf("OK\n");
-	sleep(2);
-
-	printf(" => String ...");
-	mlx_string_put(mlx,win1,5,WIN1_SY/2,0xFF99FF,"String output");
-	mlx_string_put(mlx,win1,15,WIN1_SY/2+20,0x00FFFF,"MinilibX test");
-	printf("OK\n");
-	sleep(2);
-
-	printf(" => Xpm from file ...");
-	if (!(im2 = mlx_xpm_file_to_image(mlx,"open.xpm",&xpm1_x,&xpm1_y)))
-		{
-			printf(" !! KO !!\n");
-			exit(1);
-		}
-	data2 = mlx_get_data_addr(im2,&bpp2,&sl2,&endian2);
-	printf("OK (xpm %dx%d)(img bpp2: %d, sizeline2: %d endian: %d type: %d)\n",
-	 xpm1_x,xpm1_y,bpp2,sl2,endian2,((t_img *)im2)->type);
-	sleep(2);
-
-	printf(" => Put xpm ...");
-	mlx_put_image_to_window(mlx,win1,im2,0,0);
-	mlx_put_image_to_window(mlx,win1,im2,100,100);
-	printf("OK\n");
-	sleep(2);
-
-	printf("------두번째 창 생성------");
-	win2 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title2");
-	if (!(im4 = mlx_new_image(mlx,IM3_SX, IM3_SY)))
-		{
-			printf(" !! KO !!\n");
-			exit(1);
-		}
-	data4 = mlx_get_data_addr(im4,&bpp4,&sl4,&endian4);
-	color_map_2(data4,bpp4,sl4,IM3_SX,IM3_SY,endian4, 2);
-
-	printf("------세번째 창 생성------");
-	win3 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title3");
-	mlx_expose_hook(win1,expose_win1,0);
-	mlx_mouse_hook(win1,mouse_win1,0);
-	mlx_key_hook(win1,key_win1,0);
-	mlx_expose_hook(win2,expose_win2,0);
-	mlx_mouse_hook(win2,mouse_win2,0);
-	mlx_key_hook(win2,key_win2,0);
-	mlx_key_hook(win3,key_win3,0);
-
-	mlx_hook(win3, MotionNotify, PointerMotionMask, mouse_win3, 0);
-
-	printf("OK\nNow in Loop. Just play. Esc in 3 to destroy, 1&2 to quit.\n");
+	message(2, "\n#### 이미지 객체3 화면에 뿌리기");
+		mlx_put_image_to_window(mlx,win1,img3,20,20);
 	
-	mlx_loop(mlx);
+	message(2, "\n\n#### 화면에 문자열 그리기");
+		mlx_string_put(mlx,win1,5,242/2,0xFF99FF,"String output");
+		mlx_string_put(mlx,win1,15,242/2+20,0x00FFFF,"MinilibX test");
+
+	message(2, "\n\n#### 이미지 객체2 생성:  xpm 파일 사용");
+		img2 = mlx_xpm_file_to_image(mlx, "open.xpm", &xpm1_x, &xpm1_y);
+		data2 = mlx_get_data_addr(img2,&bpp2,&sl2,&endian2);
+		printf("\nxpm %dx%d  //  img bpp2: %d, sizeline2: %d endian: %d type: %d", xpm1_x,xpm1_y,bpp2,sl2,endian2,((t_img *)img2)->type);
+
+	message(2, "\n#### 이미지 객체2 뿌리기");
+		mlx_put_image_to_window(mlx,win1,img2,0,0);
+		mlx_put_image_to_window(mlx,win1,img2,100,100);
+
+	message(2, "\n\n#### 두번째 창 생성");
+		win2 = mlx_new_window(mlx,242,242,"SECOND");
+		img4 = mlx_new_image(mlx,242, 242);
+		data4 = mlx_get_data_addr(img4,&bpp4,&sl4,&endian4);
+		color_map_2(data4,bpp4,sl4,242,242,endian4, 2);
+
+	message(2, "\n#### 세번째 창 생성");
+		win3 = mlx_new_window(mlx,242,242,"THIRD");
+
+	message(0, "\n#### 입력 감지 시작");
+		mlx_expose_hook(win1,expose_win1,0);
+		mlx_mouse_hook(win1,mouse_win1,0);
+		mlx_key_hook(win1,key_win1,0);
+
+		mlx_expose_hook(win2,expose_win2,0);
+		mlx_mouse_hook(win2,mouse_win2,0);
+		mlx_key_hook(win2,key_win2,0);
+
+		mlx_hook(win3, MotionNotify, PointerMotionMask, mouse_win3, 0);
+		mlx_key_hook(win3,key_win3,0);
+
+	message(2, "\n#### 루프에 진입. Esc in 3 to destroy, 1&2 to quit.");
+		mlx_loop(mlx);
+	
+	message(1, "\n감지 내역:");
 }
 
 
@@ -205,14 +128,14 @@ int	color_map_1(void *win,int w,int h)
 
 	x = w;
 	while (x--)
+	{
+		y = h;
+		while (y--)
 		{
-			y = h;
-			while (y--)
-				{
-					color = (x*255)/w+((((w-x)*255)/w)<<16)+(((y*255)/h)<<8);
-		mlx_pixel_put(mlx,win,x,y,color);
-				}
+			color = (x*255)/w+((((w-x)*255)/w)<<16)+(((y*255)/h)<<8);
+			mlx_pixel_put(mlx,win,x,y,color);
 		}
+	}
 }
 
 
@@ -227,7 +150,7 @@ int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int t
 	unsigned char *ptr;
 
 	opp = bpp/8;
-	printf("(opp : %d) ",opp);
+	printf("\nopp : %d ",opp);
 	y = h;
 	while (y--)
 		{
