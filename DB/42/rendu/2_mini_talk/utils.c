@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/28 23:42:16 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/29 00:04:25 by keunykim         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minitalk.h"
 
 size_t	ft_strlen(const char *s)
@@ -21,7 +9,6 @@ size_t	ft_strlen(const char *s)
 		s++;
 	return (s - rewind);
 }
-
 
 int	ft_atoi(const char *nptr)
 {
@@ -43,3 +30,7 @@ int	ft_atoi(const char *nptr)
 	return (res * sign);
 }
 
+int main()
+{
+	printf("test");
+}
