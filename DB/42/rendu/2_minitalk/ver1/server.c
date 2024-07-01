@@ -2,7 +2,7 @@
 
 int main()
 {
-	ft_printf("%d", 777)
+	ft_printf("%d", getpid());
 
 
 

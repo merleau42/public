@@ -6,12 +6,9 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/01 11:06:09 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/01 21:16:30 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdarg.h>
-#include <unistd.h>
 
 static char	*ft_strchr(const char *s, int c)
 {
