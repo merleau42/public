@@ -6,14 +6,14 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/06/27 16:44:55 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/01 11:06:09 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdarg.h>
 #include <unistd.h>
 
-char	*ft_strchr(const char *s, int c)
+static char	*ft_strchr(const char *s, int c)
 {
 	size_t	i;
 
@@ -30,12 +30,12 @@ char	*ft_strchr(const char *s, int c)
 		return (NULL);
 }
 
-size_t	ft_putchar(int nbr)
+static size_t	ft_putchar(int nbr)
 {
 	return (write(1, &nbr, 1));
 }
 
-size_t	ft_putnbr(size_t nbr, char *base, int type)
+static size_t	ft_putnbr(size_t nbr, char *base, int type)
 {
 	char	conv[65];
 	char	front;
@@ -63,7 +63,7 @@ size_t	ft_putnbr(size_t nbr, char *base, int type)
 	return (write(1, "-", negative) + write(1, conv + front, 65 - front));
 }
 
-void	ft_process(va_list paras, const char *s, int *len)
+static void	ft_process(va_list paras, const char *s, int *len)
 {
 	void	*p;
 
