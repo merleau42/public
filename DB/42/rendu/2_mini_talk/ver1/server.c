@@ -2,7 +2,7 @@
 
 int main()
 {
-	printf("%")
+	ft_printf("%d", 777)
 
 
 

@@ -4,11 +4,11 @@
 # include <signal.h>
 # include <unistd.h> 
 
-#
-int	ft_printf(const char *s, ...);
-static void	ft_process(va_list paras, const char *s, int *len);
+// ft_printf
+int				ft_printf(const char *s, ...);
+static void		ft_process(va_list paras, const char *s, int *len);
 static size_t	ft_putnbr(size_t nbr, char *base, int type);
 static size_t	ft_putchar(int nbr);
-static char	*ft_strchr(const char *s, int c);
+static char		*ft_strchr(const char *s, int c);
 
 #endif
