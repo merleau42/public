@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 11:05:58 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/01 10:17:09 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/01 10:35:40 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (storage == NULL)
 		storage = ft_strjoin("", "");
-	cart = (char *) malloc(((size_t)(BUFFER_SIZE + 1)) * sizeof (char));
+	cart = (char *) malloc(((size_t)BUFFER_SIZE + 1) * sizeof (char));
 	shovel = read(fd, cart, BUFFER_SIZE);
 	while (shovel > 0)
 	{
