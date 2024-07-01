@@ -7,9 +7,7 @@
 
 int main()
 {
-	char buff[10000] = "123뷁H꺍";
-
-	write(1, buff, 10000);
+	printf("%zu", (size_t)((unsigned int)(-42)));
 }
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
