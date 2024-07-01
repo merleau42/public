@@ -1,27 +1,25 @@
 NAME = client server
-SRCS = client.c server.c ft_printf.c
+OBJS_CLIENT = client.o ft_printf.o utils.o
+OBJS_SERVER = server.o ft_printf.o utils.o
+FLAG = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME):
-	make client
-	make server
+client: $(OBJS_CLIENT)
+	cc $(FLAG) $(OBJS_CLIENT) -o client
 
-client: client.c ft_printf.c minitalk.h
-	cc -Wall -Wextra -Werror -o $@
+server: $(OBJS_SERVER)
+	cc $(FLAG) $(OBJS_SERVER) -o server
 
-server: server.c ft_printf.c minitalk.h
-	cc -Wall -Wextra -Werror -o $@
+%.o: %.c
+	cc $(FLAG) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm $(OBJS_CLIENT) $(OBJS_SERVER)
 
-fclean:
-	make clean
-	rm -f $(NAME)
+fclean: clean
+	rm $(NAME)
 
-re:
-	make fclean
-	make all
+re: fclean all
 
 .PHONY: all clean fclean re

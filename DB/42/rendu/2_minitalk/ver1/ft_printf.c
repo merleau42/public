@@ -6,9 +6,11 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 17:20:51 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/01 21:16:30 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/01 21:25:39 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minitalk.h"
 
 static char	*ft_strchr(const char *s, int c)
 {
