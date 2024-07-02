@@ -23,5 +23,5 @@ PS1+='%F{9}%n%f'
 PS1+='@%F{10}%m%f'
 PS1+=' %F{12}%~%f$ '
 
-echo ".zshrc에서 fish 쉘을 실행합니다.";
+echo "zshrc에서 fish 쉘을 실행합니다.";
 fish;

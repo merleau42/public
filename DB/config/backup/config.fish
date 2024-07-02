@@ -10,9 +10,9 @@ export msg_r="git clone 해서 폴더 만들기 -- 내부에서 작업하기";
 export msg_R="제출시 git ls-files 확인. git set_url 리트주소";
 alias warn="echo 업로드가 끝날 때까지 터미널을 닫지마세요";
 
-export NAME="미니민희톡";
+export NAME="2_minitalk";
 
-alias d="clear; cd $dev; echo $msg_d; pwd; ls";
+alias d="clear; cd ~/dev; echo $msg_d; pwd; ls";
 alias e="clear; cd $dev/exercises; pwd; ls";
 alias alc="clear; cd $dev/알고리즘/c; pwd; ls";
 
