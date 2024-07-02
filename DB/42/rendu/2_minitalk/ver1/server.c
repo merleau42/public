@@ -2,14 +2,12 @@
 
 void handler(int sig, siginfo_t *info, void *context)
 {
-	const int from = info->si_pid;
-
 	(void) context;
+	ft_printf("\ngot from %d: ", info->si_pid);
 	if (sig == SIGUSR1)
-		ft_printf("\ngot SIGUSR1");
+		ft_printf("SIGUSR1");
 	if (sig == SIGUSR2)
-		ft_printf("\ngot SIGUSR2");
-	ft_printf("\ngot from %d", from);
+		ft_printf("SIGUSR2");
 }
 
 int main()

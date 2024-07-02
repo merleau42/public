@@ -6,14 +6,22 @@
 # include <stdarg.h>
 
 typedef struct sigaction t_sigma;
+typedef char byte;
 
-int	ft_printf(const char *s, ...);
-int	ft_atoi(const char *nptr);
+// fr_printf
+int		ft_printf(const char *s, ...);
 
+// utils
+int		ft_atoi(const char *nptr);
+void	*ft_memset(void *s, int c, size_t n);
+
+// server
 typedef struct s_storage
 {
 	char	*bitstream[7777];
 } t_storage;
+
+// client
 
 
 #endif
