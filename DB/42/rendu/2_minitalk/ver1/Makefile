@@ -1,4 +1,5 @@
 NAME = client server
+OBJS_ALL = client.o server.o ft_printf.o utils.o
 OBJS_CLIENT = client.o ft_printf.o utils.o
 OBJS_SERVER = server.o ft_printf.o utils.o
 FLAG = -Wall -Wextra -Werror
@@ -15,7 +16,7 @@ server: $(OBJS_SERVER)
 	cc $(FLAG) -c $< -o $@
 
 clean:
-	rm $(OBJS_CLIENT) $(OBJS_SERVER)
+	rm $(OBJS_ALL)
 
 fclean: clean
 	rm $(NAME)
