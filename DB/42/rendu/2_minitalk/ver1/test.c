@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int main() {
-	byte	*bytestream;
+	byte	*bitstream;
 
 	bytestream = (byte *)malloc(77777);
 	ft_memset(bytestream, 0, 77777);
