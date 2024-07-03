@@ -6,7 +6,7 @@
 # include <stdarg.h>
 
 typedef struct sigaction t_sigma;
-typedef char byte;
+typedef char byte1;
 
 // fr_printf
 int		ft_printf(const char *s, ...);
@@ -14,6 +14,10 @@ int		ft_printf(const char *s, ...);
 // utils
 int		ft_atoi(const char *nptr);
 void	*ft_memset(void *s, int c, size_t n);
+int	vaild_base2(char *base);
+int	custom_number(char ch, char *base);
+int	ft_atoi_base(char *str, char *base);
+
 
 // server
 typedef struct s_storage
