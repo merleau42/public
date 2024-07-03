@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 int main() {
-	byte1	*bytestream;
+	byte	*bytestream;
 
-	bytestream = (byte1 *)malloc(77777);
+	bytestream = (byte *)malloc(77777);
 	ft_memset(bytestream, 0, 77777);
 
 	// 'Z' == 0b01011010;

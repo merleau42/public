@@ -1,15 +1,13 @@
 #include "minitalk.h"
 
+byte	*bytestream;
+
 void handler(int sig, siginfo_t *info, void *context)
 {
 	const int	sender = info->si_pid;
 
 	(void) context;
-	ft_printf("\ngot from %d: ", sender);
-	if (sig == SIGUSR1)
-		ft_printf("SIGUSR1");
-	if (sig == SIGUSR2)
-		ft_printf("SIGUSR2");
+	ft_printf("\ngot signal %d, from %d", sig, sender);
 }
 
 int main(int argc, char *argv[])
@@ -17,10 +15,14 @@ int main(int argc, char *argv[])
 	const int 	pid = getpid();
 	t_sigma		sigma;
 
-	// if (argc != 1)
-		// return (0 * ft_printf("사용법: ./server"));
+	(void) argv;
+	if (argc != 1)
+		return (0 * ft_printf("매개변수 없이 ./server만 입력해주세요."));
 
 	ft_printf("%d", pid);
+
+	bytestream = (byte *)malloc(77777);
+	ft_memset(bytestream, 0, 77777);
 
 	sigma.sa_flags = SA_SIGINFO;
 	sigma.sa_sigaction = handler;
