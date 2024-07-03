@@ -23,13 +23,10 @@ typedef struct s_storage
 
 // client
 
-
 #endif
 
 
-
 /*
-
 핸들러 구조체는 <signal.h>에 정의되어있음.
 struct sigaction {
 	void     (*sa_handler)(int);
@@ -38,5 +35,4 @@ struct sigaction {
 	int        sa_flags;
 	void     (*sa_restorer)(void);
 };
-
 */
