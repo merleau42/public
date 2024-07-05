@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minitalk.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/06 05:15:45 by keunykim          #+#    #+#             */
+/*   Updated: 2024/07/06 05:15:45 by keunykim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINITALK_H
 # define MINITALK_H
 # include <stdlib.h>
@@ -17,14 +29,3 @@ struct s_equence
 	int		count;
 };
 #endif
-
-/*
-핸들러 구조체는 <signal.h>에 정의되어있음.
-struct sigaction {
-	void     (*sa_handler)(int);
-	void     (*sa_sigaction)(int, siginfo_t *, void *);
-	sigset_t   sa_mask;
-	int        sa_flags;
-	void     (*sa_restorer)(void);
-};
-*/

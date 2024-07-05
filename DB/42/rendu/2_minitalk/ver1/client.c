@@ -10,7 +10,7 @@ static void	send_byte(int pid, unsigned char byte)
 {
 	int	i;
 
-	ft_printf("\n%d\t%c\t", byte, byte);
+	ft_printf("%d\t%c\t", byte, byte);
 	i = 0;
 	while (i < 8)
 	{
@@ -18,6 +18,7 @@ static void	send_byte(int pid, unsigned char byte)
 		pause();
 		i++;
 	}
+	ft_printf("\n");
 }
 
 int	main(int argc, char *argv[])

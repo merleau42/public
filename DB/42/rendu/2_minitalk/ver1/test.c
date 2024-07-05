@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 04:07:41 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/06 04:07:43 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/06 07:03:34 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 
 int	main(int argc, char *argv[])
 {
-	printf ("%lu", strlen(argv[1]));
+	int a = 5;
+	a <<= 4;
+
+	printf("%d", a);
 }
 
 // 142를 존재 명부에 등록하려면? 64로 나눈 몫(2), 나머지(14)
