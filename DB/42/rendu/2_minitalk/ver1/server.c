@@ -1,7 +1,6 @@
 #include "minitalk.h"
 
 byte	*bitstream;
-int		i;
 int		count;
 
 void handler(int sig, siginfo_t *info, void *context)
@@ -11,15 +10,13 @@ void handler(int sig, siginfo_t *info, void *context)
 	(void) context;
 	(void) sender;
 
-	// ft_printf("[%d]", sig/11);
-	bitstream[i] = (bitstream[i] << 1) + sig/11;
+	*bitstream = (*bitstream << 1) + sig/11;
 	count++;
 	if (count == 8)
 	{
 
-		write(1, &bitstream[i], 1);
+		write(1, bitstream, 1);
 		count = 0;
-		i++;
 	}
 	// 비트가 하나씩 밀릴 때마다, 아스키코드 문자의 크기는 2배씩 증가
 }

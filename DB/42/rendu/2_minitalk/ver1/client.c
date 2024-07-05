@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 			usleep(100);
 			i++;
 			//	77 == 'M' == 0b01001101
+			//				 i:01234567
 		}
 		msg++;
 	}
