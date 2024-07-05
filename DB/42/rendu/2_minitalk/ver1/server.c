@@ -3,22 +3,25 @@
 byte	*bitstream;
 int		count;
 
-void handler(int sig, siginfo_t *info, void *context)
+static void handler(int sig, siginfo_t *info, void *context)
 {
-	const int	sender = info->si_pid;
+	const int	reply = info->si_pid;
 
 	(void) context;
-	(void) sender;
 
 	*bitstream = (*bitstream << 1) + sig/11;
 	count++;
-	if (count == 8)
+	if (count % 8 == 0)
 	{
-
-		write(1, bitstream, 1);
-		count = 0;
+		if (*bitstream < 128)
+		{
+			write(1, bitstream, 1);
+			bitstream++;
+		}
 	}
-	// 비트가 하나씩 밀릴 때마다, 아스키코드 문자의 크기는 2배씩 증가
+
+	usleep(50);
+	kill(reply, "\n처리완료! 다음 비트를 보내세요"[0]);
 }
 
 int main(int argc, char *argv[])
@@ -26,14 +29,13 @@ int main(int argc, char *argv[])
 	const int 	pid = getpid();
 	t_sigma		sigma;
 
-	(void) argv;
 	if (argc != 1)
 		return (0 * ft_printf("매개변수 없이 ./server만 입력해주세요."));
-
-	ft_printf("%d\n", pid);
-
+	ft_printf("실행된 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], pid);
 	bitstream = (byte *)malloc(77777);
 	ft_memset(bitstream, 0, 77777);
+	bitstream[0] = 255;
+	bitstream++;
 
 	sigma.sa_flags = SA_SIGINFO;
 	sigma.sa_sigaction = handler;

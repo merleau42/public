@@ -6,7 +6,7 @@
 # include <stdarg.h>
 
 typedef struct sigaction t_sigma;
-typedef char byte;
+typedef unsigned char byte;
 
 // fr_printf
 int		ft_printf(const char *s, ...);
