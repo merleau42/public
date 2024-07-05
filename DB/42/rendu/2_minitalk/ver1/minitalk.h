@@ -5,27 +5,18 @@
 # include <unistd.h> 
 # include <stdarg.h>
 
-typedef struct sigaction t_sigma;
-typedef unsigned char byte;
+typedef struct sigaction	t_sigma;
 
-// fr_printf
 int		ft_printf(const char *s, ...);
-
-// utils
 int		ft_atoi(const char *nptr);
 void	*ft_memset(void *s, int c, size_t n);
 
-
-// server
-typedef struct s_storage
+struct s_equence
 {
-	char	*bitstream[7777];
-} t_storage;
-
-// client
-
+	char	*stream;
+	int		count;
+};
 #endif
-
 
 /*
 핸들러 구조체는 <signal.h>에 정의되어있음.

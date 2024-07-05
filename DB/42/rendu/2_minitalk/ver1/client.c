@@ -1,38 +1,38 @@
 #include "minitalk.h"
 
-static void nothing(int sig)
+static void	handler(int sig)
 {
-	(void) sig;
+	if (sig == SIGUSR1 || sig == SIGUSR2)
+		ft_printf("%d", sig / 11);
 }
 
-
-int main(int argc, char *argv[])
+static void	send_byte(int pid, unsigned char byte)
 {
-	const int	pid;
-	const char	*msg;
-	int			i;
+	int	i;
+
+	ft_printf("\n%d\t%c\t", byte, byte);
+	i = 0;
+	while (i < 8)
+	{
+		kill(pid, 10 + 2 * ((byte >> (7 - i)) & 1));
+		pause();
+		i++;
+	}
+}
+
+int	main(int argc, char *argv[])
+{
+	char	*msg;
+	int		pid;
 
 	if (argc != 3)
 		return (0 * ft_printf("사용법: ./client [서버PID] [문자메시지]\n"));
-
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
-
-	signal(SIGUSR1, nothing);
-
-	while(*msg != '\0')
-	{
-		i = 0;
-		while(i < 8)
-		{
-			kill(pid, 10 + 2 * ((*msg >> (7-i)) & 1));
-			pause();
-			i++;
-		}
-		msg++;
-	}
-
-	return 0;
+	signal(SIGUSR1, handler);
+	signal(SIGUSR2, handler);
+	while (*msg != '\0')
+		send_byte(pid, *(msg++));
+	send_byte(pid, '\0');
+	return (0);
 }
-
-
