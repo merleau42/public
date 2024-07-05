@@ -21,6 +21,7 @@ void handler(int sig, siginfo_t *info, void *context)
 		count = 0;
 		i++;
 	}
+	// 비트가 하나씩 밀릴 때마다, 아스키코드 문자의 크기는 2배씩 증가
 }
 
 int main(int argc, char *argv[])

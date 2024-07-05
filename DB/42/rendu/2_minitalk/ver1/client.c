@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 			kill(pid, 10 + 2 * ((*msg >> (7-i)) & 1));
 			usleep(100);
 			i++;
+			//	77 == 'M' == 0b01001101
 		}
 		msg++;
 	}
