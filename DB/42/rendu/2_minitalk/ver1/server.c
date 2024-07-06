@@ -16,10 +16,10 @@ static void	handler(int sig, siginfo_t *info, void *context)
 			g_bit.stream = g_bit.stream - g_bit.count / 8;
 			write(1, g_bit.stream, g_bit.count / 8);
 			g_bit.count = 0;
+			ft_printf("\n[%p]", g_bit.stream - g_bit.rewind);
 		}
 	}
-	// usleep(10);
-	usleep(50);
+	usleep(40);
 	kill(reply, "\12\14 처리완료! 이제 다음 비트를 보내시옹!"[sig / 11]);
 	(void) context;
 }

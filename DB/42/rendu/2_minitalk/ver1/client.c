@@ -23,7 +23,6 @@ static void	send_byte(int pid, unsigned char byte)
 	}
 	ft_printf("\n");
 }
-
 int	main(int argc, char *argv[])
 {
 	char	*msg;
@@ -31,6 +30,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 3)
 		return (0 * ft_printf("사용법: ./client [서버PID] [문자메시지]\n"));
+	ft_printf("실행 중인 프로그램의( %s ) 프로쎄스 아이디( %d )\n", argv[0], getpid());
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
 	signal(SIGUSR1, handler);
