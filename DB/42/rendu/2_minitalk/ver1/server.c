@@ -10,10 +10,11 @@ static void	handler(int sig, siginfo_t *info, void *context)
 	g_bit.count++;
 	if (g_bit.count % 8 == 0)
 	{
-		(g_bit.stream)++;
+		g_bit.stream++;
 		if (*(g_bit.stream - 1) == '\0')
 		{
-			write(1, g_bit.stream - g_bit.count / 8, g_bit.count / 8);
+			g_bit.stream = g_bit.stream - g_bit.count / 8;
+			write(1, g_bit.stream, g_bit.count / 8);
 			g_bit.count = 0;
 		}
 	}
