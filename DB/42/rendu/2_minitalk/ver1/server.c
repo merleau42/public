@@ -18,7 +18,7 @@ static void	handler(int sig, siginfo_t *info, void *context)
 			g_bit.count = 0;
 		}
 	}
-	usleep(40);
+	usleep(100);
 	kill(reply, "\12\14 처리완료! 이제 다음 비트를 보내시옹!"[sig / 11]);
 	(void) context;
 }

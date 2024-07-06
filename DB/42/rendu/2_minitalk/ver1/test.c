@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 04:07:41 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/06 10:09:27 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/06 11:28:53 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,16 @@
 
 
 int	main() {
-	int *도착 = (int *)0x7100ABCDEF00;
 	int *여행 = malloc(1000000);
 	int *시작;
 
-	if ((size_t)여행 > (size_t)도착) return 0;
 	시작 = 여행;
-	while((size_t)여행 < (size_t)도착)
-	{
-		if ((size_t)여행  % 0x1000000 == 0)
-			printf("시작(%p)  현재(%p)  인덱스(%zu)\n", 시작, 여행, 여행 - 시작);
-		여행++; // 그저 자료형이 unsigned long long인 변수에 값을 대입하는 행위일 뿐인듯..
-	}
-	printf("%p부터 %p까지 %zu인덱스 여행완료\n", 시작,도착, ((size_t)도착-(size_t)시작)/4);
-	printf("이제 처음으로 역참조를 시도하면? 비로소\n"); printf("%d", *여행);
+	여행++;
+	여행++;
+	여행++;
+	printf("%zu\n", 여행 - 시작);
+	printf("%zu\n", (size_t)여행 - (size_t)시작);
+	printf("%zu", ((size_t)여행-(size_t)시작)/4);
 }
 
 // 142를 존재 명부에 등록하려면? 64로 나눈 몫(2), 나머지(14)
