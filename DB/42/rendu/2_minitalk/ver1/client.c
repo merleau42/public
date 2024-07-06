@@ -1,5 +1,7 @@
 #include "minitalk.h"
 
+int	count;
+
 static void	handler(int sig)
 {
 	if (sig == SIGUSR1 || sig == SIGUSR2)
@@ -10,10 +12,11 @@ static void	send_byte(int pid, unsigned char byte)
 {
 	int	i;
 
-	ft_printf("%d\t%c\t", byte, byte);
+	ft_printf("%d\t%c\t%d\t", byte, byte, count++);
 	i = 0;
 	while (i < 8)
 	{
+		// usleep(50);
 		kill(pid, 10 + 2 * ((byte >> (7 - i)) & 1));
 		pause();
 		i++;

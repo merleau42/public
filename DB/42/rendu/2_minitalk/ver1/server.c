@@ -18,7 +18,8 @@ static void	handler(int sig, siginfo_t *info, void *context)
 			g_bit.count = 0;
 		}
 	}
-	usleep(100);
+	// usleep(10);
+	usleep(50);
 	kill(reply, "\12\14 처리완료! 이제 다음 비트를 보내시옹!"[sig / 11]);
 	(void) context;
 }
@@ -30,11 +31,11 @@ int	main(int argc, char *argv[])
 
 	if (argc != 1)
 		return (0 * ft_printf("매개변수 없이 ./server만 입력해주세요."));
-	ft_printf("실행 중인 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], pid);
+	ft_printf("실행 중인 프로그램의( %s ) 프로쎄스 아이디( %d )\n", argv[0], pid);
 	g_bit.stream = ft_memset(malloc(1000000), 0, 1000000);
 	g_bit.rewind = g_bit.stream;
 	g_bit.count = 0;
-	sigma.sa_flags = SA_SIGINFO;
+	sigma.sa_flags = SA_SIGINFO | SA_RESTART;
 	sigma.sa_sigaction = handler;
 	sigaction(SIGUSR1, &sigma, NULL);
 	sigaction(SIGUSR2, &sigma, NULL);
