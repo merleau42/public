@@ -2,6 +2,7 @@ compile = ["make", "-s"]
 run = "./main"
 entrypoint = "main.c"
 hidden = ["main", "main-debug", "**/*.o", "**/*.d", ".ccls-cache", "Makefile"]
+modules = ["nodejs-20"]
 
 [nix]
 channel = "stable-22_11"
