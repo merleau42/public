@@ -11,12 +11,11 @@ static void	handler(int sig, siginfo_t *info, void *context)
 	if (g_bit.count % 8 == 0)
 	{
 		g_bit.stream++;
-		if (*(g_bit.stream - 1) == '\0')
+		if (*(g_bit.stream - 1) == '\0' || g_bit.count % 800 == 0)
 		{
 			g_bit.stream = g_bit.stream - g_bit.count / 8;
 			write(1, g_bit.stream, g_bit.count / 8);
 			g_bit.count = 0;
-			ft_printf("\n[%p]", g_bit.stream - g_bit.rewind);
 		}
 	}
 	usleep(40);
@@ -31,7 +30,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 1)
 		return (0 * ft_printf("매개변수 없이 ./server만 입력해주세요."));
-	ft_printf("실행 중인 프로그램의( %s ) 프로쎄스 아이디( %d )\n", argv[0], pid);
+	ft_printf("실행 중인 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], pid);
 	g_bit.stream = ft_memset(malloc(1000000), 0, 1000000);
 	g_bit.rewind = g_bit.stream;
 	g_bit.count = 0;
