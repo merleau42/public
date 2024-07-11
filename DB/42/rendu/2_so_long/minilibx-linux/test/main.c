@@ -49,15 +49,15 @@ int	main()
 	message(1, "\n     첫번째 창 비우기");
 		mlx_clear_window(mlx, win1);
 
-	message(30, "\n\n#### 이미지 객체1 생성");
+	message(1, "\n\n#### 이미지 객체1 생성");
 		img1 = mlx_new_image(mlx, 42, 42);
 		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
 		printf(" ㅡ bpp1: %d, sizeline1: %d, endian: %d, type: %d",
 						  bpp1,			 sl1,		 endian1,  ((t_img *)img1)->type);
 
-	message(1, "#### 엔디안 유형 확인");
-		int	a = 0x11223344;
-		local_endian = (&a)[0] == 0x11;
+	message(1, "#### 엔디안 유형 확인"); //> 00~FF  0~255
+		int	a = 0x11223344;	
+		local_endian = (&a)[0] == 0x11;		//>		0x11223344 이냐   0x44332211 이냐를 확인함
 		printf("\n     결과: %d\n", local_endian);
 
 	message(1, "\n     이미지 객체1 채우기");
