@@ -1,8 +1,9 @@
 export PS1='\[\033[01;31m\]\w\[\033[00m\]\$ '
 
-export dev="~/dev/DB";
+export DEV="~/dev";
+export DB="~/dev/DB";
 export FT="~/dev/DB/42";
-export out="~/goinfre/out.out";
+export aout="~/goinfre/aout";
 export FLAGS="-Werror -Wextra -Wall";
 
 export msg_d="깃허브 git add, GIT PULL, git push는 여기서";
@@ -12,9 +13,9 @@ alias warn="echo 업로드가 끝날 때까지 터미널을 닫지마세요";
 
 export NAME="2_minitalk";
 
-alias d="clear; cd ~/dev; echo $msg_d; pwd; ls";
-alias e="clear; cd $dev/exercises; pwd; ls";
-alias alc="clear; cd $dev/알고리즘/c; pwd; ls";
+alias d="clear; cd $DEV; echo $msg_d; pwd; ls";
+alias e="clear; cd $DB/exercises; pwd; ls";
+alias alc="clear; cd $DB/알고리즘/c; pwd; ls";
 
 alias f="clear; cd $FT/finish; pwd; ls";
 alias r="clear; cd $FT/rendu; echo $msg_r; pwd; ls";
@@ -31,12 +32,14 @@ alias ㅋ="d; g; cd -";
 alias x="clear";
 alias ㅌ="clear";
 
-alias c="clear; cc $FLAGS *.c -o $out";
-alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $out";
-alias ec="clear; cc $FLAGS $dev/exercises/*.c -o $out";
-alias ecc="clear; cc $dev/exercises/*.c -o $out";
+alias c="clear; cc $FLAGS *.c -o $aout";
+alias sc="clear; cc $FLAGS $FT/integrate/$NAME.c -o $aout";
+alias ec="clear; cc $FLAGS $DB/exercises/*.c -o $aout";
+alias ecc="clear; cc $DB/exercises/*.c -o $aout";
 
-alias a="clear; $out";
+alias a="clear; $aout";
+
+alias mk="clear; make fclean; make";
 
 echo "메일주소 복사 : keunykim@student.42gyeongsan.kr";
 echo "진행중인 과제 : $NAME";

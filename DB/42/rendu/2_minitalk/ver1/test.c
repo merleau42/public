@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 04:07:41 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/06 11:28:53 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/11 14:39:20 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,39 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 int	main() {
-	int *여행 = malloc(1000000);
-	int *시작;
 
-	시작 = 여행;
-	여행++;
-	여행++;
-	여행++;
-	printf("%zu\n", 여행 - 시작);
-	printf("%zu\n", (size_t)여행 - (size_t)시작);
-	printf("%zu", ((size_t)여행-(size_t)시작)/4);
+	char *a = malloc(4);
+	char *b = malloc(5);
+	char *c = malloc(6);
+
+	a[0] = '0';
+	a[1] = '1';
+	a[2] = '2';
+	a[3] = '3';
+
+	b[0] = 'a';
+	b[1] = 'b';
+	b[2] = 'c';
+	b[3] = 'd';
+	b[4] = 'e';
+
+	c[0] = 'A';
+	c[1] = 'B';
+	c[2] = 'C';
+	c[3] = 'D';
+	c[4] = 'E';
+	c[5] = 'F';
+
+	while( (size_t)a < (size_t)&c[5])
+	{
+		if (32 <= *a && *a <= 127)
+			printf("%c", *a);
+		else
+			printf("[%d]", *a);
+		a++;
+	}
+	printf("%c", *a);
 }
 
 // 142를 존재 명부에 등록하려면? 64로 나눈 몫(2), 나머지(14)
@@ -34,3 +54,4 @@ int	main() {
 // 777을 존재 명부에 등록하려면? 64로 나눈 몫(12), 나머지(9)
 // Exist[12] = Exist[12] | 0x8000000000000000 >> 9;
 // 등록된 숫자를 꺼내려면?
+

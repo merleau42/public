@@ -16,13 +16,13 @@ static void	send_byte(int pid, unsigned char byte)
 	i = 0;
 	while (i < 8)
 	{
-		// usleep(50);
 		kill(pid, 10 + 2 * ((byte >> (7 - i)) & 1));
 		pause();
 		i++;
 	}
 	ft_printf("\n");
 }
+
 int	main(int argc, char *argv[])
 {
 	char	*msg;
@@ -38,5 +38,7 @@ int	main(int argc, char *argv[])
 	while (*msg != '\0')
 		send_byte(pid, *(msg++));
 	send_byte(pid, '\0');
+	ft_printf("메시지 전송 완료... 1초 대기\n");
+	sleep(1);
 	return (0);
 }
