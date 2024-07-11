@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 05:15:45 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/11 14:46:09 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/11 20:15:05 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ struct s_equence
 {
 	char	*stream;
 	int		count;
+	int		pid;
 };
 #endif

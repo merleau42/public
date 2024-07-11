@@ -33,7 +33,7 @@ int	main(int argc, char *argv[])
 	ft_printf("실행 중인 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], pid);
 	g_bit.stream = ft_memset(malloc(1000000), 0, 1000000);
 	g_bit.count = 0;
-	sigma.sa_flags = SA_SIGINFO;
+	sigma.sa_flags = SA_SIGINFO | SA_RESTART;
 	sigma.sa_sigaction = handler;
 	sigaction(SIGUSR1, &sigma, NULL);
 	sigaction(SIGUSR2, &sigma, NULL);
