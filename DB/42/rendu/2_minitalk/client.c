@@ -38,7 +38,7 @@ int	main(int argc, char *argv[])
 	while (*msg != '\0')
 		send_byte(pid, *(msg++));
 	send_byte(pid, '\0');
-	ft_printf("메시지 전송 완료... 1초 대기\n");
+	ft_printf("메시지 전송 완료중...\n");
 	sleep(1);
 	return (0);
 }
