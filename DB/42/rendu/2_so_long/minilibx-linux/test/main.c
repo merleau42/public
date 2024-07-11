@@ -49,7 +49,7 @@ int	main()
 	message(1, "\n     첫번째 창 비우기");
 		mlx_clear_window(mlx, win1);
 
-	message(1, "\n\n#### 이미지 객체1 생성");
+	message(130, "\n\n#### 이미지 객체1 생성");
 		img1 = mlx_new_image(mlx, 42, 42);
 		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
 		printf(" ㅡ bpp1: %d, sizeline1: %d, endian: %d, type: %d",
