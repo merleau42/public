@@ -28,55 +28,60 @@ int	mouse_win1(int button,int x,int y, void *p){ printf("Mouse in Win1, button %
 int	mouse_win2(int button,int x,int y, void *p){ printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y); }
 int	mouse_win3(int x,int y, void *p){ printf("Mouse moving in Win3, at %dx%d.\n",x,y); }
 
-void message(int wait, char *msg){ printf("%s", msg); sleep(wait); }
+void message(int wait, char *msg){ printf("%s", msg); sleep(wait);  }
 
 int	main()
 {
 	//:	변동 사항 적용 방법 → 테스트 폴더에서 실행:   make -C ../; clear; ./mlx-test
 
-	message(0, "#### 엔디안 유형 확인");
-		int	a = 0x11223344; // a = 287454020  ---->  unsigned char* [0]  0x11  0x44
+	message(1, "\n#### mlx 초기화");
+		mlx = mlx_init();
+		printf(" ㅡ use_xshm %d, pshm_format %d\n",
+					((t_xvar *)mlx)->use_xshm,
+					((t_xvar *)mlx)->pshm_format);
+
+	message(3, "\n#### 첫번째 창 생성");
+		win1 = mlx_new_window(mlx, 300, 300, "FIRST");
+
+	message(1, "\n     첫번째 창 칠하기");
+		color_map_1(win1, 250, 250);
+
+	message(1, "\n     첫번째 창 비우기");
+		mlx_clear_window(mlx, win1);
+
+	message(30, "\n\n#### 이미지 객체1 생성");
+		img1 = mlx_new_image(mlx, 42, 42);
+		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
+		printf(" ㅡ bpp1: %d, sizeline1: %d, endian: %d, type: %d",
+						  bpp1,			 sl1,		 endian1,  ((t_img *)img1)->type);
+
+	message(1, "#### 엔디안 유형 확인");
+		int	a = 0x11223344;
 		local_endian = (&a)[0] == 0x11;
 		printf("\n     결과: %d\n", local_endian);
 
-	message(1, "\n#### mlx 초기화");
-		mlx = mlx_init();
-		printf(" ㅡ use_xshm %d pshm_format %d\n",((t_xvar *)mlx)->use_xshm,((t_xvar *)mlx)->pshm_format);
-
-	message(2, "\n#### 첫번째 창 생성");
-		win1 = mlx_new_window(mlx, 300, 300, "1st");
-
-	message(2, "\n     첫번째 창 칠하기");
-		color_map_1(win1, 250, 250);
-
-	message(2, "\n     첫번째 창 비우기");
-		mlx_clear_window(mlx, win1);
-
-	message(2, "\n\n#### 이미지 객체1 생성");
-		img1 = mlx_new_image(mlx, 42, 42);
-		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
-		printf(" ㅡ bpp1: %d, sizeline1: %d endian: %d type: %d",bpp1,sl1,endian1, ((t_img *)img1)->type);
-
-	message(2, "\n     이미지 객체1 채우기");
+	message(1, "\n     이미지 객체1 채우기");
 		color_map_2(data1,bpp1,sl1,42,42,endian1, 1);
-		printf("  //  pixmap : %d",(int)((t_img *)img1)->pix);
+		printf("  //  pixmap : %d",
+					(int)((t_img *)img1)->pix);
 
-	message(2, "\n     이미지 객체1 화면에 뿌리기");
+	message(1, "\n     이미지 객체1 화면에 뿌리기");
 		mlx_put_image_to_window(mlx,win1,img1,20,20);
 
-	message(2, "\n     이미지 객체1 삭제 (뿌려진 픽셀은 그대로 남음)");
+	message(1, "\n     이미지 객체1 삭제 (뿌려진 픽셀은 그대로 남고, 가상의 이미지 객체만 삭제됨)");
 		mlx_destroy_image(mlx, img1);
 
 	message(3, "\n\n#### 이미지 객체3 생성");
 		img3 = mlx_new_image(mlx,242,242);
 		data3 = mlx_get_data_addr(img3,&bpp3,&sl3,&endian3);
-		printf(" ㅡ bpp3 %d, sizeline3 %d endian3 %d type %d",bpp3,sl3,endian3, ((t_img *)img3)->type);
+		printf(" ㅡ bpp3: %d, sizeline3: %d, endian3: %d, type: %d",
+						  bpp3,			 sl3,		  endian3,	((t_img *)img3)->type);
 
-	message(2, "\n     이미지 객체3 채우기");
+	message(1, "\n     이미지 객체3 채우기");
 		color_map_2(data3,bpp3,sl3,242,242,endian3, 1);
 		printf("  //  pixmap : %d",(int)((t_img *)img3)->pix);
 
-	message(2, "\n     이미지 객체3 화면에 뿌리기");
+	message(1, "\n     이미지 객체3 화면에 뿌리기");
 		mlx_put_image_to_window(mlx,win1,img3,20,20);
 	
 	message(2, "\n\n#### 화면에 문자열 그리기");
@@ -86,9 +91,10 @@ int	main()
 	message(2, "\n\n#### 이미지 객체2 생성( xpm 파일 사용 )");
 		img2 = mlx_xpm_file_to_image(mlx, "open.xpm", &xpm1_x, &xpm1_y);
 		data2 = mlx_get_data_addr(img2,&bpp2,&sl2,&endian2);
-		printf(" ㅡ xpm %dx%d  //  bpp2: %d, sizeline2: %d endian: %d type: %d", xpm1_x,xpm1_y,bpp2,sl2,endian2,((t_img *)img2)->type);
+		printf(" ㅡ xpm %dx%d  //  bpp2: %d, sizeline2: %d, endian2: %d, type: %d",
+					xpm1_x, xpm1_y,		 bpp2,			sl2,		 endian2,  ((t_img *)img2)->type);
 
-	message(2, "\n     이미지 객체2 뿌리기");
+	message(1, "\n     이미지 객체2 뿌리기");
 		mlx_put_image_to_window(mlx,win1,img2,0,0);
 		mlx_put_image_to_window(mlx,win1,img2,100,100);
 
@@ -119,30 +125,34 @@ int	main()
 	message(1, "\n     감지 내역:");
 }
 
-
 int	color_map_1(void *win,int w,int h)
 {
-	int	x;
-	int	y;
-	int	color;
+	int	x, y;
+	int	color, red, green, blue;
 
 	x = w;
 	while (x--)
 	{
 		y = h;
-		while (y--)
-		{
-			color = (x*255)/w+((((w-x)*255)/w)<<16)+(((y*255)/h)<<8);
-			mlx_pixel_put(mlx,win,x,y,color);
+		while (y--)		//:	(w,h) ~~ (0,0) 구간에서, 현재 좌표 (x,y)를 확보. 
+		{				//:	└─> 확보해서 손에 들고있는 상태를 이용해서 원하는 행동하기.
+
+			red		=	0xFF * (w-x)/w;			//>  전체 가로 너비에서 x의 위치가 해당하는 비율 반전			x 255
+			green	=	0xFF * y/h;				//>  전체 세로 높이에서 y의 위치가 해당하는 비율 (0% ~ 100%)	x 255
+			blue	=	0xFF * x/w;				//>  전체 가로 너비에서 x의 위치가 해당하는 비율 (0% ~ 100%)	x 255
+												//<  곱셈보다 나눗셈이 먼저 행해진다면 0이 되어버림 (괄호 주의)
+//!					FF0000
+			color = (red << 16) + (green << 8) + blue; /// 0000FF
+//>									00FF00
+
+			mlx_pixel_put(mlx, win, x, y, color);
 		}
 	}
 }
 
-
 int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int type)
 {
-	int	x;
-	int	y;
+	int	x, y;
 	int	opp;
 	int	dec;
 	int	color;
@@ -179,7 +189,6 @@ int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int t
 					else
 						*(ptr+x*opp+dec) = ((unsigned char *)(&color2))[3-dec];
 				}
+		}
 	}
-	}
-
 }
