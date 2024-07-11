@@ -6,7 +6,7 @@
 /*   By: keunykim <keunykim@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 05:15:45 by keunykim          #+#    #+#             */
-/*   Updated: 2024/07/11 20:15:05 by keunykim         ###   ########.fr       */
+/*   Updated: 2024/07/11 20:52:23 by keunykim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	*ft_memset(void *s, int c, size_t n);
 
 struct s_equence
 {
+	char	*rewind;
 	char	*stream;
 	int		count;
-	int		pid;
 };
 #endif

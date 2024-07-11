@@ -33,12 +33,15 @@ int	main(int argc, char *argv[])
 	ft_printf("실행 중인 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], getpid());
 	pid = ft_atoi(argv[1]);
 	msg = argv[2];
+
 	signal(SIGUSR1, handler);
 	signal(SIGUSR2, handler);
+
 	while (*msg != '\0')
 		send_byte(pid, *(msg++));
 	send_byte(pid, '\0');
-	ft_printf("메시지 전송 마무리...\n");
+
+	ft_printf("서버의 처리를 기다리는 중...\n");
 	sleep(1);
 	return (0);
 }

@@ -31,13 +31,19 @@ int	main(int argc, char *argv[])
 	if (argc != 1)
 		return (0 * ft_printf("매개변수 없이 ./server만 입력해주세요."));
 	ft_printf("실행 중인 프로그램의( %s ) 프로세스 아이디( %d )\n", argv[0], pid);
+
 	g_bit.stream = ft_memset(malloc(1000000), 0, 1000000);
+	g_bit.rewind = g_bit.stream;
 	g_bit.count = 0;
-	sigma.sa_flags = SA_SIGINFO | SA_RESTART;
+
+	sigma.sa_flags = 0 | SA_SIGINFO;
 	sigma.sa_sigaction = handler;
+
 	sigaction(SIGUSR1, &sigma, NULL);
 	sigaction(SIGUSR2, &sigma, NULL);
+	
 	while (1)
 		pause();
+	free(g_bit.rewind);
 	return (0);
 }
