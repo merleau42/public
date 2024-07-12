@@ -28,7 +28,7 @@ int	mouse_win1(int button,int x,int y, void *p){ (void)p; printf("Mouse in Win1,
 int	mouse_win2(int button,int x,int y, void *p){ (void)p; printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y); return 0;}
 int	mouse_win3(int x,int y, void *p){ (void)p; printf("Mouse moving in Win3, at %dx%d.\n",x,y); return 0;}
 
-void message(int wait, char *msg){ printf("%s", msg); sleep(wait);  }
+void message(int wait, char *msg){ printf("%s", msg); sleep(wait); }
 
 int	main()
 {
@@ -41,9 +41,7 @@ int	main()
 
 	message(1, "\n#### mlx 초기화");
 		mlx = mlx_init();
-		printf(" ㅡ use_xshm %d, pshm_format %d\n", 
-					((t_xvar *)mlx)->use_xshm,
-					((t_xvar *)mlx)->pshm_format);
+		printf(" ㅡ use_xshm %d, pshm_format %d\n",	((t_xvar *)mlx)->use_xshm,	((t_xvar *)mlx)->pshm_format);
 
 	message(3, "\n#### 첫번째 창 생성");
 		win1 = mlx_new_window(mlx, 300, 300, "FIRST");
