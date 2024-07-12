@@ -1,6 +1,3 @@
-INC=%%%%
-INCLIB=$(INC)/../lib
-
 CFLAGS = -Werror -Wextra -Wall
 
 all:
@@ -11,12 +8,14 @@ all:
 clean:
 	make -C ./minilibx-linux clean
 	rm libmlx_Linux.a
+
+fclean:
+	make clean
 	rm so_long
 
 re:
-	make clean
+	make fclean
 	make -C ./minilibx-linux all
-	
 
 
 ############################
@@ -36,5 +35,3 @@ re:
 
 # clean:
 # 	rm -f $(NAME) $(OBJ) *~ core *.core
-
-# re: clean all
