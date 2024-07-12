@@ -16,22 +16,3 @@ fclean:
 re:
 	make fclean
 	make -C ./minilibx-linux all
-
-
-############################
-
-
-# NAME= so_long
-# SRC = main.c
-# OBJ = $(SRC:%.c=%.o)
-
-# LFLAGS = -L.. -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
-# # LFLAGS += -lbsd
-
-# all: $(NAME)
-
-# $(NAME): $(OBJ)
-# 	cc -o $(NAME) $(OBJ) $(LFLAGS)
-
-# clean:
-# 	rm -f $(NAME) $(OBJ) *~ core *.core
