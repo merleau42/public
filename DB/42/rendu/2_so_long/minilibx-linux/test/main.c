@@ -34,9 +34,14 @@ int	main()
 {
 	//:	변동 사항 적용 방법 → 테스트 폴더에서 실행:   make -C ../; clear; ./mlx-test
 
+	message(1, "#### 엔디안 유형 확인");
+		int	a = 0x11223344;	
+		local_endian = (&a)[0] == 0x11;		//> 4바이트 자료형의 첫번째 바이트를 읽어들였을때, 0x11이냐 0x44이냐를 확인함
+		printf("\n     결과: %d\n", local_endian);
+
 	message(1, "\n#### mlx 초기화");
 		mlx = mlx_init();
-		printf(" ㅡ use_xshm %d, pshm_format %d\n",
+		printf(" ㅡ use_xshm %d, pshm_format %d\n", 
 					((t_xvar *)mlx)->use_xshm,
 					((t_xvar *)mlx)->pshm_format);
 
@@ -49,16 +54,11 @@ int	main()
 	message(1, "\n     첫번째 창 비우기");
 		mlx_clear_window(mlx, win1);
 
-	message(130, "\n\n#### 이미지 객체1 생성");
+	message(3, "\n\n#### 이미지 객체1 생성");
 		img1 = mlx_new_image(mlx, 42, 42);
 		data1 = mlx_get_data_addr(img1,&bpp1,&sl1,&endian1);
 		printf(" ㅡ bpp1: %d, sizeline1: %d, endian: %d, type: %d",
 						  bpp1,			 sl1,		 endian1,  ((t_img *)img1)->type);
-
-	message(1, "#### 엔디안 유형 확인"); //> 00~FF  0~255
-		int	a = 0x11223344;	
-		local_endian = (&a)[0] == 0x11;		//>		0x11223344 이냐   0x44332211 이냐를 확인함
-		printf("\n     결과: %d\n", local_endian);
 
 	message(1, "\n     이미지 객체1 채우기");
 		color_map_2(data1,bpp1,sl1,42,42,endian1, 1);
@@ -137,7 +137,7 @@ int	color_map_1(void *win,int w,int h)
 		while (y--)		//:	(w,h) ~~ (0,0) 구간에서, 현재 좌표 (x,y)를 확보. 
 		{				//:	└─> 손에 들고있는, 확보된 상태를 이용해서 원하는 행동을 할 수 있다
 
-			/// 해당 좌표에 찍어줄 점 하나의 색상을 구연함
+///			현재 좌표의 정보가, 현재 좌표에 찍어줄 점의 색상을 결정함
 			red		=	0xFF * (w-x)/w;			//>  전체 가로 너비에서 x의 위치가 해당하는 비율 반전			x 255
 			green	=	0xFF * y/h;				//>  전체 세로 높이에서 y의 위치가 해당하는 비율 (0% ~ 100%)	x 255
 			blue	=	0xFF * x/w;				//>  전체 가로 너비에서 x의 위치가 해당하는 비율 (0% ~ 100%)	x 255
