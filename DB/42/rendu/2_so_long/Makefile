@@ -1,3 +1,6 @@
+INC=%%%%
+INCLIB=$(INC)/../lib
+
 CFLAGS = -Werror -Wextra -Wall
 
 all:
@@ -10,9 +13,7 @@ clean:
 	rm libmlx_Linux.a
 
 ############################
-# INC=%%%%
 
-# INCLIB=$(INC)/../lib
 
 # NAME= so_long
 # SRC = main.c

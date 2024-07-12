@@ -121,7 +121,7 @@ int	main()
 
 	message(2, "\n\n#### 루프에 진입. Esc in 3 to destroy, 1&2 to quit.");
 		mlx_loop(mlx);
-	
+
 	message(1, "\n     감지 내역:");
 }
 
@@ -149,7 +149,6 @@ int	color_map_1(void *win,int w,int h)
 			mlx_pixel_put(mlx, win, x, y, color);
 		}
 	}
-
 	return 0;
 }
 
