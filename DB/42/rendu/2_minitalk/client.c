@@ -40,7 +40,7 @@ int	main(int argc, char *argv[])
 	while (*msg != '\0')
 		send_byte(pid, *(msg++), 0);
 	send_byte(pid, '\0', 0);
-	ft_printf("기다리는 중...\n");
+	ft_printf("대기해주세요...\n");
 	sleep(1);
 	return (0);
 }

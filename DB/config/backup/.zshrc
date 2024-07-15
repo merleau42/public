@@ -18,10 +18,10 @@
 # PS1='%F{9}%n%f@%F{10}%m%f %F{12}%~%f$ '
 
 # 이름 / 컴퓨터 / 경로
-PS1='zsh'
-PS1+='%F{9}%n%f'
+PS1='%F{11}zsh%f'
+PS1+='@%F{9}%n%f'
 PS1+='@%F{10}%m%f'
 PS1+=' %F{12}%~%f$ '
 
-echo "zshrc에서 fish 쉘을 실행합니다.";
+echo ".zshrc에서 fish 쉘을 실행합니다.";
 fish;
