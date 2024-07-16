@@ -1,10 +1,10 @@
 CFLAGS = -Werror -Wextra -Wall
-LFLAGS = -Lmlx_linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+# LFLAGS = -Lmlx_linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 
 all:
 	make -C ./minilibx-linux
 	cp ./minilibx-linux/libmlx_Linux.a ./libmlx_Linux.a
-	cc $(CFLAGS) $(LFLAGS) libmlx_Linux.a main.c -o so_long
+	cc $(CFLAGS) -I./minilibx-linux libmlx_Linux.a main.c -o so_long
 
 clean:
 	make -C ./minilibx-linux clean
