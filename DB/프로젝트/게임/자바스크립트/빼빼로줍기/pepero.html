@@ -125,13 +125,20 @@
 		target = event.target;
 
 	    if (target.tagName === 'IMG') {
-			Q('.OK').innerText = Q('.OK').innerText*1 + (target.getAttribute("item") == "1");
-			Q('.KO').innerText = Q('.KO').innerText*1 + (target.getAttribute("item") != "1");
+			item = target.getAttribute("item");
+
+			good = (item == 1) & (item < 101);
+			bad = (item != 1) & (item < 101);
+			Q('.OK').innerText = Q('.OK').innerText*1 + good;
+			Q('.KO').innerText = Q('.KO').innerText*1 + bad;
 
 			i = target.getAttribute("row")*1;
 			j = target.getAttribute("col")*1;
-			
-			state[i][j] = [97, 20];
+
+			if (good)
+				state[i][j] = [101, 20];
+			else if (bad)
+				state[i][j] = [102, 20];
 			render(state);
 		}
 	}
