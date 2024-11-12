@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>연쇄변환기</title>
+<style>
+	*
+	{
+		text-align: center;
+		margin: 0;
+		padding: 0;
+	}
+</style>
+<script>
+	let Q = (x, y=document) => y.querySelector(x);
+	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
+	window.addEventListener('DOMContentLoaded',	main);
+	function main()
+	{
+		Q('body').appendChild( new_ring(0) );
+	}
+</script>
+</head>
+<body>
+</body>
+</html>
