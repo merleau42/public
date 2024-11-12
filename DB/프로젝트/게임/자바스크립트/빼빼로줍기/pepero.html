@@ -110,8 +110,14 @@
 				
 				img.style.opacity =	opacity;
 
-				if (item != 102)
-					img.style.top =	(life >= 80) ? (100 - life) : 20;
+				if (item == 102)
+					topp = 20;
+				else if (item == 101)
+					topp = (life >= 80) ? (life - 80) : 0;
+				else
+					topp = (life >= 90) ? (100 - life) : 10;
+
+				img.style.top = topp;
 			})
 		})
 	}
@@ -142,9 +148,9 @@
 			j = target.getAttribute("col")*1;
 
 			if (good)
-				state[i][j] = [101, 100];
+				state[i][j] = [101, 90];
 			else if (bad)
-				state[i][j] = [102, 100];
+				state[i][j] = [102, 90];
 			render(state);
 		}
 	}
