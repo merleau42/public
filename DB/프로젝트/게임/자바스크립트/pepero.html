@@ -2,112 +2,71 @@
 <head>
 <title>빼빼로 줍기</title>
 <style>
-	*
-	{
+	* {
 		text-align: center;
 		margin: 0;
 		padding: 0;
 	}
-    input[type=text]
-    {
-        width: 10%;
-    }
+	table {
+		width: 100%;
+		height: 50%;
+	}
+	img {
+		width: 50%;
+		height: 50%;
+	}
 </style>
 <script>
 	let Q = (x, y=document) => y.querySelector(x);
 	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
-	let rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+	srcs = [
+		"https://cdn.icon-icons.com/icons2/2699/PNG/512/google_logo_icon_169090.png",
+		"https://cdn.icon-icons.com/icons2/2699/PNG/512/netflix_logo_icon_170919.png",
+		"https://cdn.icon-icons.com/icons2/2699/PNG/512/minecraft_logo_icon_168974.png",
+		"https://cdn.icon-icons.com/icons2/2699/PNG/512/youtube_logo_icon_168737.png",
+		"https://cdn.icon-icons.com/icons2/2699/PNG/512/servicenow_logo_icon_168835.png"
+		];
+	state = [[ [3,9], [1,5], [3,1] ],
+			 [ [4,2], [4,2], [0,3] ],
+			 [ [2,6], [0,3], [1,7] ]]
 	window.addEventListener('DOMContentLoaded',	main);
 	function main()
 	{
-		table = document.createElement('div');
-
+		render(state);
 	}
-	function arr_to_table(arr, fd=null)
+	function render(arr)
 	{
 		table = document.createElement('table');
-		thead = document.createElement('thead');
-		tbody = document.createElement('tbody');
 		arr.forEach((row, i) => {
 			tr = document.createElement('tr');
 			row.forEach((col, j) => {
-				parsed = parse('ㅷ', col);
-				td = i > 0 ? document.createElement('td') : document.createElement('th');
-				if (i > 0 && j > 0){
-					input = document.createElement('input');
-					input.setAttribute('col', j); // input.value대신에 td.innerText를 쓰게될 수 있음
-					input.classList.add( "Cell" );
-					input.value = parsed['\x00'];
-					td.appendChild(input);
-					if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
-				}
-				else if (i != 0 && j == 0){
-					td.classList.add ("index");
-					td.innerText = i
-				}
-				else if (i == 0 && j != 0){
-					td.classList.add ("roof");
-					td.innerText = j
-				}
-				else if (i == 0 && j == 0)
-					td.classList.add ("edge");
-				td.setAttribute('col', j);
-				td.setAttribute("draggable", true)
+				td = document.createElement('td');
+				img = document.createElement('img');
+				img.src = srcs[ arr[i][j][0] ];
+				td.appendChild(img);
+				
 				tr.appendChild(td);
-				tr.setAttribute('row', i);
 			})
-			i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
+			table.appendChild(tr);
 		})
-		table.appendChild(thead);
-		table.appendChild(tbody);
-		table.border = 1;
-		if (fd) table.id = `table${fd}`;
+		if (Q('table')) Q('table').remove();
+		Q('body').appendChild( table );
 	}
-	function vec_to_table(arr, fd=null)
+	function next()
 	{
-		table = document.createElement('table');
-		thead = document.createElement('thead');
-		tbody = document.createElement('tbody');
-		arr.forEach((row, i) => {
-			tr = document.createElement('tr');
-			row.forEach((col, j) => {
-				parsed = parse('ㅷ', col);
-				td = i > 0 ? document.createElement('td') : document.createElement('th');
-				if (i > 0 && j > 0){
-					input = document.createElement('input');
-					input.setAttribute('col', j); // input.value대신에 td.innerText를 쓰게될 수 있음
-					input.classList.add( "Cell" );
-					input.value = parsed['\x00'];
-					td.appendChild(input);
-					if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
-				}
-				else if (i != 0 && j == 0){
-					td.classList.add ("index");
-					td.innerText = i
-				}
-				else if (i == 0 && j != 0){
-					td.classList.add ("roof");
-					td.innerText = j
-				}
-				else if (i == 0 && j == 0)
-					td.classList.add ("edge");
-				td.setAttribute('col', j);
-				td.setAttribute("draggable", true)
-				tr.appendChild(td);
-				tr.setAttribute('row', i);
-			})
-			i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
-		})
-		table.appendChild(thead);
-		table.appendChild(tbody);
-		table.border = 1;
-		if (fd) table.id = `table${fd}`;
-		return table;
+		state = state.map((row,i) =>
+			row.map((col,j) =>
+				state[i][j][1] < 5
+					? [state[i][j][0], state[i][j][1]+1]
+					: [ranz(0,4), 0]
+			)
+		);
+		render(state);
 	}
-
 </script>
 </head>
 <body>
-    <input type="text" value="777"></input>
+    <input type="button" value="다음 프레임" onclick="next()"></input>
 </body>
 </html>
