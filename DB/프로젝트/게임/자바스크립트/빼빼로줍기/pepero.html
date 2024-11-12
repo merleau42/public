@@ -13,43 +13,44 @@
 	table {
 		margin: auto;
 		width: 70%;
-		height: 50%;
+		height: 70%;
 		border: 1 solid black;
-	}
-	td {
-		text-align: center;
-		vertical-align: middle;
 	}
 	img {
 		position: relative;
-		width: 50%;
-		height: 50%;
+		width: 65%;
+		height: 65%;
 		object-fit: contain;
+	}
+	.bar {
+		height: 5%;
+		background: aliceblue;
+		opacity: 50%;
+	}
+	input {
+		height: 100%;
+		width: 10%;
 	}
 </style>
 <script>
 	let Q = (x, y=document) => y.querySelector(x);
 	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-	srcs = [
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/netflix_official_logo_icon_168085.png",
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/netflix_logo_icon_170919.png",
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/minecraft_logo_icon_168974.png",
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/youtube_logo_icon_168737.png",
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/servicenow_logo_icon_168835.png"
-		];
 	state = [[ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ]] // [아이템, 생명주기]
 	window.addEventListener('DOMContentLoaded',	main);
+	iid = 0;
 	function main()
 	{
-		setInterval(next, 8);
+		iid = setInterval(next, 8);
+		Q('[빠르게]').addEventListener("click", ()=>{clearInterval(iid); })
 	}
 	function render(arr)
 	{
-		table = document.createElement('table');
+		table = Q('table') || document.createElement('table');
+		table.innerHTML = '';
 		arr.forEach((row, i) => {
 			tr = document.createElement('tr');
 			row.forEach((col, j) => {
@@ -59,7 +60,7 @@
 				item = arr[i][j][0];
 				life = arr[i][j][1];
 
-				img.src = srcs[ item ];
+				img.src = `pp${item}.png`;
 				if (life <= 20)
 					opacity = 0;
 				else if (life <= 40)
@@ -68,13 +69,14 @@
 					opacity = 1;
 				img.style.opacity =	opacity;
 				img.style.top =	(life >= 80) ? (100 - life) : 20;
+
+				
 				td.appendChild(img);
 				tr.appendChild(td);
 			})
 			table.appendChild(tr);
 		})
-		if (Q('table')) Q('table').remove();
-		Q('body').appendChild( table );
+		if (!Q('table')) Q('body').appendChild( table );
 	}
 	function next()
 	{
@@ -82,7 +84,7 @@
 			row.map((col,j) =>
 				state[i][j][1] > 0
 					? [state[i][j][0], state[i][j][1] - 1]
-					: [ranz(0,4), ranz(0,1) ? 100 : ranz(10,20)]
+					: [ranz(1,4), ranz(0,1) ? 100 : ranz(10,20)]
 			)
 		);
 		render(state);
@@ -90,5 +92,9 @@
 </script>
 </head>
 <body>
+	<div class="bar">
+		<input type="button" value="빠르게"></input>
+		<input type="button" value="느리게"></input>
+	</div>
 </body>
 </html>
