@@ -18,8 +18,8 @@
 	}
 	img {
 		position: relative;
-		width: 60%;
-		height: 60%;
+		width: 70%;
+		height: 70%;
 		object-fit: contain;
 	}
 	.bar {
@@ -42,6 +42,7 @@
 </style>
 <script>
 	let Q = (x, y=document) => y.querySelector(x);
+	let QQ = (x, y=document) => y.querySelectorAll(x);
 	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 	let iid = 0;
 	let interval = 16;
@@ -115,7 +116,7 @@
 			row.map((col,j) =>
 				state[i][j][1] > 0
 					? [state[i][j][0], state[i][j][1] - 1]
-					: [ranz(1,4), ranz(0,1) ? 100 : ranz(10,20)]
+					: [ranz(1,4), ranz(0,1) ? 100 : ranz(5,20)]
 			)
 		);
 		render(state);
@@ -124,7 +125,7 @@
 	{
 		target = event.target;
 
-	    if (target.tagName === 'IMG') {
+	    if (target.tagName === 'IMG' && target.style.opacity > 0) {
 			item = target.getAttribute("item");
 
 			good = (item == 1) & (item < 101);
