@@ -22,9 +22,6 @@
 		height: 60%;
 		object-fit: contain;
 	}
-	td {
-		border-style: solid;
-	}
 	.bar {
 		height: 5%;
 		background: aliceblue;
@@ -128,10 +125,14 @@
 		target = event.target;
 
 	    if (target.tagName === 'IMG') {
-			Q('.OK').innerText = target.getAttribute("item");
+			Q('.OK').innerText = Q('.OK').innerText*1 + (target.getAttribute("item") == "1");
+			Q('.KO').innerText = Q('.KO').innerText*1 + (target.getAttribute("item") != "1");
 
-			// state[row][col] = [0, 0];
-			// render(state);
+			i = target.getAttribute("row")*1;
+			j = target.getAttribute("col")*1;
+			
+			state[i][j] = [97, 20];
+			render(state);
 		}
 	}
 </script>
