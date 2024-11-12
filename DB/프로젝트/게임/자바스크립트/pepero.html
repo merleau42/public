@@ -10,8 +10,14 @@
 	table {
 		width: 100%;
 		height: 50%;
+		border: 1 solid black;
+	}
+	td {
+		text-align: center;
+		vertical-align: middle;
 	}
 	img {
+		position: relative;
 		width: 50%;
 		height: 50%;
 	}
@@ -21,15 +27,17 @@
 	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
 	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 	srcs = [
-		"https://cdn.icon-icons.com/icons2/2699/PNG/512/google_logo_icon_169090.png",
+		null,
 		"https://cdn.icon-icons.com/icons2/2699/PNG/512/netflix_logo_icon_170919.png",
 		"https://cdn.icon-icons.com/icons2/2699/PNG/512/minecraft_logo_icon_168974.png",
 		"https://cdn.icon-icons.com/icons2/2699/PNG/512/youtube_logo_icon_168737.png",
 		"https://cdn.icon-icons.com/icons2/2699/PNG/512/servicenow_logo_icon_168835.png"
 		];
-	state = [[ [3,9], [1,5], [3,1] ],
-			 [ [4,2], [4,2], [0,3] ],
-			 [ [2,6], [0,3], [1,7] ]]
+	state = [[ [3,20], [1,20], [3,20], [3,20] ],
+			 [ [4,20], [4,20], [0,20], [1,20] ],
+			 [ [2,20], [0,20], [1,20], [0,20] ],
+			 [ [0,20], [3,20], [4,20], [3,20] ],
+			 [ [4,20], [2,20], [3,20], [2,20] ]]
 	window.addEventListener('DOMContentLoaded',	main);
 	function main()
 	{
@@ -42,10 +50,13 @@
 			tr = document.createElement('tr');
 			row.forEach((col, j) => {
 				td = document.createElement('td');
+				item = arr[i][j][0];
 				img = document.createElement('img');
-				img.src = srcs[ arr[i][j][0] ];
+				img.src = (item > 0) ? srcs[ item ] : '';
+				life = arr[i][j][1];
+				img.style.opacity =	(life < 10) ? 0 : 1;
+				img.style.top =	(life < 10) ? (20 - life) : 0;
 				td.appendChild(img);
-				
 				tr.appendChild(td);
 			})
 			table.appendChild(tr);
@@ -57,9 +68,9 @@
 	{
 		state = state.map((row,i) =>
 			row.map((col,j) =>
-				state[i][j][1] < 5
-					? [state[i][j][0], state[i][j][1]+1]
-					: [ranz(0,4), 0]
+				state[i][j][1] > 0
+					? [state[i][j][0], state[i][j][1] - 1]
+					: [ranz(0,4), 20]
 			)
 		);
 		render(state);
