@@ -12,7 +12,7 @@
 	}
 	table {
 		margin: auto;
-		width: 80%;
+		width: 70%;
 		height: 50%;
 		border: 1 solid black;
 	}
@@ -22,13 +22,13 @@
 	}
 	img {
 		position: relative;
-		width: 40%;
-		height: 40%;
+		width: 50%;
+		height: 50%;
+		object-fit: contain;
 	}
 </style>
 <script>
 	let Q = (x, y=document) => y.querySelector(x);
-	let QQ = (x, y=document) => [...y.querySelectorAll(x)];
 	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 	srcs = [
 		"https://cdn.icon-icons.com/icons2/2699/PNG/512/netflix_official_logo_icon_168085.png",
@@ -41,12 +41,11 @@
 			 [ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ],
 			 [ [0,0], [0,0], [0,0], [0,0] ],
-			 [ [0,0], [0,0], [0,0], [0,0] ]]
+			 [ [0,0], [0,0], [0,0], [0,0] ]] // [아이템, 생명주기]
 	window.addEventListener('DOMContentLoaded',	main);
 	function main()
 	{
-		// render(state);
-		setInterval(next, 10);
+		setInterval(next, 8);
 	}
 	function render(arr)
 	{
@@ -55,7 +54,6 @@
 			tr = document.createElement('tr');
 			row.forEach((col, j) => {
 				td = document.createElement('td');
-				// td.innerText = arr[i][j];
 
 				img = document.createElement('img');
 				item = arr[i][j][0];
