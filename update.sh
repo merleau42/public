@@ -5,4 +5,4 @@ git add .;
 git commit -m 'update';
 git push;
 clear;
-echo 컨트롤 클릭: https://github.com/merleau42/public;
+echo "확인(컨트롤 클릭): https://github.com/merleau42/public";
