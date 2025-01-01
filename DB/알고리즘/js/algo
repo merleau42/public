@@ -6,7 +6,7 @@ input = require("fs").readFileSync("./dev/stdin").toString()
 Array.prototype.toSorted = function(cmp) { return [...this].sort(cmp) };
 Array.prototype.with = function(i,x) { tmp=[...this]; tmp[i]=x; return tmp };
 show = sheet=>{ console.log(sheet.map(x=>x.join('\t\t\t')).join('\n') + '\n') };
-
+norm = arr=>arr.map((x,i) => [x, i]).toSorted((a,b) => a[0] - b[0]).map((x,i)=> [i, x[1]]).toSorted((a,b) => a[1] - b[1]).map(x => x[0])
 // console.log(input)
 // if (input.pop() == "") input.pop(); // 마지막 줄 제거(EOF 등)
 
