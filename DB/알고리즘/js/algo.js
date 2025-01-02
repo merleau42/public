@@ -13,14 +13,18 @@ print = function (x=this) { console.log(x.valueOf()); return x };
 rank = function (arr=this) { return arr.map((x,i) => [x*1, i]).toSorted((a,b) => a[0] - b[0]).map((x,i) => [i, x[1]]).toSorted((a,b) => a[1] - b[1]).map(x => x[0]) };
 range = (start, end) => [...Array(Math.abs(end - start))].map((_,i)=>start + i * (2 * (end > start) - 1));
 toSorted = function (cmp, arr=this) { return [...arr].sort(cmp) };
-// inserted = function (index, src, dest=this) { return [...dest.slice(0, index), ...src, ...dest.slice(index + 1)] };
-;; inserted = function (index, src, dest=this) { return dest.toSpliced() };
+toSpliced = function (arr, start, del, ...items) { return [...arr.slice(0, start), ...items, ...arr.slice(start + del)] };
+inserted = function (index, src, dest=this) { return [...dest.slice(0, index), ...src, ...dest.slice(index + 1)] };
+
+
 
 //!	체인 호출 등록
 Object.prototype.with = function(i,x) { tmp=[...this]; tmp[i]=x; return tmp };
 ['print'].forEach(f => Object.prototype[f] = globalThis[f]);
 ['rank', 'toSorted', 'inserted'].forEach(f => Array.prototype[f] = globalThis[f]);
 ['toSorted'].forEach(f => String.prototype[f] = globalThis[f]);
+Array.prototype.toSpliced = function (start, deleteCount, ...items) { return [...this.slice(0, start), ...items, ...this.slice(start + deleteCount)] };
+  
 
 //!	디버깅 도구
 stamp = (msg='')=>print(`[${Date.now() % 1000000}] ${msg}`)
