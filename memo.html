@@ -1,8 +1,7 @@
-try {document.querySelectorAll('header, #page_banner, .thebook-vsp, #mc_embed_signup, footer').forEach(x => x.remove());
-Q('#thebook-main>.mdl-grid').after(Q('#page_content'));
-Q('#next-page').addEventListener('mouseover', ()=>Q('#next-page').click());
-Q('#prev-page').addEventListener('mouseover', ()=>Q('#prev-page').click()); n++;}
-catch { n=0; Q=(x)=>document.querySelector(x); }
+try { QQ('header, #page_banner, .thebook-vsp, #mc_embed_signup, footer').forEach(x => x.remove());
+(document.URL.match(/(\d+)\/?$/)[1] % 2) && Q('#thebook-main>.mdl-grid').after(Q('#page_content'));
+QQ('#thebook-main a').forEach(x => x.addEventListener('mouseover', ()=>x.click())); n++;}
+catch { n=0; Q=(x)=>document.querySelector(x); QQ=(x)=>document.querySelectorAll(x); }
 
 <br><br>
 
