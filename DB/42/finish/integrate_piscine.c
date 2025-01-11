@@ -16,7 +16,7 @@
 ///		cat 명령어를 사용하면, 파일의 내용을 확인할 수 있음.
 ///			cat z
 ///			Z
-///		Z 이후에 새 줄이 뒤따른다고 하였음. 이것은 Z 문자 이후에 개행 문자 \n 를 넣으라는 의미.
+///		Z 이후에 새 줄이 뒤따른다고 나와있음. 이것은 Z 문자 이후에 개행 문자 \n 를 넣으라는 의미.
 ///		echo는 자체적으로 문자열에 \n을 추가해주므로 "Z" 까지만 입력해도 '새 줄' 을 만들 수 있음.
 ///		-e 옵션을 사용하면, 개행 문자가 제대로 붙어있는지 확인할 수 있음.
 ///			cat -e z
@@ -2178,161 +2178,13 @@ int ft_sort_params(int argc, char **argv) //! 주어진 인자를 아스키 순�
 	return 0;
 }
 
-//!  C07
-char *ft_strdup(char *src) //　strdup의 동작을 재현하는 함수
-{
-	int i;
-	char *dest;
-
-	i = 0;
-	while (src[i])
-		i++;
-	dest = (char *) malloc(sizeof (char) * i + 1);
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return dest;
-}
-int *ft_range(int min, int max) //　min이상 max미만의 모든 정수를 포함하는 배열을 리턴하는 함수
-{
-	int size;
-	int *tab;
-	int i;
-
-	if (max <= min)
-		return (void*)0;
-	size = max - min;
-	tab = (int *) malloc(sizeof (int) * (max - min));
-	i = 0;
-	while (i < max - min)
-	{
-		tab[i] = min + i;
-		i++;
-	}
-	return tab;
-}
-int ft_ultimate_range(int **range, int min, int max) //　min이상 max미만의 모든 정수를 포함하는 배열 ...... 하는 함수
-{
-//	Create a function ft_ultimate_range which allocates and assigns an array of ints.
-	if (max <= min) //　(max <= min) 이라면 범위는 NULL을 가리키고, 리턴값은 0이어야함.
-	{
-		range = (void*)0;
-		return 0;
-	}
-	return max - min; //　The size of range should be returned (or -1 on error).
-}
-char *ft_strjoin(int size, char **strs, char *sep) //　문자열들을 sep를 기준으로 연결하여 리턴하는 함수
-{
-//	size는 strs의 "문자열" 갯수
-//	size가 0이라면, free() 할 수 있는 빈 문자열을 리턴
-	size = 0;
-	**strs = 0;
-	*sep = 0;
-	return NULL;
-}
-char *ft_convert_base(char *nbr, char *base_from, char *base_to) //　특정한 진법 표현으로 주어진 숫자를 또다른 진법 표현으로 변환하는 함수
-{
-	*nbr = 0;
-	*base_from = 0;
-	*base_to = 0;
-	return 0;
-//nbr, base_from, base_to 는 수정할 수 없을 수도 있음
-//nbr은 ft_atoi_base 에서 사용되는 진법-체계의 문자와 같은 방식임
-//+ - 부호와 공백 문자를 유의하시오
-//& The number represented by nbr must fit inside an int.
-//진법이 잘못되었다면 NULL을 리턴
-//반환된 숫자는 (진법화된 숫자 문자열) 공백이나 +가 없으며, 필요한 경우 -를 하나만 붙일 수 있음
-}
-char *extract(char *start, char *end)
-{
-	char *dest;
-
-	dest = (char*) malloc (sizeof (char) * (end - start + 1));
-	int i;
-	i=0;
-
-	// printf("\n\n___%s\n", start);
-	// printf("___%s\n\n", end);
-	dest[0] = '7';
-
-	// while(dest[i])
-	// printf("%c", dest[i]);
-	// while (start != end)
-		// start++;
-	// {
-		// *dest = *start;
-		// start++;
-	// }
-	// *dest = '\0';
-	return dest;
-}
-
-int is_sep(char ch, char *charset)
-{
-	while (*charset)
-	{
-		if (ch == *charset || ch == '\0')
-			return 1;
-		charset++;
-	}
-	return 0;
-}
-
-char **ft_split(char *str, char *charset) //　구분자를 기준으로 문자열을 분할하고, 분할된 문자열을 인덱싱할 수 있는 모음을 리턴하는 함수
-{
-	char *rewind;
-    char *start;
-    char *end;
-    char **frame;
-	int words;
-
-
-	rewind = str;
-	words=0;
-	while(*str)
-	{
-		printf("%c", *str);
-		end = (char*)0;
-		while(is_sep(*str, charset))
-			start = str++;
-		while(!is_sep(*str, charset))
-			end = str++;
-		words++;
-	}
-
-	str = rewind;
-	frame = (char **) malloc(sizeof(char *) * (words + 1));
-	frame[words] = 0;
-
-	words = 0;
-	char *tmp;
-
-	while(*str)
-	{
-		printf("%c", *str);
-		end = (char*)0;
-		while(is_sep(*str, charset))
-			start = str++;
-		while(!is_sep(*str, charset))
-			end = str++;
-		frame[words] = extract(start, end);
-		words++;
-	}
-
-    return frame;
-}
-
 //!  RUSH 1주차
 void rush(int x, int y)
 {
 	int i;
 	int put;
-	i = 0;
 
+	i = 0;
 	while (i++ < x * y)
 	{
 		put = 4;
