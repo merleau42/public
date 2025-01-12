@@ -20,8 +20,7 @@ itertools = [
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
-	pushed = function (item) { return [...this, item] }
-]
+] // push ≒ concat,	 
 
 //!	프로토타입 함수 등록 (체인 호출 가능)
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
@@ -38,7 +37,6 @@ deep = (x) => JSON.parse( JSON.stringify(x) )
 //! 메인
 stamp();
 // [..."12345"].inserted(5, this).print();
-arrayf.map(f => f.name).print();
 [1,2,3].pushed(4).print();
 
 //! 수열, 누적합, 구간합
