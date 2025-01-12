@@ -14,33 +14,32 @@ const { clear, log } = console;
 
 //!	배열, 문자열 함수
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
-rank = function () { return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[i,x[1]]).toSorted((a,b)=>a[1]-b[1]).map(x=>x[0]) };
-toSorted = function (cmp) { return this.sort(cmp) };
-inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] };
-deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] };
-removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this };
+itertools = [
+	rank = function () { return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[i,x[1]]).toSorted((a,b)=>a[1]-b[1]).map(x=>x[0]) },
+	toSorted = function (cmp) { return this.sort(cmp) },
+	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
+	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
+	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
+	pushed = function (item) { return [...this, item] }
+]
 
-//!	체인 호출 등록
+//!	프로토타입 함수 등록 (체인 호출 가능)
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-['rank', 'toSorted', 'inserted', 'deleted', 'removed'].Each(f => Array.prototype[f] = globalThis[f])
-.concat(['join']).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+itertools.map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]).concat('join')
+.Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
   
-
 //!	디버깅 도구
 stamp = msg=>`<${Date().match(/\d+:\d+:\d+/)[0]} // ${Date.now() % 1000000}> ${msg??''}`.print();
 show = sheet=>{ console.log(sheet.map(x=>x.join('\t\t\t')).join('\n') + '\n') };
 repl = () => require('repl').start();
+deep = (x) => JSON.parse( JSON.stringify(x) )
 
 //! 메인
 stamp();
-"12345".print();
-range(10).print('');
-"abcd".removed('d').print();
-
-range(10).print();
-range(-10).print();
-
+// [..."12345"].inserted(5, this).print();
+arrayf.map(f => f.name).print();
+[1,2,3].pushed(4).print();
 
 //! 수열, 누적합, 구간합
 // search = input[0]*1
@@ -69,4 +68,4 @@ isPrime = (N)=> N<2 ? false : !range(2, floor(sqrt(N) + 1) ).some(i => N % i == 
 
 
 
-repl();
+// repl();
