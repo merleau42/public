@@ -1,7 +1,6 @@
 try { QQ('header, #page_banner, .thebook-vsp, #mc_embed_signup, footer').forEach(x => x.remove());
 (document.URL.match(/(\d+)\/?$/)[1] % 2) && Q('#thebook-main>.mdl-grid').after(Q('#page_content'));
-QQ('#thebook-main a').forEach(x => x.addEventListener('mouseover', ()=>x.click())); n++;}
-catch { n=0; Q=(x)=>document.querySelector(x); QQ=(x)=>document.querySelectorAll(x); }
+QQ('#thebook-main a').forEach(x => x.addEventListener('mouseover', ()=>x.click())); document.URL.match(/(\d+)\/?$/)[1]} catch { Q=(x)=>document.querySelector(x); QQ=(x)=>document.querySelectorAll(x); }
 
 <br><br>
 
