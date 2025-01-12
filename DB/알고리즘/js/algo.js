@@ -37,7 +37,7 @@ deep = (x) => JSON.parse( JSON.stringify(x) )
 //! 메인
 stamp();
 // [..."12345"].inserted(5, this).print();
-[1,2,3].pushed(4).print();
+[1,2,3].concat(4).print();
 
 //! 수열, 누적합, 구간합
 // search = input[0]*1
