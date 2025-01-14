@@ -6,23 +6,31 @@
 </head>
 <body>
 	<div><span id="order">1</span>번째 참가자</div>
-	<div>제시어: <span id="word"></span></div>
+	<div>제시어: <span id="begin"></span></div>
 	<input type="text">
 	<button>입력</button>
 	<br><br><br><br>
 	<img src="flowchart.jpg" alt="">
 	<script>
+		const {log} = console;
 		Q=A=>document.querySelector(A);
+
 		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
-		const {log} = console;
 
 		let 참가자 = prompt('참가자는 몇 명인가요??').toNumber();
 		let 제시어;
 		let 낱말;
 	
-		Q('input').addEventListener('onclick213', e => 낱말 = e.target.value());
-		Q('button').addEventListener('click', (e) => { });
+		Q('input').addEventListener('onclick', e => 낱말 = e.target.value());
+		Q('button').addEventListener('onclick', () => {
+			if (!제시어){
+				Q('#begin').textContent = 제시어 = 낱말;
+			}
+			else{
+				
+			}
+		});
 
 		
 
