@@ -10,7 +10,6 @@
 	<input type="text">
 	<button>입력</button>
 	<br><br><br><br>
-	<img src="flowchart.jpg">
 	<script>
 		const {log} = console;
 		Q=A=>document.querySelector(A);
@@ -23,11 +22,11 @@
 	
 		Q('button').addEventListener('click', () => {
 			newWord = Q('input').value;
-			if (!Q('#begin').innerText)
-				Q('#begin').innerText = words[0];
-			if (words.at(-1).at(-1) === newWord[0])
-				Q('#begin').innerText = words.at(-1);
 			words.push( newWord );
+			if (!Q('#begin').innerText)
+				return Q('#begin').innerText = newWord;
+			if (words.at(-2).at(-1) === newWord[0])
+				Q('#begin').innerText = words.at(-1);
 		});
 
 		
