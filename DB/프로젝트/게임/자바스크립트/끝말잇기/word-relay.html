@@ -10,7 +10,7 @@
 	<input type="text">
 	<button>입력</button>
 	<br><br><br><br>
-	<img src="flowchart.jpg" alt="">
+	<img src="flowchart.jpg">
 	<script>
 		const {log} = console;
 		Q=A=>document.querySelector(A);
@@ -18,18 +18,16 @@
 		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
 
-		let 참가자 = prompt('참가자는 몇 명인가요??').toNumber();
-		let 제시어;
-		let 낱말;
+		let party = prompt('참가자는 몇 명인가요?').toNumber();
+		let words = [];
 	
-		Q('input').addEventListener('click', e => 낱말 = e.target.value() );
 		Q('button').addEventListener('click', () => {
-			if (!제시어){
-				Q('#begin').innerText = 제시어 = 낱말;
-			}
-			else{
-				
-			}
+			newWord = Q('input').value;
+			if (!Q('#begin').innerText)
+				Q('#begin').innerText = words[0];
+			if (words.at(-1).at(-1) === newWord[0])
+				Q('#begin').innerText = words.at(-1);
+			words.push( newWord );
 		});
 
 		
