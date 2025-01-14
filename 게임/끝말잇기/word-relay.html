@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>끝말잇기</title>
+</head>
+<body>
+	<div><span id="order">1</span>번째 참가자</div>
+	<div>제시어: <span id="begin"></span></div>
+	<input type="text">
+	<button>입력</button>
+	<br><br><br><br>
+	<script>
+		const {log} = console;
+		Q=A=>document.querySelector(A);
+
+		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
+
+
+		let party = prompt('참가자는 몇 명인가요?').toNumber();
+		let words = [];
+	
+		Q('button').addEventListener('click', () => {
+			newWord = Q('input').value;
+			words.push( newWord );
+			if (!Q('#begin').innerText)
+				return Q('#begin').innerText = newWord;
+			if (words.at(-2).at(-1) === newWord[0])
+				Q('#begin').innerText = words.at(-1);
+		});
+	</script>
+</body>
+</html>
