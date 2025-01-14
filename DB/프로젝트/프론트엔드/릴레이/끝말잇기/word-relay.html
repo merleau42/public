@@ -18,15 +18,14 @@
 
 
 		let party = prompt('참가자는 몇 명인가요?').toNumber();
-		let words = [];
+		let word;
 	
 		Q('button').addEventListener('click', () => {
-			newWord = Q('input').value;
-			words.push( newWord );
+			current = Q('input').value;
 			if (!Q('#begin').innerText)
-				return Q('#begin').innerText = newWord;
-			if (words.at(-2).at(-1) === newWord[0])
-				Q('#begin').innerText = words.at(-1);
+				return Q('#begin').innerText = current;
+			if (word.at(-1) === current[0])
+				Q('#begin').innerText = curent;
 		});
 	</script>
 </body>
