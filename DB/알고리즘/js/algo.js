@@ -27,7 +27,7 @@ Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this
 Object.prototype.Each = function (f) { this.forEach(f); return this };
 itertools.map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]).concat('join')
 .Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
-  
+
 //!	디버깅 도구
 stamp = msg=>`<${Date().match(/\d+:\d+:\d+/)[0]} // ${Date.now() % 1000000}> ${msg??''}`.print();
 show = sheet=>{ console.log(sheet.map(x=>x.join('\t\t\t')).join('\n') + '\n') };
@@ -36,8 +36,7 @@ deep = (x) => JSON.parse( JSON.stringify(x) )
 
 //! 메인
 stamp();
-// [..."12345"].inserted(5, this).print();
-[1,2,3].concat(4).print();
+"1245".print('_');
 
 //! 수열, 누적합, 구간합
 // search = input[0]*1
