@@ -22,10 +22,10 @@
 		let 제시어;
 		let 낱말;
 	
-		Q('input').addEventListener('onclick', e => 낱말 = e.target.value());
-		Q('button').addEventListener('onclick', () => {
+		Q('input').addEventListener('click', e => 낱말 = e.target.value() );
+		Q('button').addEventListener('click', () => {
 			if (!제시어){
-				Q('#begin').textContent = 제시어 = 낱말;
+				Q('#begin').innerText = 제시어 = 낱말;
 			}
 			else{
 				
