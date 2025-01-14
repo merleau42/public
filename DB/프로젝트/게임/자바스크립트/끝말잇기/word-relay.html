@@ -13,7 +13,7 @@
 	<img src="flowchart.jpg" alt="">
 	<script>
 		Q=A=>document.querySelector(A);
-		String.prototype.toNumber = function () { return this.match(/\d+/)?.[0]*1||0 };
+		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
 		const {log} = console;
 
