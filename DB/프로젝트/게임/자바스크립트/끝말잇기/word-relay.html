@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>끝말잇기</title>
+	<meta charset="utf-8">
+	<title>끝말잇기</title>
 </head>
 <body>
-<div><span id="order">1</span>번째 참가자</div>
-<div>제시어: <span id="word"></span></div>
-<input type="text">
-<button>입력</button>
-<script>
-</script>
+	<div><span id="order">1</span>번째 참가자</div>
+	<div>제시어: <span id="word"></span></div>
+	<input type="text">
+	<button>입력</button>
+	<br><br><br><br>
+	<img src="flowchart.jpg" alt="">
+	<script>
+		Q=A=>document.querySelector(A);
+		String.prototype.toNumber = function () { return this.match(/\d+/)?.[0]*1||0 };
+
+		const {log} = console;
+
+		let 참가자 = prompt('참가자는 몇 명인가요??').toNumber();
+		let 제시어;
+		let 낱말;
+	
+		Q('input').addEventListener('onclick213', e => 낱말 = e.target.value());
+		Q('button').addEventListener('click', (e) => { });
+
+		
+
+	</script>
 </body>
 </html>
