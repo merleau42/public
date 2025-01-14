@@ -59,8 +59,8 @@
 	}
 	function new_ring(index)
 	{
-		names = ["초성화", "이니셜", "공백제거", "그대로", "함수111", "함수..."];
-		binds = [conv_cho, conv_init, conv_space, conv_1, conv_2, conv_3];
+		names = ["초성화", "이니셜", "공백제거", "그대로", "거꾸로", "함수..."];
+		binds = [conv_cho, conv_init, conv_space, conv_1, conv_reverse, conv_3];
 
 		div = document.createElement('div');
 		div.classList.add('ring');
@@ -98,7 +98,7 @@
 		origin = origin.replace(/[싸-앃]/g, 'ㅆ');
 		origin = origin.replace(/[아-잏]/g, 'ㅇ');
 		origin = origin.replace(/[자-짛]/g, 'ㅈ');
-		origin = origin.replace(/[짜-찧]/g, 'ㅈ');
+		origin = origin.replace(/[짜-찧]/g, 'ㅉ');
 		origin = origin.replace(/[차-칳]/g, 'ㅊ');
 		origin = origin.replace(/[카-킿]/g, 'ㅋ');
 		origin = origin.replace(/[타-팋]/g, 'ㅌ');
@@ -144,8 +144,16 @@
 
 		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
 	}
-	function conv_2(index){
-		;
+	function conv_reverse(index){
+		if (!Q(`.ring[index="${index*1+1}"]`))
+			Q('body').append( new_ring(index*1+1) );
+
+		Q(`textarea[index="${index*1+1}"]`).value
+		= Q(`textarea[index="${index*1}"]`).value.split('\n').map(x=>[...x].toReversed().join('')).join('\n');
+
+		Q(`p[index="${index*1+1}"]`).innerText = `연쇄${index*1+1}: 거꾸로`;
+
+		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
 	}
 	function conv_3(index){
 		;
