@@ -12,21 +12,21 @@
 	<br><br><br><br>
 	<script>
 		const {log} = console;
-		Q=A=>document.querySelector(A);
+		Q=x=>document.querySelector(x);
 
 		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
-
 		let party = prompt('참가자는 몇 명인가요?').toNumber();
-		let words = [];
+
+		let prev;
+		let current;
 	
 		Q('button').addEventListener('click', () => {
-			newWord = Q('input').value;
-			words.push( newWord );
-			if (!Q('#begin').innerText)
-				return Q('#begin').innerText = newWord;
-			if (words.at(-2).at(-1) === newWord[0])
-				Q('#begin').innerText = words.at(-1);
+			current = Q('input').value;
+			if (!Q('#begin').innerText || prev.at(-1) === current[0]){
+				prev = current;
+				Q('#begin').innerText = prev;
+			}
 		});
 	</script>
 </body>
