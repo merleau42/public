@@ -16,16 +16,17 @@
 
 		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
-
 		let party = prompt('참가자는 몇 명인가요?').toNumber();
-		let word;
+
+		let prev;
+		let current;
 	
 		Q('button').addEventListener('click', () => {
 			current = Q('input').value;
-			if (!Q('#begin').innerText)
-				return Q('#begin').innerText = current;
-			if (word.at(-1) === current[0])
-				Q('#begin').innerText = curent;
+			if (!Q('#begin').innerText || prev.at(-1) === current[0]){
+				prev = current;
+				Q('#begin').innerText = prev;
+			}
 		});
 	</script>
 </body>
