@@ -1,15 +1,12 @@
-//!	테스트 케이스 읽기
-file = require("fs").readFileSync("./dev/stdin").toString()
-
-//!	입력값 파싱
-input = file
+//!	입력값의 테스트 케이스를 불러와서 파싱
+input = require("fs").readFileSync("./dev/stdin").toString()
 // .split(" ")
 // .split("\n")
 // .map(x=>x.split(" "));
 // if (input.pop() == "") input.pop(); // 마지막 줄 제거(EOF 등)
 
 //! 네임 스페이스 제거
-const { sqrt, ceil, floor, abs, sign } = Math;
+const { sqrt, ceil, floor, abs, sign, max, min } = Math;
 const { clear, log } = console;
 
 //!	배열, 문자열 함수
@@ -21,33 +18,32 @@ itertools = [
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
 ] // push ≒ concat,	 
+arr_str = ['join', 'toReversed'];
 
 //!	프로토타입 함수 등록 (체인 호출 가능)
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-itertools.map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]).concat('join')
-.Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+itertools.map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
+.concat(arr_str).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //!	디버깅 도구
-stamp = msg=>`<${Date().match(/\d+:\d+:\d+/)[0]} // ${Date.now() % 1000000}> ${msg??''}`.print();
-show = sheet=>{ console.log(sheet.map(x=>x.join('\t\t\t')).join('\n') + '\n') };
+stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
+table = (...info) => log( info.map(x=>x.join('\t')).join('\n') );
 repl = () => require('repl').start();
 deep = (x) => JSON.parse( JSON.stringify(x) )
 
-//! 메인
-stamp();
-"1245".print('_');
 
 //! 수열, 누적합, 구간합
-// search = input[0]*1
-// seq = input[1].split(" ")
-// sheet1 = seq.reduce((s,c,i,a) => [...s, [
-// 	i,
-// 	c*1,
-// 	c*1 + s[i][2]*1
-//  ]], [[0,0,0,0,0,0,0]]).with(0, ["IND", "TRM", "SUM"])
-// console.log( sheet1.filter(x=>x[1]==search).length )
+Array.prototype.psum = function () {return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], [])};
 
+seq = range(33, 40);
+seq_tools = [
+	serial = seq.map((_,i) => i),
+	seq,
+	psum = seq.psum(),
+]
+
+table(...seq_tools)
 
 //! 미분류
 // sheet1 = input.reduce((s,c,i,a) => [...s, [
@@ -60,9 +56,6 @@ stamp();
 
 
 //! 정수론
-isPrime = (N)=> N<2 ? false : !range(2, floor(sqrt(N) + 1) ).some(i => N % i == 0);
+isPrime = (N)=> N==2 || N>1 && !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 
-
-
-
-// repl();
+// range(1, 100).psum().print();
