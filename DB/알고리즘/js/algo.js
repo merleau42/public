@@ -11,20 +11,19 @@ const { clear, log } = console;
 
 //!	배열, 문자열 함수
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
+arr_str = ['join', 'toReversed'];
 itertools = [
 	rank = function () { return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[i,x[1]]).toSorted((a,b)=>a[1]-b[1]).map(x=>x[0]) },
 	toSorted = function (cmp) { return this.sort(cmp) },
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
-] // push ≒ concat,	 
-arr_str = ['join', 'toReversed'];
+].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
+.concat(arr_str).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //!	프로토타입 함수 등록 (체인 호출 가능)
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-itertools.map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat(arr_str).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //!	디버깅 도구
 stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
@@ -32,30 +31,16 @@ table = (...info) => log( info.map(x=>x.join('\t')).join('\n') );
 repl = () => require('repl').start();
 deep = (x) => JSON.parse( JSON.stringify(x) )
 
-
 //! 수열, 누적합, 구간합
-Array.prototype.psum = function () {return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], [])};
-
+Array.prototype.pre = [];
+seqtools = [
+	serial = function () { return this.pre.index = this.map((_,x) => i)},
+	psum = function (arr=this) { return arr.pre.psum = arr.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
+].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 seq = range(33, 40);
-seq_tools = [
-	serial = seq.map((_,i) => i),
-	seq,
-	psum = seq.psum(),
-]
-
-table(...seq_tools)
-
-//! 미분류
-// sheet1 = input.reduce((s,c,i,a) => [...s, [
-// 	i,
-// 	c[0],
-// 	age = c[1]*1,
-// 	wei = c[2]*1,
-// 	(age > 17 || wei >= 80) ? 'Senior' : 'Junior'
-//  ]], [[0,0,0,0,0,0]]).with(0, ["IND", "NAM", "AGE", "WEI", "VAL"])
-
 
 //! 정수론
 isPrime = (N)=> N==2 || N>1 && !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 
-// range(1, 100).psum().print();
+//! 메인
+range(1, 100).psum().print();
