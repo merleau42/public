@@ -2,18 +2,17 @@
 const { sqrt, ceil, floor, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
 
-//!	입력값의 테스트 케이스를 불러와서 파싱
-file = (sp, tr=0) => require("fs").readFileSync("./dev/stdin").toString()[tr ? 'trim' : 'valueOf']().split(sp);
-// .map(x=>x.split(" "));
-// if (input.pop() == "") input.pop(); // 마지막 줄 제거(EOF 등)
+//! 테스트 케이스 불러오기
+input = (s,t=1)=>require("fs").readFileSync("./dev/stdin").toString()[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
 
 //!	기본 함수, 디버깅 도구
+Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
 stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
 repl = (msg=log('REPL모드')) => require('repl').start();
-randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() * (max - min + 1)) + min;
+randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
 
 //!	배열 함수 확장, 문자열에도 적용
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
@@ -39,5 +38,17 @@ seqtools = [
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 
-//! 메인
-range(file(' ', false)).forEach(i => log(`Hello World, Judge ${i + 1}!`))
+
+//: ■■■■■■■■■■■■■■[ 메인 ]■■■■■■■■■■■■■■
+
+//! 문자열 양식
+// /*  14581 */	log(`:fan::fan::fan:\n:fan::${input(' ')}::fan:\n:fan::fan::fan:`);
+
+//! 문자열을 반복해서 출력
+// /*  9316 */	range(input(' ')).forEach(i => log(`Hello World, Judge ${i + 1}!`))
+// /* 26766 */	log( 문자열.repeat(input(' ')) );
+
+//! 아스키코드
+// input(' ').charAt();
+
+"123".repeat(input()).print();
