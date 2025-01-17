@@ -18,7 +18,7 @@ repl = (msg=log('REPL모드')) => require('repl').start();
 
 //!	배열 함수 확장, 문자열에 적용
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
-randz = (min, max, arr=0) => !arr ? floor(random() * (max - min + 1)) + min : range(arr).map(x => randz(min, max));
+randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() * (max - min + 1)) + min;
 arr_str = ['join', 'toReversed'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[0],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[0])},
@@ -45,4 +45,4 @@ isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 
 seq = range(33, 40).prep();
 seq.sheet.show()
 
-randz(3,5,10).print();
+randz(3,15,10).print();
