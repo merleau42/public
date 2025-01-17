@@ -12,9 +12,8 @@ input = require("fs").readFileSync("./dev/stdin").toString()
 //!	기본 함수, 디버깅 도구
 Object.prototype.Each = function (f) { this.forEach(f); return this };
 Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
-Object.prototype.show = function (s) { log(Object.entries()) };
+Object.prototype.show = function () {log(Object.entries(this).map(([k,v])=>`${k}\t${v.join('\t')}`).join('\n'))};
 stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
-obj_to_table = function (obs) { log( info.map(x=>x.join('\t')).join('\n') ) };
 repl = (msg=log('REPL모드')) => require('repl').start();
 
 //!	배열 함수 확장, 문자열에 적용
@@ -31,7 +30,7 @@ itertools = [
 
 //! 수열, 누적합, 구간합
 Array.prototype.sheet = {};
-Array.prototype.prep = function (arr=this) { this.serial(); this.psum(); }
+Array.prototype.prep = function () { this.serial(); this.psum(); return this}
 
 seqtools = [
 	serial = function () { return this.sheet.index = this.map((_,i) => i)},
@@ -42,7 +41,5 @@ seqtools = [
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 
 //! 메인
-seq = range(33, 40);
-seq.prep();
-log(seq.sheet)
-repl();
+seq = range(33, 40).prep();
+seq.sheet.show()
