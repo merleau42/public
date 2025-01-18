@@ -3,12 +3,16 @@ const { sqrt, ceil, floor, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
 
 //! 테스트 케이스 불러오기
-input = (s,t=1)=>require("fs").readFileSync("./dev/stdin").toString()[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
+input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
+input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
 
-//!	기본 함수, 디버깅 도구
+//!	기본 함수
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.print = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
+Object.prototype.if = function (T,F) { return this.valueOf() ? T : F};
+Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
+
+//! 디버깅 도구
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
 stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
 repl = (msg=log('REPL모드')) => require('repl').start();
@@ -16,10 +20,11 @@ randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(r
 
 //!	배열 함수 확장, 문자열에도 적용
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
-arr_str = ['join', 'toReversed'];
+arr_str = ['join'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[0],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[0])},
 	toSorted = function (cmp) { return this.sort(cmp) },
+	toReversed = function () { return this.reverse()},
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
@@ -39,16 +44,23 @@ seqtools = [
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 
 
-//: ■■■■■■■■■■■■■■[ 메인 ]■■■■■■■■■■■■■■
-
+//: ■■■■■■■■■■■■■■[ ~브론즈5 ]■■■■■■■■■■■■■■
 //! 문자열 양식
-// /*  14581 */	log(`:fan::fan::fan:\n:fan::${input(' ')}::fan:\n:fan::fan::fan:`);
+// /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
 
 //! 문자열을 반복해서 출력
-// /*  9316 */	range(input(' ')).forEach(i => log(`Hello World, Judge ${i + 1}!`))
-// /* 26766 */	log( 문자열.repeat(input(' ')) );
+// /*  9316 */	range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
+// /* 26766 */	log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 
 //! 아스키코드
-// input(' ').charAt();
+// input().charCodeAt().log()
 
-"123".repeat(input()).print();
+//! 비교
+// /*  4101 */	input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log());
+// /* 10871 */	[_, x, ...seq]=input(/\W/); seq.filter(e => +e < +x).log(' ');
+// /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
+// /* 26209 */	input(' ').some(x => +x > 1).if('F', 'S').log();
+
+
+//: ■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■
+'nN'.includes(input()).if('Naver D2', 'Naver Whale').log();
