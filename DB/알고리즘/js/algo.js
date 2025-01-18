@@ -24,7 +24,7 @@ randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(r
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
 arr_str = ['join'];
 itertools = [
-	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[0],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[0])},
+	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
 	toReversed = function () { return this.reverse()},
 	toSeq = function() { return  },
@@ -72,7 +72,4 @@ isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 
 
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-// x = input()*1;
-// ['Violet','Indigo','Blue','Green','Yellow','Orange','Red']
-[425,450,495,570,590,620].rank().log();
-[4,87,2,6,5].rank().log();
+x = input()*1;
