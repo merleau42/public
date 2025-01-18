@@ -1,5 +1,7 @@
+const { fchown } = require("fs");
+
 //! 네임 스페이스 제거
-const { sqrt, ceil, floor, abs, sign, max, min, random } = Math;
+const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
 
 //! 테스트 케이스 불러오기
@@ -25,6 +27,7 @@ itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[0],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[0])},
 	toSorted = function (cmp) { return this.sort(cmp) },
 	toReversed = function () { return this.reverse()},
+	toSeq = function() { return  },
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
@@ -61,6 +64,15 @@ isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 
 // /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
 // /* 26209 */	input(' ').some(x => +x > 1).if('F', 'S').log();
 
+//! 사칙연산
+// /* 10869 */	[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
 
-//: ■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■
-'nN'.includes(input()).if('Naver D2', 'Naver Whale').log();
+//! 조건에 따라서 알맞은 메시지 출력
+// log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
+
+
+//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
+// x = input()*1;
+// ['Violet','Indigo','Blue','Green','Yellow','Orange','Red']
+[425,450,495,570,590,620].rank().log();
+[4,87,2,6,5].rank().log();
