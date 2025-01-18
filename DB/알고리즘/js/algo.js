@@ -11,7 +11,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 //!	기본 함수
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.if = function (T,F) { return this.valueOf() ? T : F};
+Object.prototype.if = function (T,F) { return this.valueOf() ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 
 //! 디버깅 도구
@@ -45,9 +45,9 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
+fibo = (arr) => arr.reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], [0, 1]);
 
-
-//: ■■■■■■■■■■■■■■[ ~브론즈5 ]■■■■■■■■■■■■■■
+//: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식
 // /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
 
@@ -69,7 +69,7 @@ isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 
 
 //! 조건에 따라서 알맞은 메시지 출력
 // log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
+// [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-x = input()*1;
