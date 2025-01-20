@@ -1,5 +1,3 @@
-const { fchown } = require("fs");
-
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
@@ -22,7 +20,6 @@ randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(r
 
 //!	배열 함수 확장, 문자열에도 적용
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
-arr_str = ['join'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
@@ -31,7 +28,7 @@ itertools = [
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat(arr_str).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+.concat('join').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 수열, 누적합, 구간합
 Array.prototype.sheet = {};
