@@ -8,7 +8,8 @@
 	<div><span id="order">1</span>번째 참가자</div>
 	<div>제시어: <span id="begin"></span></div>
 	<input type="text">
-	<button>입력</button>
+	<button id="input">입력</button>
+	<button id="clear">지우기</button>
 	<div id="msg">제시어를 입력해주세요</div>
 	<br><br><br><br>
 	<script>
@@ -24,22 +25,32 @@
 		let current;
 		let order;
 	
-		Q('button').addEventListener('click', () => {
+		Q('button#input').onclick = () => {
 			if (!(current = Q('input').value))
-				return;
+				return Q('#msg').classList.add('invalid');
 			if (!Q('#begin').innerText || prev.at(-1) === current[0]){
 				prev = current;
 				Q('#begin').innerText = prev;
 				Q('#order').innerText = (Q('#order').innerText*1) % party + 1
+				Q('input').value = '';
+				Q('#msg').classList.add('valid');
+				Q('#msg').classList.remove('invalid');
 			}
 			else {
-				Q('')
+				Q('#msg').innerText = '틀린 단어입니다!';
+				Q('#msg').classList.add('invalid');
+				Q('#msg').classList.remove('valid');
 			}
-		});
+		};
+		Q('button#clear').onclick = ()=>Q('input').value = '';
 	</script>
 	<style>
-		#msg[invalid] {
+		#msg.valid{
+			visibility: hidden;
+		}
+		#msg.invalid {
 			color: red;
+			font-weight: bold;
 		}
 	</style>
 </body>
