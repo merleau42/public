@@ -6,8 +6,8 @@
 </head>
 <body>
 	<div><span id="order">1</span>번째 참가자</div>
-	<div>제시어: <span id="begin"></span></div>
-	<input type="text">
+	<div><span id="label">제시어: </span><span id="begin"></span></div>
+	<input id="text" type="text">
 	<button id="input">입력</button>
 	<button id="clear">지우기</button>
 	<div id="msg">제시어를 입력해주세요</div>
@@ -26,13 +26,15 @@
 		let order;
 	
 		Q('button#input').onclick = () => {
-			if (!(current = Q('input').value))
-				return Q('#msg').classList.add('invalid');
-			if (!Q('#begin').innerText || prev.at(-1) === current[0]){
+			if (!(current = Q('#text').value))
+			return Q('#msg').classList.add('invalid');
+		
+		if (!Q('#begin').innerText || prev.at(-1) === current[0]){
+				Q('#label').innerText = '이전 단어: ';
 				prev = current;
 				Q('#begin').innerText = prev;
 				Q('#order').innerText = (Q('#order').innerText*1) % party + 1
-				Q('input').value = '';
+				Q('#text').value = '';
 				Q('#msg').classList.add('valid');
 				Q('#msg').classList.remove('invalid');
 			}
@@ -42,7 +44,7 @@
 				Q('#msg').classList.remove('valid');
 			}
 		};
-		Q('button#clear').onclick = ()=>Q('input').value = '';
+		Q('button#clear').onclick = ()=>Q('#text').value = '';
 	</script>
 	<style>
 		#msg.valid{
