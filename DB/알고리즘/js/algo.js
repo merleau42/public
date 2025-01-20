@@ -42,6 +42,7 @@ seqtools = [
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 fibo = (arr=range(100)) => arr.reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], [0, 1]);
+clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식

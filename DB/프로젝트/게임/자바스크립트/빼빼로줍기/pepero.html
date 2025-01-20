@@ -66,6 +66,7 @@
 		if(iid)
 			clearInterval(iid);
 		interval += ms;
+		interval = (interval < 1)?1 : (interval > 30)?30 : interval;
 		iid = setInterval(next, interval);
 		Q('.freq').innerText = interval;
 	}
