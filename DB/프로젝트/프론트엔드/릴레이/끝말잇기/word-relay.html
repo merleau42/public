@@ -9,7 +9,7 @@
 	<div>제시어: <span id="begin"></span></div>
 	<input type="text">
 	<button>입력</button>
-	<div id="msg">틀렸습니다!</div>
+	<div id="msg">제시어를 입력해주세요</div>
 	<br><br><br><br>
 	<script>
 		const {log} = console;
@@ -31,16 +31,14 @@
 				prev = current;
 				Q('#begin').innerText = prev;
 				Q('#order').innerText = (Q('#order').innerText*1) % party + 1
-				Q('#msg').style.visibility = 'hidden';
 			}
 			else {
-				Q('#msg').style.visibility = 'visible';
+				Q('')
 			}
 		});
 	</script>
 	<style>
-		#msg {
-			visibility: hidden;
+		#msg[invalid] {
 			color: red;
 		}
 	</style>
