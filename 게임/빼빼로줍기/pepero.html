@@ -68,7 +68,7 @@
 		interval += ms;
 		interval = (interval < 1)?1 : (interval > 30)?30 : interval;
 		iid = setInterval(next, interval);
-		Q('.freq').innerText = interval;
+		Q('.freq').innerText = 31 - interval;
 	}
 	function grid(arr)
 	{
@@ -160,9 +160,9 @@
 </head>
 <body>
 	<div class="bar">
-		<div class="freq"></div>
-		<input type="button" value="빠르게"></input>
 		<input type="button" value="느리게"></input>
+		<input type="button" value="빠르게"></input>
+		<div class="freq"></div>
 		<div class="OK">0</div>
 		<div class="KO">0</div>
 	</div>
