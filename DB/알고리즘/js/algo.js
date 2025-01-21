@@ -9,7 +9,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 //!	기본 함수
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.if = function (T,F) { return this.valueOf() ? T : F };
+Object.prototype.if = function (T, F) { return this.valueOf() ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
 
 //! 디버깅 도구
