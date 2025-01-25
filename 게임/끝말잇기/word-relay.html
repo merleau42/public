@@ -12,38 +12,43 @@
 	<button id="clear">지우기</button>
 	<div id="msg">제시어를 입력해주세요</div>
 	<script>
-		const {log} = console;
-		Q=x=>document.querySelector(x);
+	const {log} = console;
+	Q=x=>document.querySelector(x);
 
-		String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
+	String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
 
-		// let party = prompt('참가자는 몇 명인가요?').toNumber();
+	// let party = prompt('참가자는 몇 명인가요?').toNumber();
 
-		let party = 3;
-		let prev;
-		let current;
-		let order;
-	
-		Q('button#input').onclick = () => {
-			if (!(current = Q('#text').value))
+	let party = 3;
+	let prev;
+	let current;
+	let order;
+
+	Q('button#input').onclick = () => {
+		if (!(current = Q('#text').value))
 			return Q('#msg').classList.add('invalid');
-		
-		if (!Q('#begin').innerText || prev.at(-1) === current[0]){
-				Q('#label').innerText = '이전 단어: ';
-				prev = current;
-				Q('#begin').innerText = prev;
-				Q('#order').innerText = (Q('#order').innerText*1) % party + 1
-				Q('#text').value = '';
-				Q('#msg').classList.add('valid');
-				Q('#msg').classList.remove('invalid');
-			}
-			else{
-				Q('#msg').innerText = '틀린 단어입니다!';
-				Q('#msg').classList.add('invalid');
-				Q('#msg').classList.remove('valid');
-			}
-		};
-		Q('button#clear').onclick = ()=>Q('#text').value = '';
+	
+		if (!Q('#begin').innerText || prev.at(-1) === current[0]) {
+			Q('#label').innerText = '이전 단어: ';
+			prev = current;
+			Q('#begin').innerText = prev;
+			Q('#order').innerText = (Q('#order').innerText*1) % party + 1
+			Q('#text').value = '';
+			Q('#msg').classList.add('valid');
+			Q('#msg').classList.remove('invalid');
+		}
+		else {
+			Q('#msg').innerText = `틀린 단어입니다!  ${Q('#text').value}`;
+			Q('#text').value = '';
+			Q('#msg').classList.add('invalid');
+			Q('#msg').classList.remove('valid');
+		}
+		Q('#text').focus();
+	};
+	Q('button#clear').onclick = ()=> {
+		Q('#text').value = '';
+		Q('#text').focus();
+	}
 	</script>
 	<style>
 		#msg.valid{
