@@ -17,24 +17,50 @@
 		<button id="num-7">7</button>
 		<button id="num-8">8</button>
 		<button id="num-9">9</button>
-		<button id="plus">+</button>
+		<button id="operator: +">+</button>
 	</div>
 	<div class="row">
 		<button id="num-4">4</button>
 		<button id="num-5">5</button>
 		<button id="num-6">6</button>
-		<button id="minus">-</button>
+		<button id="operator: -">-</button>
 	</div>
 	<div class="row">
 		<button id="num-1">1</button>
 		<button id="num-2">2</button>
 		<button id="num-3">3</button>
-		<button id="divide">/</button>
+		<button id="operator: /">/</button>
 	</div>
 	<div class="row">
 		<button id="clear">C</button>
 		<button id="num-0">0</button>
 		<button id="calculate">=</button>
-		<button id="multiply">x</button>
+		<button id="operator: *">x</button>
 	</div>
+	<div id="log">-----</div>
+	<script>
+		Q = (x) => document.querySelector(x);
+		log = (x) => Q('#log').innerText = x;
+		let numOne = '';
+		let operator = '';
+		let numTwo = '';
+		const $operator = document.querySelector('#operator');
+		[0,1,2,3,4,5,6,7,8,9].forEach(i => {
+			Q(`#num-${i}`).addEventListener('click', () => {
+				log(i);
+				if (operator)
+					numTwo += i+'';
+				else
+					numOne += i+'';
+				Q('#result').value += i+'';
+			});
+		});
+		// document.querySelector('#plus').addEventListener('click', () => {}); 
+		// document.querySelector('#minus').addEventListener('click', () => {}); 
+		// document.querySelector('#divide').addEventListener('click', () => {}); 
+		// document.querySelector('#multiply').addEventListener('click', () => {}); 
+		// document.querySelector('#calculate').addEventListener('click', () => {}); 
+		// document.querySelector('#clear').addEventListener('click', () => {});
+
+	</script>
 </body>
