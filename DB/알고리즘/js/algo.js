@@ -19,7 +19,7 @@ repl = (msg=log('REPL모드')) => require('repl').start();
 randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
 
 //!	배열 함수 확장, 문자열에도 적용
-range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a + d * i * sign(l - a) : d * i * sign(a));
+range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
@@ -73,6 +73,7 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 // log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
 // [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
+//! 별찍기
+range(1, input()*1+1).forEach(x=>'*'.repeat(x).log())
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-"444".log().toNumber().log()
