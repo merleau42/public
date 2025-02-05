@@ -48,7 +48,7 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (arr) => arr.reduce((s,c,i) => [...s, i<2 ? c : s[i-2] + s[i-1]], []);
+fibo = (N, start=[0, 1]) => range(N).reduce((s,c,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
@@ -80,13 +80,13 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
 //! 행렬
-// (j >= maxi - i - 1) ? '*' : ' '		// 대각선 ↙ 이하
+// matrix(Mi, Mj, (i,j) => (j >= Mi - i - 1) ? '*' : ' ').deepjoin(['\n','']).log();// 대각선 ↙ 이하 별찍기
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 공통 환경 조정
-// [mi, Mi] = [0, +input()];
-// [mj, Mj] = [0, Mi];
+[mi, Mi] = [0, +input()];
+[mj, Mj] = [0, Mi];
 
 //! 메인
 // range(maxi).forEach(i => {
@@ -98,7 +98,5 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // })
 // lines.log('\n');
 
-fibo([4,8,9,0,0,5]).log()
+fibo(10, [3,-4]).log();
 
-// matrix(, range(Mj), (i,j)=>(j >= Mi - i - 1) ? '*' : ' ').deepjoin(['\n','']).log();
-// matrix(2, 9, (i,j)=>`(${i},${j})`).deepjoin(['\n', ' ']).log()
