@@ -1,6 +1,3 @@
-const { type } = require("os");
-const { isNumber } = require("util");
-
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
@@ -68,13 +65,12 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-input().ascii().map(x => ascii(x^32)).log('')
 
-//: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
-//! 문자열 양식
+//: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
+//! 양식
 // /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
 
-//! 문자열을 반복해서 출력
+//! 반복해서 출력
 // /*  9316 */	range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
 // /* 26766 */	log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 
@@ -86,6 +82,9 @@ input().ascii().map(x => ascii(x^32)).log('')
 // /* 10871 */	[_, x, ...seq]=input(/\W/); seq.filter(e => +e < +x).log(' ');
 // /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
 // /* 26209 */	input(' ').some(x => +x > 1).if('F', 'S').log();
+
+//! 문자열 비교
+// /*  4999 */	[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
 
 //! 사칙연산
 // /* 10869 */	[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
