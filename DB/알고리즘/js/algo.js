@@ -55,6 +55,17 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 matrix = (rows, cols, f) => range(rows).map(i => range(cols).map(j => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
+//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
+
+//! 공통 환경 조정
+[mi, Mi] = [0, +input()];
+[mj, Mj] = [0, Mi];
+
+//! 메인
+fibo(10, [3,-4]).log();
+
+
+
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식
 // /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
@@ -81,22 +92,3 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //! 행렬
 // matrix(Mi, Mj, (i,j) => (j >= Mi - i - 1) ? '*' : ' ').deepjoin(['\n','']).log();// 대각선 ↙ 이하 별찍기
-
-//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-
-//! 공통 환경 조정
-[mi, Mi] = [0, +input()];
-[mj, Mj] = [0, Mi];
-
-//! 메인
-// range(maxi).forEach(i => {
-// 	line=''
-// 	range(maxj).forEach(j => {
-// 		line += (j >= maxi - i - 1) ? '*' : ' '
-// 	})
-// 	lines.push(line);
-// })
-// lines.log('\n');
-
-fibo(10, [3,-4]).log();
-
