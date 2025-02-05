@@ -11,7 +11,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
 Object.prototype.if = function (T, F) { return this.valueOf() ? T : F };
-Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : this.join(s)); return this };
+Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
 
 //! 디버깅 도구
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
@@ -59,11 +59,10 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //! 공통 환경 조정
 [mi, Mi] = [0, +input()];
-[mj, Mj] = [0, Mi];
+[mj, Mj] = [0, 0];
 
 //! 메인
-fibo(10, [3,-4]).log();
-
+matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) ? '*' : ' ').log(['\n', '']);
 
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
@@ -91,4 +90,6 @@ fibo(10, [3,-4]).log();
 // [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
 //! 행렬
-// matrix(Mi, Mj, (i,j) => (j >= Mi - i - 1) ? '*' : ' ').deepjoin(['\n','']).log();// 대각선 ↙ 이하 별찍기
+// matrix(Mi, Mi, (i,j) => '*' ).log(['\n', ''])		// 모든 셀 채우기
+// matrix(Mi, Mi, (i,j) => (j == Mi - i - 1) ? '*' : ' ').log(['\n', '']);		// 대각선 ↙
+// matrix(Mi, Mi, (i,j) => (j == i) 		 ? '*' : ' ').log(['\n', '']);		// 대각선 ↘
