@@ -1,6 +1,7 @@
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
+const { isArray } = Array;
 
 //! 테스트 케이스 불러오기
 input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
@@ -27,11 +28,12 @@ itertools = [
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
+	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) }
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat('join').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+.concat('join', 'reduce').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
-//! 문자열 함수
-strtools = [
+//! 문자열 관련 함수
+strtools = [ 
 	toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
 
@@ -46,8 +48,12 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (arr=range(10)) => arr.reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], [0, 1]);
+fibo = (arr) => arr.reduce((s,c,i) => [...s, i<2 ? c : s[i-2] + s[i-1]], []);
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
+
+//! 행렬
+matrix = (rows, cols, f) => range(rows).map(i => range(cols).map(j => f(i,j)));
+matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식
@@ -73,7 +79,26 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 // log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
 // [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
-//! 별찍기
-range(1, input()*1+1).forEach(x=>'*'.repeat(x).log())
+//! 행렬
+// (j >= maxi - i - 1) ? '*' : ' '		// 대각선 ↙ 이하
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
+
+//! 공통 환경 조정
+// [mi, Mi] = [0, +input()];
+// [mj, Mj] = [0, Mi];
+
+//! 메인
+// range(maxi).forEach(i => {
+// 	line=''
+// 	range(maxj).forEach(j => {
+// 		line += (j >= maxi - i - 1) ? '*' : ' '
+// 	})
+// 	lines.push(line);
+// })
+// lines.log('\n');
+
+fibo([4,8,9,0,0,5]).log()
+
+// matrix(, range(Mj), (i,j)=>(j >= Mi - i - 1) ? '*' : ' ').deepjoin(['\n','']).log();
+// matrix(2, 9, (i,j)=>`(${i},${j})`).deepjoin(['\n', ' ']).log()
