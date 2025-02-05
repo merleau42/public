@@ -1,9 +1,11 @@
 const { type } = require("os");
+const { isNumber } = require("util");
 
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
 const { isArray } = Array;
+const { fromCharCode } = String;
 
 //! 테스트 케이스 불러오기
 input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
@@ -14,6 +16,7 @@ Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
 Object.prototype.if = function (T, F) { return this.valueOf() ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
+typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
 //! 디버깅 도구
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
@@ -32,9 +35,10 @@ itertools = [
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
 	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) }
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat('join', 'reduce').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+.concat('join', 'reduce', 'map').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 문자열 관련 함수
+Object.prototype.ascii = function(x=this) { t=typeOf(x); return t=='string' ? x.map(c => c.charCodeAt()) : t=='number' ? fromCharCode(x) : x };
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
@@ -64,23 +68,7 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-Object.prototype.ascii = function() {
-	if (isArray(this))
-		return log('array');
-	if (typeof this.valueOf() == 'string')
-		return log('string');
-
-	return log('else');
-}
-
-(7).log();
-"213".ascii();
-[2,3,9].ascii();
-
-// String.fromCharCode(97).log();
-// "a".charCodeAt().log();
-// "abc".charCodeAt().log();
-// ['a'].charCodeAt().log();
+input().ascii().map(x => ascii(x^32)).log('')
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식
@@ -91,7 +79,7 @@ Object.prototype.ascii = function() {
 // /* 26766 */	log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 
 //! 아스키코드
-// input().charCodeAt().log()
+// input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 
 //! 비교
 // /*  4101 */	input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log());
