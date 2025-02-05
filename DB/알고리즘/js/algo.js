@@ -1,3 +1,5 @@
+const { type } = require("os");
+
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { clear, log } = console;
@@ -34,7 +36,7 @@ itertools = [
 
 //! 문자열 관련 함수
 strtools = [ 
-	toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
+	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
 
 //! 수열, 누적합, 구간합
@@ -57,13 +59,28 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
-//! 공통 환경 조정
-[mi, Mi] = [0, +input()];
-[mj, Mj] = [0, 0];
+//! 환경 조정
+// [mi, Mi] = [0, +input()];
+// [mj, Mj] = [0, 0];
 
 //! 메인
-matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) || (j <= i) ? '*' : ' ').log(['\n', '']);
+Object.prototype.ascii = function() {
+	if (isArray(this))
+		return log('array');
+	if (typeof this.valueOf() == 'string')
+		return log('string');
 
+	return log('else');
+}
+
+(7).log();
+"213".ascii();
+[2,3,9].ascii();
+
+// String.fromCharCode(97).log();
+// "a".charCodeAt().log();
+// "abc".charCodeAt().log();
+// ['a'].charCodeAt().log();
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
 //! 문자열 양식
@@ -93,3 +110,6 @@ matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) || (j <= i) ? '*' : ' ').log(['\n', ''
 // matrix(Mi, Mi, (i,j) => '*' ).log(['\n', ''])		// 모든 셀 채우기
 // matrix(Mi, Mi, (i,j) => (j == Mi - i - 1) ? '*' : ' ').log(['\n', '']);		// 대각선 ↙
 // matrix(Mi, Mi, (i,j) => (j == i) 		 ? '*' : ' ').log(['\n', '']);		// 대각선 ↘
+
+//! 해석 기하
+// matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) && (j >= i) || (j >= Mi - i - 1) && (j <= i) ? '*' : ' ').log(['\n', '']);	// 별찍기 모래시계
