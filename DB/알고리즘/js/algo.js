@@ -62,7 +62,7 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 [mj, Mj] = [0, 0];
 
 //! 메인
-matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) ? '*' : ' ').log(['\n', '']);
+matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) || (j <= i) ? '*' : ' ').log(['\n', '']);
 
 
 //: ■■■■■■■■■■■■■■■■[ 유형 ]■■■■■■■■■■■■■■■■
