@@ -65,3 +65,4 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
+`${input()??!}`.log()
