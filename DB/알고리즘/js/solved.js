@@ -16,7 +16,7 @@ input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출�
 
 //! 비교
 /*  4101 */	input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log());
-/* 10871 */	[_, x, ...seq]=input(/\W/); seq.filter(e => +e < +x).log(' ');
+/* 10871 */	[_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' ');
 /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
 
 //! 길이 비교 (4999, )
