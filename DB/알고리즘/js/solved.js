@@ -1,6 +1,6 @@
 //: ■■■■■■■■■■■■■■■■[ 입출력 ]■■■■■■■■■■■■■■■■
 //! 양식 (14581, )
-log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
+`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log();
 
 //! 반복해서 출력 (9316, 26766, )
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
@@ -38,6 +38,8 @@ input(' ').some(x => +x > 1).if('F', 'S').log();
 ['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log()
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
+keys = input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
+
 
 //! 행렬
 /* 평면채우기 */ matrix(Mi, Mi, (i,j) => '*' ).log(['\n', '']);
@@ -45,4 +47,3 @@ log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<62
 /* 반대각행렬 */ matrix(Mi, Mi, (i,j) => (j == Mi - i - 1)	? '*' : ' ').log(['\n', '']); 
 
 //! 해석 기하
-matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) && (j >= i) || (j >= Mi - i - 1) && (j <= i) ? '*' : ' ').log(['\n', '']);	// 별찍기 모래시계

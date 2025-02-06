@@ -64,5 +64,5 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-//! 메인
-`${input()??!}`.log()
+//! 메인=
+[_, ...keys]=input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
