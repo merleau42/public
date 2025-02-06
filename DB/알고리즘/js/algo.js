@@ -66,7 +66,7 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //! 메인
 
-//: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
+//: ■■■■■■■■■■■■■■■■[ 입출력 ]■■■■■■■■■■■■■■■■
 //! 양식
 // /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
 
@@ -74,6 +74,11 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // /*  9316 */	range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
 // /* 26766 */	log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 
+//: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
+//! 사칙연산
+// /* 10869 */	[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
+
+//: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //! 아스키코드
 // input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 
@@ -83,12 +88,14 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
 // /* 26209 */	input(' ').some(x => +x > 1).if('F', 'S').log();
 
-//! 문자열 비교
+//! 길이 비교
 // /*  4999 */	[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
 
-//! 사칙연산
-// /* 10869 */	[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
+//: ■■■■■■■■■■■■■■■■■[ 정렬 ]■■■■■■■■■■■■■■■■■
+//! 순서 비교
+// /*  4999 */	[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
 
+//: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
 // log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
 // [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
