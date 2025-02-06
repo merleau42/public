@@ -11,7 +11,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 //!	기본 함수
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.if = function (T, F) { return this.valueOf() ? T : F };
+Object.prototype.if = function (T=true, F=false) { return this.valueOf() ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
 typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
@@ -58,52 +58,10 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 matrix = (rows, cols, f) => range(rows).map(i => range(cols).map(j => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
-//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
+//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 환경 조정
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
 //! 메인
-
-//: ■■■■■■■■■■■■■■■■[ 입출력 ]■■■■■■■■■■■■■■■■
-//! 양식
-// /*  14581 */	log(`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`);
-
-//! 반복해서 출력
-// /*  9316 */	range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
-// /* 26766 */	log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
-
-//: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
-//! 사칙연산
-// /* 10869 */	[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
-
-//: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
-//! 아스키코드
-// input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
-
-//! 비교
-// /*  4101 */	input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log());
-// /* 10871 */	[_, x, ...seq]=input(/\W/); seq.filter(e => +e < +x).log(' ');
-// /* 10807 */	[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log();
-// /* 26209 */	input(' ').some(x => +x > 1).if('F', 'S').log();
-
-//! 길이 비교
-// /*  4999 */	[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
-
-//: ■■■■■■■■■■■■■■■■■[ 정렬 ]■■■■■■■■■■■■■■■■■
-//! 순서 비교
-// /*  4999 */	[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
-
-//: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
-//! 조건에 따라서 알맞은 메시지 출력
-// log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
-// [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
-
-//! 행렬
-// matrix(Mi, Mi, (i,j) => '*' ).log(['\n', ''])		// 모든 셀 채우기
-// matrix(Mi, Mi, (i,j) => (j == Mi - i - 1) ? '*' : ' ').log(['\n', '']);		// 대각선 ↙
-// matrix(Mi, Mi, (i,j) => (j == i) 		 ? '*' : ' ').log(['\n', '']);		// 대각선 ↘
-
-//! 해석 기하
-// matrix(Mi, Mi, (i,j) => (j <= Mi - i - 1) && (j >= i) || (j >= Mi - i - 1) && (j <= i) ? '*' : ' ').log(['\n', '']);	// 별찍기 모래시계
