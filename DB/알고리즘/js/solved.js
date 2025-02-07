@@ -1,4 +1,7 @@
 //: ■■■■■■■■■■■■■■■■[ 입출력 ]■■■■■■■■■■■■■■■■
+
+const { it } = require("node:test");
+
 //! 양식 (14581, )
 `:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log();
 
@@ -15,7 +18,7 @@ log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 for
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 
 //! 비교
-/*  4101 */	input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log());
+input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
 
 //! 길이 비교 (4999, )
 [a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
@@ -30,7 +33,7 @@ input().Match(/DKSH/g).length.log()
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인
-input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
+input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
 [_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
 
 //! 크기 비교
@@ -42,8 +45,8 @@ input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
-['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log()
-log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":x<=780?"Red":"")
+['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log();
+log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 keys = input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
 

@@ -9,10 +9,12 @@ input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it'
 input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
 
 //!	기본 함수
-Object.prototype.it = function (f) { return this.valueOf() };
-Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.if = function (T, F=false, cond=(x)=>x) { return cond(this.valueOf()) ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
+Object.prototype.if = function (cond, T, F=false) { return cond(this.valueOf()) ? T : F };
+universal = [
+	it = function (obj=this) { return obj.valueOf() },
+	Each = function (f) { this.forEach(f); return this },
+].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
 typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
 //! 디버깅 도구
@@ -70,4 +72,6 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-seq=input(' '); seq.sum().if('OK', this, (x) => x >= 100).log();
+// seq=input(' '); seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][min(...seq)], (x) => x >= 100).log();
+
+input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
