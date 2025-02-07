@@ -69,4 +69,4 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-input().Match(/DKSH/g).length.log()
+[_, k, ...seq] = input(/\D+/); seq.filter(e => +e < +k).log(' ')
