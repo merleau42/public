@@ -70,4 +70,3 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 //! 메인
 input().Match(/DKSH/g).length.log()
-// ([...new Set(input().match(/[MOBIS]/g))].toSorted().join('')=='BIMOS') ? log('YES') : log('NO');
