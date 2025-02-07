@@ -29,7 +29,7 @@ input('\n')[1].slice(-5).log()
 input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 (input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
 
-//: ■■■■■■■■■■■■■■■■■[ 탐색 ]■■■■■■■■■■■■■■■■■
+//: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부 확인 (26209, )
 input(' ').some(x => +x > 1).if('F', 'S').log();
 

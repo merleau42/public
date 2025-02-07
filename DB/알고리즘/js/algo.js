@@ -39,7 +39,7 @@ itertools = [
 Object.prototype.ascii = function(x=this) { t=typeOf(x); return t=='string' ? x.map(c => c.charCodeAt()) : t=='number' ? fromCharCode(x) : x };
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
-	Match = function (regex) { return this.match(regex)??[] },
+	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
 
 //! 수열, 누적합, 구간합
@@ -69,5 +69,5 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-(input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO');
+input().match(/DKSH/g).log()
 // ([...new Set(input().match(/[MOBIS]/g))].toSorted().join('')=='BIMOS') ? log('YES') : log('NO');
