@@ -11,7 +11,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 //!	기본 함수
 Object.prototype.it = function (f) { return this.valueOf() };
 Object.prototype.Each = function (f) { this.forEach(f); return this };
-Object.prototype.if = function (T=true, F=false) { return this.valueOf() ? T : F };
+Object.prototype.if = function (T, F=false, cond=(x)=>x) { return cond(this.valueOf()) ? T : F };
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
 typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
@@ -22,6 +22,7 @@ repl = (msg=log('REPL모드')) => require('repl').start();
 randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
 
 //!	배열 함수 확장, 문자열에도 적용
+arrayfuncs = ['join', 'reduce', 'map', 'forEach', 'filter'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
@@ -29,14 +30,16 @@ itertools = [
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
-	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) }
+	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) },
+	unique = function () { return [...new Set(this)] },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat('join', 'reduce', 'map').Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+.concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 문자열 관련 함수
 Object.prototype.ascii = function(x=this) { t=typeOf(x); return t=='string' ? x.map(c => c.charCodeAt()) : t=='number' ? fromCharCode(x) : x };
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
+	Match = function (regex) { return this.match(regex)??[] },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
 
 //! 수열, 누적합, 구간합
@@ -66,6 +69,5 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-// exist = range(255);
-// input().Each()
-vector(5, (i)=>i).log()
+(input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO');
+// ([...new Set(input().match(/[MOBIS]/g))].toSorted().join('')=='BIMOS') ? log('YES') : log('NO');
