@@ -1,9 +1,7 @@
 //: ■■■■■■■■■■■■■■■■[ 입출력 ]■■■■■■■■■■■■■■■■
-
-const { it } = require("node:test");
-
-//! 양식 (14581, )
-`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log();
+//! 양식
+`:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log(); //14581
+input('\n').slice(1).map(x=>`${x} ${x}`).log('\n'); //26574
 
 //! 반복해서 출력 (9316, 26766, )
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
@@ -33,7 +31,7 @@ input().Match(/DKSH/g).length.log()
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인
-input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
+input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 [_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
 
 //! 크기 비교
@@ -49,7 +47,7 @@ input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 keys = input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
-seq.sum().if(e=> +e>=100, 'OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()]).log();
+seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
 
 //: ■■■■■■■■■■■■■■■■■[ 행렬 ]■■■■■■■■■■■■■■■■■
 //! 행렬

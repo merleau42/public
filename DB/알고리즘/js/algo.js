@@ -1,6 +1,6 @@
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
-const { clear, log } = console;
+// const { clear, log } = console;
 const { isArray } = Array;
 const { fromCharCode } = String;
 
@@ -9,11 +9,13 @@ input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it'
 input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
 
 //!	기본 함수
-Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
-Object.prototype.if = function (cond, T, F=false) { return cond(this.valueOf()) ? T : F };
-unitools = [
+// Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
+Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
+objtools = [
+	log = function (s) { console.log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this },
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
+	ascii = function (x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
 ].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
 typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
@@ -38,10 +40,10 @@ itertools = [
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 문자열 관련 함수
-Object.prototype.ascii = function(x=this) { t=typeOf(x); return t=='string' ? x.map(c => c.charCodeAt()) : t=='number' ? fromCharCode(x) : x };
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
+	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
 
 //! 수열, 누적합, 구간합
@@ -64,9 +66,9 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
 vector = (n, f=()=>null) => [...Array(n)].map((x,i)=>f(i));
-matrix = (rows, cols, f) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
+matrix = (rows, cols, f=()=>null) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
-
+Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 환경 조정
@@ -74,3 +76,4 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
+matrix(6, 6).draw((_,i,j,a)=>a.length).log(['\n', ' '])
