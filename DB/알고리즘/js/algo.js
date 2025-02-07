@@ -1,5 +1,6 @@
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
+const { log } = console;
 const { isArray } = Array;
 const { fromCharCode } = String;
 
@@ -9,8 +10,8 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 
 //!	기본 함수
 Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
+Object.prototype.log = function (...s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this },
 objtools = [
-	log = function (...s) { console.log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this },
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
 	ascii = function (x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
@@ -76,4 +77,4 @@ Array.prototype.blend = function(f) { return this.map((row,i) => row.map((col,j)
 
 //! 메인
 N=7;
-matrix(N, N).draw((_,i,j)=>+(i==j)).blend((_,i,j)=>+(i==0)).log('\n', '')
+matrix(N, N).draw((_,i,j)=>+(i<=j && j<=N-i-1)).draw(c=>c ? '*' : ' ').log('\n', '')
