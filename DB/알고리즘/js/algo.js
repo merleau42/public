@@ -48,6 +48,7 @@ Array.prototype.prep = function () { seqtools.forEach(f => this[f]()); return th
 seqtools = [
 	serial = function () { return this.sheet.index = this.map((_,i) => i) },
 	value = function () { return this.sheet.value = [...this] },
+	sum = function () { return this.reduce((s,c)=>s*1 + c*1) },
 	psum = function (arr=this) { return arr.sheet.psum = arr.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 
@@ -69,5 +70,4 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-[_, k, ...seq] = input(/\D+/); seq.filter(e => +e < +k).log(' ');
-[_, x, ...seq] = input(/\W/); seq.filter(e => +e < +x).log(' ');
+seq=input(' '); seq.sum().if('OK', this, (x) => x >= 100).log();

@@ -29,12 +29,12 @@ input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 input().Match(/DKSH/g).length.log()
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
-//! 포함 여부-갯수 확인 (26209, )
-input(' ').some(x => +x > 1).if('F', 'S').log();
+//! 포함 여부-갯수 확인
+input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
+[_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
 
 //! 크기 비교
 [_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' '); //10871
-[_, seq, [v]] = input2('\n', ' '); seq.filter(e => +e==+v).length.log(); //10807
 
 //: ■■■■■■■■■■■■■■■■■[ 순서 ]■■■■■■■■■■■■■■■■■
 //! 아스키 비교  (4999, )
