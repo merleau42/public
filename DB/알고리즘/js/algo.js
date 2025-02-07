@@ -5,12 +5,13 @@ const { isArray } = Array;
 const { fromCharCode } = String;
 
 //! 테스트 케이스 불러오기
-input = (s,t=1)=>`${require("fs").readFileSync("./dev/stdin")}`[t? 'trim' : 'it']()[s? 'split' : 'it'](s);
+input = (s)=>`${require("fs").readFileSync("./dev/stdin")}`.trim()[s? 'split' : 'it'](s);
 input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
 
 //!	기본 함수
 Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
-Object.prototype.log = function (...s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this },
+Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this },
+
 objtools = [
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
@@ -76,5 +77,6 @@ Array.prototype.blend = function(f) { return this.map((row,i) => row.map((col,j)
 // [mj, Mj] = [0, 0];
 
 //! 메인
-N=7;
-matrix(N, N).draw((_,i,j)=>+(i<=j && j<=N-i-1)).draw(c=>c ? '*' : ' ').log('\n', '')
+5..log();
+// [tar, _, ...list] = input('\n'); list.filter(e => e==tar).length.log()
+/* 주대각행렬 */ matrix(7, 7, (i,j) => (j == i)			? '*' : ' ').log('\n', '');
