@@ -45,10 +45,11 @@ input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
-['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log();
+['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log(); //24883
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 keys = input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
+seq.sum().if(e=> +e>=100, 'OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()]).log();
 
 //: ■■■■■■■■■■■■■■■■■[ 행렬 ]■■■■■■■■■■■■■■■■■
 //! 행렬

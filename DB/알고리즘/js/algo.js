@@ -11,7 +11,7 @@ input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1
 //!	기본 함수
 Object.prototype.log = function (s) { log(s==undefined ? this.valueOf() : isArray(s) ? this.deepjoin(s) : this.join(s)); return this };
 Object.prototype.if = function (cond, T, F=false) { return cond(this.valueOf()) ? T : F };
-universal = [
+unitools = [
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
 ].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
@@ -52,6 +52,8 @@ seqtools = [
 	value = function () { return this.sheet.value = [...this] },
 	sum = function () { return this.reduce((s,c)=>s*1 + c*1) },
 	psum = function (arr=this) { return arr.sheet.psum = arr.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
+	mini = function () { return this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
+	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 
 //! 정수론
@@ -72,6 +74,3 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-// seq=input(' '); seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][min(...seq)], (x) => x >= 100).log();
-
-input(' ').some(x => +x > 1).if(it, 'F', 'S').log(); //26209
