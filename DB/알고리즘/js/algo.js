@@ -69,4 +69,5 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
-[_, k, ...seq] = input(/\D+/); seq.filter(e => +e < +k).log(' ')
+[_, k, ...seq] = input(/\D+/); seq.filter(e => +e < +k).log(' ');
+[_, x, ...seq] = input(/\W/); seq.filter(e => +e < +x).log(' ');
