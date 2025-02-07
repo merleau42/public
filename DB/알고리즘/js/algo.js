@@ -22,7 +22,6 @@ repl = (msg=log('REPL모드')) => require('repl').start();
 randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
 
 //!	배열 함수 확장, 문자열에도 적용
-range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
@@ -55,7 +54,9 @@ fibo = (N, start=[0, 1]) => range(N).reduce((s,c,i) => i<2 ? s : [...s, s[i-2] +
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
-matrix = (rows, cols, f) => range(rows).map(i => range(cols).map(j => f(i,j)));
+range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
+vector = (n, f=()=>null) => [...Array(n)].map((x,i)=>f(i));
+matrix = (rows, cols, f) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 
 
@@ -65,3 +66,6 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 // [mj, Mj] = [0, 0];
 
 //! 메인
+// exist = range(255);
+// input().Each()
+vector(5, (i)=>i).log()
