@@ -5,8 +5,7 @@ const { isArray } = Array;
 const { fromCharCode } = String;
 
 //! 테스트 케이스 불러오기
-// input = (s)=>`${require("fs").readFileSync("./dev/stdin")}`.trim()[s? 'split' : 'it'](s);
-// input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
+input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepsplit(s);
 
 //!	기본 함수
 Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
@@ -44,8 +43,7 @@ strtools = [
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
-//	deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
-	deepsplit = function (s) { return s[0] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
+	deepsplit = function (s, str=this, d=0) { return s[d] == undefined ? str : str.split(s[d]).map(e=>deepsplit(s, e, d+1)); },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f]);
 
 //! 수열, 누적합, 구간합
@@ -77,30 +75,9 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-input1 = (...s)=> raw[s[0]? 'split' : 'it'](s[0]);
-input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
 
 //! 메인
 
-// raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
-// raw.deepsplit(['\n', ' ', ':', '_']).log();
-
-
-//. deepsplit 함수 길이 줄이기
-//. 풀던 문제, forEach에서 구조분해할당 알아보기
-
-// input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
-
-
-fnc = function(a) {
-
-}
 
 //! 씨스타
-// 러빙유, 쏘쿨, 니까짓게, 터치미바디, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 
-
-/*
-1:1_x ef_cw_z:2 1:3
-2_a:1 2:2 2_w:3_c_e
-3_bc:1 3:2_xx 3:3
-*/
+// 러빙유, 쏘쿨,  
