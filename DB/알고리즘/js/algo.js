@@ -44,8 +44,8 @@ strtools = [
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
-	// deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
-	deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
+//	deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
+	deepsplit = function (s) { return s[0] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f]);
 
 //! 수열, 누적합, 구간합
@@ -82,8 +82,8 @@ input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
 
 //! 메인
 
-raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
-raw.deepsplit(['\n', ' ', ':', '_']).log();
+// raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
+// raw.deepsplit(['\n', ' ', ':', '_']).log();
 
 
 //. deepsplit 함수 길이 줄이기
@@ -91,6 +91,10 @@ raw.deepsplit(['\n', ' ', ':', '_']).log();
 
 // input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
 
+
+fnc = function(a) {
+
+}
 
 //! 씨스타
 // 러빙유, 쏘쿨, 니까짓게, 터치미바디, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 
