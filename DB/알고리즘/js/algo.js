@@ -75,16 +75,23 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-raw = `${require("fs").readFileSync("./dev/stdin")}`;
-input1 = (...s)=> raw.trim()[s[0]? 'split' : 'it'](s[0]);
+raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
+input1 = (...s)=> raw[s[0]? 'split' : 'it'](s[0]);
 input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
 
 //! 메인
-s = ['\n', ' ', ':'];
-i = raw.trim().split(s[0]).map(x=>x.split(s[1]).map(x=>x.split(s[2])));
 
-w(x,d) = x.map(e=>w( e.split(s[d]), d+1 ));
+w = function (sep, d, str) {
+	if (sep[d] == undefined)
+		return str;
+	if (d == 0)
+		return w(sep, d+1, str.split(sep[d]));
+	if (str.indexOf(sep[d+1]))
+		return str.map(e=>w(sep, d+1, e.split(sep[d])));
+	return str;
+};
 
-i.log();
+w(['\n', ' ', ':', '_'], 0, raw).log();
+w(['\n', ' ', ':'], 0, raw).log();
+
 // input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
-
