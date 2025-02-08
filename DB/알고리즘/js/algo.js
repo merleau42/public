@@ -84,14 +84,25 @@ input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
 w = function (sep, d, str) {
 	if (sep[d] == undefined)
 		return str;
-	if (d == 0)
+	if (!d)
 		return w(sep, d+1, str.split(sep[d]));
-	if (str.indexOf(sep[d+1]))
-		return str.map(e=>w(sep, d+1, e.split(sep[d])));
-	return str;
+	return str.map(e=>w(sep, d+1, e.split(sep[d])));
 };
 
-w(['\n', ' ', ':', '_'], 0, raw).log();
+w([], 0, raw).log();
+w(['\n'], 0, raw).log();
+w(['\n', ' '], 0, raw).log();
 w(['\n', ' ', ':'], 0, raw).log();
+w(['\n', ' ', ':', '_'], 0, raw).log();
 
 // input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
+
+
+//! 씨스타
+// 러빙유, 
+
+/*
+1:1_x ef_cw_z:2 1:3
+2_a:1 2:2 2_w:3_c_e
+3_bc:1 3:2_xx 3:3
+*/
