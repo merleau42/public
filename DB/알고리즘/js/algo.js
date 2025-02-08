@@ -77,7 +77,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-
+[r, c] = input('\n'); matrix(+r, +c, ()=>'*').log('\n', '')
 
 //! 씨스타
 // 러빙유, 쏘쿨,  
