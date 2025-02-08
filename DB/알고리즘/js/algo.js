@@ -44,7 +44,9 @@ strtools = [
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
-].map(f => f.name).Each(f => String.prototype[f] = globalThis[f])
+	// deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
+	deepsplit = function (s, d=0) { return s[d] == undefined ? this : !d ? deepsplit(s, d+1, this.split(s[d])) : this.map(e=>deepsplit(s, d+1, e.split(s[d]))); },
+].map(f => f.name).Each(f => String.prototype[f] = globalThis[f]);
 
 //! 수열, 누적합, 구간합
 Array.prototype.sheet = {};
@@ -75,31 +77,23 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
 input1 = (...s)=> raw[s[0]? 'split' : 'it'](s[0]);
 input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
 
 //! 메인
 
-w = function (sep, d, str) {
-	if (sep[d] == undefined)
-		return str;
-	if (!d)
-		return w(sep, d+1, str.split(sep[d]));
-	return str.map(e=>w(sep, d+1, e.split(sep[d])));
-};
+raw = `${require("fs").readFileSync("./dev/stdin")}`.trim();
+raw.deepsplit(['\n', ' ', ':', '_']).log();
 
-w([], 0, raw).log();
-w(['\n'], 0, raw).log();
-w(['\n', ' '], 0, raw).log();
-w(['\n', ' ', ':'], 0, raw).log();
-w(['\n', ' ', ':', '_'], 0, raw).log();
+
+//. deepsplit 함수 길이 줄이기
+//. 풀던 문제, forEach에서 구조분해할당 알아보기
 
 // input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
 
 
 //! 씨스타
-// 러빙유, 
+// 러빙유, 쏘쿨, 니까짓게, 터치미바디, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 
 
 /*
 1:1_x ef_cw_z:2 1:3
