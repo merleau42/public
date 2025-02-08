@@ -5,8 +5,8 @@ const { isArray } = Array;
 const { fromCharCode } = String;
 
 //! 테스트 케이스 불러오기
-input = (s)=>`${require("fs").readFileSync("./dev/stdin")}`.trim()[s? 'split' : 'it'](s);
-input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
+// input = (s)=>`${require("fs").readFileSync("./dev/stdin")}`.trim()[s? 'split' : 'it'](s);
+// input2 = (s1,s2)=>`${require("fs").readFileSync("./dev/stdin")}`.trim().split(s1).map(x=>x.trim().split(s2));
 
 //!	기본 함수
 Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
@@ -69,14 +69,22 @@ vector = (n, f=()=>null) => [...Array(n)].map((x,i)=>f(i));
 matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
-Array.prototype.blend = function(f) { return this.map((row,i) => row.map((col,j) => col + f(col,i,j,this))) };
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 환경 조정
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
+raw = `${require("fs").readFileSync("./dev/stdin")}`;
+input1 = (...s)=> raw.trim()[s[0]? 'split' : 'it'](s[0]);
+input2 = (...s)=> input1.map(x=>x.trim().split(s[1]));
+
 //! 메인
-5..log();
-// [tar, _, ...list] = input('\n'); list.filter(e => e==tar).length.log()
-/* 주대각행렬 */ matrix(7, 7, (i,j) => (j == i)			? '*' : ' ').log('\n', '');
+s = ['\n', ' ', ':'];
+i = raw.trim().split(s[0]).map(x=>x.split(s[1]).map(x=>x.split(s[2])));
+
+w(x,d) = x.map(e=>w( e.split(s[d]), d+1 ));
+
+i.log();
+// input('\n').slice(0, -1).forEach(([name, age, weight]) => log(name, age, weight))
+

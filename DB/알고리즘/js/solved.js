@@ -29,6 +29,9 @@ input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 (input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
 input().Match(/DKSH/g).length.log()
 
+//! 분류중
+input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log()) //23235
+
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
