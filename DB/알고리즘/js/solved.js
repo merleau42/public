@@ -8,8 +8,8 @@ input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log())
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
-//! 사칙연산 (10869, )
-[a,b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
+//! 사칙연산
+[a,b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n'); //10869
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
@@ -44,7 +44,7 @@ input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 log(+(!(year % 400) || !!(year % 100) && !(year % 4))); //2753, !(A%B) 배수아니다, !!(A%B) 배수이다
 
 //! 수학 공식
-range(N+1).sum().log() //8393, 1부터 N까지의 합
+log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인

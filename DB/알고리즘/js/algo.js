@@ -80,4 +80,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-N = +input(); range(N+1).sum().log()
+input('\n', ' ').slice(1).map(([a,b])=>a*1 + b*1).log('\n');
