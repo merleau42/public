@@ -80,4 +80,5 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-input('\n').slice(1).map(x=>x.toReversed()).log('\n', '')
+[a,b,c] = input('\n').map(Number);
+(a >= b ? b >= c ? b : a >= c ? c : a : b <= c ? b : a <= c ? c: a).log()
