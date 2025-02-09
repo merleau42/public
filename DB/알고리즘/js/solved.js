@@ -12,8 +12,9 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 [a,b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
+//> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 //! 문자열 반복
-'하트'.repeat(+input()).log(); //26766, 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
+'하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
 
 //! 아스키코드
@@ -35,6 +36,11 @@ input().Match(/DKSH/g).length.log()
 
 //! 좌우 반전
 input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
+
+//: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
+//>	나머지 연산은, 덧셈과 곱셈에 대해서 분배 법칙이 성립
+//! 나머지
+
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인
