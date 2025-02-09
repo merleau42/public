@@ -80,4 +80,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-[A,B,C]=input(' ').map(Number); [(A+B)%C, ((A%C) + (B%C))%C, (A*B)%C, ((A%C) * (B%C))%C].log('\n');
+N = input(); log(+(!(year % 400) || !!(year % 100) && !(year % 4)));
