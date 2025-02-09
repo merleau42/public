@@ -9,7 +9,7 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
 //! 사칙연산 (10869, )
-[a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
+[a,b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //! 문자열 반복
@@ -42,7 +42,7 @@ input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 [_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
 
 //! 크기 비교
-[a,b] = input(' '); log((a==b)*1); //15963
+[a,b] = input(' ').map(Number); log(a>b ? '>' : a==b ? '==' : '<'); //1330
 input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4101
 [_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' '); //10871
 
@@ -69,6 +69,10 @@ keys = input('\n'); keys.forEach(key => ({"키A": "값X", "키B": "값Y", "키C"
 
 //! 자료 분석
 input('\n',' ').slice(0,-1).forEach(([n,a,w])=>`${n} ${['Junior','Senior'][a>17|w>=80]}`.log()); //2083
+
+//: ■■■■■■■■■■■■■■■■[ 반복문 ]■■■■■■■■■■■■■■■■
+//! 미분류
+N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 
 //: ■■■■■■■■■■■■■■■■■[ 행렬 ]■■■■■■■■■■■■■■■■■
 //! 행렬

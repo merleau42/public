@@ -80,4 +80,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-'SciComLove\n'.repeat(+input()).log();
+N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
