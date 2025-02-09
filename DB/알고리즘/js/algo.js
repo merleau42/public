@@ -32,7 +32,7 @@ itertools = [
 	toReversed = function () { return this.reverse()},
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
-	removed = function (item, from=0) { i = this.indexOf(item,from); return i > -1 ? this.deleted(i) : this },
+	removed = function (tar, from=0) { i = this.indexOf(tar,from); return i > -1 ? this.deleted(i) : this },
 	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) },
 	unique = function () { return [...new Set(this)] },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
@@ -80,4 +80,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-[a,b,c] = input('\n').map(Number); (a >= b ? b >= c ? b : a >= c ? c : a : b <= c ? b : a <= c ? c: a).log();
+'SciComLove\n'.repeat(+input()).log();

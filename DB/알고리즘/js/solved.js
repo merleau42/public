@@ -3,15 +3,19 @@
 `:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log(); //14581
 input('\n').slice(1).map(x=>`${x} ${x}`).log('\n'); //26574
 
-//! 반복해서 출력 (9316, 26766, )
-range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`))
-log( 문자열.repeat(input()) );		// 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
+//! 반복 출력 (9316, 26766, )
+input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log()) //23235
+range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
 //! 사칙연산 (10869, )
 [a,b]=input(' ').map(x=>x*1); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n');
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
+//! 문자열 반복
+'하트'.repeat(+input()).log(); //26766, 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
+'long '.repeat(+input()/4).concat('int').log(); //25314
+
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 
@@ -29,9 +33,6 @@ input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 (input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
 input().Match(/DKSH/g).length.log()
 
-//! 분류중
-input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log()) //23235
-
 //! 좌우 반전
 input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 
@@ -41,7 +42,12 @@ input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 [_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
 
 //! 크기 비교
+[a,b] = input(' '); log((a==b)*1); //15963
+input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4101
 [_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' '); //10871
+
+//! 분류중
+range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
 
 //: ■■■■■■■■■■■■■■■■[ 조건문 ]■■■■■■■■■■■■■■■■
 //! 중첩 조건문
@@ -56,8 +62,10 @@ input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 ['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log(); //24883
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
-keys = input('\n'); keys.forEach(key => ({"ab": "204", "xx": "207", "wa": "303"})[key].log());
 seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
+
+//! 키값에 대응하는 메시지 출력
+keys = input('\n'); keys.forEach(key => ({"키A": "값X", "키B": "값Y", "키C": "값Z"})[key].log());
 
 //! 자료 분석
 input('\n',' ').slice(0,-1).forEach(([n,a,w])=>`${n} ${['Junior','Senior'][a>17|w>=80]}`.log()); //2083
