@@ -60,7 +60,7 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (N, start=[0, 1]) => range(N).reduce((s,c,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
+fibo = (N, start=[0, 1]) => vector(N).reduce((s,c,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
@@ -75,9 +75,9 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-
-//! 메인
-[r, c] = input('\n'); matrix(+r, +c, ()=>'*').log('\n', '')
-
 //! 씨스타
 // 러빙유, 쏘쿨,  
+
+
+//! 메인
+input('\n').slice(1).map(x=>x.toReversed()).log('\n', '')

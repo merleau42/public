@@ -18,11 +18,11 @@ input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출�
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
 
-//! 길이 비교 (4999, )
-[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no');
+//! 길이 비교
+[a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no'); //4999
 
-//! 영역 추출 (21964, )
-input('\n')[1].slice(-5).log()
+//! 영역 추출
+input('\n')[1].slice(-5).log() //21964
 
 //! 포함 여부-갯수 확인
 input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
@@ -31,6 +31,9 @@ input().Match(/DKSH/g).length.log()
 
 //! 분류중
 input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log()) //23235
+
+//! 좌우 반전
+input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 포함 여부-갯수 확인
