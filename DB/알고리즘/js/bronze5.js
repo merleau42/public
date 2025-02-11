@@ -9,6 +9,7 @@ input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log())
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //! 입력 형식
+input('\n', ' ').slice(0,-1).map(([A, B])=>A*1 + B*1).log('\n'); //10952
 
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
