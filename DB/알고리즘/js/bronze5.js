@@ -5,8 +5,8 @@
 `:fan::fan::fan:\n:fan::${input()}::fan:\n:fan::fan::fan:`.log(); //14581
 input('\n').slice(1).map(x=>`${x} ${x}`).log('\n'); //26574
 
-//! 반복 출력 (9316, 26766, )
-input('\n').slice(0, -1).forEach((_,i) => `Case ${i+1}: Sorting... done!`.log()) //23235
+//! 반복 출력
+input('\n', ' ').slice(1).map(([a, b], i)=>`Case #${i+1}: ${a*1 + b*1}`).log('\n'); //11021
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //! 입력 형식
