@@ -75,9 +75,11 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
-//! 씨스타
-// 러빙유, 쏘쿨,  
-
+//! 일정
+// 모임: 금요일 6시반 카페
+// 씨스타: 러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 
 
 //! 메인
-input('\n', ' ').slice(1).map(([a, b], i)=>`Case #${i+1}: ${a} + ${b} = ${a*1 + b*1}`).log('\n');
+facto = (N, start=1) => range(start, N+1).reduce((s,c,i) => [...s, s[i]*c], [start]);
+
+facto(7).log();

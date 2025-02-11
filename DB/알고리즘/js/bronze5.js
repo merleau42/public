@@ -16,14 +16,28 @@ input('\n', ' ').map(([a, b])=>a*1 + b*1).log('\n'); // 테케갯수없이끝까
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
 //! 사칙연산
-[a,b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n'); //10869
-input('\n', ' ').slice(1).map(([a,b])=>a*1 + b*1).log('\n'); //10950, 각 행에서 두 수의 합을 출력
+[a, b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n'); //10869
+[k, q, r, b, n, p] = input(' '); log(1-k, 1-q, 2-r, 2-b, 2-n, 8-p); //3003
+(input(' ').map(Number).reduce((s,c)=>s + c*c, 0)%10).log(); //2475
+[a, b] = input(' '); abs(a-b).log(); //2420, 절댓값 구하기
+(input()-543).log(); //18108, 불기 연도를 서기 연도로 변환
+[a, b] = input('\n'); log(a*b); //27323, 직사각형의 넓이
+[a, b] = input(' ').map(Number); log( (a+b)*(a-b) ); //15964
+
+//! 큰 수 계산
+[a, b] = input(' ').map(BigInt); `${(a + b)}`.log(); //15740
+[a, b] = input(' ').map(BigInt); log(`${a/b}`); log(`${a%b}`); //1271
+[a, b] = input('\n').map(BigInt); log(`${a+b}`); log(`${a-b}`); log(`${a*b}`); //2338
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 //! 문자열 반복
 '하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
+
+//! 인덱싱
+[str, n] = input('\n'); str[n-1].log(); //27866
+input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
@@ -67,6 +81,7 @@ input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4
 //! 분류중
 range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
 range(N+1).sum().log() //8393, 1부터 N까지의 합
+input('\n').sum().log() //5522, 수열의 합
 
 //: ■■■■■■■■■■■■■■■■[ 조건문 ]■■■■■■■■■■■■■■■■
 //! 중첩 조건문
