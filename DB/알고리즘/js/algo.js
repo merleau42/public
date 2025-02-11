@@ -1,3 +1,5 @@
+const { start } = require("repl");
+
 //! 네임 스페이스 제거
 const { sqrt, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log } = console;
@@ -46,21 +48,22 @@ strtools = [
 	deepsplit = function (s, str=this, d=0) { return s[d] == undefined ? str : str.split(s[d]).map(e=>deepsplit(s, e, d+1)); },
 ].map(f => f.name).Each(f => String.prototype[f] = globalThis[f]);
 
-//! 수열, 누적합, 구간합
-Array.prototype.sheet = {};
-Array.prototype.prep = function () { seqtools.forEach(f => this[f]()); return this};
+//! 수열, 누적합/구간합, 누적곱/구간곱
 seqtools = [
-	serial = function () { return this.sheet.index = this.map((_,i) => i) },
-	value = function () { return this.sheet.value = [...this] },
+	serial = function () { return this.map((_,i) => i) },
+	value = function () { return [...this] },
 	sum = function () { return this.reduce((s,c)=>s*1 + c*1) },
-	psum = function (arr=this) { return arr.sheet.psum = arr.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
+	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
+	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
+	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||1) ], []) },
 	mini = function () { return this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
 	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (N, start=[0, 1]) => vector(N).reduce((s,c,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
+fibo = (N, start=[0, 1]) => vector(N).reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
+facto = () => [1].concat(range(1, 30)).pproduct();
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
@@ -77,9 +80,8 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 //! 일정
 // 모임: 금요일 6시반 카페
-// 씨스타: 러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 
+// 씨스타: 러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 있다없, 
 
 //! 메인
-facto = (N, start=1) => range(start, N+1).reduce((s,c,i) => [...s, s[i]*c], [start]);
 
-facto(7).log();
+facto().log()
