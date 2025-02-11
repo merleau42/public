@@ -80,4 +80,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 
 //! 메인
-input('\n', ' ').slice(1).map(([a, b], i)=>`Case #${i+1}: ${a*1 + b*1}`).log('\n');
+input('\n', ' ').slice(1).map(([a, b], i)=>`Case #${i+1}: ${a} + ${b} = ${a*1 + b*1}`).log('\n');

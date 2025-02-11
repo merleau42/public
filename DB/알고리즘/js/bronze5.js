@@ -6,7 +6,7 @@
 input('\n').slice(1).map(x=>`${x} ${x}`).log('\n'); //26574
 
 //! 반복 출력
-input('\n', ' ').slice(1).map(([a, b], i)=>`Case #${i+1}: ${a*1 + b*1}`).log('\n'); //11021
+input('\n', ' ').slice(1).map(([a,b],i)=>`Case #${i+1}: ${a} + ${b} = ${a*1 + b*1}`).log('\n'); //11022
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 
 //! 입력 형식
