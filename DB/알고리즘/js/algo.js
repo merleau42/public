@@ -83,7 +83,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // 씨스타 = [러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 있다없, 넌넘야]
 
 //! 메인
-[a, b] = input(' '); (a*100 >= b ? 'Yes' : 'No').log('')
+[a, b] = input('\n').slice(1).map(BigInt); log(`${a * b}`);
 
 //! 분류중
 // N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //20492
