@@ -24,7 +24,7 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 [W, H] = input(' '); log( (W*H / 2).toFixed(1) ); //29751, 삼각형의 넓이
 
 //! 큰 수 계산
-//> Number 리터럴과 BigInt의 사칙연산이 유발되는 경우, Number 리터럴에 n을 붙여서 BigInt 끼리 연산으로 바꿔주기
+//> Number 리터럴과 BigInt의 사칙연산이 유발되는 경우, Number 리터럴에 n을 붙여 BigInt 끼리의 연산으로 바꿔주기
 [a, b] = input(' ').map(BigInt); `${(a + b)}`.log(); //15740
 [a, b] = input(' ').map(BigInt); log(`${a/b}`); log(`${a%b}`); //1271
 [a, b] = input('\n').map(BigInt); log(`${a+b}`); log(`${a-b}`); log(`${a*b}`); //2338
