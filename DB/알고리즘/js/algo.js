@@ -62,6 +62,7 @@ seqtools = [
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 fibo = (N, start=[0, 1]) => vector(N).reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
+factoR = (N) => N<2 ? 1 : N * factoR(N-1);
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
@@ -81,7 +82,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // 씨스타 = [러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 있다없, 넌넘야]
 
 //! 메인
-log( `${facto(input())}` );
+log( `${factoR(input())}` );
 
 //! 분류중
 // N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //20492
