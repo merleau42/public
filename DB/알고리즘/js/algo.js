@@ -66,7 +66,7 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? ((N<2 ? start[N] : fibo(N-2) + fibo(N-1)));
+fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
@@ -82,8 +82,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 cache = new Map();
 
 //! 메인
-log(  `${BigInt(input()) % 20000303n}`  ); //14928
-
+input('\n', ' ').slice(1).draw(Number).map(([a,b,x]) => a * (x - 1) + b).log('\n');
 
 //! 분류중
 // N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //B5 20492
