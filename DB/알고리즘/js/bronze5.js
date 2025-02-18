@@ -20,9 +20,7 @@ input('\n', ' ').map(([a, b])=>a*1 + b*1).log('\n'); // 테케갯수없이끝까
 [k, q, r, b, n, p] = input(' '); log(1-k, 1-q, 2-r, 2-b, 2-n, 8-p); //3003
 (input(' ').map(Number).reduce((s,c)=>s + c*c, 0)%10).log(); //2475
 [a, b] = input(' '); abs(a-b).log(); //2420, 절댓값 구하기
-(input() - 543).log(); //18108, 불기 연도를 서기 연도로 변환
-[a, b] = input('\n'); log(a*b); //27323, 직사각형의 넓이
-[a, b] = input(' ').map(Number); log( (a+b)*(a-b) ); //15964
+[W, H] = input(' '); log( (W*H / 2).toFixed(1) ); //29751, 삼각형의 넓이
 
 //! 큰 수 계산
 [a, b] = input(' ').map(BigInt); `${(a + b)}`.log(); //15740
@@ -30,9 +28,13 @@ input('\n', ' ').map(([a, b])=>a*1 + b*1).log('\n'); // 테케갯수없이끝까
 [a, b] = input('\n').map(BigInt); log(`${a+b}`); log(`${a-b}`); log(`${a*b}`); //2338
 log(  `${BigInt(input()) % BigInt(20000303)}`  ); //14928
 
-//! 공식에 대입
-[UR, TR, UO, TO] = input(' '); log( 56*UR + 24*TR + 14*UO + 6*TO ); //20254
+//! 공식에 대입, 공식 세우기
+input('\n', ' ').map(([T, F, S, P, C]) => 6*T + 3*F + 2*S + 1*P + 2*C).log(' '); //24736
 [n1, n2, n12] = input(' ').map(Number); log( floor((n1+1)*(n2+1)/(n12+1) - 1) ); //18301
+[a, b] = input(' ').map(Number); log( (a+b)*(a-b) ); //15964
+[경가, 경성, 자가] = input(' '); log(3 * 자가 * (경성/경가)); //26082
+[a, b, c] = input('\n').map(BigInt); log( `${(b - c)/a}` );
+
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
@@ -46,6 +48,7 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
+[_, str] = input('\n'); str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
@@ -68,6 +71,9 @@ input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
 //>	나머지 연산은, 덧셈과 곱셈에 대해서 분배 법칙이 성립
 //> 400의 배수이거나, 100의 배수가 아니면서 4의 배수이면 윤년
+//! 년도, 나이, 주년
+(input() - 543).log(); //18108, 불기 연도를 서기 연도로 변환
+
 //! 배수 판정
 log(+(!(year % 400) || !!(year % 100) && !(year % 4))); //2753, !(A%B) 배수아니다, !!(A%B) 배수이다
 
@@ -81,6 +87,9 @@ log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합
 a = input(); ceil(a/5).log(); //15727
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
+//! 시그마 표현
+N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).sum()].log('\n') //28701
+
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
 [_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
@@ -93,10 +102,12 @@ input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4
 //! 분류중
 range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
 
-//! 팩토리얼
-range(N+1).sum().log() //8393, 1부터 N까지의 합
-facto(input()).log(); //27433, 1부터 N까지의 곱
+//! 합, 누적합, 구간합
 input('\n').sum().log() //5522, 수열의 합
+input('\n').slice(0,-1).map(N => range(+N+1).sum()).log('\n'); //5341, 1부터 N까지의 합
+
+//! 팩토리얼
+facto(input()).log(); //27433, 1부터 N까지의 곱
 
 //! 수열간 연산
 
