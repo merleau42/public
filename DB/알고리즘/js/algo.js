@@ -1,3 +1,5 @@
+const { time } = require("console");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log } = console;
@@ -20,7 +22,7 @@ typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
 //! 디버깅 도구
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
-stamp = (()=>{ let count = 0; return (msg='STAMP',tabs=0)=>log("\t".repeat(tabs) + msg + ':', ++count) })();
+stamp = (()=>{ count = 0; ago = Date.now(); return (msg='STAMP')=>{log(msg, ++count, Date.now() - ago); ago=Date.now()} })();
 repl = (msg=log('REPL모드')) => require('repl').start();
 randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
 
@@ -39,17 +41,7 @@ itertools = [
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 함수 객체 편의 기능
-Function.prototype.memo = new Map();
-Function.prototype.memoize = function (...args) {
-	key = JSON.stringify(args);
-
-	if (this.memo.has(key))
-		return this.memo.get(key); // 캐시된 값 반환
-
-	const result = original.apply(this, args); // 원래 함수 실행
-	memo.set(key, result); // 결과를 캐싱
-	return result;
-};
+// Function.prototype.memoized = function (fn=this) { return (...args) => memo[args] ?? (memo[args] = fn(...args))  }
 
 //! 문자열 관련 함수
 strtools = [ 
@@ -74,12 +66,9 @@ seqtools = [
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (N, start=[0, 1]) => vector(N).reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
+fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? ((N<2 ? start[N] : fibo(N-2) + fibo(N-1)));
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
-
-//! 재귀
-facto_ = (N) => N<2 ? BigInt(1) : BigInt(N) * facto_(N-1);
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
@@ -90,20 +79,13 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 전역 변수
-// memo = vector(100000);
-// [mi, Mi] = [0, +input()];
-// [mj, Mj] = [0, 0];
-
-//! 메모
-// 폰트 = [15px]
-// 씨스타 = [러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 있다없, 넌넘야]
+cache = new Map();
 
 //! 메인
-facto_.memoize()(5).log()
+log(  `${BigInt(input()) % 20000303n}`  ); //14928
+
 
 //! 분류중
-// N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //20492
-// [a,b, c,d] = input(' '); log(a*b + c*d); //8370
-
-//! 브론즈4 인덱싱
-// [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //17256
+// N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //B5 20492
+// [a,b, c,d] = input(' '); log(a*b + c*d); //B5 8370
+// [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //B4 17256 인덱싱
