@@ -38,6 +38,19 @@ itertools = [
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
+//! 함수 객체 편의 기능
+Function.prototype.memo = new Map();
+Function.prototype.memoize = function (...args) {
+	key = JSON.stringify(args);
+
+	if (this.memo.has(key))
+		return this.memo.get(key); // 캐시된 값 반환
+
+	const result = original.apply(this, args); // 원래 함수 실행
+	memo.set(key, result); // 결과를 캐싱
+	return result;
+};
+
 //! 문자열 관련 함수
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
@@ -58,12 +71,15 @@ seqtools = [
 	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 
+
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 fibo = (N, start=[0, 1]) => vector(N).reduce((s,_,i) => i<2 ? s : [...s, s[i-2] + s[i-1]], start);
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
-factoR = (N) => N<2 ? 1 : N * factoR(N-1);
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
+
+//! 재귀
+facto_ = (N) => N<2 ? BigInt(1) : BigInt(N) * facto_(N-1);
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
@@ -73,7 +89,8 @@ matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-//! 환경 조정
+//! 전역 변수
+// memo = vector(100000);
 // [mi, Mi] = [0, +input()];
 // [mj, Mj] = [0, 0];
 
@@ -82,7 +99,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // 씨스타 = [러빙유, 쏘쿨, 터마바, 쉐이킷, 아락댓, 기빗투미, 푸시푸시, 마보이, 나혼자, 가식걸, 있다없, 넌넘야]
 
 //! 메인
-log( `${factoR(input())}` );
+facto_.memoize()(5).log()
 
 //! 분류중
 // N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //20492
