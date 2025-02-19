@@ -81,4 +81,11 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-[_, str] = input('\n'); str.reduce((s,c)=>s*1 + c*1).log()
+[a, b, c] = input(' ').map(Number);
+(a==b
+	? b==c
+		? (10000 + a*1000)
+		: (1000 + b*100)
+	: b==c
+		? (1000 + b*100)
+		: max(a,b,c)*100).log()
