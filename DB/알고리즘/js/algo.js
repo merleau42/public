@@ -81,7 +81,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-N = input(); (2 * (N.includes('7')) + !(N % 7)).log()
+[x, l] = input('\n',' ').map(([t,e,f])=>t*3 + e*20 + f*120); log(x, l); log(x > l ? 'Max' : x == l ? 'Draw' : 'Mel');
 
 //! 분류중
 // [a,b, c,d] = input(' '); log(a*b + c*d); //B5 8370
