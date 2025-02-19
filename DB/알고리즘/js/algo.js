@@ -1,5 +1,3 @@
-const { time } = require("console");
-
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log } = console;
@@ -37,6 +35,7 @@ itertools = [
 	removed = function (tar, from=0) { i = this.indexOf(tar,from); return i > -1 ? this.deleted(i) : this },
 	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) },
 	unique = function () { return [...new Set(this)] },
+	mapleaves = function (fn, arr=this) { return (isArray(arr) ? arr.map(x => mapleaves(fn, x)) : fn(arr.valueOf())) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
@@ -79,12 +78,11 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 전역 변수
-cache = new Map();
+// cache = new Map();
 
 //! 메인
-input('\n', ' ').slice(1).draw(Number).map(([a,b,x]) => a * (x - 1) + b).log('\n');
+N = input(); (2 * (N.includes('7')) + !(N % 7)).log()
 
 //! 분류중
-// N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //B5 20492
 // [a,b, c,d] = input(' '); log(a*b + c*d); //B5 8370
 // [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //B4 17256 인덱싱
