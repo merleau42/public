@@ -81,8 +81,4 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-input('\n', ' ').slice(1).mapleaves(Number).map(([a,b])=>+a+b).log('\n')
-
-//! 분류중
-// [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //B4 17256 인덱싱
-
+[_, str] = input('\n'); str.reduce((s,c)=>s*1 + c*1).log()
