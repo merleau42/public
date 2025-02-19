@@ -14,7 +14,7 @@ Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? 
 objtools = [
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
-	ascii = function (x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
+	ascii = function (n=0, x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => n + c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
 ].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
 typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
@@ -55,6 +55,7 @@ seqtools = [
 	serial = function () { return this.map((_,i) => i) },
 	value = function () { return [...this] },
 	sum = function () { return this.reduce((s,c)=>s*1 + c*1) },
+	average = function () { return this.sum()/this.length },
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
 	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||BigInt(1)) ], []) },
@@ -71,7 +72,7 @@ clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
-vector = (n, f=()=>null) => [...Array(n)].map((x,i)=>f(i));
+vector = (n, f=()=>null) => [...Array(n)].map((_,i)=>f(i));
 matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
 matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
 Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
@@ -81,11 +82,10 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-[a, b, c] = input(' ').map(Number);
-(a==b
-	? b==c
-		? (10000 + a*1000)
-		: (1000 + b*100)
-	: b==c
-		? (1000 + b*100)
-		: max(a,b,c)*100).log()
+// 'baekjoon'.reduce((s,c) => s.toSpliced(ascii(c) - 97, 1, s[ascii(c) - 97]+1), vector(26, x=>0)).log(' ');
+
+vector(26, x=>0).log();
+'baekjoon'.ascii(-97).log();
+
+
+// repl();

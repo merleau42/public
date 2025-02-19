@@ -21,6 +21,7 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 (input(' ').map(Number).reduce((s,c)=>s + c*c, 0)%10).log(); //2475
 [a, b] = input(' '); abs(a-b).log(); //2420, 절댓값 구하기
 [W, H] = input(' '); log( (W*H / 2).toFixed(1) ); //29751, 삼각형의 넓이
+[t, _, ...b] = input('\n', ' '); (t == b.map(([p, n])=>p*n).sum()).if('Yes', 'No').log() //25304
 
 //! 나눗셈, 몫과 나머지, 부동소수점
 [a, b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n'); //10869
@@ -81,7 +82,7 @@ input().Match(/DKSH/g).length.log()
 //! 좌우 반전
 input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 
-//! 문자열 합산
+//! 합산
 [a, b, c] = input(' '); str.reduce((s,c)=>s*1 + c*1).log() //11720
 
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
@@ -133,6 +134,9 @@ input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4
 //! 분류중
 range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
 
+//! 평균
+input('\n').map(x=>x<40 ? 40 : x).average().log() //10039
+
 //! 합, 누적합, 구간합
 input('\n').sum().log() //5522, 수열의 합
 input('\n').slice(0,-1).map(N => range(+N+1).sum()).log('\n'); //5341, 1부터 N까지의 합
@@ -149,17 +153,21 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 
 
 //: ■■■■■■■■■■■■■■■■[ 조건문 ]■■■■■■■■■■■■■■■■
-//! 많은 조건 분기
-[a,b,c] = input('\n').map(Number); log(a>=b ? b>=c ? b : a>=c ? c : a : b<=c ? b : a<=c ? c: a); //6840
+//! 많은 조건 분기, 조건문 최적화
+(a>=b ? b>=c ? b : a>=c ? c : a : b<=c ? b : a<=c ? c: a).log(); //6840
 (n > b ? 'Bus' : a < b ? 'Bus' : a == b ? 'Anything' : a > b ? 'Subway' : '').log() //브5, 28113
+
+//! 정렬을 통한 전처리
+[a, b, c] = input(' ').map(Number).toSorted();
+(a==b && b==c) ? log(10000 + a*1000) : (a==b || b==c || a==c) ? log(1000 + b*100) : log(max(a,b,c)*100);
 
 //! 논리식
 [T, S] = input(' ').map(Number); ((12<=T && T<=16 && !S) ? 320 : 280).log(); //27294
 
 
-//: ■■■■■■■■■■■■■■■■■[ 순서 ]■■■■■■■■■■■■■■■■■
-//! 아스키 비교  (4999, )
-[a, b] = input('\n'); log(a <= b ? 'go' : 'no');
+//: ■■■■■■■■■■■■■■■■■[ 정렬 ]■■■■■■■■■■■■■■■■■
+//! 아스키 순서
+[a, b] = input('\n'); log(a <= b ? 'go' : 'no'); //4999
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
