@@ -30,6 +30,7 @@ itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
 	toSorted = function (cmp) { return this.sort(cmp) },
 	toReversed = function () { return this.reverse()},
+	With = function (index, val) { return [...this].map((x,i) => i == index ? val : x) },
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (tar, from=0) { i = this.indexOf(tar,from); return i > -1 ? this.deleted(i) : this },
@@ -48,7 +49,7 @@ strtools = [
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
 	deepsplit = function (s, str=this, d=0) { return s[d] == undefined ? str : str.split(s[d]).map(e=>deepsplit(s, e, d+1)); },
-].map(f => f.name).Each(f => String.prototype[f] = globalThis[f]);
+].map(f => f.name).forEach(f => String.prototype[f] = globalThis[f]);
 
 //! 수열, 누적합/구간합, 누적곱/구간곱
 seqtools = [
@@ -82,10 +83,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-// 'baekjoon'.reduce((s,c) => s.toSpliced(ascii(c) - 97, 1, s[ascii(c) - 97]+1), vector(26, x=>0)).log(' ');
-
-vector(26, x=>0).log();
-'baekjoon'.ascii(-97).log();
+input().ascii(-97).reduce((s,c)=>s.With(c, s[c]+1), vector(26, x=>0)).log(' '); //10808
 
 
 // repl();

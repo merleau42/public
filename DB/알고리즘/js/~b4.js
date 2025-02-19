@@ -63,6 +63,7 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 [_, str] = input('\n'); str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
+input().ascii(-97).reduce((s,c)=>s.With(c, s[c]+1), vector(26, x=>0)).log(' '); //10808 아스키갯수
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
