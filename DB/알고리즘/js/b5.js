@@ -32,6 +32,7 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 [a, b] = input(' ').map(BigInt); log(`${a/b}`); log(`${a%b}`); //1271
 [a, b] = input('\n').map(BigInt); log(`${a+b}`); log(`${a-b}`); log(`${a*b}`); //2338
 log(  `${BigInt(input()) % 20000303n}`  ); //14928
+input('\n').slice(0,-1).map(BigInt).map(x => !(x%42n) ? '당첨' : '재시도').log('\n'); //30664
 
 //! 공식에 대입, 공식 세우기
 N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //B5, 20492
@@ -86,7 +87,8 @@ input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
 (input() - 543).log(); //18108, 불기 연도를 서기 연도로 변환
 
 //! 배수 판정
-log(+(!(year % 400) || !!(year % 100) && !(year % 4))); //2753, !!(A%B) 배수아니다, !(A%B) 배수이다
+//> !(A%B) 배수이다, !!(A%B) 배수아니다
+log(+(!(year % 400) || !!(year % 100) && !(year % 4))); //2753
 
 //! 수학 공식
 log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합

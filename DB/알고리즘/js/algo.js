@@ -81,7 +81,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 // cache = new Map();
 
 //! 메인
-[seq] = input('\n', ' ').slice(1); log(seq.sum() > 0 ? 'Right' : seq.sum() == 0 ? 'Stay' : 'Left'); //28938
+
 
 //! 분류중
 // [a,b, c,d] = input(' '); log(a*b + c*d); //B5 8370
