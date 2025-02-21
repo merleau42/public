@@ -1,8 +1,6 @@
-const { time } = require("console");
-
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
-const { log } = console;
+const { log, clear } = console;
 const { isArray } = Array;
 const { fromCharCode } = String;
 
@@ -81,23 +79,23 @@ fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) +
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 numtools = [
-	notate = function (rad, base=range(rad), n=this) {return (n<rad) ? [base[n]] : [...notate(rad, base, floor(n / rad)),  base[n % rad]]},
+	digits = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
+	notate = function (r, b=range(r), p=this.digits(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)], [this])},
 ].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
-//! 전역 변수
-// cache = new Map();
+
 
 //! 메인
 [now, [elt]] = input('\n', ' ').mapleaves(Number);
-(now.reduce((s,c)=>s*60 + c) + elt).notate(60).update(0, x=>x%24).log(' ');
-
-
-//! 디버그
-// repl();
-
-//! 검토중
-// 존재 배열 기법을 위해서, 예비 함수를 만들 것인지
+// (now.reduce((s,c)=>s*60 + c) + elt).notate(60, 3).update(0, x=>x%24).log(' ');
+(1000).notate(16, "0123456789ABCDEF").log('');
+// (10000).digits(10).log();
+// (-1000).notate(16, "0123456789ABCDEF", 16).log('')
 
 //! 입출력 양식 (B4)
 // [버거, 음료] = input('\n').chunk(3).mapleaves(Number); log(min(...버거) + min(...음료) - 50); //5548
+
+//! 검토중
+// 존재 배열 기법을 위해서, 예비 함수를 만들 것인지
+// 범용적인 목적으로 전역 변수를 도입할 것인지
