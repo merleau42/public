@@ -1,3 +1,5 @@
+const { time } = require("console");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log } = console;
@@ -10,13 +12,12 @@ input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepspli
 //!	기본 함수
 Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
 Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this },
-
 objtools = [
 	it = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
 	ascii = function (n=0, x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => n + c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
+	typeOf = function (x=this) { return isArray(x) ? 'array' : typeof x.valueOf() },
 ].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
-typeOf = (x) => isArray(x) ? 'array' : typeof x.valueOf();
 
 //! 디버깅 도구
 Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, ...v].join('\t')).join('\n')) };
@@ -28,20 +29,18 @@ randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(r
 arrayfuncs = ['join', 'reduce', 'map', 'forEach', 'filter'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
-	toSorted = function (cmp) { return this.sort(cmp) },
-	toReversed = function () { return this.reverse()},
-	With = function (index, val) { return [...this].map((x,i) => i == index ? val : x) },
+	toSorted = function (cmp) { return [...this].sort(cmp) },
+	toReversed = function () { return [...this].reverse()},
+	update = function (index, fn) { tmp=[...this]; tmp[index]=fn( tmp[index] ); return tmp },
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
 	removed = function (tar, from=0) { i = this.indexOf(tar,from); return i > -1 ? this.deleted(i) : this },
 	deepjoin = function (sep, arr=this, depth=0) { return arr.map(row => isArray(row) ? deepjoin(sep, row, depth+1) : row).join(sep[depth]) },
-	unique = function () { return [...new Set(this)] },
 	mapleaves = function (fn, arr=this) { return (isArray(arr) ? arr.map(x => mapleaves(fn, x)) : fn(arr.valueOf())) },
+	chunk = function (...s) { return s.length == 0 ? [this.valueOf()] : [this.slice(0, s[0]), ...this.slice(s[0]).chunk(...s.slice(1))] },
+	unique = function () { return [...new Set(this)] },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
-
-//! 함수 객체 편의 기능
-// Function.prototype.memoized = function (fn=this) { return (...args) => memo[args] ?? (memo[args] = fn(...args))  }
 
 //! 문자열 관련 함수
 strtools = [ 
@@ -62,28 +61,43 @@ seqtools = [
 	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||BigInt(1)) ], []) },
 	mini = function () { return this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
 	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
-].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
+].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
 
+//! 컬렉션
+map = (n, kf=i=>i, vf=()=>0) => [...Array(n)].reduce((s,_,i) => s.set(kf(i), vf(i)), new Map());
+Map.prototype.update = function (key, fn) { return this.set(key, fn(this.get(key) || 0)) };
+Map.prototype.vals = function () { return [...this.values()] };
+
+//! 행렬
+range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
+vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i));
+matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
+matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
+Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
-
-//! 행렬
-range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
-vector = (n, f=()=>null) => [...Array(n)].map((_,i)=>f(i));
-matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
-matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
-Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
+numtools = [
+	notate = function (rad, base=range(rad), n=this) {return (n<rad) ? [base[n]] : [...notate(rad, base, floor(n / rad)),  base[n % rad]]},
+].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 전역 변수
 // cache = new Map();
 
 //! 메인
-input().ascii(-97).reduce((s,c)=>s.With(c, s[c]+1), vector(26, x=>0)).log(' '); //10808
+[now, [elt]] = input('\n', ' ').mapleaves(Number);
+(now.reduce((s,c)=>s*60 + c) + elt).notate(60).update(0, x=>x%24).log(' ');
 
 
+//! 디버그
 // repl();
+
+//! 검토중
+// 존재 배열 기법을 위해서, 예비 함수를 만들 것인지
+
+//! 입출력 양식 (B4)
+// [버거, 음료] = input('\n').chunk(3).mapleaves(Number); log(min(...버거) + min(...음료) - 50); //5548

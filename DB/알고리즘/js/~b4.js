@@ -54,6 +54,9 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //B4 17256
 
+//! 존재 배열
+input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)).log(' '); //10808
+
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 //! 문자열 반복
@@ -63,7 +66,6 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 [_, str] = input('\n'); str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
-input().ascii(-97).reduce((s,c)=>s.With(c, s[c]+1), vector(26, x=>0)).log(' '); //10808 아스키갯수
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
@@ -110,6 +112,11 @@ N = input(); log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
 [s, w] = input('\n').map(Number); ((w - s + 24)%24).log() //29863
 x = input(); log(1 * (x % 7 == 2)) //31611, 오늘이 일요일이라면, X일 이후에는 화요일인지 판정
 
+//: ■■■■■■■■■■■■■■■■■[ 진법 ]■■■■■■■■■■■■■■■■■
+//! 고정 기수 표기법
+
+
+
 //: ■■■■■■■■■■■■■■■■[ 방정식 ]■■■■■■■■■■■■■■■■
 //! 연립방정식
 [x, y] = input('\n').map(BigInt); [(x + y) / 2n, (x - y) / 2n].log('\n')
@@ -131,6 +138,7 @@ log( seq.filter(x=>!(x%2)).length > seq.filter(x=>!!(x%2)).length ? 'Happy' : 'S
 [a,b] = input(' ').map(Number); log(a>b ? '>' : a==b ? '==' : '<'); //1330
 input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4101
 [_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' '); //10871
+[버거, 음료] = input('\n').map(Number).chunk(3); log(min(...버거) + min(...음료) - 50); //B4, 5548
 
 //! 분류중
 range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
@@ -167,8 +175,11 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 
 
 //: ■■■■■■■■■■■■■■■■■[ 정렬 ]■■■■■■■■■■■■■■■■■
-//! 아스키 순서
+//! 아스키 오름차순
 [a, b] = input('\n'); log(a <= b ? 'go' : 'no'); //4999
+
+//! 정수 오름차순
+input(' ').toSorted((a,b)=>a - b).log(' ') //2752
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
@@ -204,6 +215,10 @@ N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 log(  (x>0 && y>0) ? 1 : (x<0 && y>0) ? 2 : (x<0 && y<0) ? 3 : (x>0 && y<0) ? 4 : 0  );
 //! 도형
 input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
+
+//! N각형
+a+b+c != 180 ? '에러' : (a==b && b==c) ? '정삼각형' : (a==b || b==c || a==c) ? '이등변' : '부등변' //10101
+
 
 //< ■■■■■■■■■■■■■■■■■[ 노트 ]■■■■■■■■■■■■■■■■■
 //: 브론즈5, 28113
