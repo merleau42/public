@@ -88,4 +88,4 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[r, c, index] = input(' '); [floor(index / c), floor(index % c)].log(' ');
+[m, d] = input('\n'); log(  ((m-1)*30 + d*1) > 48 ? 'After' : ((m-1)*30 + d*1) < 48 ? 'Before' : 'Special'  );
