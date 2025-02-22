@@ -36,7 +36,8 @@ log(  `${BigInt(input()) % 20000303n}`  ); //14928
 input('\n').slice(0,-1).map(BigInt).map(x => !(x%42n) ? '당첨' : '재시도').log('\n'); //30664
 
 //! 공식에 대입, 공식 세우기
-N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //B5, 20492
+//_	브론즈5
+N = input(); [N*0.78, N*0.8 + N*0.2*0.78].log(' ') //20492
 input('\n', ' ').map(([T, F, S, P, C]) => 6*T + 3*F + 2*S + 1*P + 2*C).log(' '); //24736
 [n1, n2, n12] = input(' ').map(Number); log( floor((n1+1)*(n2+1)/(n12+1) - 1) ); //18301
 [a, b] = input(' ').map(Number); log( (a+b)*(a-b) ); //15964
@@ -44,7 +45,9 @@ input('\n', ' ').map(([T, F, S, P, C]) => 6*T + 3*F + 2*S + 1*P + 2*C).log(' ');
 [a, b, c] = input('\n').map(BigInt); log( `${(b - c)/a}` ); //24309
 input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).log('\n'); //30007
 [a, b] = input(' '); ((a-9)*60 + b*1).log() //26307
-[a,b, c,d] = input(' '); log(a*b + c*d); //B5 8370
+[a,b, c,d] = input(' '); log(a*b + c*d); //8370
+//_ 브론즈4
+m.map(x => x - d*v).log(' '); //2845
 
 
 //: ■■■■■■■■■■■■■■■■[ 인덱싱 ]■■■■■■■■■■■■■■■■
@@ -52,7 +55,8 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 "WelcomeToSMUPC"[(input() - 1)%14].log() //29699
 [str, n] = input('\n'); str[n-1].log(); //27866
 input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
-[a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //B4 17256
+//_ 브론즈4
+[a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //17256
 
 //! 존재 배열
 input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)).log(' '); //10808
@@ -65,7 +69,7 @@ input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)
 
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
-[_, str] = input('\n'); str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
+lines.map(str => str.filter(ch => 'aeiouAEIOU'.includes(ch)).length).log('\n'); //1264 모음의 갯수
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
@@ -104,17 +108,21 @@ log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합
 //! 분수 표현
 [a, b] = input(' '); log( b-a, b ); //16430
 
-//! 천장/바닥 함수
-a = input(); ceil(a/5).log(); //15727
-
-//! 몫과 나머지
-N = input(); log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
+//! 몫과(floor) 나머지(%)
 [s, w] = input('\n').map(Number); ((w - s + 24)%24).log() //29863
 x = input(); log(1 * (x % 7 == 2)) //31611, 오늘이 일요일이라면, X일 이후에는 화요일인지 판정
+N = input(); log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
+
+//! 올림(ceil), 반올림(round), 내림(floor), 버림(trunc)
+//_ 브론즈5
+a = input(); ceil(a/5).log(); //15727
+//_ 브론즈4
+log( l - max( ceil(b / d), ceil(a / c) ) ); //5532
 
 //: ■■■■■■■■■■■■■■■■■[ 진법 ]■■■■■■■■■■■■■■■■■
 //! 고정 기수 표기법
-
+//> (ABCDE)r  ==  Ar⁴ + Br³ + Cr² + Dr¹ + E  <===>  [A, B, C, D, E]  ==  notate(r)
+(now.reduce((s,c)=>s*60 + c) + elt).notate(60, 3).update(0, x=>x%24).log(' '); //2530, [시/분/초] ⇔ 초
 
 
 //: ■■■■■■■■■■■■■■■■[ 방정식 ]■■■■■■■■■■■■■■■■
@@ -131,7 +139,7 @@ N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).su
 
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
-[_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
+seq.filter(x => x==tar).length.log(); //10807
 log( seq.filter(x=>!(x%2)).length > seq.filter(x=>!!(x%2)).length ? 'Happy' : 'Sad' ) //29163
 
 //! 크기 비교
@@ -167,7 +175,7 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 (n > b ? 'Bus' : a < b ? 'Bus' : a == b ? 'Anything' : a > b ? 'Subway' : '').log() //브5, 28113
 
 //! 정렬을 통한 전처리
-[a, b, c] = input(' ').map(Number).toSorted();
+[a, b, c] = input(' ').map(Number).toSorted(); //2480
 (a==b && b==c) ? log(10000 + a*1000) : (a==b || b==c || a==c) ? log(1000 + b*100) : log(max(a,b,c)*100);
 
 //! 논리식
@@ -222,9 +230,15 @@ a+b+c != 180 ? '에러' : (a==b && b==c) ? '정삼각형' : (a==b || b==c || a==
 
 //< ■■■■■■■■■■■■■■■■■[ 노트 ]■■■■■■■■■■■■■■■■■
 //: 브론즈5, 28113
-// n  > b ---> 걸어서 지하철 잡을 수 없다, 버스를 탄다
-// n <= b ---> 걸어서 지하철 잡을 수 있다, 버스랑 지하철 중에 먼저 오는 것을 탄다
-// 		a  < b ---> 버스를 탄다
+//	n  > b ---> 걸어서 지하철 잡을 수 없다, 버스를 탄다
+//	n <= b ---> 걸어서 지하철 잡을 수 있다, 버스랑 지하철 중에 먼저 오는 것을 탄다
+//		a  < b ---> 버스를 탄다
 //		a == b ---> 아무거나 탄다
 //		a  > b ---> 지하철을 탄다
 (n > b ? 'Bus' : a < b ? 'Bus' : a == b ? 'Anything' : a > b ? 'Subway' : '').log()
+//: 브론즈4, 5532
+//	L == 남은방학
+//	ceil(B / D) == 수학 소요시간
+//	ceil(A / C) == 국어 소요시간
+//	숙제하는 날 == max(수학, 국어)
+//	노는 날 == 남은 방학 - 숙제하는 날

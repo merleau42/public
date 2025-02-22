@@ -49,6 +49,8 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 //: ■■■■■■■■■■■■■■■■[ 인덱싱 ]■■■■■■■■■■■■■■■■
 [a,b] = input(''); log(Number(a==b)) //27324, 10의 자리숫자와 1의 자리 숫자가 동일한지 비교
 "WelcomeToSMUPC"[(input() - 1)%14].log() //29699
+[str, n] = input('\n'); str[n-1].log(); //27866
+input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
@@ -56,13 +58,9 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 '하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
 
-//! 인덱싱
-[str, n] = input('\n'); str[n-1].log(); //27866
-input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
-
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
-[_, str] = input('\n'); str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
+str.filter(ch => 'aeiou'.includes(ch)).length.log();	//18409 모음의갯수
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
@@ -120,7 +118,7 @@ N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).su
 
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
-[_, seq, tar] = input('\n'); seq.split(' ').filter(x => +x==+tar).length.log(); //10807
+seq.filter(x => x==tar).length.log(); //10807
 log( seq.filter(x=>!(x%2)).length > seq.filter(x=>!!(x%2)).length ? 'Happy' : 'Sad' ) //29163
 
 //! 크기 비교
@@ -147,15 +145,15 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 
 
 //: ■■■■■■■■■■■■■■■■[ 조건문 ]■■■■■■■■■■■■■■■■
-//! 많은 조건 분기
-[a,b,c] = input('\n').map(Number); log(a>=b ? b>=c ? b : a>=c ? c : a : b<=c ? b : a<=c ? c: a); //6840
+//! 많은 조건 분기, 조건문 최적화
+(a>=b ? b>=c ? b : a>=c ? c : a : b<=c ? b : a<=c ? c: a).log(); //6840
 (n > b ? 'Bus' : a < b ? 'Bus' : a == b ? 'Anything' : a > b ? 'Subway' : '').log() //브5, 28113
 
 //! 논리식
 [T, S] = input(' ').map(Number); ((12<=T && T<=16 && !S) ? 320 : 280).log(); //27294
 
 
-//: ■■■■■■■■■■■■■■■■■[ 순서 ]■■■■■■■■■■■■■■■■■
+//: ■■■■■■■■■■■■■■■■■[ 정렬 ]■■■■■■■■■■■■■■■■■
 //! 아스키 오름차순
 [a, b] = input('\n'); log(a <= b ? 'go' : 'no'); //4999
 
