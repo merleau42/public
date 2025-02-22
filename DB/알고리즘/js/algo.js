@@ -88,4 +88,4 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[a, b] = input('\n'); log(2*b - a)
+[r, c, index] = input(' '); [floor(index / c), floor(index % c)].log(' ');
