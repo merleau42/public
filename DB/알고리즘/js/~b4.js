@@ -87,7 +87,7 @@ input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 input().Match(/DKSH/g).length.log()
 
 //! 좌우 반전
-input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
+input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945, 11365
 
 //! 합산
 [a, b, c] = input(' '); str.reduce((s,c)=>s*1 + c*1).log() //11720
@@ -133,6 +133,9 @@ log( l - max( ceil(b / d), ceil(a / c) ) ); //5532
 //! 순열에 번호매기기
 N = input(); (2 * (N.includes('7')) + !(N % 7)).log(); //30224
 
+//! 파스칼 삼각형
+(2**input()).log(); //녹색거탑, 24723
+
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 시그마 표현
 N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).sum()].log('\n') //28701
@@ -155,9 +158,11 @@ range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로�
 input('\n').map(x=>x<40 ? 40 : x).average().log() //10039
 
 //! 합, 누적합, 구간합
-input('\n').sum().log() //5522, 수열의 합
+//_ 브론즈5
 input('\n').slice(0,-1).map(N => range(+N+1).sum()).log('\n'); //5341, 1부터 N까지의 합
 [seq]=input('\n', ' ').slice(1); log(seq.sum() > 0 ? 'Right' : seq.sum() == 0 ? 'Stay' : 'Left'); //28938
+//_ 브론즈4
+input('\n', ' ').map(seq => seq.sum())._max().log(); //5596, 각 수열의 합 중에서 최댓값
 
 //! 팩토리얼
 facto(input()).log(); //27433, 1부터 N까지의 곱
@@ -210,7 +215,11 @@ N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 //! 행렬
 /* 평면채우기 */ matrix(Mi, Mi, (i,j) => '*' ).log(['\n', '']);
 /* 주대각행렬 */ matrix(Mi, Mi, (i,j) => (j == i)			? '*' : ' ').log('\n', '');
-/* 반대각행렬 */ matrix(Mi, Mi, (i,j) => (j == Mi - i - 1)	? '*' : ' ').log('\n', ''); 
+/* 반대각행렬 */ matrix(Mi, Mi, (i,j) => (j == Mi - i - 1)	? '*' : ' ').log('\n', '');
+
+//! 배열 선형화, 행우선/열우선
+//> 2차원 좌표를 1차원 좌표로 매핑
+
 
 //: ■■■■■■■■■■■■■■■■[ 방정식 ]■■■■■■■■■■■■■■■■
 //! 1차 방정식

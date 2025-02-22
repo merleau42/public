@@ -57,6 +57,8 @@ seqtools = [
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
 	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||BigInt(1)) ], []) },
+	_min = function () { return this.reduce((s,c) => s > +c ? c : s, +Infinity) },
+	_max = function () { return this.reduce((s,c) => s < +c ? c : s, -Infinity) },
 	mini = function () { return this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
 	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
@@ -86,9 +88,4 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[l, a, b, c, d] = input('\n');
-log( l - max( ceil(b / d), ceil(a / c) ) );
-
-//! 검토중
-// 범용적인 목적으로 전역 변수를 도입할 것인지
-// 존재 배열 기법을 위해서 함수를 도입할 것인지
+[a, b] = input('\n'); log(2*b - a)
