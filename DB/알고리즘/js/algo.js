@@ -88,4 +88,5 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-floor(input()*0.1).log()
+[seq, [pr]] = input('\n', ' ').mapleaves(Number);
+log( seq.sum() - 2*pr * (seq.sum() >= 2*pr) );
