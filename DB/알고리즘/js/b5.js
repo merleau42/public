@@ -55,6 +55,7 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 //! 문자열 반복
+"LoveisKoreaUniversity ".repeat(input()).slice(0,-1).log() //32929
 '하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
 

@@ -13,7 +13,8 @@ input('\n').slice(1).map(x=>`${x} ${x}`).log('\n'); //26574
 //! 반복 출력
 input('\n', ' ').slice(1).map(([a,b],i)=>`Case #${i+1}: ${a} + ${b} = ${a*1 + b*1}`).log('\n'); //11022
 range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
-
+//_ 브론즈4
+input('\n').slice(1).map((str, i) => `${i+1}. ${str}`).log('\n'); //4470
 
 //: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
 //! 사칙연산
@@ -64,8 +65,10 @@ input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
 //! 문자열 반복
+"LoveisKoreaUniversity ".repeat(input()).slice(0,-1).log() //32929
 '하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
+input('\n').slice(1).map(n => '='.repeat(n)).log('\n') //13752
 
 //! 아스키코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
@@ -124,7 +127,8 @@ log( l - max( ceil(b / d), ceil(a / c) ) ); //5532
 //! 고정 기수 표기법
 //> (ABCDE)r  ==  Ar⁴ + Br³ + Cr² + Dr¹ + E  <===>  [A, B, C, D, E]  ==  notate(r)
 (now.reduce((s,c)=>s*60 + c) + elt).notate(60, 3).update(0, x=>x%24).log(' '); //2530, [시/분/초] ⇔ 초
-
+input('\n', ' ').map(line => line.chunk(3)).map(seqs => seqs.map(seq => seq.reduce((s,c)=>s*60 + c*1)))
+.map(([a,b])=>b-a).map(x => x.notate(60, 3)).log('\n', ' '); //5575, [시/분/초] 끼리의 뺄셈
 
 //: ■■■■■■■■■■■■■■■■[ 방정식 ]■■■■■■■■■■■■■■■■
 //! 연립방정식
@@ -197,6 +201,10 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 
 //! 정수 오름차순
 input(' ').toSorted((a,b)=>a - b).log(' ') //2752
+
+//! 정수 내림차순
+[과학, 사회] = input('\n').map(Number).chunk(4);
+[과학, 사회].map(seq => seq.toSorted((a,b)=>b-a).slice(0,-1).sum()).sum().log(); //11948
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
