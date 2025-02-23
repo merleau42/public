@@ -1,1 +1,0 @@
-notate = function (r, base=range(r)) { return (this<r) ? [base[this]] : [...floor(this / r).notate(r, base), base[this % r]] };
