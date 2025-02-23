@@ -8,10 +8,11 @@ const { fromCharCode } = String;
 input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepsplit(s);
 
 //!	기본 함수
-Object.prototype.if = function (T, F=false, cond=it) { return cond(this.valueOf()) ? T : F };
-Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this },
+Object.prototype.if = function (T, F, cond=self) { return cond(this.valueOf()) ? T : F };
+Object.prototype.branch = function (T, F, cond=self) { return cond(this.valueOf()) ? T(this.valueOf()) : F(this.valueOf()) };
+Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this };
 objtools = [
-	it = function (obj=this) { return obj.valueOf() },
+	self = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
 	ascii = function (n=0, x=this) { t=typeOf(x)[0]; return t=='s' ? x.map(c => n + c.charCodeAt()) : t=='n' ? fromCharCode(x) : x },
 	typeOf = function (x=this) { return isArray(x) ? 'array' : typeof x.valueOf() },
@@ -52,7 +53,7 @@ strtools = [
 seqtools = [
 	serial = function () { return this.map((_,i) => i) },
 	value = function () { return [...this] },
-	sum = function () { return this.reduce((s,c)=>s*1 + c*1) },
+	sum = function () { return this.reduce((s,c)=>s*1 + c*1, 0) },
 	average = function () { return this.sum()/this.length },
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
@@ -88,21 +89,4 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-
-//: 13866
-// 가정: a>b>c>d
-
-// 경우1: (a,b) vs (c,d) ===> a + b - c - d
-// 경우2: (a,c) vs (b,d) ===> a + c - b - d
-// 경우3: (a,d) vs (b,c) ===> a + d - b - c
-
-// 경우1: a + (b - c) - d		--- 괄호가 양수, 나머지항 동일
-// 경우2: a + (c - b) - d		--- 괄호가 음수, 나머지항 동일
-// --->  경우1 > 경우2
-
-// 경우2: a + (c - d) - b		--- 괄호가 양수, 나머지항 동일
-// 경우3: a + (d - c) - b		--- 괄호가 음수, 나머지항 동일
-// --->  경우2 > 경우3
-
-// 두 팀의 능력 차이: 경우1 > 경우2 > 경우3
-[w, x, y, z] = input(' ').map(Number).toSorted((a,b)=>b-a); log(abs(w + z - x - y)) //13866
+[n, m] = input(' ').mapleaves(Number); (m<3 ? 'NEWBIE!' : m<=n ? 'OLDBIE!' : 'TLE!').log(); //19944

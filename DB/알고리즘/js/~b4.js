@@ -97,6 +97,10 @@ input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945, 11365
 //! 합산
 [a, b, c] = input(' '); str.reduce((s,c)=>s*1 + c*1).log() //11720
 
+//! 정규표현식
+input().replace(/10/g, '십').split('').map(x=>x=='십' ? 10 : +x).sum().log() //15873, 증명과 함께
+input().replace(/0/g, 9).split('').sum().log() //15873, 증명과 함께
+
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
 //>	나머지 연산은, 덧셈/뺄셈/곱셈에 대해서 분배 법칙이 성립
 //> 400의 배수이거나, 100의 배수가 아니면서 4의 배수이면 윤년
@@ -191,6 +195,7 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 //_ 브론즈4
 (m < 2) ? 'Before' : (m > 2) ? 'After' : (d < 18) ? 'Before' : (d > 18) ? 'After' : 'Special'; //10768
 (seq.sum() - 2*pr * (seq.sum() >= 2*pr)) == ( seq.sum() >= 2*pr ? seq.sum() - 2*pr : seq.sum() ); //14489
+(m<3 ? 'NEWBIE!' : m<=n ? 'OLDBIE!' : 'TLE!').log(); //19944
 
 //! 정렬을 통한 전처리
 [a, b, c] = input(' ').map(Number).toSorted(); //2480
@@ -216,7 +221,7 @@ input(' ').toSorted((a,b)=>a - b).log(' ') //2752
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
-['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log(); //24883
+['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log(); //24883
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
 [[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
@@ -248,15 +253,18 @@ N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 
 //: ■■■■■■■■■■■■■■■■[ 기하학 ]■■■■■■■■■■■■■■■■
 //! 평면기하
+
 //! 사분면
 log(  (x>0 && y>0) ? 1 : (x<0 && y>0) ? 2 : (x<0 && y<0) ? 3 : (x>0 && y<0) ? 4 : 0  );
-//! 도형
-input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
-(2*d + 2*r*3.141592).toFixed(6).log(); //16486, 원주의 길이
 
 //! N각형
 a+b+c != 180 ? '에러' : (a==b && b==c) ? '정삼각형' : (a==b || b==c || a==c) ? '이등변' : '부등변' //10101
 
+//! 원
+(2*d + 2*r*3.141592).toFixed(6).log(); //16486, 원주의 길이
+
+//! 입체
+input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
 
 //: ■■■■■■■■■■■■■■■■[ 분류중 ]■■■■■■■■■■■■■■■■
 [a, b, A, B] = input(/\s/).map(Number); min(b+A, a+B).log(); //11943
