@@ -119,6 +119,7 @@ log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합
 x = input(); log(1 * (x % 7 == 2)) //31611, 오늘이 일요일이라면, X일 이후에는 화요일인지 판정
 N = input(); log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
 "WelcomeToSMUPC"[(input() - 1)%14].log() //29699
+[1,2,3,4,5,4,3,2][((input()-1) % 8)].log() //17362
 
 //! 올림(ceil), 반올림(round), 내림(floor), 버림(trunc)
 //_ 브론즈5
@@ -209,6 +210,9 @@ input(' ').toSorted((a,b)=>a - b).log(' ') //2752
 //! 정수 내림차순
 [과학, 사회] = input('\n').map(Number).chunk(4);
 [과학, 사회].map(seq => seq.toSorted((a,b)=>b-a).slice(0,-1).sum()).sum().log(); //11948
+
+//! 순서쌍 비교
+[w, x, y, z] = input(' ').map(Number).toSorted((a,b)=>b-a); log(abs(w + z - x - y)) //13866 합:합 최소차이
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
