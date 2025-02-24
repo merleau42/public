@@ -89,4 +89,4 @@ numtools = [
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[n, m] = input(' ').mapleaves(Number); (m<3 ? 'NEWBIE!' : m<=n ? 'OLDBIE!' : 'TLE!').log(); //19944
+[a, b] = input(' ').mapleaves(Number); log(a+b)

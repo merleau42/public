@@ -49,7 +49,7 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 [a,b, c,d] = input(' '); log(a*b + c*d); //8370
 //_ 브론즈4
 m.map(x => x - d*v).log(' '); //2845
-
+[t, p, d] = input(' ').mapleaves(Number); log( p * d/(2*t) ) //14924 폰 노이만과 파리
 
 //: ■■■■■■■■■■■■■■■■[ 인덱싱 ]■■■■■■■■■■■■■■■■
 [a,b] = input(''); log(Number(a==b)) //27324, 10의 자리숫자와 1의 자리 숫자가 동일한지 비교

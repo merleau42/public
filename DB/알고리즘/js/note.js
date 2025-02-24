@@ -67,3 +67,11 @@ log( l - max( ceil(b / d), ceil(a / c) ) );
 // 두 팀의 능력 차이: 경우1 > 경우2 > 경우3
 [w, x, y, z] = input(' ').map(Number).toSorted((a,b)=>b-a);
 log(abs(w + z - x - y)) //13866
+
+//: 14924
+//	D = 처음 기차 사이의 거리
+//	2t의 속도로 D에서 거리가 줄어듦.
+//	D/2t = 열차 충돌 시간 = 파리가 이동한 시간
+//	p * D/2t = 파리가 이동한 거리
+[t, p, d] = input(' ').mapleaves(Number); log( p * d/(2*t) )
+
