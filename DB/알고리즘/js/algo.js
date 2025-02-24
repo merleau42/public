@@ -10,6 +10,7 @@ input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepspli
 //!	기본 함수
 Object.prototype.if = function (T, F, cond=self) { return cond(this.valueOf()) ? T : F };
 Object.prototype.branch = function (T, F, cond=self) { return cond(this.valueOf()) ? T(this.valueOf()) : F(this.valueOf()) };
+Object.prototype.thru = function (fn) { return fn(this.valueOf())};
 Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this };
 objtools = [
 	self = function (obj=this) { return obj.valueOf() },
@@ -38,6 +39,7 @@ itertools = [
 	mapleaves = function (fn, arr=this) { return (isArray(arr) ? arr.map(x => mapleaves(fn, x)) : fn(arr.valueOf())) },
 	chunk = function (...s) { return s.length == 0 ? [this.valueOf()] : [this.slice(0, s[0]), ...this.slice(s[0]).chunk(...s.slice(1))] },
 	unique = function () { return [...new Set(this)] },
+	unbase = function (r, b=range(r).map(String)) { return this.reduce((s,c)=>s*r + b.indexOf(c+''), 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
@@ -82,11 +84,12 @@ fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) +
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 numtools = [
-	digits = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
-	notate = function (r, p=this.digits(r), b=range(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)], [this])},
+	length = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
+	notate = function (r, p=this.length(r), b=range(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r)+'', b[s[0]%r], ...s.slice(1)],[this])},
 ].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[a, b] = input(' ').mapleaves(Number); log(a+b)
+[now, [elpt]] = input('\n', ' ').mapleaves(Number);
+(now.unbase(60)+elpt).notate(60, 3).update(0, x=>x%24).log(' ');
