@@ -1,3 +1,5 @@
+const { throws } = require("assert");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
@@ -39,7 +41,7 @@ itertools = [
 	mapleaves = function (fn, arr=this) { return (isArray(arr) ? arr.map(x => mapleaves(fn, x)) : fn(arr.valueOf())) },
 	chunk = function (...s) { return s.length == 0 ? [this.valueOf()] : [this.slice(0, s[0]), ...this.slice(s[0]).chunk(...s.slice(1))] },
 	unique = function () { return [...new Set(this)] },
-	unbase = function (r, b=range(r).map(String)) { return this.reduce((s,c)=>s*r + b.indexOf(c+''), 0) },
+	unbase = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return this.reduce((s,c)=>s*rad + base.indexOf(c+''), 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
@@ -49,6 +51,7 @@ strtools = [
 	Match = function (regex, fail=[]) { return this.match(regex)??fail },
 	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
 	deepsplit = function (s, str=this, d=0) { return s[d] == undefined ? str : str.split(s[d]).map(e=>deepsplit(s, e, d+1)); },
+	len = function () { return this.length },
 ].map(f => f.name).forEach(f => String.prototype[f] = globalThis[f]);
 
 //! 수열, 누적합/구간합, 누적곱/구간곱
@@ -84,12 +87,17 @@ fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) +
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 numtools = [
-	length = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
-	notate = function (r, p=this.length(r), b=range(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r)+'', b[s[0]%r], ...s.slice(1)],[this])},
+	len = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
+//	unbase = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return this.reduce((s,c)=>s*rad + base.indexOf(c+''), 0) },
+//	notate = function (r, p=this.len(r), b=range(r)) {return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
+	// notate = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
 ].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 
 //! 메인
-[now, [elpt]] = input('\n', ' ').mapleaves(Number);
-(now.unbase(60)+elpt).notate(60, 3).update(0, x=>x%24).log(' ');
+
+// [n, r] = input(' '); (+n).notate(r, undefined, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
+// [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
+
+// [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
