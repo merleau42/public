@@ -14,6 +14,7 @@ Object.prototype.if = function (T, F, cond=self) { return cond(this.valueOf()) ?
 Object.prototype.branch = function (T, F, cond=self) { return cond(this.valueOf()) ? T(this.valueOf()) : F(this.valueOf()) };
 Object.prototype.thru = function (fn) { return fn(this.valueOf())};
 Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this };
+Object.defineProperty(Function.prototype, "memo", { get() { return this.cache ??= {}; } });
 objtools = [
 	self = function (obj=this) { return obj.valueOf() },
 	Each = function (f) { this.forEach(f); return this },
@@ -83,19 +84,21 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-fibo = (N, start=[0, 1]) => cache[N] = cache[N] ?? (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 numtools = [
 	len = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
-//	unbase = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return this.reduce((s,c)=>s*rad + base.indexOf(c+''), 0) },
-//	notate = function (r, p=this.len(r), b=range(r)) {return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
-	// notate = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
+	notate = function (b) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r)?[B[this]]:[...floor(this/r).notate(b),B[this%r]] },
 ].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
 
-//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
+//! 점화식
+fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
 
+//: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
+//	[base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b];
+
+(20000).notate("0123456789ABCDEF").log() // [4, 14, 2, 0]
 
 // [n, r] = input(' '); (+n).notate(r, undefined, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
