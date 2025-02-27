@@ -1,5 +1,3 @@
-const { throws } = require("assert");
-
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
@@ -42,6 +40,7 @@ itertools = [
 	mapleaves = function (fn, arr=this) { return (isArray(arr) ? arr.map(x => mapleaves(fn, x)) : fn(arr.valueOf())) },
 	chunk = function (...s) { return s.length == 0 ? [this.valueOf()] : [this.slice(0, s[0]), ...this.slice(s[0]).chunk(...s.slice(1))] },
 	unique = function () { return [...new Set(this)] },
+	leftpad = function (p, v=0) { return p > this.length ? vector(p - this.length, x=>v).concat(this) : this },
 	unbase = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return this.reduce((s,c)=>s*rad + base.indexOf(c+''), 0) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
@@ -96,9 +95,8 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-//	[base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b];
-
-(20000).notate("0123456789ABCDEF").log() // [4, 14, 2, 0]
+[now, [elt]] = input('\n', ' ').mapleaves(Number);
+(now.unbase(60) + elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ');
 
 // [n, r] = input(' '); (+n).notate(r, undefined, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745

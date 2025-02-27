@@ -1,5 +1,7 @@
 //! 레거시 코드
 notate = function (r, base=range(r)) { return (this<r) ? [base[this]] : [...floor(this / r).notate(r, base), base[this % r]] };
+notate = function (r, p=this.len(r), b=range(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this])},
+notate = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
 
 //! 풀이 과정 (브론즈5)
 //: 28113
