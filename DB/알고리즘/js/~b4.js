@@ -268,3 +268,9 @@ input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
 
 //: ■■■■■■■■■■■■■■■■[ 분류중 ]■■■■■■■■■■■■■■■■
 [a, b, A, B] = input(/\s/).map(Number); min(b+A, a+B).log(); //11943
+
+//! 백분율
+input('\n', ' ').map(([df, ig])=>df * (100 - ig)/100).map(x => +(x < 100)).log('\n') //25238
+
+//! 누진세
+[ori, fin, x, y, z] = input('\n').map(Number); range(ori, fin).map(tp=>tp<0 ? x : tp==0 ? (y+z) : tp>0 ? z : '').sum().log() //14470

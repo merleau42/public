@@ -41,9 +41,11 @@ itertools = [
 	chunk = function (...s) { return s.length == 0 ? [this.valueOf()] : [this.slice(0, s[0]), ...this.slice(s[0]).chunk(...s.slice(1))] },
 	unique = function () { return [...new Set(this)] },
 	leftpad = function (p, v=0) { return p > this.length ? vector(p - this.length, x=>v).concat(this) : this },
-	unbase = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return this.reduce((s,c)=>s*rad + base.indexOf(c+''), 0) },
+	rightpad = function (p, v=0) { return p > this.length ? this.concat(vector(p - this.length, x=>v)) : this },
+	subsetOf = function (S) { return this.every(e => S.includes(e)) },
+	unbase = function (b) { [B,r]=b[0]?[[...b],b.len()]:[vector(b,String),b]; N=this.map(String); return N.subsetOf(B)?N.reduce((s,c)=>s*r + B.indexOf(c+''), 0):0},
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
-.concat(arrayfuncs).Each(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
+.concat(arrayfuncs).forEach(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
 //! 문자열 관련 함수
 strtools = [ 
@@ -58,7 +60,7 @@ strtools = [
 seqtools = [
 	serial = function () { return this.map((_,i) => i) },
 	value = function () { return [...this] },
-	sum = function () { return this.reduce((s,c)=>s*1 + c*1, 0) },
+	sum = function (cond) { return this.reduce((s,c) => !cond || cond && cond(c) ? s + c*1 : s, 0) },
 	average = function () { return this.sum()/this.length },
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
@@ -95,10 +97,16 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[now, [elt]] = input('\n', ' ').mapleaves(Number);
-(now.unbase(60) + elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ');
+[i, j] = input(' ').map(Number); log( !(j%2) ? i*j /2 : i * (j-1) / 2 + floor(i/2) );
 
-// [n, r] = input(' '); (+n).notate(r, undefined, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
+matrix(15, 15)
+	.draw((_,i,j)=>!(j%2) ? i*j /2 : i * (j-1) / 2 + floor(i/2))
+	.draw((c,i,j)=>i==0 ? j : j==0 ? i : c)
+	.log('\n', '\t');
+
+//! 진법
+// [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
+// input('\n', ' ').slice(1).map(([i, x])=>[i, x.unbase(8), x.unbase(10), x.unbase("0123456789abcdef")]).log('\n', ' '); //13877
+// [n, r] = input(' '); (+n).notate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
-
 // [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
