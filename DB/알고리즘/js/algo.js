@@ -97,12 +97,8 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[i, j] = input(' ').map(Number); log( !(j%2) ? i*j /2 : i * (j-1) / 2 + floor(i/2) );
+N = input(); (N[0] * N.length).log();
 
-matrix(15, 15)
-	.draw((_,i,j)=>!(j%2) ? i*j /2 : i * (j-1) / 2 + floor(i/2))
-	.draw((c,i,j)=>i==0 ? j : j==0 ? i : c)
-	.log('\n', '\t');
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
@@ -110,3 +106,6 @@ matrix(15, 15)
 // [n, r] = input(' '); (+n).notate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
 // [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
+
+//! 반복 함수, 궤도, 고정점, 주기점
+ 
