@@ -30,8 +30,9 @@ randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(r
 arrayfuncs = ['join', 'reduce', 'map', 'forEach', 'filter'];
 itertools = [
 	rank = function () {return this.map((x,i)=>[x*1,i]).toSorted((a,b)=>a[0]-b[0]).map((x,i)=>[x[1],i]).toSorted((a,b)=>a[0]-b[0]).map(x=>x[1])},
+	// rank = function () { S = this.toSorted((a,b)=>a-b); return this.map(e => S.indexOf(e))},
 	toSorted = function (cmp) { return [...this].sort(cmp) },
-	toReversed = function () { return [...this].reverse()},
+	toReversed = function () { return [...this].reverse() },
 	update = function (index, fn) { tmp=[...this]; tmp[index]=fn( tmp[index] ); return tmp },
 	inserted = function (index, ...src) { return [...this.slice(0, index), ...src, ...this.slice(index)] },
 	deleted = function (index, size=1) { return [...this.slice(0, index), ...this.slice(index + size)] },
@@ -44,6 +45,9 @@ itertools = [
 	rightpad = function (p, v=0) { return p > this.length ? this.concat(vector(p - this.length, x=>v)) : this },
 	subsetOf = function (S) { return this.every(e => S.includes(e)) },
 	unbase = function (b) { [B,r]=b[0]?[[...b],b.len()]:[vector(b,String),b]; N=this.map(String); return N.subsetOf(B)?N.reduce((s,c)=>s*r + B.indexOf(c+''), 0):0},
+	has = function (e) { return this.indexOf(e) != -1},
+	equals = function (arr) { return this.length == arr.length ? this.every((_,i) => this[i] == arr[i]) : false },
+	// until = function (WHILE, DO) {while(WHILE) DO(this);},
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f])
 .concat(arrayfuncs).forEach(f => String.prototype[f] = function(...args) { return [...this][f](...args) } );
 
@@ -94,11 +98,20 @@ numtools = [
 
 //! 점화식
 fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
+recur = (fn, state, call=100) => call > 0 ? fn( recur(fn, state, call - 1) ) : state;
+//! 반복 함수, 궤도, 고정점, 주기점
+picard = (f,S,m=100) => {o=[S]; while(m--) {c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t]; } return [o,'chaos']; };
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-N = input(); (N[0] * N.length).log();
+// N = input(); (N[0] * N.length).log();
+// orbit = (fn, N) => vector(100).reduce(s => {p=s.at(-1); c=fn(p); return p==c ? s : s.has(c) ? s : [...s, fn(p)] }, [N]);
 
+// orbit(x => '' + x[0] * x.length, '9999999999').log();
+// picard(x => '' + x[0] * x.length, '9999999999').log();
+
+R = vector(20, x=>randz(0, 30));
+R.log().rank().log()
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
@@ -106,6 +119,3 @@ N = input(); (N[0] * N.length).log();
 // [n, r] = input(' '); (+n).notate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
 // [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
-
-//! 반복 함수, 궤도, 고정점, 주기점
- 
