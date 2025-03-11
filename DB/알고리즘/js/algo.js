@@ -107,11 +107,9 @@ cartesian = (...arrs) => arrs.reduce((res, arr) => res.map(i => arr.map(j => [i,
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[듬, 눈] = input('\n').map(Number);
+[s, a] = input(' ').map(Number);
 
-if (3 <= 듬 && 눈 <= 4) log('TroyMartian');
-if (듬 <= 6 && 2 <= 눈) log('VladSaturnian'); 
-if (듬 <= 2 && 눈 <= 3) log('GraemeMercurian');
+min(floor(s/2), floor(a/2)).log() //23825
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
