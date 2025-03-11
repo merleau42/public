@@ -98,20 +98,20 @@ numtools = [
 
 //! 점화식
 fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
-recur = (fn, state, call=100) => call > 0 ? fn( recur(fn, state, call - 1) ) : state;
+
 //! 반복 함수, 궤도, 고정점, 주기점
-picard = (f,S,m=100) => {o=[S]; while(m--) {c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t]; } return [o,'chaos']; };
+picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t];} return [o,'chaos']; };
+
+//! 조합론
+cartesian = (...arrs) => arrs.reduce((res, arr) => res.map(i => arr.map(j => [i, j].flat())).flat());
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-// N = input(); (N[0] * N.length).log();
-// orbit = (fn, N) => vector(100).reduce(s => {p=s.at(-1); c=fn(p); return p==c ? s : s.has(c) ? s : [...s, fn(p)] }, [N]);
+[듬, 눈] = input('\n').map(Number);
 
-// orbit(x => '' + x[0] * x.length, '9999999999').log();
-// picard(x => '' + x[0] * x.length, '9999999999').log();
-
-R = vector(20, x=>randz(0, 30));
-R.log().rank().log()
+if (3 <= 듬 && 눈 <= 4) log('TroyMartian');
+if (듬 <= 6 && 2 <= 눈) log('VladSaturnian'); 
+if (듬 <= 2 && 눈 <= 3) log('GraemeMercurian');
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
