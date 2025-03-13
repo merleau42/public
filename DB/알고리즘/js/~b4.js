@@ -23,6 +23,7 @@ input('\n').slice(1).map((str, i) => `${i+1}. ${str}`).log('\n'); //4470
 [a, b] = input(' '); abs(a-b).log(); //2420, 절댓값 구하기
 [W, H] = input(' '); log( (W*H / 2).toFixed(1) ); //29751, 삼각형의 넓이
 [t, _, ...b] = input('\n', ' '); (t == b.map(([p, n])=>p*n).sum()).if('Yes', 'No').log() //25304
+[a, b] = input(' '); m = (b-a) / 400; log(1 / (1 + 10**m)); //17356, 거듭 제곱
 
 //! 나눗셈, 몫과 나머지, 부동소수점
 [a, b]=input(' ').map(Number); [a+b, a-b, a*b, (a/b)|0, a%b].log('\n'); //10869
@@ -50,6 +51,7 @@ input('\n', ' ').slice(1).mapleaves(Number).map(([a,b,x]) => a * (x - 1) + b).lo
 //_ 브론즈4
 m.map(x => x - d*v).log(' '); //2845
 [t, p, d] = input(' ').mapleaves(Number); log( p * d/(2*t) ) //14924 폰 노이만과 파리
+[a,b] = input('\n').chunk(3).map(([x,y,z]) => x*3 + y*2 + z*1); log( a > b ? 'A' : a < b ? 'B' : 'T' ); //17009
 
 //: ■■■■■■■■■■■■■■■■[ 인덱싱 ]■■■■■■■■■■■■■■■■
 [a,b] = input(''); log(Number(a==b)) //27324, 10의 자리숫자와 1의 자리 숫자가 동일한지 비교
@@ -72,9 +74,11 @@ input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)
 'long '.repeat(+input()/4).concat('int').log(); //25314
 input('\n').slice(1).map(n => '='.repeat(n)).log('\n') //13752
 
-//! 아스키코드
+//! 아스키코드, 유니코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 lines.map(str => str.filter(ch => 'aeiouAEIOU'.includes(ch)).length).log('\n'); //1264 모음의 갯수
+("가".ascii()*1 + input()*1 - 1).ascii().log() //11282, 유니코드에서 N번째의 한글 문자
+log( input().ascii()[0] - "가".ascii()[0] + 1) //11283, 유니코드에서 몇 번째 한글 문자인지
 
 //! 비교
 input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : 'No').log()); //4101
@@ -83,7 +87,8 @@ input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : '
 [a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no'); //4999
 input('\n').slice(1).map(x => 6 <= x.length && x.length <= 9 ? 'yes' : 'no').log('\n') //25372
 
-//! 영역 추출
+//! 접두사, 접미사, 영역 추출
+input().slice(0,3).if('YES', 'NO', s=>s=="555").log(); //17863
 input('\n')[1].slice(-5).log() //21964
 
 //! 포함 여부-갯수 확인
@@ -100,6 +105,7 @@ input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945, 11365
 //! 정규표현식
 input().replace(/10/g, '십').split('').map(x=>x=='십' ? 10 : +x).sum().log() //15873, 증명과 함께
 input().replace(/0/g, 9).split('').sum().log() //15873, 증명과 함께
+[a, b, c] = input(/\D+/).map(Number); log( ['NO', 'YES'][+(a + b == c)] ); //6810
 
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
 //! 년도, 나이, 주년
@@ -167,7 +173,7 @@ N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).su
 
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
-seq.filter(x => x==tar).length.log(); //10807
+list.filter(e => e==tar).length.log(); //10807
 log( seq.filter(x=>!(x%2)).length > seq.filter(x=>!!(x%2)).length ? 'Happy' : 'Sad' ) //29163
 
 //! 크기 비교
@@ -192,7 +198,8 @@ input('\n', ' ').map(seq => seq.sum())._max().log(); //5596, 각 수열의 합 �
 //! 팩토리얼
 facto(input()).log(); //27433, 1부터 N까지의 곱
 
-//! 수열
+//! ISBN
+"9780921418".concat(input().replace(/\n/g,'')).map((x,i)=> !(i%2) ? x*1 : x*3 ).sum() //6810
 
 //: ■■■■■■■■■■■■■■■■■[ 집합 ]■■■■■■■■■■■■■■■■■
 //! 포함 관계
@@ -235,11 +242,11 @@ input(' ').toSorted((a,b)=>a - b).log(' ') //2752
 //! 조건에 따라서 알맞은 메시지 출력
 ['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log(); //24883
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
-[[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
 
 //! 키값에 대응하는 메시지 출력
 keys = input('\n'); keys.forEach(key => ({"키A": "값X", "키B": "값Y", "키C": "값Z"})[key].log());
+[[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
 //! 자료 분석
 input('\n',' ').slice(0,-1).forEach(([n,a,w])=>`${n} ${['Junior','Senior'][a>17|w>=80]}`.log()); //2083
@@ -295,13 +302,14 @@ input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
 //> 넘치는 요소가 아닌 가장 부족한 요소가 전체 성과를 결정한다
 [치,콜,맥] = input(/\s/).map(Number); min(치, floor(콜/2)+맥).log() //25191
 min(floor(s/2), floor(a/2)).log() //23825
+[후라, 간장, 양념].map(x => min(x, 마리) ).sum().log(); //27110
 
 //! 누진세
 [ori, fin, x, y, z] = input('\n').map(Number); range(ori, fin).map(tp=>tp<0 ? x : tp==0 ? (y+z) : tp>0 ? z : '').sum().log() //14470
 
 //! 타일채우기
 [N, W, H, L] = input(' ').map(Number); min(floor(W/L) * floor(H/L), N).log(); //19698
-
+log( ceil(행/변) * ceil(열/변) ); //13136, CCTV 배치하기
 
 //: ■■■■■■■■■■■■■■■■[ 분류중 ]■■■■■■■■■■■■■■■■
-
+가게들.filter(([도착, 진열]) => 도착 <= 진열).map(([_, 진열]) => 진열)._min().log() //25377

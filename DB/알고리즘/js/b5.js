@@ -70,17 +70,6 @@ input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : '
 [a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no'); //4999
 input('\n').slice(1).map(x => 6 <= x.length && x.length <= 9 ? 'yes' : 'no').log('\n') //25372
 
-//! 영역 추출
-input('\n')[1].slice(-5).log() //21964
-
-//! 포함 여부-갯수 확인
-input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
-(input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
-input().Match(/DKSH/g).length.log()
-
-//! 좌우 반전
-input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945
-
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
 //>	나머지 연산은, 덧셈/뺄셈/곱셈에 대해서 분배 법칙이 성립
 //> 400의 배수이거나, 100의 배수가 아니면서 4의 배수이면 윤년
@@ -161,15 +150,12 @@ input('\n').every(x=>['원소1','원소2','원소3','원소4'].includes(x)).if('
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
 ['n','N'].includes(input()).if(it, 'Naver D2', 'Naver Whale').log(); //24883
-log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
-[[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
-seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
+log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":""); //30676
+seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log(); //17388
 
 //! 키값에 대응하는 메시지 출력
 keys = input('\n'); keys.forEach(key => ({"키A": "값X", "키B": "값Y", "키C": "값Z"})[key].log());
-
-//! 자료 분석
-input('\n',' ').slice(0,-1).forEach(([n,a,w])=>`${n} ${['Junior','Senior'][a>17|w>=80]}`.log()); //2083
+[[], [12,1600], [11,894], [11,1327], '...', [6,556], [6,773]][input()*1].log('');
 
 //: ■■■■■■■■■■■■■■■■[ 반복문 ]■■■■■■■■■■■■■■■■
 //! 미분류
@@ -177,14 +163,12 @@ N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 
 //: ■■■■■■■■■■■■■■■■■[ 행렬 ]■■■■■■■■■■■■■■■■■
 //! 행렬
-/* 평면채우기 */ matrix(Mi, Mi, (i,j) => '*' ).log(['\n', '']);
-/* 주대각행렬 */ matrix(Mi, Mi, (i,j) => (j == i)			? '*' : ' ').log('\n', '');
-/* 반대각행렬 */ matrix(Mi, Mi, (i,j) => (j == Mi - i - 1)	? '*' : ' ').log('\n', ''); 
+/* 평면채우기 */ matrix(Mi, Mi, (i,j) => '*' ).log('\n', ''); //15232
 
 //: ■■■■■■■■■■■■■■■■[ 기하학 ]■■■■■■■■■■■■■■■■
 //! 평면기하
 //! 사분면
-log(  (x>0 && y>0) ? 1 : (x<0 && y>0) ? 2 : (x<0 && y<0) ? 3 : (x>0 && y<0) ? 4 : 0  );
+log(  (x>0 && y>0) ? 1 : (x<0 && y>0) ? 2 : (x<0 && y<0) ? 3 : (x>0 && y<0) ? 4 : 0  ); //14681
 //! 도형
 input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
 

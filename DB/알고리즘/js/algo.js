@@ -69,10 +69,10 @@ seqtools = [
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
 	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||BigInt(1)) ], []) },
-	_min = function () { return this.reduce((s,c) => s > +c ? c : s, +Infinity) },
-	_max = function () { return this.reduce((s,c) => s < +c ? c : s, -Infinity) },
-	mini = function () { return this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
-	maxi = function () { return this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
+	_min = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c) => s > +c ? c : s, +Infinity) },
+	_max = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c) => s < +c ? c : s, -Infinity) },
+	mini = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
+	maxi = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
 
 //! 컬렉션
@@ -84,7 +84,9 @@ Map.prototype.vals = function () { return [...this.values()] };
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
 vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i));
 matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
-matrixR = (rowR, colR, f) => rowR.map(i => colR.map(j => f(i,j)));
+dimtools = [
+	blend = function (vec2, f, depth=1) { return this.map((_,i) => f(this[i], vec2[i])) },
+].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
 
 //! 정수론
@@ -107,9 +109,8 @@ cartesian = (...arrs) => arrs.reduce((res, arr) => res.map(i => arr.map(j => [i,
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[s, a] = input(' ').map(Number);
-
-min(floor(s/2), floor(a/2)).log() //23825
+[마리, 후라, 간장, 양념] = input(/\D/).map(Number);
+[후라, 간장, 양념].map(x => min(x, 마리) ).sum().log(); //27110
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530

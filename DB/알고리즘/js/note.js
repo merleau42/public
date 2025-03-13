@@ -85,7 +85,7 @@ log(abs(w + z - x - y)) //13866
 //	OOOOOO | XXXXXX
 //	OOOOOO | XXXXXX
 //	N개의 카드 전체가 앞뒤가 동일함.
-//	전체에서 0개를 (m-k) 제외한 값과 공교롭게도 같음.
+//	전체에서 0개를 (m-k) 제외한 값과 공교롭게도 같음
 //
 //	M > K 인 경우
 //	OOOOOO | XXXXXX
