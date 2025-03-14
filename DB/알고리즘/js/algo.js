@@ -114,6 +114,20 @@ cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j =>
 //! 완전탐색, 백트래킹
 deepfor = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; }
 
+tracer = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => {
+	now[d] = start[d];
+	while (now[d] <= end[d]) {
+		if (d < start.length - 1)
+			tracer(start, end, fn, now, d+1, ret)
+		else { // 순서쌍을 온전히 이룸
+			if (is_valid(now))
+			ret.push( fn([...now]) );
+		}
+		now[d]++;
+	}
+	return ret;
+}
+
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
 // cases = input('\n', ' ').slice(1).mapleaves(Number);
@@ -122,7 +136,7 @@ deepfor = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => { for (now[d] 
 // cartesian(range(2,10), range(1,10)).log()
 // seqs.filter(seq => seq.includes(11)).log();
 
-// B == A^N 을 만족하는, 
+tracer( [1,1,1,1], [3,3,3,3] ).log()
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
