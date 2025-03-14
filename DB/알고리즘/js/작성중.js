@@ -5,7 +5,7 @@
 	}
 	
     for (choice of choices) {
-		if ('바로_부정되지_않은_미래인가?') {
+		if ('곧바로_부정되지는_않는_미래인가?') {
 			state.push(choice);
 			백트래킹(state, choices, args, 해집합);
 			state.pop();
