@@ -1,3 +1,5 @@
+const { fork } = require("child_process");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
@@ -82,10 +84,11 @@ Map.prototype.vals = function () { return [...this.values()] };
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
-vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i));
-matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j)));
+natural = (n) => range(1, n+1);
+vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i,n));
+matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j,rows,cols)));
 dimtools = [
-	blend = function (vec2, f, depth=1) { return this.map((_,i) => f(this[i], vec2[i])) },
+	blend = function (arr, f, depth=1) { return this.map((_,i) => f(this[i], arr[i])) },
 ].map(f => f.name).Each(f => Array.prototype[f] = globalThis[f]);
 Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) => f(col,i,j,this))) };
 
@@ -93,6 +96,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
 facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
+divisor = (N) => range(1, N+1).filter(x => !(N%x));
 numtools = [
 	len = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
 	notate = function (b) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r)?[B[this]]:[...floor(this/r).notate(b),B[this%r]] },
@@ -105,12 +109,20 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t];} return [o,'chaos']; };
 
 //! 조합론
-cartesian = (...arrs) => arrs.reduce((res, arr) => res.map(i => arr.map(j => [i, j].flat())).flat());
+cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j => [i, j].flat())));
+
+//! 완전탐색, 백트래킹
+deepfor = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; }
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[마리, 후라, 간장, 양념] = input(/\D/).map(Number);
-[후라, 간장, 양념].map(x => min(x, 마리) ).sum().log(); //27110
+// cases = input('\n', ' ').slice(1).mapleaves(Number);
+// cases.map(domain => cartesian2([1,1,1], domain).filter(([x,y,z]) => (x%y == y%z) && (y%z == z%x)).length.log() );
+
+// cartesian(range(2,10), range(1,10)).log()
+// seqs.filter(seq => seq.includes(11)).log();
+
+// B == A^N 을 만족하는, 
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
@@ -118,3 +130,16 @@ cartesian = (...arrs) => arrs.reduce((res, arr) => res.map(i => arr.map(j => [i,
 // [n, r] = input(' '); (+n).notate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
 // [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
+
+//! 완탐
+//_ 브4
+// deepfor([2,1], [9,9]).filter(([a,b])=>[a,b,a*b].includes(+input())).length ? log(1) : log(0) //32710, 구구구구단
+
+//! 정수론
+//_ 브3
+// [n, nth] = input(' ').map(Number); log(  divisor(n)[nth - 1]??0  ); //2501, K번째 약수
+
+//! 기하학
+//_ 브3
+// n = +input(); deepfor([1,1], [ceil(sqrt(n)), ceil(sqrt(n))]).find(([w,h])=>w*h >= n).log(' ') //3276, 최소둘레 최대넓이
+
