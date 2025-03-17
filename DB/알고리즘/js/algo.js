@@ -120,6 +120,16 @@ deepfor = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => { for (now[d] 
 // cartesian(range(2,10), range(1,10)).log()
 // seqs.filter(seq => seq.includes(11)).log();
 
+seq = input('\n').map(Number);
+
+seq.every((_,i,a) => (a[i-1] ?? -Infinity)	<	a[i])
+	? log('Fish Rising')
+	: seq.every((_,i,a) => (a[i-1] ?? +Infinity)	>	a[i])
+		? log('Fish Diving')
+		: seq.every((_,i,a) => (a[i-1] ?? a[i])		==	a[i])
+			? log('Constant Depth')
+			: log('No Fish');
+
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
 // input('\n', ' ').slice(1).map(([i, x])=>[i, x.unbase(8), x.unbase(10), x.unbase("0123456789abcdef")]).log('\n', ' '); //13877
