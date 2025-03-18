@@ -2,8 +2,6 @@
 //> 런타임 에러 (EACCES) 발생시 readFileSync(...) 에 임시로 0을 기입해서 제출
 //> 입력이 주어질 때마다 끊어서 출력하든, 모든 입력이 주어진 후 한 번에 출력하든 정답 여부에는 영향을 주지 않음
 
-const { deflate } = require("zlib");
-
 //! 입력 형식
 [a, b] = input('구분자'); log(a*1 + b*1); // 공백(' ', 1000), 개행('\n', 2558), 기타('/', 20499)
 input('\n', ' ').slice(추출).map(([a,b])=>a*1 + b*1).log('\n'); //테케수(1): 10950, 종료기호(0,-1): 10952
@@ -63,8 +61,11 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 //_ 브론즈4
 [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //17256
 
-//! 존재 배열
-input().ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)).log(' '); //10808
+//! 존재 배열 (또는 맵), 해시 테이블
+[..."MOBIS"].subsetOf( keys( input().reduce((exist, c) => {exist[c] = (exist[c]||0) + 1; return exist}, {}) ) ) ? log('YES') : log("NO"); //28074
+입력.ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)).log(' '); //10808
+입력.reduce((exist, c) => {exist[c]++; return exist}, vector(10)).reduce((s,c,i) => !(c%2) ? s : [...s, i], []).log('\n'); //28431
+입력.reduce((map, c) => {abs(map.D - map.P) < 2 ? map[c]++ : ''; return map }, {D: 0, P: 0}).thru(map => `${map['D']}:${map['P']}`).log() //27918
 
 //! 몫과 나머지, 주기성
 //> 정수론 파트로
@@ -90,12 +91,13 @@ input('\n').slice(0,-1).map(x=>x.split(' ')).forEach(([a,b])=>(+a>+b ? 'Yes' : '
 [a, b] = input('\n'); log(a.length >= b.length ? 'go' : 'no'); //4999
 input('\n').slice(1).map(x => 6 <= x.length && x.length <= 9 ? 'yes' : 'no').log('\n') //25372
 
-//! 접두사, 접미사, 영역 추출
+//! 접두사, 접미사, 영역 추출, 특성 추출
 input().slice(0,3).if('YES', 'NO', s=>s=="555").log(); //17863
+input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 input('\n')[1].slice(-5).log() //21964
+input('\n').slice(1).map(str => +str.slice(2)).filter(x => x <= 90).length.log(); //21964
 
 //! 포함 여부-갯수 확인
-input('\n').slice(1).map(s=>s.endsWith('.') ? s : s+'.').log('\n') //26560
 (input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
 input().Match(/DKSH/g).length.log()
 
@@ -210,6 +212,11 @@ facto(input()).log(); //27433, 1부터 N까지의 곱
 //! ISBN
 "9780921418".concat(input().replace(/\n/g,'')).map((x,i)=> !(i%2) ? x*1 : x*3 ).sum() //6810
 
+//! (단조) 증가, (단조) 감소 함수
+seq.every((_,i,a) => (a[i-1] ??	 a[i])		==	a[i]) // 항등 수열, 6764
+seq.every((_,i,a) => (a[i-1] ?? -Infinity)	<	a[i]) // 증가 수열(6764), 오름차순(4589)
+seq.every((_,i,a) => (a[i-1] ?? +Infinity)	>	a[i]) // 감소 수열(6764), 내림차순(4589)
+
 //: ■■■■■■■■■■■■■■■■■[ 집합 ]■■■■■■■■■■■■■■■■■
 //! 부분 집합
 input('\n').every(x=>['원소1','원소2','원소3'].includes(x)); //29731
@@ -227,6 +234,7 @@ seqs.every(seq => seq.includes(tar)); //32941
 (seq.sum() - 2*pr * (seq.sum() >= 2*pr)) == ( seq.sum() >= 2*pr ? seq.sum() - 2*pr : seq.sum() ); //14489
 (m<3 ? 'NEWBIE!' : m<=n ? 'OLDBIE!' : 'TLE!').log(); //19944
 max(...input(' ')).log(); //13597, 페어나 트리플 만들기
+( (a==8) || (a==9) ) && ( (d==8) || (d==9) ) && (b==c); //16017, 최적화 해볼 것
 
 //! 정렬을 통한 전처리
 [a, b, c] = input(' ').map(Number).toSorted(); //2480
@@ -252,10 +260,11 @@ input(' ').toSorted((a,b)=>a - b).log(' ') //2752
 
 //: ■■■■■■■■■■■■■■■■[ 케이스 ]■■■■■■■■■■■■■■■■
 //! 조건에 따라서 알맞은 메시지 출력
-['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log(); //24883
 log(x<425?"Violet":x<450?"Indigo":x<495?"Blue":x<570?"Green":x<590?"Yellow":x<620?"Orange":"");
+['n','N'].includes(input()).if('Naver D2', 'Naver Whale').log(); //24883
 seq.sum().if('OK', ['Soongsil', 'Korea', 'Hanyang'][seq.mini()], e=> +e>=100).log();
 (제한 < 속도) ? (속도 <= 제한 + 20) ? '$100.' : (속도 <= 제한 + 30) ? '$270.' : '$500.' : '과속 아님'; //6763
+[-1,3,3,2,2,1,1][input('\n').filter(x => x=='W').length].log() //14038
 
 //! 키값에 대응하는 메시지 출력
 keys = input('\n'); keys.forEach(key => ({"키A": "값X", "키B": "값Y", "키C": "값Z"})[key].log());
@@ -266,7 +275,7 @@ input('\n',' ').slice(0,-1).forEach(([n,a,w])=>`${n} ${['Junior','Senior'][a>17|
 
 //: ■■■■■■■■■■■■■■■■[ 반복문 ]■■■■■■■■■■■■■■■■
 //! 미분류
-N=input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
+N = input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 
 //: ■■■■■■■■■■■■■■■■■[ 행렬 ]■■■■■■■■■■■■■■■■■
 //! 행렬
@@ -297,6 +306,16 @@ log(  (x>0 && y>0) ? 1 : (x<0 && y>0) ? 2 : (x<0 && y<0) ? 3 : (x>0 && y<0) ? 4 
 
 //! N각형
 a+b+c != 180 ? '에러' : (a==b && b==c) ? '정삼각형' : (a==b || b==c || a==c) ? '이등변' : '부등변' //10101
+
+//! 삼각형
+//> 세 변의 길이 (a, b, c)
+a == b && b == c && c == a; // 정삼각형
+[a, b, c] = input(' ').toSorted((a,b) => a - b); //  <--- a <= b <= c 이면,
+c**2 == a**2 + b**2; //  <--- 직각 삼각형
+
+
+//! 넓이, 부피, 둘레
+(4*sqrt(넓이)).log() //15610, 정사각형의 넓이 ---> 정사각형의 둘레 길이
 
 //! 원
 (2*d + 2*r*3.141592).toFixed(6).log(); //16486, 원주의 길이
@@ -329,3 +348,6 @@ log( ceil(행/변) * ceil(열/변) ); //13136, CCTV 배치하기
 
 //: ■■■■■■■■■■■■■■■■[ 분류중 ]■■■■■■■■■■■■■■■■
 가게들.filter(([도착, 진열]) => 도착 <= 진열).map(([_, 진열]) => 진열)._min().log() //25377
+
+//: ■■■■■■■■■■■■■■■■[ 다양성 ]■■■■■■■■■■■■■■■■
+[0,0,0,1,1,2,2][+input(' ').sum()].log(); //18408

@@ -1,8 +1,10 @@
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
+const { keys } = Object;
 const { isArray } = Array;
 const { fromCharCode } = String;
+
 
 //! 테스트 케이스 불러오기
 input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepsplit(s);
@@ -110,25 +112,14 @@ picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' :
 cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j => [i, j].flat())));
 
 //! 완전탐색, 백트래킹
-deepfor = (start, end, fn=x=>x, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
+deepfor = (start, end, fn=a=>a, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
+
+//! 기타
+median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-// cases = input('\n', ' ').slice(1).mapleaves(Number);
-// cases.map(domain => cartesian2([1,1,1], domain).filter(([x,y,z]) => (x%y == y%z) && (y%z == z%x)).length.log() );
-
-// cartesian(range(2,10), range(1,10)).log()
-// seqs.filter(seq => seq.includes(11)).log();
-
-seq = input('\n').map(Number);
-
-seq.every((_,i,a) => (a[i-1] ?? -Infinity)	<	a[i])
-	? log('Fish Rising')
-	: seq.every((_,i,a) => (a[i-1] ?? +Infinity)	>	a[i])
-		? log('Fish Diving')
-		: seq.every((_,i,a) => (a[i-1] ?? a[i])		==	a[i])
-			? log('Constant Depth')
-			: log('No Fish');
+input('\n').slice(1).reduce((map, c) => {abs(map.D - map.P) < 2 ? map[c]++ : ''; return map }, {D: 0, P: 0}).thru(map => `${map['D']}:${map['P']}`).log() //27918, 
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
@@ -140,6 +131,7 @@ seq.every((_,i,a) => (a[i-1] ?? -Infinity)	<	a[i])
 //! 완탐
 //_ 브4
 // deepfor([2,1], [9,9]).filter(([a,b])=>[a,b,a*b].includes(+input())).length ? log(1) : log(0) //32710, 구구구구단
+// 테케.map(상한 => deepfor([1,1,1], 상한).filter(([x,y,z]) => (x%y == y%z) && (y%z == z%x)).length.log() );
 
 //! 정수론
 //_ 브3
