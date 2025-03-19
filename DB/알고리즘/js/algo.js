@@ -12,7 +12,7 @@ input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepspli
 //!	기본 함수
 Object.prototype.if = function (T, F, cond=self) { return cond(this.valueOf()) ? T : F };
 Object.prototype.branch = function (T, F, cond=self) { return cond(this.valueOf()) ? T(this.valueOf()) : F(this.valueOf()) };
-Object.prototype.thru = function (fn) { return fn(this.valueOf())};
+Object.prototype.thru = function (fn) { return fn(this.valueOf())}; //0차원 맵
 Object.prototype.log = function (...s) { log(s.length ? typeOf(this)=='array' ? this.deepjoin(s) : this.join(s) : this.valueOf()); return this };
 Object.defineProperty(Function.prototype, "memo", { get() { return this.cache ??= {}; } });
 objtools = [
@@ -71,8 +71,8 @@ seqtools = [
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
 	pproduct = function () { return this.reduce((s,c,i) => [ ...s, c * (s[i-1]||BigInt(1)) ], []) },
-	_min = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c) => s > +c ? c : s, +Infinity) },
-	_max = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c) => s < +c ? c : s, -Infinity) },
+	_min = function (lim = -Infinity, err = -1) { return this.length == 0 ? err : max(lim, this.reduce((s,c) => s > +c ? c : s, +Infinity)) },
+	_max = function (lim = +Infinity, err = -1) { return this.length == 0 ? err : min(lim, this.reduce((s,c) => s < +c ? c : s, -Infinity)) },
 	mini = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
 	maxi = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
 ].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
@@ -114,12 +114,12 @@ cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j =>
 //! 완전탐색, 백트래킹
 deepfor = (start, end, fn=a=>a, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
 
-//! 기타
+//! 통계학
 median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-input('\n').slice(1).reduce((map, c) => {abs(map.D - map.P) < 2 ? map[c]++ : ''; return map }, {D: 0, P: 0}).thru(map => `${map['D']}:${map['P']}`).log() //27918, 
+input().map(ch => 1 + ({':' : 1, '_' : 5}[ch]||0) ).sum().log()
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530

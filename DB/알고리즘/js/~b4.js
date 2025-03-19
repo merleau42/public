@@ -61,7 +61,7 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 //_ 브론즈4
 [a, c] = input('\n', ' '); [c[0] - a[2],  c[1] / a[1],  c[2] - a[0]].log(' '); //17256
 
-//! 존재 배열 (또는 맵), 해시 테이블
+//! 존재 배열, 맵, 해시 테이블
 [..."MOBIS"].subsetOf( keys( input().reduce((exist, c) => {exist[c] = (exist[c]||0) + 1; return exist}, {}) ) ) ? log('YES') : log("NO"); //28074
 입력.ascii(-97).reduce((exist, ch) => {exist[ch]++; return exist}, vector(26)).log(' '); //10808
 입력.reduce((exist, c) => {exist[c]++; return exist}, vector(10)).reduce((s,c,i) => !(c%2) ? s : [...s, i], []).log('\n'); //28431
@@ -72,11 +72,12 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 
 //: ■■■■■■■■■■■■■■■■[ 문자열 ]■■■■■■■■■■■■■■■■
 //> 문자열을 통째로 출력하는게 forEach(log) 보다 빠름
-//! 문자열 반복
+//! 반복 문자열
 "LoveisKoreaUniversity ".repeat(input()).slice(0,-1).log() //32929
 '하트'.repeat(+input()).log(); //26766, 
 'long '.repeat(+input()/4).concat('int').log(); //25314
 input('\n').slice(1).map(n => '='.repeat(n)).log('\n') //13752
+input('\n', ' ').slice(1).map(([n, str]) => str.repeat(+n)).log('\n'); //17010
 
 //! 아스키코드, 유니코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
@@ -136,10 +137,11 @@ log(  (N*(N+1))/2  ); //8393, 1부터 N까지의 합
 //! 몫과(floor) 나머지(%), 주기성
 //>	나머지 연산은, 덧셈/뺄셈/곱셈에 대해서 분배 법칙이 성립
 [s, w] = input('\n').map(Number); ((w - s + 24)%24).log() //29863
-x = input(); log(1 * (x % 7 == 2)) //31611, 오늘이 일요일이라면, X일 이후에는 화요일인지 판정
-N = input(); log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
+log( 1 * (x % 7 == 2) ) //31611, 오늘이 일요일이라면, X일 이후에는 화요일인지 판정
+log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
 "WelcomeToSMUPC"[(input() - 1)%14].log() //29699
 [1,2,3,4,5,4,3,2][((input()-1) % 8)].log() //17362
+제식.reduce((방향, 구령) => 방향 + [0, +90, +180, -90][구령], 0).thru(x => "NESW"[(x%360 + 360)%360 / 90]).log(); //28295
 
 //! 올림(ceil), 반올림(round), 내림(floor), 버림(trunc)
 //_ 브론즈5
@@ -161,10 +163,6 @@ input('\n', ' ').map(line => line.chunk(3)).map(seqs => seqs.map(seq => seq.redu
 //! 반복 함수, 궤도, 고정점, 주기점
 (picard(x => '' + x[0] * x.length, input())[1] == 'fixed' ? 'FA' : 'NFA').log(); //14395
 
-//: ■■■■■■■■■■■■■■■■[ 방정식 ]■■■■■■■■■■■■■■■■
-//! 연립방정식
-[x, y] = input('\n').map(BigInt); [(x + y) / 2n, (x - y) / 2n].log('\n')
-
 //: ■■■■■■■■■■■■■■■■[ 조합론 ]■■■■■■■■■■■■■■■■
 //! 순열에 번호매기기
 N = input(); (2 * (N.includes('7')) + !(N % 7)).log(); //30224
@@ -173,6 +171,13 @@ N = input(); (2 * (N.includes('7')) + !(N % 7)).log(); //30224
 (2**input()).log(); //녹색거탑, 24723
 
 //! 분류중
+
+//: ■■■■■■■■■■■■■■■■■[ 람다 ]■■■■■■■■■■■■■■■■■
+[x=>x*1, x=>x-500, x=>x*0.9, x=>x-2000, x=>x*0.75].slice(0, 1 + floor(출석/5)).map(f => f(가격))._min(0).log(); //25704
+
+
+//: ■■■■■■■■■■■■■■■■■[ 배열 ]■■■■■■■■■■■■■■■■■
+//! 영역 추출
 
 
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
@@ -293,6 +298,9 @@ N = input(); range(1,10).map(i => `${N} * ${i} = ${+N*i}`).log('\n');
 
 //! 백분율
 input('\n', ' ').map(([df, ig])=>df * (100 - ig)/100).map(x => +(x < 100)).log('\n') //25238
+
+//! 연립방정식
+[x, y] = input('\n').map(BigInt); [(x + y) / 2n, (x - y) / 2n].log('\n')
 
 
 //: ■■■■■■■■■■■■■■■■■[ 기하 ]■■■■■■■■■■■■■■■■■
