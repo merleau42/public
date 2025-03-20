@@ -112,14 +112,14 @@ picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' :
 cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j => [i, j].flat())));
 
 //! 완전탐색, 백트래킹
-deepfor = (start, end, fn=a=>a, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? deepfor(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
+space = (start, end, fn=a=>a, now = [...start], d=0, ret=[]) => { for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? space(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
 
 //! 통계학
 median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-input().map(ch => 1 + ({':' : 1, '_' : 5}[ch]||0) ).sum().log()
+[L, R] = input(' ').map(Number); ((L || R) ? L == R ? `Even ${L+R}` : `Odd ${max(L,R) * 2}` : 'Not a moose').log()
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
