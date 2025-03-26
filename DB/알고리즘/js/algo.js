@@ -1,3 +1,5 @@
+const { start } = require("repl");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
@@ -108,12 +110,13 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 //! 반복 함수, 궤도, 고정점, 주기점
 picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t];} return [o,'chaos']; };
 
-//! 조합론
-cartesian = (...arrs) => arrs.reduce((res, arr) => res.flatMap(i => arr.map(j => [i, j].flat())));
-
 //! 완전탐색, 백트래킹
-space = (start, end, fn=a=>a, now = [...start], d=0, ret=[]) =>
-	{ for (now[d] = start[d]; now[d] <= end[d]; now[d]++) (d < start.length - 1) ? space(start, end, fn, now, d+1, ret) : ret.push( fn([...now]) ); return ret; };
+//> 조합론
+cartesian = (하한, 상한, 상태=[], 깊이=0, 해집합=[]) => {
+	if (하한[깊이] == undefined) return 해집합.push([...상태]);
+	for (e of range(하한[깊이], 상한[깊이] + 1)) { 상태.push(e); cartesian(하한, 상한, 상태, 깊이+1, 해집합); 상태.pop(); }
+	return 해집합;
+}
 
 //! 통계학
 median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
@@ -121,7 +124,37 @@ median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
 // [L, R] = input(' ').map(Number); ((L || R) ? L == R ? `Even ${L+R}` : `Odd ${max(L,R) * 2}` : 'Not a moose').log()
-(input(' ').map(x => x**2).sum() % 10).log();
+
+// 해님은 A년 전에 정상 위치, B년 마다 정상 위치
+// 달님은 C년 전에 정상 위치, D년 마다 정상 위치
+// 해님이 정상 위치인 연도 == [ (B - A) + B*i]  -----  i = 0, 1, 2, 3, 4, ..., N
+// 달님이 정상 위치인 연도 == [ (D - C) + D*j]  -----  j = 0, 1, 2, 3, 4, ..., N
+// 일식 조건: A + B*i == C + D*j  -----  [i,j] 공간의 원소 하나를 활용하는 함수.
+
+[A, B, C, D] = input(/\s/).map(Number);
+
+백트래킹 = (상태=[], 깊이=0, 해집합=[]) => {
+	if (깊이 == 2) {
+		[i, j] = 상태;
+		if ( (B - A) + B*i == (D - C) + D*j) {
+			해집합.push( (B - A) + B*i );
+		}
+		return ;
+	}
+
+    for (e of range(0, 5000)) {
+		상태.push(e);
+		백트래킹(상태, 깊이+1, 해집합);
+		상태.pop();
+		if (1 == 해집합.length)
+			return 해집합;
+	}
+	
+	return 해집합;
+}
+
+백트래킹().log('')
+
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
