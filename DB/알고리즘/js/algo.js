@@ -1,12 +1,9 @@
-const { start } = require("repl");
-
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
 const { log, clear } = console;
 const { keys } = Object;
 const { isArray } = Array;
 const { fromCharCode } = String;
-
 
 //! 테스트 케이스 불러오기
 input = (...s) => `${require("fs").readFileSync("./dev/stdin")}`.trim().deepsplit(s);
@@ -110,50 +107,61 @@ fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(
 //! 반복 함수, 궤도, 고정점, 주기점
 picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' : o.has(c) ? 'periodic' : 0; o.push(c); if (t) return [o,t];} return [o,'chaos']; };
 
-//! 완전탐색, 백트래킹
-//> 조합론
-cartesian = (하한, 상한, 상태=[], 깊이=0, 해집합=[]) => {
-	if (하한[깊이] == undefined) return 해집합.push([...상태]);
-	for (e of range(하한[깊이], 상한[깊이] + 1)) { 상태.push(e); cartesian(하한, 상한, 상태, 깊이+1, 해집합); 상태.pop(); }
+//! 조합론
+cartesian = (하한, 상한, 설정={}, 상태=[], 깊이=0, 해집합=[]) => {
+	설정 = { 필터:()=>true, 액션:e=>e, 가지치기:()=>true, 조기리턴:()=>false, ...설정 };
+
+	if (하한[깊이] == undefined) {
+		if (설정.필터(...상태))
+			해집합.push( 설정.액션(...상태) );
+		return ;
+	}
+	for (e of range(하한[깊이], 상한[깊이] + 1)) {
+		if (설정.가지치기(...상태)) {
+			상태.push(e);
+			cartesian(하한, 상한, 설정, 상태, 깊이+1, 해집합);
+			상태.pop();
+		}
+		if (설정.조기리턴(해집합))
+			return 해집합;
+	}
 	return 해집합;
 }
 
+완전탐색 = (자료={}, 전략={}, 상태={}, 초기화=false) => {
+	if (!초기화) {
+		자료 = { 상한: [], 하한: [], ...자료 };
+		상태 = { 스택: [], 깊이: 0, 해집합: [], ...상태 };
+		전략 = { 필터: ()=>true, 액션: e=>e, 가지치기: ()=>true, 종료: ()=>false, ...전략 };
+	}
+
+    if (자료.하한[상태.깊이] == undefined) {
+        if (전략.필터(...상태.스택))
+            상태.해집합.push(전략.액션(...상태.스택));
+        return;
+    }
+
+    for (e of range(자료.하한[상태.깊이], 상태.상한[상태.깊이] + 1)) {
+        if (전략.가지치기(...상태.스택)) {
+            상태.스택.push(e);
+            완전탐색(자료, 전략, 상태, true);
+            상태.스택.pop();
+        }
+        if (전략.조기리턴(상태.해집합))
+            return 상태.해집합;
+    }
+    return 상태.해집합;
+}
+
+
 //! 통계학
-median = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
+median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
 // [L, R] = input(' ').map(Number); ((L || R) ? L == R ? `Even ${L+R}` : `Odd ${max(L,R) * 2}` : 'Not a moose').log()
 
-// 해님은 A년 전에 정상 위치, B년 마다 정상 위치
-// 달님은 C년 전에 정상 위치, D년 마다 정상 위치
-// 해님이 정상 위치인 연도 == [ (B - A) + B*i]  -----  i = 0, 1, 2, 3, 4, ..., N
-// 달님이 정상 위치인 연도 == [ (D - C) + D*j]  -----  j = 0, 1, 2, 3, 4, ..., N
-// 일식 조건: A + B*i == C + D*j  -----  [i,j] 공간의 원소 하나를 활용하는 함수.
-
-[A, B, C, D] = input(/\s/).map(Number);
-
-백트래킹 = (상태=[], 깊이=0, 해집합=[]) => {
-	if (깊이 == 2) {
-		[i, j] = 상태;
-		if ( (B - A) + B*i == (D - C) + D*j) {
-			해집합.push( (B - A) + B*i );
-		}
-		return ;
-	}
-
-    for (e of range(0, 5000)) {
-		상태.push(e);
-		백트래킹(상태, 깊이+1, 해집합);
-		상태.pop();
-		if (1 == 해집합.length)
-			return 해집합;
-	}
-	
-	return 해집합;
-}
-
-백트래킹().log('')
+cartesian([2,1], [9,9], {필터: (i, j)=>[i, j, i*j].includes( +input() ) }).log()
 
 
 //! 진법
