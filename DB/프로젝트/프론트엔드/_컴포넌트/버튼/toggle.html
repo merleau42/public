@@ -1,0 +1,45 @@
+<div class="toggle-container">
+	<div class="toggle-button" id="toggleBtn">
+		<div class="toggle-circle"></div>
+	</div>
+</div>
+
+<style>
+	.toggle-button {
+		width: 60px;
+		height: 30px;
+		border-radius: 30px;
+		background-color: #ccc;
+		position: relative;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	
+	.toggle-button.active {
+		background-color: #4f4f4f;
+	}
+
+	.toggle-circle {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background-color: white;
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		transition: left 0.3s ease;
+	}
+	
+	.toggle-button.active .toggle-circle {
+		left: 32px;
+	}
+</style>
+
+<script>
+	const toggleBtn = document.getElementById('toggleBtn');
+
+	toggleBtn.addEventListener('click', () => {
+		document.body.classList.toggle('dark-mode');
+		toggleBtn.classList.toggle('active');
+	});
+</script>
