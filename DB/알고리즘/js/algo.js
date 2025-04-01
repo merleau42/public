@@ -56,7 +56,7 @@ itertools = [
 strtools = [ 
 	stoi = function () { return this.match(/\-?\d+/)?.[0]*1||0 },
 	_match = function (regex, fail=[]) { return this.match(regex)??fail },
-	asciiShift = function (s) { return this.ascii().map(x => ascii(x+s)).join('') },
+	asciiShift = function (s) { return this.ascii().map(x => (x+s).ascii()).join('') },
 	deepsplit = function (s, str=this, d=0) { return s[d] == undefined ? str : str.split(s[d]).map(e=>deepsplit(s, e, d+1)); },
 	len = function () { return this.length },
 ].map(f => f.name).forEach(f => String.prototype[f] = globalThis[f]);
@@ -79,7 +79,7 @@ seqtools = [
 //! 컬렉션
 map = (n, kf=i=>i, vf=()=>0) => [...Array(n)].reduce((s,_,i) => s.set(kf(i), vf(i)), new Map());
 Map.prototype.update = function (key, fn) { return this.set(key, fn(this.get(key) || 0)) };
-Map.prototype.vals = function () { return [...this.values()] };
+Map.prototype._values = function () { return [...this.values()] };
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
@@ -111,13 +111,13 @@ picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' :
 완전탐색 = (정보 = {}, 초기화 = false) => {
 	정보 = 초기화 ? 정보 : {
 		하한: [], 상한: [], 스택: [], 깊이: 0, 해집합: [],
-		충족: ()=>true, 완료: ()=>true, 액션: ()=>[...스택], 범위: ()=>[], 가지치기: ()=>true, 종료: ()=>false,  ...정보
+		충족: ()=>true, 발견: ()=>true, 액션: ()=>[...스택], 범위: ()=>[], 가지치기: ()=>true, 종료: ()=>false,  ...정보
 	};
 
-	const { 하한, 상한, 스택, 해집합, 충족, 완료, 액션, 범위, 가지치기, 종료 } = 정보;
+	const { 하한, 상한, 스택, 해집합, 충족, 발견, 액션, 범위, 가지치기, 종료 } = 정보;
 
 	if (충족(정보)) {
-		if (완료(정보))
+		if (발견(정보))
 			해집합.push(액션(정보));
 		return;
 	}
@@ -147,13 +147,7 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
 // [L, R] = input(' ').map(Number); ((L || R) ? L == R ? `Even ${L+R}` : `Odd ${max(L,R) * 2}` : 'Not a moose').log()
-
-정보 = {
-	완료: ({스택: [i, j]}) => [i, j, i*j].includes(+input()),
-	종료: ({해집합}) => 해집합.length == 1,
-};
-
-cartesian([2,1], [9,9], 정보).length.log()
+("가".ascii()*1).log()
 
 
 
