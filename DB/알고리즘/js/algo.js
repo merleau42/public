@@ -146,7 +146,7 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-("가".ascii()*1).log()
+input('\n').mapleaves(Number).sum().notate(60).log('\n')
 
 
 

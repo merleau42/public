@@ -17,7 +17,7 @@ range(input()).forEach(i => log(`Hello World, Judge ${i + 1}!`)); //9316
 //_ 브론즈4
 input('\n').slice(1).map((str, i) => `${i+1}. ${str}`).log('\n'); //4470
 
-//: ■■■■■■■■■■■■■■■[ 사칙연산 ]■■■■■■■■■■■■■■■■
+//: ■■■■■■■■■■■■■■■■■[ 산술 ]■■■■■■■■■■■■■■■■■
 //! 사칙연산
 [k, q, r, b, n, p] = input(' '); log(1-k, 1-q, 2-r, 2-b, 2-n, 8-p); //3003
 (input(' ').map(Number).reduce((s,c)=>s + c*c, 0)%10).log(); //2475
