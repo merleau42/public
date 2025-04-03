@@ -407,8 +407,14 @@ cartesian([1,1,1], xyz, ([i,j,k])=>(i%j==j%k & j%k==k%i)).length; //25494
 
 발견: ({스택: [i, j]}) => [i, j, i*j].includes(+input());
 종료: ({해집합}) => 해집합.length == 1;
-cartesian([2,1], [9,9], 정보).length.log()
+cartesian([2,1], [9,9], 정보).해집합.length.log() //32710
 
 
 발견: ({스택: [x, y, z]}) => x%y==y%z && y%z==z%x;
-cartesian([1,1,1], xyz, 정보).length
+cartesian([1,1,1], xyz, 정보).해집합.length //25494
+
+
+예선: ({스택}, 가지) => (스택.length <= 0) || (스택.at(-1) * 가지 >= N);
+발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용
+가공: ({스택: [x, y]}) => [x+y, x, y];
+cartesian([1,1], [N, N], 정보).해집합.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' '); //3276
