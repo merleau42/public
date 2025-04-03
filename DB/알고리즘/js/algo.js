@@ -1,5 +1,5 @@
 //! 네임 스페이스 제거
-const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random } = Math;
+const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random, PI } = Math;
 const { log, clear } = console;
 const { keys } = Object;
 const { isArray } = Array;
@@ -140,7 +140,7 @@ picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' :
 	
 	return 정보;
 };
-  
+
 
 //! 조합론
 cartesian = (하한, 상한, 정보={}) => 완전탐색({하한, 상한, 충족: ({하한, 깊이}) => 하한[깊이] == undefined, 범위: ({하한, 상한, 깊이}) => range(하한[깊이], 상한[깊이] + 1), ...정보});
@@ -150,11 +150,17 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-정보 = {
-	예선: ({스택}, 가지) => (스택.length >= 1) ? abs(스택.at(-1) - 가지) < 13 : true,
-};
-cartesian([10,10,10,10], [35,35,35,35], 정보).해집합.log()
+[x, y] = input(' ').map(Number);
 
+[ a=100-x,  b=100-y,  c=100-(a+b),  d=a*b,  q=floor(d / 100),  r=d%100].log(' ');
+[ c+q, r ].log(' ');
+
+/*
+높은 산 깊은 골 적막한 산하 / 눈 내린 전선을 우리는 간다 / 젊은 넋 숨져간 그 때 그 자리 / 상처 입은 노송은 말을 잊었네
+전우여 들리는가 그 성난 목소리 / 전우여 보이는가 한 맺힌 눈동자
+푸른 숲 맑은 물 숨쉬는 산하 / 봄이 온 전선을 우리는 간다 / 젊은 피 스며든 그 때 그 자리 / 이끼 낀 바위는 말을 잊었네
+전우여 들리는가 그 성난 목소리 / 전우여 보이는가 한 맺힌 눈동자
+*/
 
 //! 진법
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
