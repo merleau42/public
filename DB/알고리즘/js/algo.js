@@ -150,34 +150,18 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[x, y] = input(' ').map(Number);
+input().log()
 
-[ a=100-x,  b=100-y,  c=100-(a+b),  d=a*b,  q=floor(d / 100),  r=d%100].log(' ');
-[ c+q, r ].log(' ');
 
-/*
-높은 산 깊은 골 적막한 산하 / 눈 내린 전선을 우리는 간다 / 젊은 넋 숨져간 그 때 그 자리 / 상처 입은 노송은 말을 잊었네
-전우여 들리는가 그 성난 목소리 / 전우여 보이는가 한 맺힌 눈동자
-푸른 숲 맑은 물 숨쉬는 산하 / 봄이 온 전선을 우리는 간다 / 젊은 피 스며든 그 때 그 자리 / 이끼 낀 바위는 말을 잊었네
-전우여 들리는가 그 성난 목소리 / 전우여 보이는가 한 맺힌 눈동자
-*/
 
 //! 진법
+//> 이런 스타일로 정착할 것인지?
 // [now, [elt]] = input('\n', ' ').mapleaves(Number); (now.unbase(60)+elt).thru(x=>x%86400).notate(60).leftpad(3).log(' ') //2530
 // input('\n', ' ').slice(1).map(([i, x])=>[i, x.unbase(8), x.unbase(10), x.unbase("0123456789abcdef")]).log('\n', ' '); //13877
 // [n, r] = input(' '); (+n).notate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log('') //11005
 // [n, r] = input(' '); n.unbase("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0,r)).log() //2745
 // [[a, b] ,_ , n] = input('\n', ' ').mapleaves(Number); n.unbase(a).notate(b).log(' ') //11576
 
-//! 완탐
-//_ 브4
-// deepfor([2,1], [9,9]).filter(([a,b])=>[a,b,a*b].includes(+input())).length ? log(1) : log(0) //32710, 구구구구단
-// 테케.map(상한 => deepfor([1,1,1], 상한).filter(([x,y,z]) => (x%y == y%z) && (y%z == z%x)).length.log() );
-
 //! 정수론
-//_ 브3
+//> divisor 도입할 것인지?
 // [n, nth] = input(' ').map(Number); log(  divisor(n)[nth - 1]??0  ); //2501, K번째 약수
-
-//! 기하학
-//_ 브3
-// n = +input(); deepfor([1,1], [ceil(sqrt(n)), ceil(sqrt(n))]).find(([w,h])=>w*h >= n).log(' ') //3276, 최소둘레 최대넓이
