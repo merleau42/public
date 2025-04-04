@@ -83,7 +83,7 @@ Map.prototype._values = function () { return [...this.values()] };
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
-natural = (n) => range(1, n+1);
+natural = (n) => range(1, (+n)+1);
 vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i,n));
 matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j,rows,cols)));
 dimtools = [
@@ -93,7 +93,7 @@ Array.prototype.draw = function(f) { return this.map((row,i) => row.map((col,j) 
 
 //! 정수론
 isPrime = (N)=> N>1 && N==2 || !range(2, ceil(sqrt(N)) + 1 ).some(i => N % i == 0);
-facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[N];
+facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct() : facto()[+N];
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 divisor = (N) => range(1, N+1).filter(x => !(N%x));
 numtools = [
@@ -150,9 +150,10 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-input().log()
-
-
+[a1, b1, b2, a2] = input(/\s+/).map(Number);
+원점다득점 = (a2 > b1) ? 'Persepolis' : (b1 > a2) ? 'Esteghlal' : 'Penalty';
+승패 = (a1 + a2 > b1 + b2) ? 'Persepolis' : (b1 + b2 > a1 + a2) ? 'Esteghlal' : 원점다득점;
+log(승패);
 
 //! 진법
 //> 이런 스타일로 정착할 것인지?
