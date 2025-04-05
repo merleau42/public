@@ -112,6 +112,21 @@ input().replace(/10/g, '십').split('').map(x=>x=='십' ? 10 : +x).sum().log() /
 input().replace(/0/g, 9).split('').sum().log() //15873, 증명과 함께
 [a, b, c] = input(/\D+/).map(Number); log( ['NO', 'YES'][+(a + b == c)] ); //6810
 
+
+//: ■■■■■■■■■■■■■■■[ 진법/비트 ]■■■■■■■■■■■■■■■
+//! 고정 기수 표기법
+//> (ABCDE)r  ==  Ar⁴ + Br³ + Cr² + Dr¹ + E  <===>  [A, B, C, D, E]  ==  notate(r)
+(now.unbase(60) + elt).thru(x=>x%86400).notate(60).leftpad(3).log(' '); //2530, [시/분/초] ⇔ 초
+input('\n', ' ').map(line => line.chunk(3)).map(seqs => seqs.map(seq => seq.reduce((s,c)=>s*60 + c*1)))
+.map(([a,b])=>b-a).map(x => x.notate(60, 3)).log('\n', ' '); //5575, [시/분/초] 끼리의 뺄셈
+"*CBAABC*"[ input(' ').unbase(2) ].log(); //13623
+
+//! 진법
+[n, r] = input(' '); [n].notate(r).encode().log(''); //11005, R진법을 10진법으로
+[n, r] = input(' '); [...n].decode().unbase(r).log(); //2745, 10진법을 R진법으로
+[[a, b] ,_ , n] = input('\n', ' '); [n.unbase(a)].notate(b).log(' '); //11576, A진법을 B진법으로
+input('\n', ' ').slice(1).map(([i, x])=>[i, x.unbase(8), x.unbase(10), x.unbase(16)]).log('\n', ' '); //13877, R진법을 10진법으로
+
 //: ■■■■■■■■■■■■■■■■[ 정수론 ]■■■■■■■■■■■■■■■■
 //! 연도, 나이, 주년
 만나이 = (금년 - 생년) - (금월 < 생월 || (금월 == 생월 && 금일 < 생일일)); //16199
@@ -127,10 +142,11 @@ log( ( 시분초2.unbase(60) - 시분초1.unbase(60) + 86400) % 86400 ); //15080
 
 //! 기본 단위로 환원, 복합 단위로 재구성
 
-//! 배수 판정
+//! 배수 판정, 양의 배수, 음의 배수
 //> !(A%B) --- A가 B의 배수이다.	!!(A%B) --- A가 B의 배수가 아니다
 //> 400의 배수이거나, 100의 배수가 아니면서 4의 배수이면 윤년
 log(+(!(year % 400) || !!(year % 100) && !(year % 4))); //2753
+input('\n').slice(1).map(x => !(x%2) ? `${x} is even` : `${x} is odd`).log('\n');
 
 //! 특정 자리의 숫자로 배수 판정
 log( (n < 5) ? [1,1,2,6,4][n] : 0 ); //8558
@@ -165,15 +181,6 @@ min(ceil(n/m1)*p1, ceil(n/m2)*p2).log() //15474
 //! 팩토리얼
 facto(input()).log(); //27433, 1부터 N까지의 곱
 
-//: ■■■■■■■■■■■■■■■[ 진법/비트 ]■■■■■■■■■■■■■■■
-//! 고정 기수 표기법
-//> (ABCDE)r  ==  Ar⁴ + Br³ + Cr² + Dr¹ + E  <===>  [A, B, C, D, E]  ==  notate(r)
-(now.unbase(60) + elt).thru(x=>x%86400).notate(60).leftpad(3).log(' '); //2530, [시/분/초] ⇔ 초
-input('\n', ' ').map(line => line.chunk(3)).map(seqs => seqs.map(seq => seq.reduce((s,c)=>s*60 + c*1)))
-.map(([a,b])=>b-a).map(x => x.notate(60, 3)).log('\n', ' '); //5575, [시/분/초] 끼리의 뺄셈
-"*CBAABC*"[ input(' ').unbase(2) ].log(); //13623
-
-
 //: ■■■■■■■■■■■■■■■■[ 점화식 ]■■■■■■■■■■■■■■■■
 //! 반복 함수, 궤도, 고정점, 주기점
 (picard(x => '' + x[0] * x.length, input())[1] == 'fixed' ? 'FA' : 'NFA').log(); //14395
@@ -198,6 +205,7 @@ N = input(); (2 * (N.includes('7')) + !(N % 7)).log(); //30224
 //: ■■■■■■■■■■■■■■■■■[ 수열 ]■■■■■■■■■■■■■■■■■
 //! 시그마 표현
 N = +input(); [range(N+1).sum(), range(N+1).sum()**2, range(N+1).map(x=>x**3).sum()].log('\n') //28701
+seq.map(x => max(...seq) - x).sum().log() /* 또는 */ ( seq.length * max(...seq) - seq.sum() ).log()
 
 //! 포함 여부-갯수 확인
 input(' ').some(x => +x > 1).if('F', 'S').log(); //26209
@@ -330,7 +338,6 @@ m.map(x => x - d*v).log(' '); //2845
 
 //! min함수, max함수
 min(max(x, L), R).log(); //18414
-
 
 //: ■■■■■■■■■■■■■■■■■[ 기하 ]■■■■■■■■■■■■■■■■■
 //! 평면기하
