@@ -2,6 +2,9 @@
 notate = function (r, base=range(r)) { return (this<r) ? [base[this]] : [...floor(this / r).notate(r, base), base[this % r]] };
 notate = function (r, p=this.len(r), b=range(r)) {return vector(p-1).reduce((s,_,i)=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this])},
 notate = function (b) { [base,rad] = b[0] ? [b,b.len()] : [vector(b, String),b]; return vector(p-1).reduce(s=>[floor(s[0]/r), b[s[0]%r], ...s.slice(1)],[this]).update(0,x=>b[x])},
+notate = function (b) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r)?[B[this]]:[...floor(this/r).notate(b),B[this%r]] },
+notate = function (b,d=100) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r || !d)?[B[this]]:[...floor(this/r).notate(b, d-1),B[this%r]] },
+unbase = function (b) { [B,r]=b[0]?[[...b],b.len()]:[vector(b,String),b]; N=this.map(String); return N.subsetOf(B)?N.reduce((s,c)=>s*r + B.indexOf(c+''), 0):0},
 
 //! 풀이 과정 (브론즈5)
 //: 28113

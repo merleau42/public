@@ -45,7 +45,6 @@ itertools = [
 	leftpad = function (p, v=0) { return p > this.length ? vector(p - this.length, x=>v).concat(this) : this },
 	rightpad = function (p, v=0) { return p > this.length ? this.concat(vector(p - this.length, x=>v)) : this },
 	subsetOf = function (S) { return this.every(e => S.includes(e)) },
-	// unbase = function (b) { [B,r]=b[0]?[[...b],b.len()]:[vector(b,String),b]; N=this.map(String); return N.subsetOf(B)?N.reduce((s,c)=>s*r + B.indexOf(c+''), 0):0},
 	has = function (e) { return this.indexOf(e) != -1},
 	equals = function (arr) { return this.length == arr.length ? this.every((_,i) => this[i] == arr[i]) : false },
 	// until = function (WHILE, DO) {while(WHILE) DO(this);},
@@ -97,10 +96,16 @@ facto = (N) => N == undefined ? [1].concat(range(1, 101)).map(BigInt).pproduct()
 clamp = (x, min, max) => x < min ? min : x > max ? max : x;
 divisor = (N) => range(1, N+1).filter(x => !(N%x));
 numtools = [
-	len = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
-	// notate = function (b) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r)?[B[this]]:[...floor(this/r).notate(b),B[this%r]] },
-	// notate = function (b,d=100) { [B,r]=b[0]?[b,b.len()]:[vector(b, String),b]; return (this<r || !d)?[B[this]]:[...floor(this/r).notate(b, d-1),B[this%r]] },
+	length = function (base=10, N=this) { return N==0 ? 1 : floor(Math.log(N) / Math.log(base)) + 1 },
 ].map(f => f.name).forEach(f => Number.prototype[f] = globalThis[f]);
+
+//! 고정 기수법, 진법
+radixtools = [
+	notate = function (b, d=99, arr=this) {return (+arr[0] < b) || d < 2 ? [+arr[0]] : [ ...notate(b, d-1, [floor(arr[0]/b)]), (arr[0]%b) ]},
+	encode = function (table={..."0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"}, arr=this) {return arr.map(x => table[x])},
+	decode = function (table="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", arr=this) {return arr.map(x => table.indexOf(x))},
+	unbase = function (b, bound=b, arr=this) {return (max(...arr) < bound) ? arr.reduce((s,c)=> s*b + c*1) : 0},
+].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
 
 //! 점화식
 fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
@@ -151,17 +156,8 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-// [seq] = input('\n', ' ').slice(1);
-// ( seq.sum() + (seq.length-1)*8 ).notate(24, 1).leftpad(2).log(' ');
-radixtools = [
-	notate = function (b, d=99, arr=this) {return (+arr[0] < b) || d < 2 ? [+arr[0]] : [ ...notate(b, d-1, [floor(arr[0]/b)]), (arr[0]%b) ]},
-	encode = function (table={..."0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"}, arr=this) {return arr.map(x => table[x])},
-	decode = function (table="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", arr=this) {return arr.map(x => table.indexOf(x))},
-	unbase = function (b, bound=b, arr=this) {return (max(...arr) < bound) ? arr.reduce((s,c)=> s*b + c*1) : 0},
-].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
-
-input('\n', ' ').slice(1).map(([i, x])=>[i, x.unbase(8), x.unbase(10), x.unbase(16)]).log('\n', ' ');
-
+[seq] = input('\n', ' ').slice(1);
+[( seq.sum() + (seq.length-1)*8 )].notate(24, 2).leftpad(2).log(' ');
 
 //! 약수와 배수
 //> divisor 도입할 것인지?

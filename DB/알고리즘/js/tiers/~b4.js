@@ -116,7 +116,7 @@ input().replace(/0/g, 9).split('').sum().log() //15873, 증명과 함께
 //: ■■■■■■■■■■■■■■■[ 진법/비트 ]■■■■■■■■■■■■■■■
 //! 고정 기수 표기법
 //> (ABCDE)r  ==  Ar⁴ + Br³ + Cr² + Dr¹ + E  <===>  [A, B, C, D, E]  ==  notate(r)
-(now.unbase(60) + elt).thru(x=>x%86400).notate(60).leftpad(3).log(' '); //2530, [시/분/초] ⇔ 초
+[(now.unbase(60)+elt)%86400].notate(60).leftpad(3).log(' '); //2530, [시/분/초] ⇔ 초
 input('\n', ' ').map(line => line.chunk(3)).map(seqs => seqs.map(seq => seq.reduce((s,c)=>s*60 + c*1)))
 .map(([a,b])=>b-a).map(x => x.notate(60, 3)).log('\n', ' '); //5575, [시/분/초] 끼리의 뺄셈
 "*CBAABC*"[ input(' ').unbase(2) ].log(); //13623
