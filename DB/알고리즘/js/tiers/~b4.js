@@ -78,6 +78,9 @@ input('\n').slice(1).map(x=>x[0] + x.at(-1)).log('\n'); //9086
 input('\n').slice(1).map(n => '='.repeat(n)).log('\n') //13752
 input('\n', ' ').slice(1).map(([n, str]) => str.repeat(+n)).log('\n'); //17010
 
+//! 축약
+input('\n').slice(1).map(str => str.reduce((acc, ch) => acc.at(-1) != ch ? [...acc, ch] : acc) ).log('\n', ''); //5357
+
 //! 아스키코드, 유니코드
 input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
 lines.map(str => str.filter(ch => 'aeiouAEIOU'.includes(ch)).length).log('\n'); //1264 모음의 갯수

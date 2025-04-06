@@ -156,8 +156,7 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[seq] = input('\n', ' ').slice(1);
-[( seq.sum() + (seq.length-1)*8 )].notate(24, 2).leftpad(2).log(' ');
+input('\n').slice(1).map(n => n**2).log('\n');
 
 //! 약수와 배수
 //> divisor 도입할 것인지?
