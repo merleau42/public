@@ -104,7 +104,7 @@ radixtools = [
 	notate = function (b, d=99, arr=this) {return (+arr[0] < b) || d < 2 ? [+arr[0]] : [ ...notate(b, d-1, [floor(arr[0]/b)]), (arr[0]%b) ]},
 	encode = function (table={..."0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"}, arr=this) {return arr.map(x => table[x])},
 	decode = function (table="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", arr=this) {return arr.map(x => table.indexOf(x))},
-	unbase = function (b, bound=b, arr=this) {return (max(...arr) < bound) ? arr.reduce((s,c)=> s*b + c*1) : 0},
+	unbase = function (b, bound=b, arr=this) {return (bound==false || max(...arr) < bound) ? arr.reduce((s,c)=> s*b + c*1, 0) : 0},
 ].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
 
 //! 점화식
@@ -156,7 +156,8 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-input('\n').slice(1).map(n => n**2).log('\n');
+input('\n').slice(0,-1).map(지수 => [1,1,1,1,1].unbase(지수, bound=false).toFixed(2) ).log('\n'); //4696
+
 
 //! 약수와 배수
 //> divisor 도입할 것인지?
