@@ -1,3 +1,6 @@
+const { pseudoRandomBytes } = require("crypto");
+const { setPriority } = require("os");
+
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random, PI } = Math;
 const { log, clear } = console;
@@ -26,6 +29,11 @@ Object.prototype.show = function () { log(Object.entries(this).map(([k,v])=>[k, 
 stamp = (()=>{ count = 0; ago = Date.now(); return (msg='STAMP')=>{log(msg, ++count, Date.now() - ago); ago=Date.now()} })();
 repl = (msg=log('REPL모드')) => require('repl').start();
 randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
+
+//! 상수 함수
+I = (x) => ( ()=>x );
+T = TRUE = 참 = I(true);
+F = FALSE = 거짓 = I(false);
 
 //!	배열 함수 확장, 문자열에도 적용
 arrayfuncs = ['join', 'reduce', 'map', 'forEach', 'filter'];
@@ -105,7 +113,7 @@ radixtools = [
 	encode = function (table={..."0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"}, arr=this) {return arr.map(x => table[x])},
 	decode = function (table="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", arr=this) {return arr.map(x => table.indexOf(x))},
 	unbase = function (b, bound=b, arr=this) {return (bound==false || max(...arr) < bound) ? arr.reduce((s,c)=> s*b + c*1, 0) : 0},
-].map(f => f.name).forEach(f => Object.prototype[f] = globalThis[f]);
+].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
 
 //! 점화식
 fibo = (N, start=[0, 1]) => fibo.memo[N] ??= (N<2 ? start[N] : fibo(N-2) + fibo(N-1));
@@ -117,8 +125,8 @@ picard = (f,S,m=100) => {o=[S]; while(m--){c=f(p=o.at(-1)); t=(p==c) ? 'fixed' :
 완전탐색 = (정보 = {}, 초기화 = false) => {
 	정보 = 초기화 ? 정보 : {
 		하한: [], 상한: [], 스택: [], 깊이: 0, 해집합: [], 최댓값: -Infinity, 최솟값: +Infinity,
-		충족: ()=>true, 활동1: ()=>{}, 발견: ()=>true, 활동2: ()=>{}, 가공: ()=>[...스택],
-		범위: ()=>[], 예선: ()=>true, 종료: ()=>false,  ...정보
+		충족: 참, 활동1: ()=>{}, 발견: 참, 활동2: ()=>{}, 가공: ()=>[...스택],
+		범위: ()=>[], 예선: 참, 종료: 거짓,  ...정보
 	};
 
 	const { 하한, 상한, 스택, 해집합, 충족, 활동1, 발견, 활동2, 가공, 범위, 예선, 종료 } = 정보;
@@ -154,14 +162,17 @@ cartesian = (하한, 상한, 정보={}) => 완전탐색({하한, 상한, 충족:
 //! 통계학
 median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
+//! 해석학
+analytoos = [
+	piecewise = function (...arrs) { arrs.push([T, I(0)]); return  this.map(e => arrs[arrs.findIndex(([범위, _]) => 범위(e))][1](e) ) },
+].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
+
+
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[a, b, sol, diff] = input(/\s+/).map(Number);
-// natural(a,b).filter(x => abs(sol - x) <= diff).length.branch(self, ()=>'IMPOSSIBLE', len=>len).log();
-//	X	1234567
-//	Y		56789
-//			567
-//	7 == X.max
+[a,x,b,y,t] = input('\n').map(Number);
+
+natural(1,30).piecewise( [t=> (t<=30),  t=> t] ).log()
 
 //! 메모
 //> 형변환을 멀리하다가 5분 동안 맞왜틀
@@ -171,5 +182,3 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 //! 약수와 배수
 //> divisor 도입할 것인지?
 // [n, nth] = input(' ').map(Number); log(  divisor(n)[nth - 1]??0  ); //2501, K번째 약수
-
-// 569718
