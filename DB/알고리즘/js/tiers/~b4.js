@@ -82,7 +82,7 @@ input('\n', ' ').slice(1).map(([n, str]) => str.repeat(+n)).log('\n'); //17010
 input('\n').slice(1).map(str => str.reduce((acc, ch) => acc.at(-1) != ch ? [...acc, ch] : acc) ).log('\n', ''); //5357
 
 //! 아스키코드, 유니코드
-input().ascii().map(x => ascii(x^32)).log('')		// 아스키코드 반대로 출력
+input().ascii().map(x => ascii(x^32)).log('') // 아스키코드 반대로 출력
 lines.map(str => str.filter(ch => 'aeiouAEIOU'.includes(ch)).length).log('\n'); //1264 모음의 갯수
 ("가".ascii()*1 + input()*1 - 1).ascii().log() //11282, 유니코드에서 N번째의 한글 문자
 log( input().ascii()[0] - "가".ascii()[0] + 1) //11283, 유니코드에서 몇 번째 한글 문자인지
@@ -197,6 +197,7 @@ N = input(); (2 * (N.includes('7')) + !(N % 7)).log(); //30224
 (2**input()).log(); //녹색거탑, 24723
 
 //! 분류중
+[n,m,k] = input(' '); log( n-abs(m-k) ); //16204
 
 //: ■■■■■■■■■■■■■■■■■[ 람다 ]■■■■■■■■■■■■■■■■■
 [x=>x*1, x=>x-500, x=>x*0.9, x=>x-2000, x=>x*0.75].slice(0, 1 + floor(출석/5)).map(f => f(가격))._min(0).log(); //25704
@@ -349,6 +350,12 @@ m.map(x => x - d*v).log(' '); //2845
 //! min함수, max함수
 min(max(x, L), R).log(); //18414
 
+
+//: ■■■■■■■■■■■■■■■■[ 중앙값 ]■■■■■■■■■■■■■■■■
+//! 가중 중앙값
+natural(seq.length).map(k => seq.map((N,i) => N  *  2*abs(i+1-k)).sum())._min().log();
+
+
 //: ■■■■■■■■■■■■■■■■■[ 기하 ]■■■■■■■■■■■■■■■■■
 //! 평면기하
 //> 평행이동
@@ -377,14 +384,10 @@ log( !(가로%2) || !(세로%2) ? 0 : min(가로, 세로) ); //8674
 //! 원
 (2*d + 2*r*3.141592).toFixed(6).log(); //16486, 원주의 길이
 [v, c1, r, c2] = input(/\s+/); ['원형', '조각'][ Number( (v / c1) > (PI * r**2 / c2) ) ].log(); //16693
+log( 2 * PI * sqrt( input() / PI ) );
 
 //! 입체
 input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
-
-//: ■■■■■■■■■■■■■■■■[ 조합론 ]■■■■■■■■■■■■■■■■
-//! 분류중
-[n,m,k] = input(' '); log( n-abs(m-k) ); //16204
-
 
 //: ■■■■■■■■■■■■■■■[ 상태 전이 ]■■■■■■■■■■■■■■■■
 [a, b, A, B] = input(/\s/).map(Number); min(b+A, a+B).log(); //11943
