@@ -224,6 +224,7 @@ log( seq.filter(x=>!(x%2)).length > seq.filter(x=>!!(x%2)).length ? 'Happy' : 'S
 input('\n', ' ').slice(0,-1).map(([a,b])=>+a > +b ? 'Yes' : 'No').log('\n'); //4101
 [_, x, ...seq]= input(/\W/); seq.filter(e => +e < +x).log(' '); //10871
 [버거, 음료] = input('\n').map(Number).chunk(3); log(min(...버거) + min(...음료) - 50); //B4, 5548
+natural(a,b).filter(x => abs(sol - x) <= diff).length.branch(self, ()=>'IMPOSSIBLE', len=>len).log(); //29736
 
 //! 분류중
 range(1, input()*1+1).toReversed().log('\n') //2742, N부터 1까지 거꾸로출력
@@ -259,6 +260,9 @@ input('\n').every(x=>['원소1','원소2','원소3'].includes(x)); //29731
 
 //! 공통 원소, 교집합
 seqs.every(seq => seq.includes(tar)); //32941
+
+//! 교집합의 원소의 갯수
+
 
 //: ■■■■■■■■■■■■■■■■[ 조건문 ]■■■■■■■■■■■■■■■■
 //! 많은 조건 분기, 조건문 최적화
@@ -336,8 +340,10 @@ input('\n', ' ').map(([df, ig])=>df * (100 - ig)/100).map(x => +(x < 100)).log('
 //! 연립방정식
 [x, y] = input('\n').map(BigInt); [(x + y) / 2n, (x - y) / 2n].log('\n')
 
-//! 비례식, 단위당 양
+//! 비례식, 단위당 양, 단위 변환
 input('\n', ' ').slice(1).map(([마릿수, 마리당_사료, 사료당_가격]) => "$" + (마릿수 * 마리당_사료 * 사료당_가격).toFixed(2) ).log('\n') //26575
+log( 235.214583 / +input() ); //14065
+
 
 //! 밀도, 부피, 질량
 m.map(x => x - d*v).log(' '); //2845
@@ -347,8 +353,13 @@ m.map(x => x - d*v).log(' '); //2845
 //! 부등식
 ( (x < L) ? L : (L <= x && x <= R) ? x : R ).log(); //18414
 
+//: ■■■■■■■■■■■■■■■■[ 해석학 ]■■■■■■■■■■■■■■■■
+//! 구간 함수, 누진세
+[ori, fin, x, y, z] = input('\n').map(Number); range(ori, fin).map(tp=>tp<0 ? x : tp==0 ? (y+z) : tp>0 ? z : '').sum().log() //14470
+
 //! min함수, max함수
 min(max(x, L), R).log(); //18414
+log( min(사용량, (이월 + 60))*1500 + max(사용량 - (이월 + 60), 0)*3000 ); //18330
 
 
 //: ■■■■■■■■■■■■■■■■[ 중앙값 ]■■■■■■■■■■■■■■■■
@@ -399,9 +410,6 @@ input('\n').map(x=>x**3).log('') //24082, 정육면체의 부피
 [치,콜,맥] = input(/\s/).map(Number); min(치, floor(콜/2)+맥).log() //25191
 min(floor(s/2), floor(a/2)).log() //23825
 [후라, 간장, 양념].map(x => min(x, 마리) ).sum().log(); //27110
-
-//! 누진세
-[ori, fin, x, y, z] = input('\n').map(Number); range(ori, fin).map(tp=>tp<0 ? x : tp==0 ? (y+z) : tp>0 ? z : '').sum().log() //14470
 
 //! 타일채우기
 [N, W, H, L] = input(' ').map(Number); min(floor(W/L) * floor(H/L), N).log(); //19698

@@ -82,7 +82,7 @@ Map.prototype._values = function () { return [...this.values()] };
 
 //! 행렬
 range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
-natural = (n) => range(1, (+n)+1);
+natural = (n, m=undefined) => m ? range(+n, (+m)+1) : range(1, (+n)+1);
 vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i,n));
 matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j,rows,cols)));
 dimtools = [
@@ -156,19 +156,20 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-
-
-
+[a, b, sol, diff] = input(/\s+/).map(Number);
+// natural(a,b).filter(x => abs(sol - x) <= diff).length.branch(self, ()=>'IMPOSSIBLE', len=>len).log();
+//	X	1234567
+//	Y		56789
+//			567
+//	7 == X.max
 
 //! 메모
 //> 형변환을 멀리하다가 5분 동안 맞왜틀
 //> 입출력, 인덱싱, 문자열, 고정기수, 람다, 배열, 집합, 조건문, 정렬, 케이스, 행렬, 상태전이...
-//> 수학: 산술, 정수론, 대수, 기하, 조합론, 수열, 통계학...
+//> 수학: 정수론, 대수, 기하, 조합론, 수열, 통계학, 산술...
 
 //! 약수와 배수
 //> divisor 도입할 것인지?
 // [n, nth] = input(' ').map(Number); log(  divisor(n)[nth - 1]??0  ); //2501, K번째 약수
 
-
-// 건물의 모든 직원이 이용할 수 있도록, 층별 직원 수와 층간 이동 거리를 고려하여 커피 머신을 설치하려 한다.
-// 각 층의 직원 수를 입력받고, 모든 직원의 왕복 거리 합이 최소가 되는 층을 구하기
+// 569718
