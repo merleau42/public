@@ -281,8 +281,9 @@ max(...input(' ')).log(); //13597, 페어나 트리플 만들기
 ( (a==8) || (a==9) ) && ( (d==8) || (d==9) ) && (b==c); //16017, 최적화 해볼 것
 
 //! 정렬을 통한 전처리
-[a, b, c] = input(' ').map(Number).toSorted(); //2480
-(a==b && b==c) ? log(10000 + a*1000) : (a==b || b==c || a==c) ? log(1000 + b*100) : log(max(a,b,c)*100);
+[a, b, c, d, ...z] = input(' ').map(Number).toSorted((a,b)=>a-b); //이하 공통
+(a==b && b==c) ? log(10000 + a*1000) : (a==b || b==c || a==c) ? log(1000 + b*100) : log(max(a,b,c)*100); //2480
+(a==b || b==c || a==c || a+b==c) ? log('S') : log('N'); //13580
 
 //! 논리식
 [T, S] = input(' ').map(Number); ((12<=T && T<=16 && !S) ? 320 : 280).log(); //27294
@@ -364,6 +365,7 @@ m.map(x => x - d*v).log(' '); //2845
 //! min함수, max함수
 min(max(x, L), R).log(); //18414
 log( min(사용량, (이월 + 60))*1500 + max(사용량 - (이월 + 60), 0)*3000 ); //18330
+[a,x, b,y, t] = input('\n').map(Number); log(  a + x*max(t-30, 0) * 21  ); log(  b + y*max(t-45, 0) * 21  ); //20233
 
 
 //: ■■■■■■■■■■■■■■■■[ 중앙값 ]■■■■■■■■■■■■■■■■
@@ -420,6 +422,8 @@ min(floor(s/2), floor(a/2)).log() //23825
 //! 타일채우기
 [N, W, H, L] = input(' ').map(Number); min(floor(W/L) * floor(H/L), N).log(); //19698
 log( ceil(행/변) * ceil(열/변) ); //13136, CCTV 배치하기
+input('\n', ' ').slice(1).mapleaves(Number).map(([R,C]) => floor(R*C / 2) ).log('\n'); //8760
+
 
 //: ■■■■■■■■■■■■■■■■[ 분류중 ]■■■■■■■■■■■■■■■■
 가게들.filter(([도착, 진열]) => 도착 <= 진열).map(([_, 진열]) => 진열)._min().log() //25377
@@ -471,3 +475,8 @@ cartesian([1,1,1], xyz, 정보).해집합.length //25494
 발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용
 가공: ({스택: [x, y]}) => [x+y, x, y];
 cartesian([1,1], [N, N], 정보).해집합.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' '); //3276
+
+// 13580
+cartesian([-1,-1,-1], [1,1,1]).해집합
+.map(([i,j,k])=> a*i + b*j + c*k).filter(x=>x==0)
+.length > 1 ? log('S') : log('N');

@@ -1,6 +1,3 @@
-const { pseudoRandomBytes } = require("crypto");
-const { setPriority } = require("os");
-
 //! 네임 스페이스 제거
 const { sqrt, round, ceil, floor, trunc, abs, sign, max, min, random, PI } = Math;
 const { log, clear } = console;
@@ -164,15 +161,22 @@ median3 = (x, y, z) => x ^ y ^ z ^ min(x,y,z) ^ max(x,y,z);
 
 //! 해석학
 analytoos = [
-	piecewise = function (...arrs) { arrs.push([T, I(0)]); return  this.map(e => arrs[arrs.findIndex(([범위, _]) => 범위(e))][1](e) ) },
+	piecewise = function (Else, ...confs) { return this.map(e => confs.concat(x=>[1, Else(e)]).find(conf => conf(e)[0])(e)[1] ) },
 ].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
 
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[a,x,b,y,t] = input('\n').map(Number);
+[a, b, c, d, e, f] = input(' ').map(Number).toSorted((a,b)=>a-b);
 
-natural(1,30).piecewise( [t=> (t<=30),  t=> t] ).log()
+// 서로 하나라도 같음: 하나는 미래로, 하나는 과거로 여행하면 제자리.
+// (a==b || b==c || a==c);
+
+// 서로 모두 다름: ( +하나 +하나 -하나 == 0 ) 등등 다양한데,
+// 0을 만들 수 없거나, (a < b < c) 조건에서 (a+b == c)로 환원됨.
+// (a+b == c)
+
+(a==b || b==c || a==c || a+b==c) ? log('S') : log('N');
 
 //! 메모
 //> 형변환을 멀리하다가 5분 동안 맞왜틀
