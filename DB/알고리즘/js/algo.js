@@ -167,8 +167,11 @@ analytoos = [
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-`The largest square has side length ${floor(sqrt(input()))}.`.log();
+[p1,q1, p2,q2] = input(' ').map(Number);
 
+// 넓이 = (p1/q1) * (p2/q2) / 2;
+넓이 = (p1 * p2) / q1 / q2 / 2;
+log( 넓이 == floor(넓이) ? 1 : 0 );
 
 //! 메모
 //> 형변환을 멀리하다가 5분 동안 맞왜틀
