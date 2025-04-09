@@ -169,8 +169,7 @@ analytoos = [
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[a, b] = input('\n').map(Number);
-log(  (a + b - 1)%12 + 1 );
+input('\n', ' ').slice(1).mapleaves(Number).map(([a,d,g]) => a*(d+g) * (1 + (a==d+g)) )._max().log();
 
 //! 메모
 //> 형변환을 지양하다가 5분 동안 맞왜틀
