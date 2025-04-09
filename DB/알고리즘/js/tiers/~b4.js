@@ -246,6 +246,7 @@ input('\n', ' ').map(seq => seq.sum())._max().log(); //5596, 각 수열의 합 �
 
 //! 수열간 연산
 [준비, 주문] = input('\n', ' '); 준비.blend(주문, (i,j) => j - i).filter(x => x > 0).sum().log(); //15059
+[계획, 실천] = input('\n', ' ').slice(1).mapleaves(Number); 계획.blend(실천, (i,j) => i <= j).sum().log(); //30033
 
 //! ISBN
 "9780921418".concat(input().replace(/\n/g,'')).map((x,i)=> !(i%2) ? x*1 : x*3 ).sum() //6810
