@@ -169,7 +169,8 @@ analytoos = [
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-input('\n', ' ').slice(1).mapleaves(Number).map(([a,d,g]) => a*(d+g) * (1 + (a==d+g)) )._max().log();
+[_, 심사위원, ...투표함] = input(/\s+/);
+투표함.map(투표 => 투표.filter(x=>x=='O').length ).filter(득표 => 득표 > 심사위원/2).length.log();
 
 //! 메모
 //> 형변환을 지양하다가 5분 동안 맞왜틀
