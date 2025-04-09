@@ -108,6 +108,8 @@ input('\n').slice(1).map(str => +str.slice(2)).filter(x => x <= 90).length.log()
 //! 포함 여부-갯수 확인
 (input().Match(/[MOBIS]/g).unique().toSorted().join('')=='BIMOS') ? log('YES') : log('NO'); //28074
 input().Match(/DKSH/g).length.log()
+({w:'chunbae', b:'nabi', g:'yeongcheol'})[ input().match(/[wbg]/)[0] ].log(); //30402
+
 
 //! 좌우 반전
 input('\n').slice(1).map(x=>x.toReversed()).log('\n', '') //11945, 11365
@@ -178,6 +180,9 @@ log( "V".repeat(floor(N/5)) + "I".repeat(N%5) ) //27219
 "WelcomeToSMUPC"[(input() - 1)%14].log() //29699
 [1,2,3,4,5,4,3,2][((input()-1) % 8)].log() //17362
 "NESW"[input('\n').sum()%4].log(); //28295, 90도 풀이 버전 비교
+//> 주기 만들기
+log(  (a + b - 1)%12 + 1 ); //24083
+
 
 //! 올림(ceil), 반올림(round), 내림(floor), 버림(trunc)
 a = input(); ceil(a/5).log(); //15727

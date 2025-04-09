@@ -65,11 +65,12 @@ strtools = [
 	len = function () { return this.length },
 ].map(f => f.name).forEach(f => String.prototype[f] = globalThis[f]);
 
-//! 수열, 누적합/구간합, 누적곱/구간곱
+//! 수열, 누적합/구간합, 누적곱/구간곱, 슬라이딩 윈도우
 seqtools = [
 	serial = function () { return this.map((_,i) => i) },
 	value = function () { return [...this] },
-	sum = function (cond) { return this.reduce((s,c) => !cond || cond && cond(c) ? s + c*1 : s, 0) },
+	sum = function (arr=this) { return arr.reduce((s,c) => s + c*1, 0) },
+	sumif = function (cond, arr=this) { return arr.reduce((s,c) => !cond || cond && cond(c) ? s + c*1 : s, 0) },
 	average = function () { return this.sum()/this.length },
 	psum = function () { return this.reduce((s,c,i) => [ ...s, c + (s[i-1]||0) ], []) },
 	product = function () { return this.reduce((s,c)=>s*1 * c*1) },
@@ -78,6 +79,7 @@ seqtools = [
 	_max = function (lim = +Infinity, err = -1) { return this.length == 0 ? err : min(lim, this.reduce((s,c) => s < +c ? c : s, -Infinity)) },
 	mini = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] > +c ? i : s, 0) },
 	maxi = function (err = -1) { return this.length == 0 ? err : this.reduce((s,c,i) => +this[s] < +c ? i : s, 0) },
+	slide = function (gap, fn=a=>a, arr=this) { return arr.reduce((s,_,i,a) => i>gap-2 ? (s.push( fn(a.slice(i-gap+1, i+1)) ), s) : s, []) },
 ].map(f => f.name).forEach(f => Array.prototype[f] = globalThis[f]);
 
 //! 컬렉션
@@ -167,7 +169,8 @@ analytoos = [
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[계획, 실천] = input('\n', ' ').slice(1).mapleaves(Number); 계획.blend(실천, (i,j) => i <= j).sum().log();
+[a, b] = input('\n').map(Number);
+log(  (a + b - 1)%12 + 1 );
 
 //! 메모
 //> 형변환을 지양하다가 5분 동안 맞왜틀
