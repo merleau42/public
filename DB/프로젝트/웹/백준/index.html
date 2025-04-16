@@ -122,6 +122,7 @@
   </main>
 
   <script>
+	let Q = x=>document.querySelector(x);
     let state = {
       problems: [],
       selectedCategory: null,
@@ -168,15 +169,15 @@
     }
 
     function render() {
-      const toc = document.getElementById('toc');
-      const main = document.getElementById('main');
+      const toc = Q('#toc');
+      const main = Q('#main');
 
       const allTags = Array.from(new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류']))));
       renderCategoryNav(allTags, toc);
 
-      const searchText = document.getElementById('searchInput').value.toLowerCase();
-      const tierMin = parseInt(document.getElementById('tierMin').value) || null;
-      const tierMax = parseInt(document.getElementById('tierMax').value) || null;
+      const searchText = Q('#searchInput').value.toLowerCase();
+      const tierMin = parseInt(Q('#tierMin').value) || null;
+      const tierMax = parseInt(Q('#tierMax').value) || null;
 
       state.tierMin = tierMin;
       state.tierMax = tierMax;
@@ -204,14 +205,14 @@
         const data = await res.json();
         state.problems = data;
 
-        document.getElementById('searchInput').addEventListener('input', render);
-        document.getElementById('tierMin').addEventListener('input', render);
-        document.getElementById('tierMax').addEventListener('input', render);
-        document.getElementById('toggleSolution').addEventListener('change', (e) => {
+        Q('#searchInput').addEventListener('input', render);
+        Q('#tierMin').addEventListener('input', render);
+        Q('#tierMax').addEventListener('input', render);
+        Q('#toggleSolution').addEventListener('change', (e) => {
           state.showSolution = e.target.checked;
           render();
         });
-        document.getElementById('clearTag').addEventListener('click', () => {
+        Q('#clearTag').addEventListener('click', () => {
           state.selectedCategory = null;
           render();
         });
@@ -219,7 +220,7 @@
         render();
       } catch (err) {
         console.error(err);
-        document.getElementById('main').textContent = '문제 데이터를 불러오는 데 실패했습니다.';
+        Q('#main').textContent = '데이터를 불러오지 못했습니다.';
       }
     });
   </script>
