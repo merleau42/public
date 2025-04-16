@@ -1,270 +1,227 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>문제 뷰어</title>
-    <style>
-      body {
-        font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', '맑은 고딕', sans-serif;
-        background-color: #f2f4f7;
-        color: #1f2937;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문제 뷰어</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f2f4f7;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
 
-      header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background-color: rgba(229, 231, 235, 0.9);
-        padding: 1rem;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-      }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(229, 231, 235, 0.9);
+      padding: 1rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
 
-      main {
-        padding: 1rem;
-      }
+    .controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
 
-      .card-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-      }
+    input[type="text"],
+    input[type="number"] {
+      padding: 0.3rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+    }
 
-      .card {
-        background: white;
-        border-radius: 0.5rem;
-        padding: 1rem;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        box-sizing: border-box;
-      }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
 
-      .card hr {
-        margin: 0.75rem 0;
-        border: none;
-        border-top: 1px solid #ddd;
-      }
+    .card {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
 
-      .card h4,
-      .card p {
-        display: inline;
-        margin-right: 4px;
-      }
+    .card hr {
+      margin: 0.75rem 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
 
-      .card .tags,
-      .card .tier {
-        color: #d1d5db;
-        font-size: smaller;
-        font-style: italic;
-      }
+    .card h4,
+    .card p {
+      display: inline;
+      margin-right: 4px;
+    }
 
-      button {
-        margin: 0.1rem;
-        padding: 0.2rem 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 0.375rem;
-        cursor: pointer;
-        background-color: white;
-        font-size: 0.875rem;
-      }
+    .tags,
+    .tier {
+      color: #9ca3af;
+      font-size: smaller;
+      font-style: italic;
+    }
 
-      .tier-buttons button {
-        max-width: 4%;
-      }
+    button {
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      background-color: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
 
-      .active {
-        background-color: teal;
-        color: white;
-        font-weight: bold;
-        border-color: teal;
-      }
+    .active {
+      background-color: teal;
+      color: white;
+      font-weight: bold;
+      border-color: teal;
+    }
 
-      input[type='text'] {
-        width: 30%;
-        margin: 0.25rem 0;
-        padding: 0.5rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-      }
+    #tagContainer {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem;
+    }
 
-      input {
-        display: inline;
-      }
+    #toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="controls">
+      <label>검색: <input id="searchInput" type="text" placeholder="문제 제목 또는 태그 검색..." /></label>
+      <label>티어:
+        <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:50px;" />
+        ~
+        <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:50px;" />
+      </label>
+      <label>해설: <input type="checkbox" id="toggleSolution" checked /></label>
+    </div>
+    <div id="tagContainer">
+      <label>태그: </label>
+      <button id="clearTag">해제</button>
+      <div id="toc"></div>
+    </div>
+  </header>
 
-      label {
-        display: inline;
-        font-weight: bold;
-      }
+  <main>
+    <div id="main" class="card-container"></div>
+  </main>
 
-      .tier-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.25rem;
-      }
+  <script>
+    let state = {
+      problems: [],
+      selectedCategory: null,
+      showSolution: true,
+      tierMin: null,
+      tierMax: null
+    };
 
-      #tagContainer {
-        display: inline-flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.25rem;
-        margin-bottom: 0.5rem;
-      }
+    function createElement(tag, className, content) {
+      const el = document.createElement(tag);
+      if (className) el.className = className;
+      if (content) el.textContent = content;
+      return el;
+    }
 
-      #toc {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-      }
-    </style>
-  </head>
-
-  <body>
-    <header>
-      <div id="tagContainer">
-        <label>태그: </label>
-        <button id="clearTag">해제</button>
-        <div id="toc"></div>
-      </div>
-
-      <div class="filters">
-        <div class="tier-buttons">
-          <label>티어: </label>
-          <button id="clearAll">해제</button>
-          <div id="tierButtons" style="display: contents;"></div>
-        </div>
-        <label>해설: <input type="checkbox" id="toggleSolution" checked /></label>
-        <input id="searchInput" type="text" placeholder="문제 제목 또는 태그 검색..." />
-      </div>
-    </header>
-
-    <main>
-      <div id="main" class="card-container"></div>
-    </main>
-
-    <script>
-      let state = {
-        problems: [],
-        selectedCategory: null,
-        showSolution: true,
-        selectedTiers: new Set()
-      };
-
-      function createElement(tag, className, content) {
-        const el = document.createElement(tag);
-        if (className) el.className = className;
-        if (content) el.textContent = content;
-        return el;
-      }
-
-      function renderCategoryNav(categories, container) {
-        container.innerHTML = '';
-        categories.forEach((category) => {
-          const btn = createElement(
-            'button',
-            state.selectedCategory === category ? 'active' : '',
-            category
-          );
-          btn.addEventListener('click', () => {
-            state.selectedCategory = state.selectedCategory === category ? null : category;
-            render();
-          });
-          container.appendChild(btn);
-        });
-      }
-
-      function renderTierButtons() {
-        const container = document.getElementById('tierButtons');
-        container.innerHTML = '';
-
-        for (let i = 1; i <= 25; i++) {
-          const btn = createElement('button', state.selectedTiers.has(i) ? 'active' : '', i.toString());
-          btn.addEventListener('click', () => {
-            if (state.selectedTiers.has(i)) {
-              state.selectedTiers.delete(i);
-            } else {
-              state.selectedTiers.add(i);
-            }
-            render();
-          });
-          container.appendChild(btn);
-        }
-      }
-
-      function renderProblems(problems, container) {
-        container.innerHTML = '';
-        problems.forEach((problem) => {
-          const card = createElement('div', 'card');
-          card.append(
-            createElement('h4', 'id', `${problem.id}.\t`),
-            createElement('p', null, `${problem.summary}\t`),
-            createElement('p', 'tags', `#${problem.tags.join(', ') || '없음'}\t`),
-            createElement('p', 'tier', `#${problem.tier}\t`)
-          );
-          if (state.showSolution) {
-            card.append(document.createElement('hr'));
-            card.append(createElement('p', null, `해설: ${problem.solution}`));
-          }
-          container.appendChild(card);
-        });
-      }
-
-      function render() {
-        const toc = document.getElementById('toc');
-        const main = document.getElementById('main');
-
-        const allTags = Array.from(
-          new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류'])))
-        );
-        renderCategoryNav(allTags, toc);
-        renderTierButtons();
-
-        const searchText = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = state.problems.filter((p) => {
-          const tags = p.tags.length ? p.tags : ['미분류'];
-          const inTag =
-            !state.selectedCategory || tags.includes(state.selectedCategory);
-          const inSearch =
-            p.summary.toLowerCase().includes(searchText) ||
-            tags.some((tag) => tag.toLowerCase().includes(searchText));
-          const tier = typeof p.tier === 'number' ? p.tier : 10;
-          const inTier = state.selectedTiers.size === 0 || state.selectedTiers.has(tier);
-          return inTag && inSearch && inTier;
-        });
-
-        renderProblems(filtered, main);
-      }
-
-      document.addEventListener('DOMContentLoaded', async () => {
-        try {
-          const res = await fetch('problems.json');
-          const data = await res.json();
-          state.problems = data;
-
-          document.getElementById('searchInput').addEventListener('input', render);
-          document.getElementById('toggleSolution').addEventListener('change', (e) => {
-            state.showSolution = e.target.checked;
-            render();
-          });
-
-          document.getElementById('clearAll').addEventListener('click', () => {
-            state.selectedTiers.clear();
-            render();
-          });
-
-          document.getElementById('clearTag').addEventListener('click', () => {
-            state.selectedCategory = null;
-            render();
-          });
-
+    function renderCategoryNav(categories, container) {
+      container.innerHTML = '';
+      categories.forEach((category) => {
+        const btn = createElement('button', state.selectedCategory === category ? 'active' : '', category);
+        btn.addEventListener('click', () => {
+          state.selectedCategory = state.selectedCategory === category ? null : category;
           render();
-        } catch (err) {
-          console.error(err);
-          document.getElementById('main').textContent = '문제 데이터를 불러오는 데 실패했습니다.';
-        }
+        });
+        container.appendChild(btn);
       });
-    </script>
-  </body>
+    }
+
+    function renderProblems(problems, container) {
+      container.innerHTML = '';
+      problems.forEach((problem) => {
+        const card = createElement('div', 'card');
+        card.append(
+          createElement('h4', 'id', `${problem.id}. `),
+          createElement('p', null, `${problem.summary} `),
+          createElement('p', 'tags', `#${problem.tags.join(', ') || '없음'} `),
+          createElement('p', 'tier', `#${problem.tier}`)
+        );
+        if (state.showSolution) {
+          card.append(document.createElement('hr'));
+          card.append(createElement('p', null, `해설: ${problem.solution}`));
+        }
+        container.appendChild(card);
+      });
+    }
+
+    function render() {
+      const toc = document.getElementById('toc');
+      const main = document.getElementById('main');
+
+      const allTags = Array.from(new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류']))));
+      renderCategoryNav(allTags, toc);
+
+      const searchText = document.getElementById('searchInput').value.toLowerCase();
+      const tierMin = parseInt(document.getElementById('tierMin').value) || null;
+      const tierMax = parseInt(document.getElementById('tierMax').value) || null;
+
+      state.tierMin = tierMin;
+      state.tierMax = tierMax;
+
+      const filtered = state.problems.filter((p) => {
+        const tags = p.tags.length ? p.tags : ['미분류'];
+        const inTag = !state.selectedCategory || tags.includes(state.selectedCategory);
+        const inSearch =
+          p.summary.toLowerCase().includes(searchText) ||
+          tags.some((tag) => tag.toLowerCase().includes(searchText));
+        const tier = typeof p.tier === 'number' ? p.tier : 10;
+        const inTier =
+          (!tierMin || tier >= tierMin) &&
+          (!tierMax || tier <= tierMax);
+
+        return inTag && inSearch && inTier;
+      });
+
+      renderProblems(filtered, main);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('problems.json');
+        const data = await res.json();
+        state.problems = data;
+
+        document.getElementById('searchInput').addEventListener('input', render);
+        document.getElementById('tierMin').addEventListener('input', render);
+        document.getElementById('tierMax').addEventListener('input', render);
+        document.getElementById('toggleSolution').addEventListener('change', (e) => {
+          state.showSolution = e.target.checked;
+          render();
+        });
+        document.getElementById('clearTag').addEventListener('click', () => {
+          state.selectedCategory = null;
+          render();
+        });
+
+        render();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('main').textContent = '문제 데이터를 불러오는 데 실패했습니다.';
+      }
+    });
+  </script>
+</body>
 </html>
