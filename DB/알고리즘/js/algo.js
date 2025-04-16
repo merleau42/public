@@ -169,8 +169,10 @@ analytoos = [
 
 //: ■■■■■■■■■■■■■■■■[ 풀이 ]■■■■■■■■■■■■■■■■
 //! 메인
-[_, 심사위원, ...투표함] = input(/\s+/);
-투표함.map(투표 => 투표.filter(x=>x=='O').length ).filter(득표 => 득표 > 심사위원/2).length.log();
+log( {'fdsajkl;':'in-out', 'jkl;fdsa':'in-out',
+	'asdf;lkj':'out-in', ';lkjasdf':'out-in',
+	'asdfjkl;':'stairs', ';lkjfdsa':'reverse'}[input()]??'molu' );
+
 
 //! 메모
 //> 형변환을 지양하다가 5분 동안 맞왜틀
