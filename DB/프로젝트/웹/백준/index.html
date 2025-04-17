@@ -36,7 +36,6 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 0.3rem;
-      margin-bottom: 0.5rem;
     }
 
     input[type="text"],
@@ -98,6 +97,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.25rem;
+      margin-top: 0.5rem;
     }
 
   </style>
@@ -125,108 +125,123 @@
   </main>
 
   <script>
-	let Q = x=>document.querySelector(x);
-    let state = {
-      problems: [],
-      selectedCategory: null,
-      showSolution: true,
-      tierMin: null,
-      tierMax: null
-    };
-
-    function createElement(tag, className, content, id) {
-      const el = document.createElement(tag);
-      if (className) el.className = className;
-      if (content) el.textContent = content;
+	let Q = x => document.querySelector(x);
+	let state = {
+	  problems: [],
+	  selectedCategory: null,
+	  showSolution: true,
+	  showTags: true,
+	  tierMin: null,
+	  tierMax: null
+	};
+  
+	function createElement(tag, className, content, id) {
+	  const el = document.createElement(tag);
+	  if (className) el.className = className;
+	  if (content) el.textContent = content;
 	  if (id) el.id = id;
-      return el;
-    }
+	  return el;
+	}
+  
+	function renderCategoryNav(categories, container) {
+	  container.innerHTML = '';
 
-    function renderCategoryNav(categories, container) {
-      container.innerHTML = '';
-	  clearTag = createElement('button', null ,'해제', 'clearTag');
-	  clearTag.addEventListener('click', () => { state.selectedCategory = null; render(); });
+	  if (!state.showTags) return;
+  
+	  const clearTag = createElement('button', null, '해제', 'clearTag');
+	  clearTag.addEventListener('click', () => {
+		state.selectedCategory = null;
+		render();
+	  });
 	  container.appendChild(clearTag);
-      categories.forEach((category) => {
-        const btn = createElement('button', state.selectedCategory === category ? 'active' : '', category);
-        btn.addEventListener('click', () => {
-          state.selectedCategory = state.selectedCategory === category ? null : category;
-          render();
-        });
-        container.appendChild(btn);
-      });
-    }
+  
+	  categories.forEach((category) => {
+		const btn = createElement('button', state.selectedCategory === category ? 'active' : '', category);
+		btn.addEventListener('click', () => {
+		  state.selectedCategory = state.selectedCategory === category ? null : category;
+		  render();
+		});
+		container.appendChild(btn);
+	  });
+	}
+  
+	function renderProblems(problems, container) {
+	  container.innerHTML = '';
+	  problems.forEach((problem) => {
+		const card = createElement('div', 'card');
+		card.append(
+		  createElement('h4', 'id', `${problem.id}. `),
+		  createElement('p', null, `${problem.summary} `),
+		  state.showTags ? createElement('p', 'tags', `#${problem.tags.join(', ') || '없음'} `) : '',
+		  createElement('p', 'tier', `#${problem.tier}`)
+		);
+		if (state.showSolution) {
+		  card.append(document.createElement('hr'));
+		  card.append(createElement('p', null, `${problem.solution}`));
+		}
+		container.appendChild(card);
+	  });
+	}
+  
+	function render() {
+	  const toc = Q('#toc');
+	  const main = Q('#main');
+  
+	  const allTags = Array.from(new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류']))));
+	  renderCategoryNav(allTags, toc);
 
-    function renderProblems(problems, container) {
-      container.innerHTML = '';
-      problems.forEach((problem) => {
-        const card = createElement('div', 'card');
-        card.append(
-          createElement('h4', 'id', `${problem.id}. `),
-          createElement('p', null, `${problem.summary} `),
-          createElement('p', 'tags', `#${problem.tags.join(', ') || '없음'} `),
-          createElement('p', 'tier', `#${problem.tier}`)
-        );
-        if (state.showSolution) {
-          card.append(document.createElement('hr'));
-          card.append(createElement('p', null, `해설: ${problem.solution}`));
-        }
-        container.appendChild(card);
-      });
-    }
-
-    function render() {
-      const toc = Q('#toc');
-      const main = Q('#main');
-
-      const allTags = Array.from(new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류']))));
-      renderCategoryNav(allTags, toc);
-
-      const searchText = Q('#searchInput').value.toLowerCase();
-      const tierMin = parseInt(Q('#tierMin').value) || null;
-      const tierMax = parseInt(Q('#tierMax').value) || null;
-
-      state.tierMin = tierMin;
-      state.tierMax = tierMax;
-
-      const filtered = state.problems.filter((p) => {
-        const tags = p.tags.length ? p.tags : ['미분류'];
-        const inTag = !state.selectedCategory || tags.includes(state.selectedCategory);
-        const inSearch =
-          p.summary.toLowerCase().includes(searchText) ||
-          tags.some((tag) => tag.toLowerCase().includes(searchText));
-        const tier = typeof p.tier === 'number' ? p.tier : 10;
-        const inTier =
-          (!tierMin || tier >= tierMin) &&
-          (!tierMax || tier <= tierMax);
-
-        return inTag && inSearch && inTier;
-      });
-
-      renderProblems(filtered, main);
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const res = await fetch('problems.json');
-        const data = await res.json();
-        state.problems = data;
-
-        render();
-
-        Q('#searchInput').addEventListener('input', render);
-        Q('#tierMin').addEventListener('input', render);
-        Q('#tierMax').addEventListener('input', render);
-        Q('#toggleSolution').addEventListener('change', (e) => {
-          state.showSolution = e.target.checked;
-          render();
-        });
-
-      } catch (err) {
-        console.error(err);
-        Q('#main').textContent = '데이터를 불러오지 못했습니다.';
-      }
-    });
+	  toc.style.display = ['none', 'flex'][1 * state.showTags];
+  
+	  const searchText = Q('#searchInput').value.toLowerCase();
+	  const tierMin = parseInt(Q('#tierMin').value) || null;
+	  const tierMax = parseInt(Q('#tierMax').value) || null;
+  
+	  state.tierMin = tierMin;
+	  state.tierMax = tierMax;
+  
+	  const filtered = state.problems.filter((p) => {
+		const tags = p.tags.length ? p.tags : ['미분류'];
+		const inTag = !state.selectedCategory || tags.includes(state.selectedCategory);
+		const inSearch =
+		  p.summary.toLowerCase().includes(searchText) ||
+		  tags.some((tag) => tag.toLowerCase().includes(searchText));
+		const tier = typeof p.tier === 'number' ? p.tier : 10;
+		const inTier =
+		  (!tierMin || tier >= tierMin) &&
+		  (!tierMax || tier <= tierMax);
+  
+		return inTag && inSearch && inTier;
+	  });
+  
+	  renderProblems(filtered, main);
+	}
+  
+	document.addEventListener('DOMContentLoaded', async () => {
+	  try {
+		const res = await fetch('problems.json');
+		const data = await res.json();
+		state.problems = data;
+  
+		render();
+  
+		Q('#searchInput').addEventListener('input', render);
+		Q('#tierMin').addEventListener('input', render);
+		Q('#tierMax').addEventListener('input', render);
+		Q('#toggleSolution').addEventListener('change', (e) => {
+		  state.showSolution = e.target.checked;
+		  render();
+		});
+		Q('#toggleTag').addEventListener('change', (e) => {
+		  state.showTags = e.target.checked;
+		  render();
+		});
+  
+	  } catch (err) {
+		console.error(err);
+		Q('#main').textContent = '데이터를 불러오지 못했습니다.';
+	  }
+	});
   </script>
+  
 </body>
 </html>
