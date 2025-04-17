@@ -26,12 +26,12 @@
 		display: flex;
 		flex-wrap: wrap;
 		min-height: 27px; /* 라벨들 TOP이 맞춰짐 */
-		margin-left: 10px;
+		margin-left: 13px;
 	}
 	
     .controls {
 	  position: relative;
-	  left: -10px;
+	  left: -13px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -108,12 +108,13 @@
       <label>검색: </label>
 	  <input id="searchInput" type="text" placeholder="문제 제목 또는 태그 검색..." />
       <label>티어: </label>
-      <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:50px;" />
+      <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" />
       ~
-      <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:50px;" />
-      <label>코드: </label>
+      <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
+      <label>해답: </label>
 	  <input type="checkbox" id="toggleSolution" checked />
       <label>태그: </label>
+	  <input type="checkbox" id="toggleTag" checked />
 
     </div>
     <div id="toc"></div>
