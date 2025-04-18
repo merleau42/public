@@ -24,15 +24,15 @@
       display: flex;
       flex-wrap: wrap;
       min-height: 27px;
-      margin-left: 13px;
+      margin-left: 14px;
     }
     .controls {
       position: relative;
-      left: -13px;
+      left: -14px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.3rem;
+      gap: 0.25rem;
     }
     input[type="text"],
     input[type="number"] {
@@ -81,7 +81,7 @@
     #toc {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.25rem;
+      gap: 0.3rem;
       margin-top: 0.5rem;
     }
     .tag {
@@ -121,13 +121,13 @@
       <input type="checkbox" id="toggleTier" var="showTiers" checked />
       <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
       <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
-      <label>해답: </label>
-      <input type="checkbox" id="toggleSolution" var="showSolution" />
       <label>태그: </label>
       <input type="checkbox" id="toggleTag" var="showTags" checked />
       <button id="toggleMainOnly">주요 태그</button>
       <label>중복: </label>
       <input type="checkbox" id="toggleDuple" var="showDuple" />
+      <label>해답: </label>
+      <input type="checkbox" id="toggleSolution" var="showSolution" />
     </div>
     <div id="toc"></div>
   </header>
