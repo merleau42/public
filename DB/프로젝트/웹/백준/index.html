@@ -1,247 +1,304 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>문제 뷰어</title>
-  <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #f2f4f7;
-      color: #1f2937;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: rgba(229, 231, 235, 0.9);
-      padding: 1rem;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    }
-
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>문제 뷰어</title>
+	<style>
+	body {
+		font-family: 'Noto Sans KR', sans-serif;
+		background-color: #f2f4f7;
+		color: #1f2937;
+		margin: 0;
+		padding: 0;
+	}
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		background-color: rgba(229, 231, 235, 0.9);
+		padding: 1rem;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+	}
 	label {
 		display: flex;
 		flex-wrap: wrap;
-		min-height: 27px; /* 라벨들 TOP이 맞춰짐 */
+		min-height: 27px;
 		margin-left: 13px;
 	}
-	
-    .controls {
-	  position: relative;
-	  left: -13px;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      padding: 0.25rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-    }
-
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    .card hr {
-      margin: 0.75rem 0;
-      border: none;
-      border-top: 1px solid #ddd;
-    }
-
-    .card h4,
-    .card p {
-      display: inline;
-      margin-right: 4px;
-    }
-
-    .tags,
-    .tier {
-      color: #9ca3af;
-      font-size: smaller;
-      font-style: italic;
-    }
-
-    button {
-      border: 1px solid #ccc;
-      border-radius: 0.375rem;
-      background-color: white;
-      cursor: pointer;
-      font-size: 0.875rem;
-    }
-
-    .active {
-      background-color: teal;
-      color: white;
-      font-weight: bold;
-      border-color: teal;
-    }
-
-    #toc {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      margin-top: 0.5rem;
-    }
-
-  </style>
+	.controls {
+		position: relative;
+		left: -13px;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+	}
+	input[type="text"],
+	input[type="number"] {
+		padding: 0.25rem;
+		border: 1px solid #d1d5db;
+		border-radius: 0.375rem;
+	}
+	.card-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1rem;
+		padding: 1rem;
+	}
+	.card {
+		background: white;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	}
+	.card hr {
+		margin: 0.75rem 0;
+		border: none;
+		border-top: 1px solid #ddd;
+	}
+	.card h4,
+	.card p {
+		display: inline;
+		margin-right: 4px;
+	}
+	.dup {
+		background: gainsboro;
+	}
+	button {
+		border: 1px solid #ccc;
+		border-radius: 0.375rem;
+		background-color: white;
+		cursor: pointer;
+		font-size: 0.875rem;
+	}
+	.active {
+		background-color: teal;
+		color: white;
+		font-weight: bold;
+		border-color: teal;
+	}
+	#toc {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		margin-top: 0.5rem;
+	}
+	.tag {
+		display: inline-block;
+		margin-right: 6px;
+		font-size: smaller;
+		font-style: italic;
+		padding: 2px 6px;
+		border-radius: 6px;
+	}
+	.main-tag {
+		background-color: #e0f7fa;
+		color: #00796b;
+	}
+	.sub-tag {
+		background-color: #f3e5f5;
+		color: #6a1b9a;
+	}
+	.tag-button.include {
+		background-color: green;
+		color: white;
+	}
+	.tag-button.exclude {
+		background-color: crimson;
+		color: white;
+	}
+	.tier-badge {
+		display: inline-block;
+		padding: 2px 6px;
+		font-size: 0.75rem;
+		border-radius: 9999px;
+		font-weight: bold;
+		color: white;
+		margin-left: 4px;
+	}
+	.tier-5 { background-color: #b0bec5; }
+	.tier-10 { background-color: #81d4fa; }
+	.tier-15 { background-color: #4db6ac; }
+	.tier-20 { background-color: #9575cd; }
+	.tier-25 { background-color: #f06292; }
+	.tier-30 { background-color: #ef5350; }
+	</style>
 </head>
 <body>
-  <header>
-    <div class="controls">
-      <label>검색: </label>
-	  <input id="searchInput" type="text" placeholder="문제 제목 또는 태그 검색..." />
-      <label>티어: </label>
-      <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" />
-      ~
-      <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
-      <label>해답: </label>
-	  <input type="checkbox" id="toggleSolution" checked />
-      <label>태그: </label>
-	  <input type="checkbox" id="toggleTag" checked />
-
-    </div>
-    <div id="toc"></div>
-  </header>
-
-  <main>
-    <div id="main" class="card-container"></div>
-  </main>
-
-  <script>
+	<header>
+	<div class="controls">
+		<label>검색: </label>
+		<input id="searchInput" type="text" placeholder="..." style="width:20%" />
+		<label>티어: </label>
+		<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
+		<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
+		<label>해답: </label>
+		<input type="checkbox" id="toggleSolution" var="showSolution" checked />
+		<label>태그: </label>
+		<input type="checkbox" id="toggleTag" var="showTags" checked />
+		<button id="toggleMainOnly">주요 태그</button>
+		<label>중복: </label>
+		<input type="checkbox" id="toggleDuple" var="showDuple" />
+	</div>
+	<div id="toc"></div>
+	</header>
+	<main>
+	<div id="main" class="card-container"></div>
+	</main>
+	<script>
 	let Q = x => document.querySelector(x);
+	let QQ = x => [...document.querySelectorAll(x)];
 	let state = {
-	  problems: [],
-	  selectedCategory: null,
-	  showSolution: true,
-	  showTags: true,
-	  tierMin: null,
-	  tierMax: null
+		problems: [],
+		selectedCategory: null,
+		showSolution: true,
+		showTags: true,
+		showDuple: false,
+		showMainOnly: false,
+		tagFilters: {},
+		tierMin: null,
+		tierMax: null
 	};
-  
-	function createElement(tag, className, content, id) {
-	  const el = document.createElement(tag);
-	  if (className) el.className = className;
-	  if (content) el.textContent = content;
-	  if (id) el.id = id;
-	  return el;
-	}
-  
-	function renderCategoryNav(categories, container) {
-	  container.innerHTML = '';
 
-	  if (!state.showTags) return;
-  
-	  const clearTag = createElement('button', null, '해제', 'clearTag');
-	  clearTag.addEventListener('click', () => {
-		state.selectedCategory = null;
-		render();
-	  });
-	  container.appendChild(clearTag);
-  
-	  categories.forEach((category) => {
-		const btn = createElement('button', state.selectedCategory === category ? 'active' : '', category);
-		btn.addEventListener('click', () => {
-		  state.selectedCategory = state.selectedCategory === category ? null : category;
-		  render();
+	function createElement(tag, className, content, id) {
+		const el = document.createElement(tag);
+		if (className) el.className = className;
+		if (content) el.textContent = content;
+		if (id) el.id = id;
+		return el;
+	}
+
+	function parseTags(tags) {
+		const main = tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1));
+		const sub = tags.map(t => t.endsWith('!') ? t.slice(0, -1) : t).filter(t => !main.includes(t));
+		return { main, sub };
+	}
+
+	function renderCategoryNav(categories, container) {
+		container.innerHTML = '';
+		if (!state.showTags) return;
+
+		categories.forEach((category) => {
+		const btn = createElement('button', `tag-button ${state.tagFilters[category] || ''}`, category);
+		btn.addEventListener('click', e => {
+			e.preventDefault();
+			const current = state.tagFilters[category];
+			state.tagFilters[category] = current === 'include' ? null : 'include';
+			render();
+		});
+		btn.addEventListener('contextmenu', e => {
+			e.preventDefault();
+			const current = state.tagFilters[category];
+			state.tagFilters[category] = current === 'exclude' ? null : 'exclude';
+			render();
 		});
 		container.appendChild(btn);
-	  });
+		});
 	}
-  
-	function renderProblems(problems, container) {
-	  container.innerHTML = '';
-	  problems.forEach((problem) => {
-		const card = createElement('div', 'card');
-		card.append(
-		  createElement('h4', 'id', `${problem.id}. `),
-		  createElement('p', null, `${problem.summary} `),
-		  state.showTags ? createElement('p', 'tags', `#${problem.tags.join(', ') || '없음'} `) : '',
-		  createElement('p', 'tier', `#${problem.tier}`)
-		);
-		if (state.showSolution) {
-		  card.append(document.createElement('hr'));
-		  card.append(createElement('p', null, `${problem.solution}`));
-		}
-		container.appendChild(card);
-	  });
-	}
-  
-	function render() {
-	  const toc = Q('#toc');
-	  const main = Q('#main');
-  
-	  const allTags = Array.from(new Set(state.problems.flatMap((p) => (p.tags.length ? p.tags : ['미분류']))));
-	  renderCategoryNav(allTags, toc);
 
-	  toc.style.display = ['none', 'flex'][1 * state.showTags];
-  
-	  const searchText = Q('#searchInput').value.toLowerCase();
-	  const tierMin = parseInt(Q('#tierMin').value) || null;
-	  const tierMax = parseInt(Q('#tierMax').value) || null;
-  
-	  state.tierMin = tierMin;
-	  state.tierMax = tierMax;
-  
-	  const filtered = state.problems.filter((p) => {
-		const tags = p.tags.length ? p.tags : ['미분류'];
-		const inTag = !state.selectedCategory || tags.includes(state.selectedCategory);
-		const inSearch =
-		  p.summary.toLowerCase().includes(searchText) ||
-		  tags.some((tag) => tag.toLowerCase().includes(searchText));
-		const tier = typeof p.tier === 'number' ? p.tier : 10;
-		const inTier =
-		  (!tierMin || tier >= tierMin) &&
-		  (!tierMax || tier <= tierMax);
-  
-		return inTag && inSearch && inTier;
-	  });
-  
-	  renderProblems(filtered, main);
+	function renderProblems(problems, container) {
+		container.innerHTML = '';
+		problems.forEach((problem) => {
+			if (problem.dup && !state.showDuple) return;
+			const { main, sub } = parseTags(problem.tags || []);
+			const card = createElement('div', 'card');
+			card.append(
+				createElement('h4', 'id', `${problem.id}. `),
+				createElement('p', null, `${problem.summary}`)
+			);
+
+			if (state.showTags) {
+				if ((problem.tags || []).length === 0) {
+				card.append(createElement('span', 'tag sub-tag', '#미분류'));
+				}
+				main.forEach(tag => card.append(createElement('span', 'tag main-tag', `#${tag}`)));
+				sub.forEach(tag => card.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+			}
+
+			const tierColor = `tier-${Math.ceil(problem.tier / 5) * 5}`;
+			const tierBadge = createElement('span', `tier-badge ${tierColor}`, `#${problem.tier}`);
+			card.append(tierBadge);
+
+			if (state.showSolution) {
+				card.append(document.createElement('hr'));
+				card.append(createElement('p', null, `${problem.solution}`));
+			}
+			if (problem.dup) card.classList.add('dup');
+			container.appendChild(card);
+		});
 	}
-  
+
+	function render() {
+		const toc = Q('#toc');
+		const main = Q('#main');
+		const allTags = Array.from(new Set(state.problems.flatMap((p) => {
+		const tags = p.tags || [];
+		const tagList = state.showMainOnly ? tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1)) : tags.map(t => t.replace('!', ''));
+		return tagList.length ? tagList : ['미분류'];
+		})));
+
+		renderCategoryNav(allTags, toc);
+		toc.style.display = state.showTags ? 'flex' : 'none';
+
+		const searchText = Q('#searchInput').value.toLowerCase();
+		const tierMin = parseInt(Q('#tierMin').value) || null;
+		const tierMax = parseInt(Q('#tierMax').value) || null;
+
+		state.tierMin = tierMin;
+		state.tierMax = tierMax;
+
+		const filtered = state.problems.filter((p) => {
+		const tags = p.tags || [];
+		const tagList = state.showMainOnly ? tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1)) : tags.map(t => t.replace('!', ''));
+		const resolvedTagList = tagList.length ? tagList : ['미분류'];
+
+		const includeTags = Object.entries(state.tagFilters).filter(([_, mode]) => mode === 'include').map(([tag]) => tag);
+		const excludeTags = Object.entries(state.tagFilters).filter(([_, mode]) => mode === 'exclude').map(([tag]) => tag);
+
+		const inInclude = includeTags.every(tag => resolvedTagList.includes(tag));
+		const inExclude = excludeTags.some(tag => resolvedTagList.includes(tag));
+
+		const inTag = inInclude && !inExclude;
+
+		const inSearch = p.summary.toLowerCase().includes(searchText) || resolvedTagList.some((tag) => tag.toLowerCase().includes(searchText));
+
+		const tier = typeof p.tier === 'number' ? p.tier : 10;
+		const inTier = (!tierMin || tier >= tierMin) && (!tierMax || tier <= tierMax);
+
+		return inTag && inSearch && inTier;
+		});
+
+		renderProblems(filtered, main);
+	}
+
 	document.addEventListener('DOMContentLoaded', async () => {
-	  try {
+		try {
 		const res = await fetch('problems.json');
 		const data = await res.json();
 		state.problems = data;
-  
 		render();
-  
+
 		Q('#searchInput').addEventListener('input', render);
 		Q('#tierMin').addEventListener('input', render);
 		Q('#tierMax').addEventListener('input', render);
-		Q('#toggleSolution').addEventListener('change', (e) => {
-		  state.showSolution = e.target.checked;
-		  render();
+
+		QQ('input[type="checkbox"]').forEach(box => {
+			box.addEventListener('change', e => {
+			state[e.target.getAttribute('var')] = e.target.checked;
+			render();
+			});
 		});
-		Q('#toggleTag').addEventListener('change', (e) => {
-		  state.showTags = e.target.checked;
-		  render();
+
+		Q('#toggleMainOnly').addEventListener('click', () => {
+			state.showMainOnly = !state.showMainOnly;
+			Q('#toggleMainOnly').classList.toggle('active', state.showMainOnly);
+			render();
 		});
-  
-	  } catch (err) {
-		console.error(err);
+		} catch (err) {
 		Q('#main').textContent = '데이터를 불러오지 못했습니다.';
-	  }
+		}
 	});
-  </script>
-  
+</script>
 </body>
 </html>
