@@ -4,35 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>문제 뷰어</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyBQs0UGKh_CU4lp7hksQUPGYmTLpfKNrz0",
-      authDomain: "shepherd-94cc6.firebaseapp.com",
-      projectId: "shepherd-94cc6",
-      storageBucket: "shepherd-94cc6.firebasestorage.app",
-      messagingSenderId: "99412616175",
-      appId: "1:99412616175:web:78c964c8e96f821c380c1a",
-      measurementId: "G-DEPRRVXVS6"
-    };
-  
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-  
-    window.loadDataFromFirebase = async () => {
-      const problemsSnap = await getDocs(collection(db, "problems"));
-      const categoriesSnap = await getDocs(collection(db, "categories"));
-  
-      const problems = problemsSnap.docs.map(doc => doc.data());
-      const categories = categoriesSnap.docs.map(doc => doc.data());
-  
-      return { problems, categories };
-    };
-  </script>
-  
   <style>
     body {
       font-family: 'Noto Sans KR', sans-serif;
@@ -55,7 +26,7 @@
       min-height: 22px;
       margin-left: 14px;
       font-weight: bold;
-	  font-size: small;
+      font-size: small;
     }
     .controls {
       position: relative;
@@ -82,7 +53,7 @@
       border-radius: 0.5rem;
       padding: 1rem;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-	  font-size: small;
+      font-size: small;
     }
     .card hr {
       margin: 0.75rem 0;
@@ -103,7 +74,7 @@
       background-color: white;
       cursor: pointer;
       font-size: 0.875rem;
-	  padding-bottom: 1px;
+      padding-bottom: 1px;
     }
     .active {
       background-color: teal;
@@ -114,7 +85,6 @@
     #toc {
       display: flex;
       flex-wrap: wrap;
-      /* gap: 0.05rem; */
       margin-top: 0.5rem;
     }
     .tag {
@@ -135,10 +105,9 @@
     .tier-플래 { color: mediumaquamarine; }
     .tier-다이아 { color: blue; }
     .tier-루비 { color: red; }
-
-	.tag-button {
-		font-size: 0.7rem;
-	}
+    .tag-button {
+      font-size: 0.7rem;
+    }
     .tag-button.include {
       background-color: green;
       color: white;
@@ -147,12 +116,10 @@
       background-color: crimson;
       color: white;
     }
-	
-	.group-button {
-		font-weight: bold;
-		background-color: floralwhite
-	}
-
+    .group-button {
+      font-weight: bold;
+      background-color: floralwhite
+    }
   </style>
 </head>
 <body>
@@ -166,19 +133,35 @@
       <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
       <label>태그: </label>
       <input type="checkbox" id="toggleTag" var="showTags" checked />
-      <button id="toggleMainOnly">주태그만</button>
+      <button id="toggleMainOnly">주태그</button>
       <label>중복: </label>
       <input type="checkbox" id="toggleDuple" var="showDuple" />
       <label>해답: </label>
       <input type="checkbox" id="toggleSolution" var="showSolution" />
-	  <label id="cardCount">문제: 0</label>
+      <label id="cardCount">문제: 0</label>
     </div>
     <div id="toc"></div>
   </header>
   <main>
     <div id="main" class="card-container"></div>
   </main>
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQs0UGKh_CU4lp7hksQUPGYmTLpfKNrz0",
+      authDomain: "shepherd-94cc6.firebaseapp.com",
+      projectId: "shepherd-94cc6",
+      storageBucket: "shepherd-94cc6.firebasestorage.app",
+      messagingSenderId: "99412616175",
+      appId: "1:99412616175:web:78c964c8e96f821c380c1a",
+      measurementId: "G-DEPRRVXVS6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     let Q = x => document.querySelector(x);
     let QQ = x => [...document.querySelectorAll(x)];
     let state = {
@@ -261,8 +244,8 @@
             card.append(createElement('span', 'tag sub-tag', '#미분류'));
           }
           main.forEach(tag => card.append(createElement('span', 'tag main-tag', `#${tag}`)));
-		  if (!state.showMainOnly)
-          	sub.forEach(tag => card.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+          if (!state.showMainOnly)
+            sub.forEach(tag => card.append(createElement('span', 'tag sub-tag', `#${tag}`)));
         }
         if (state.showTiers) {
           const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
@@ -274,7 +257,7 @@
         }
         if (problem.dup) card.classList.add('dup');
         container.appendChild(card);
-		state.rendered++;
+        state.rendered++;
       });
     }
 
@@ -288,7 +271,7 @@
       const tierMax = parseInt(Q('#tierMax').value) || null;
       state.tierMin = tierMin;
       state.tierMax = tierMax;
-	  state.rendered = 0;
+      state.rendered = 0;
       const filtered = state.problems.filter(p => {
         const tags = p.tags || [];
         const tagList = state.showMainOnly ? tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1)) : tags.map(t => t.replace('!', ''));
@@ -304,21 +287,17 @@
         return inTag && inSearch && inTier;
       });
       renderProblems(filtered, main);
-	  Q('#cardCount').textContent = `문제: ${state.rendered}`;
+      Q('#cardCount').textContent = `문제: ${state.rendered}`;
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        // const [resProblems, resCategories] = await Promise.all([
-        //   fetch('problems.json'),
-        //   fetch('category.json')
-        // ]);
-        // state.problems = await resProblems.json();
-        // state.categories = await resCategories.json();
-        const { problems, categories } = await window.loadDataFromFirebase();
-        state.problems = problems;
-        state.categories = categories;  
+        const problemsSnap = await getDocs(query(collection(db, "problems"), orderBy("id")));
+        const categoriesSnap = await getDocs(query(collection(db, "categories"), orderBy("group")));
+        state.problems = problemsSnap.docs.map(doc => doc.data());
+        state.categories = categoriesSnap.docs.map(doc => doc.data());
         render();
+
         Q('#searchInput').addEventListener('input', render);
         Q('#tierMin').addEventListener('input', render);
         Q('#tierMax').addEventListener('input', render);
@@ -334,7 +313,8 @@
           render();
         });
       } catch (err) {
-        Q('#main').textContent = err;
+        console.error('Firebase 로딩 실패:', err);
+        Q('#main').textContent = '데이터를 불러오는 데 실패했습니다.';
       }
     });
   </script>
