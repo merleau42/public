@@ -78,18 +78,20 @@
         const card = createElement('div', 'card');
         card.dataset.id = problem.id;
 
-        const title = createElement('h4', null, `${problem.id}. `);
+        // const title = createElement('h4', null, `${problem.id}. `);
+        // card.append(title);
+
+        const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
+        const tier = createElement('h4', `tag tier-${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
+        card.append(tier);
+
         const summary = createElement('p', null, `${problem.summary} `);
-        card.append(title, summary);
+        card.append(summary);
 
         const { main, sub } = parseTags(problem.tags || []);
         if (problem.tags?.length === 0) card.append(createElement('span', 'tag sub-tag', '#미분류'));
         main.forEach(tag => card.append(createElement('span', 'tag main-tag', `#${tag}`)));
         sub.forEach(tag => card.append(createElement('span', 'tag sub-tag', `#${tag}`)));
-
-        const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
-        const tier = createElement('span', `tag tier-${급간}`, `#${급간}${5 - (problem.tier - 1) % 5}`);
-        card.append(tier);
 
         const solution = createElement('p', 'solution', problem.solution1 || '');
         card.append(document.createElement('hr'), solution);
