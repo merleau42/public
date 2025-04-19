@@ -39,7 +39,7 @@
 	{
 		color: blue;
 	}
-	input[value*=함수]
+	input[value*="..."]
 	{
 		color: gray;
 	}
@@ -59,8 +59,8 @@
 	}
 	function new_ring(index)
 	{
-		names = ["초성화", "이니셜", "공백제거", "그대로", "거꾸로", "함수..."];
-		binds = [conv_cho, conv_init, conv_space, conv_1, conv_reverse, conv_3];
+		names = ["초성화", "이니셜", "공백제거", "그대로", "거꾸로", "중복제거"];
+		binds = [conv_cho, conv_init, conv_space, conv_self, conv_reverse, conv_dedup];
 
 		div = document.createElement('div');
 		div.classList.add('ring');
@@ -79,6 +79,20 @@
 		[p, area, ...btns].forEach(elem => div.appendChild(elem));
 
 		return div;
+	}
+
+	function conv_dedup(index){
+		if (!Q(`.ring[index="${index*1+1}"]`))
+			Q('body').append( new_ring(index*1+1) );
+		origin = Q(`textarea[index="${index*1}"]`).value;
+
+		origin = origin.replace(/[,"]+/g, '\n').replace(/\n+/g, '\n').split('\n').map(s => s.trim());
+		origin = [...new Set(origin)].toSorted().join('\n');
+
+		Q(`textarea[index="${index*1+1}"]`).value = origin;
+		Q(`p[index="${index*1+1}"]`).innerText = `연쇄${index*1+1}: 중복 제거`;
+
+		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
 	}
 	function conv_cho(index){
 		if (!Q(`.ring[index="${index*1+1}"]`))
@@ -134,7 +148,7 @@
 
 		QQ('p[index]').forEach((p,i)=>{if(i<=index*1+1) p.classList.remove('legacy'); else p.classList.add('legacy')});
 	}
-	function conv_1(index){
+	function conv_self(index){
 		if (!Q(`.ring[index="${index*1+1}"]`))
 			Q('body').append( new_ring(index*1+1) );
 
