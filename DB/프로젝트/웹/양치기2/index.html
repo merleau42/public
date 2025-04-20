@@ -6,30 +6,36 @@
     <title>문제 뷰어</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-<body>
+<body class="TRUE showTag showTier showSubTag"> 
   <header>
     <div class="controls">
       <label>검색:</label><input id="searchInput" type="text" style="width:12%" placeholder="...">
-      <label>티어:</label><input type="checkbox" id="toggleTier" var="showTiers" checked />
+      <label>티어:</label><input type="checkbox" id="toggleTier" checked />
       <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
       <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
-      <label>태그:</label><input type="checkbox" id="toggleTag" var="showTags" checked />
-      <button id="toggleMainOnly">주태그</button>
-      <label>중복:</label><input type="checkbox" id="toggleDuple" var="showDuple" />
-      <label>해답:</label><input type="checkbox" id="toggleSolution" var="showSolution" />
+      <label>태그:</label><input type="checkbox" id="toggleTag" checked />
+      <button id="toggleSubTag">부태그</button>
+      <label>중복:</label><input type="checkbox" id="toggleDuple" />
+      <label>해답:</label><input type="checkbox" id="toggleSolution" />
       <label id="cardCount">문제: 0</label>
     </div>
     <div id="toc"></div>
-  </header>
+  </header> 
+  <debug>
+    디버그2
+  </debug>
   <main>
-    <div id="main" class="card-container"></div>
+    <div id="main" class="deck"></div>
   </main>
-  <script>
-    let Q = s => document.querySelector(s), QQ = s => [...document.querySelectorAll(s)];
+  <script> 
+    let Q = s => document.querySelector(s);
+    let QQ = s => [...document.querySelectorAll(s)];
+    let debug = (...msg) => {Q('debug').textContent = msg.join(', '); return msg[0];}
+
     let state = {
-      problems: [], categories: [], problemElements: [],
-      showSolution: false, showTiers: true, showTags: true,
-      showDuple: false, showMainOnly: false,
+      problems: [], categories: [], problemElements: [], renderMax: 30,
+      showSolution: false, showTier: true, showTag: true,
+      showDuple: false, showSubTag: false,
       tagFilters: {}, tierMin: null, tierMax: null,
     };
 
@@ -48,7 +54,7 @@
 
     function renderCategoryNav(categories, container) {
       container.innerHTML = '';
-      if (!state.showTags) return;
+      if (!state.showTag) return;
       categories.forEach(({ group, tags }) => {
         const groupBtn = createElement('button', `tag-button group-button ${state.tagFilters[group] || ''}`, group);
         groupBtn.addEventListener('click', e => { e.preventDefault(); toggleTag(group, 'include'); });
@@ -78,62 +84,46 @@
         const card = createElement('div', 'card');
         card.dataset.id = problem.id;
 
-        // const title = createElement('h4', null, `${problem.id}. `);
-        // card.append(title);
-
         const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
-        const tier = createElement('h4', `tag tier-${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
+        const tier = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
         card.append(tier);
 
-        const summary = createElement('p', null, `${problem.summary} `);
+        const summary = createElement('p', 'summary', `${problem.summary} `);
         card.append(summary);
 
         const { main, sub } = parseTags(problem.tags || []);
         if (problem.tags?.length === 0) card.append(createElement('span', 'tag sub-tag', '#미분류'));
-        main.forEach(tag => card.append(createElement('span', 'tag main-tag', `#${tag}`)));
-        sub.forEach(tag => card.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+
 
         const solution = createElement('p', 'solution', problem.solution1 || '');
-        card.append(document.createElement('hr'), solution);
+        const hr = createElement('hr', 'hr');
+        card.append(hr, solution);
+        
+        const tagbox = createElement('div', 'tagbox');
+        main.forEach(tag => tagbox.append(createElement('span', 'tag main-tag', `#${tag}`)));
+        sub.forEach(tag => tagbox.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+        card.append(tagbox);
 
         if (problem.dup) card.classList.add('dup');
 
+        card.style.display = 'none';
         container.appendChild(card);
         state.problemElements.push({ element: card, problem });
       });
     }
 
-    function updateCardContent(el, problem) {
-      el.querySelectorAll('.main-tag, .sub-tag').forEach(tag => {
-        tag.style.display = state.showTags ? '' : 'none';
-      });
-
-      if (state.showMainOnly) {
-        el.querySelectorAll('.sub-tag').forEach(tag => tag.style.display = 'none');
-      }
-
-      el.querySelectorAll('[class*="tier-"]').forEach(tier => {
-        tier.style.display = state.showTiers ? '' : 'none';
-      });
-
-      const solution = el.querySelector('.solution');
-      const hr = el.querySelector('hr');
-      if (solution) solution.style.display = state.showSolution ? '' : 'none';
-      if (hr) hr.style.display = state.showSolution ? '' : 'none';
-    }
-
-    function updateProblemVisibility() {
+    function renderProblems() {
       const search = Q('#searchInput').value.toLowerCase();
       const min = parseInt(Q('#tierMin').value) || null;
       const max = parseInt(Q('#tierMax').value) || null;
-      state.tierMin = min; state.tierMax = max;
+      state.tierMin = min;
+      state.tierMax = max;
       state.rendered = 0;
+      state.valid = 0;
 
       state.problemElements.forEach(({ element, problem }) => {
         const tags = problem.tags || [];
-        const tagList = state.showMainOnly
-          ? tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1))
-          : tags.map(t => t.replace('!', ''));
+        const tagList = tags.map(t => t.replace('!', ''));
         const resolved = tagList.length ? tagList : ['미분류'];
 
         const includes = Object.entries(state.tagFilters).filter(([_, m]) => m === 'include').map(([k]) => k);
@@ -142,22 +132,23 @@
         const inExclude = excludes.some(tag => resolved.includes(tag));
         const inSearch = problem.summary.toLowerCase().includes(search) || resolved.some(t => t.toLowerCase().includes(search));
         const inTier = (!min || problem.tier >= min) && (!max || problem.tier <= max);
-        const visible = (!problem.dup || state.showDuple) && inInclude && !inExclude && inSearch && inTier;
+        const valid = (!problem.dup || state.showDuple) && inInclude && !inExclude && inSearch && inTier;
 
-        element.style.display = visible ? 'block' : 'none';
-        if (visible) {
-          updateCardContent(element, problem);
-          state.rendered++;
+        state.valid = state.valid + valid*1;
+        if (valid && (state.rendered < state.renderMax)){
+          element.style.display = valid ? 'block' : 'none';
+          state.rendered = state.rendered + 1;
+          console.log( state.rendered );
         }
       });
 
-      Q('#cardCount').textContent = `문제: ${state.rendered}`;
+      Q('#cardCount').textContent = `문제: ${state.valid}`;
     }
 
     function render() {
       renderCategoryNav(state.categories, Q('#toc'));
-      Q('#toc').style.display = state.showTags ? 'flex' : 'none';
-      updateProblemVisibility();
+      Q('#toc').style.display = state.showTag ? 'flex' : 'none';
+      renderProblems();
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -171,17 +162,11 @@
       Q('#searchInput').addEventListener('input', render);
       Q('#tierMin').addEventListener('input', render);
       Q('#tierMax').addEventListener('input', render);
-      QQ('input[type="checkbox"]').forEach(box => {
-        box.addEventListener('change', e => {
-          state[e.target.getAttribute('var')] = e.target.checked;
-          render();
-        });
-      });
-      Q('#toggleMainOnly').addEventListener('click', () => {
-        state.showMainOnly = !state.showMainOnly;
-        Q('#toggleMainOnly').classList.toggle('active', state.showMainOnly);
-        render();
-      });
+      Q('#toggleTier').addEventListener('change', e=>Q('body').classList.toggle('showTier'));
+      Q('#toggleTag').addEventListener('change', e=>Q('body').classList.toggle('showTag'));
+      Q('#toggleDuple').addEventListener('change', e=> state.showDuple = !state.showDuple );
+      Q('#toggleSolution').addEventListener('change', e=>Q('body').classList.toggle('showSolution'));
+      Q('#toggleSubTag').addEventListener('click', e=>Q('body').classList.toggle('showSubTag'));
     });
   </script>
 </body>
