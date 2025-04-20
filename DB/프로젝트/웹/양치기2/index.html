@@ -20,17 +20,13 @@
       <label id="cardCount">문제: 0</label>
     </div>
     <div id="toc"></div>
-  </header> 
-  <debug>
-    디버그2
-  </debug>
+  </header>
   <main>
-    <div id="main" class="deck"></div>
+    <div id="deck"></div>
   </main>
   <script> 
     let Q = s => document.querySelector(s);
     let QQ = s => [...document.querySelectorAll(s)];
-    let debug = (...msg) => {Q('debug').textContent = msg.join(', '); return msg[0];}
 
     let state = {
       problems: [], categories: [], problemElements: [], renderMax: 30,
@@ -73,7 +69,7 @@
     function toggleTag(tag, mode) {
       const current = state.tagFilters[tag];
       state.tagFilters[tag] = current === mode ? null : mode;
-      render();
+      renderProblems();
     }
 
     function createProblemElements(container) {
@@ -106,13 +102,14 @@
 
         if (problem.dup) card.classList.add('dup');
 
-        card.style.display = 'none';
         container.appendChild(card);
         state.problemElements.push({ element: card, problem });
       });
     }
 
     function renderProblems() {
+      QQ('.draw').forEach(prev => prev.classList.toggle('draw'));
+
       const search = Q('#searchInput').value.toLowerCase();
       const min = parseInt(Q('#tierMin').value) || null;
       const max = parseInt(Q('#tierMax').value) || null;
@@ -136,19 +133,12 @@
 
         state.valid = state.valid + valid*1;
         if (valid && (state.rendered < state.renderMax)){
-          element.style.display = valid ? 'block' : 'none';
+          element.classList.toggle('draw');
           state.rendered = state.rendered + 1;
-          console.log( state.rendered );
         }
       });
 
       Q('#cardCount').textContent = `문제: ${state.valid}`;
-    }
-
-    function render() {
-      renderCategoryNav(state.categories, Q('#toc'));
-      Q('#toc').style.display = state.showTag ? 'flex' : 'none';
-      renderProblems();
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -156,15 +146,16 @@
       const categories = await fetch('./categories.json').then(r => r.json());
       state.problems = problems;
       state.categories = categories;
-      createProblemElements(Q('#main'));
-      render();
+      renderCategoryNav(state.categories, Q('#toc'));
+      createProblemElements(Q('#deck'));
+      renderProblems();
 
-      Q('#searchInput').addEventListener('input', render);
-      Q('#tierMin').addEventListener('input', render);
-      Q('#tierMax').addEventListener('input', render);
+      Q('#searchInput').addEventListener('input', renderProblems);
+      Q('#tierMin').addEventListener('input', renderProblems);
+      Q('#tierMax').addEventListener('input', renderProblems);
       Q('#toggleTier').addEventListener('change', e=>Q('body').classList.toggle('showTier'));
       Q('#toggleTag').addEventListener('change', e=>Q('body').classList.toggle('showTag'));
-      Q('#toggleDuple').addEventListener('change', e=> state.showDuple = !state.showDuple );
+      Q('#toggleDuple').addEventListener('change', e=> {state.showDuple = !state.showDuple; renderProblems()} );
       Q('#toggleSolution').addEventListener('change', e=>Q('body').classList.toggle('showSolution'));
       Q('#toggleSubTag').addEventListener('click', e=>Q('body').classList.toggle('showSubTag'));
     });

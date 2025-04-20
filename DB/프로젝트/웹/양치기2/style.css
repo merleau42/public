@@ -1,154 +1,157 @@
-  body {
+body {
 	font-family: 'Noto Sans KR', sans-serif;
 	background: #f2f4f7;
 	color: #1f2937;
 	margin: 0;
 	padding: 0;
-  }
-  
-  header {
+}
+
+header {
 	position: sticky;
 	top: 0;
 	z-index: 100;
 	background: rgba(229, 231, 235, 0.9);
 	padding: 1rem;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  label {
+}
+
+label {
 	min-height: 22px;
 	margin-left: 14px;
 	font-weight: bold;
 	font-size: small;
-  }
-  
-  .controls {
+}
+
+.controls {
 	left: -14px;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.25rem;
 	align-items: center;
 	position: relative;
-  }
-  
-  input[type="text"],
-  input[type="number"] {
+}
+
+input[type="text"],
+input[type="number"] {
 	padding: 0.25rem;
 	border: 1px solid #d1d5db;
 	border-radius: 0.375rem;
-  }
-  
-  .dup {
-	background: gainsboro;
-  }
+}
 
-  button {
+button {
 	border: 1px solid #ccc;
 	border-radius: 0.375rem;
 	background-color: white;
 	font-size: 0.875rem;
 	padding-bottom: 1px;
-  }
+}
 
-  .showSubTag #toggleSubTag {
+.showSubTag #toggleSubTag {
 	background: #999;
 	color: white
-  }
-  
-  #toc {
+}
+
+#toc {
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: 0.5rem;
-  }
+}
 
-  .deck {
+#deck {
 	padding: 1rem;
-  }
-  
-  .card {
+}
+
+.card {
 	background: white;
 	border-radius: 0.5rem;
 	padding: 1rem;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	font-size: small;
-  }
-  
-  .card hr {
+}
+
+.card.dup {
+	background: gainsboro;
+}
+
+.card hr {
 	margin: 0.75rem 0;
 	border-top: 1px solid #ccc;
 	border: none;
-  }
-  
-  .card span {
+}
+
+.card span {
 	margin-right: 4px;
-  }
+}
 
 
-  .tagbox {
+.tagbox {
 	text-align: right;
-  }
+}
 
-  .tag {
+.tag {
 	font-size: smaller;
 	font-style: italic;
 	padding: 1px 4px 2px 2px;
-  }
-  
-  .main-tag {
+}
+
+.main-tag {
 	color: teal;
-  }
-  
-  .sub-tag {
+}
+
+.sub-tag {
 	color: #ccc;
-  }
-  
-  .tag-button {
+}
+
+.tag-button {
 	font-size: 0.7rem;
-  }
-  
-  .tag-button.include {
+}
+
+.tag-button.include {
 	background: teal;
 	color: white;
-  }
-  
-  .tag-button.exclude {
+}
+
+.tag-button.exclude {
 	background: crimson;
 	color: white;
-  }
-  
-  .group-button {
+}
+
+.group-button {
 	font-weight: bold;
 	background: floralwhite;
-  }
- 
-  .tier {
+}
+
+.tier {
 	font-weight: bold;
 	font-size: smaller; 
 	font-style: italic;
 	padding: 1px 4px 2px 2px;
-  }
+}
 
-  .브론즈 { color: brown; }
-  .실버 { color: gray; }
-  .골드 { color: goldenrod; }
-  .플래 { color: mediumaquamarine; }
-  .다이아 { color: blue; }
-  .루비 { color: red; }
-  
-  /* display 관리 */
-  main > *						{ display: none; }
-  	.TRUE			.deck		{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+.브론즈 { color: brown; }
+.실버 { color: gray; }
+.골드 { color: goldenrod; }
+.플래 { color: mediumaquamarine; }
+.다이아 { color: blue; }
+.루비 { color: red; }
 
-  .deck > *						{ display: none; }
-  	.visible		.card		{ display: block; }
+/* display 관리 */
+#deck {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 1rem;
+}
 
-  .card	> *						{ display: none; }
-	.showTier		.tier		{ display: inline; }
-	.TRUE			.summary	{ display: inline; }
-	.showTag		.tagbox		{ display: block; } 
-	.showSolution	.hr			{ display: block; } 
-	.showSolution	.solution	{ display: block; }
-	
-  .tagbox > *					{ display: none; }
-	.TRUE			.main-tag	{ display: inline-block; }
-	.showSubTag		.sub-tag	{ display: inline-block; }
+.card						{ display: none; }
+.draw.card					{ display: block; }
+
+.card > *					{ display: none; }
+.showTier		.tier		{ display: inline; }
+.TRUE			.summary	{ display: inline; }
+.showTag		.tagbox		{ display: block; } 
+.showSolution	.hr			{ display: block; } 
+.showSolution	.solution	{ display: block; }
+
+.tagbox > *					{ display: none; }
+.TRUE			.main-tag	{ display: inline-block; }
+.showSubTag		.sub-tag	{ display: inline-block; }
