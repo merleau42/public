@@ -285,7 +285,7 @@
     "summary": "자사 제품의 '가성비' 는 경쟁사의 3배이다. '가성비' 를 구하는 공식과 일부 변수가 주어질 때, 자사 제품의 '성능' 을 구하기",
     "solution1": "[경가, 경성, 자가] = input(' ');\nlog(3 * 자가 * (경성/경가));\r\n",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 32314,
@@ -294,7 +294,7 @@
     "summary": "제품의 요구 전류와, 콘센트의 전력과 전압을 입력받고, 콘센트의 전류가 제품의 요구 전류를 만족하는지 출력",
     "solution1": "[전류, 전력, 전압] = input(/\\s/);\n(전류 <= 전력/전압) ? log(1) : log(0)",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 8437,
@@ -303,7 +303,7 @@
     "summary": "두 사람이 총 X개의 사과를 가지고 있다. 한 사람이 Y개를 더 가지고 있다. 각자 몇 개를 가지고 있을까?",
     "solution1": "[x, y] = input('\\n').map(BigInt);\n[(x + y) / 2n, (x - y) / 2n].log('\\n')",
     "solution2": "",
-    "tags": ["대수", "큰수"]
+    "tags": ["대수학", "큰수"]
   },
   {
     "id": 21300,
@@ -1275,7 +1275,7 @@
     "summary": "모든 입력값이 특정 문자열 모음에 소속되는지 확인",
     "solution1": "input('\\n').slice(1).every(x=>\r\n['Never gonna give you up',\r\n'Never gonna let you down',\r\n'Never gonna run around and desert you',\r\n'Never gonna make you cry',\r\n'Never gonna say goodbye',\r\n'Never gonna tell a lie and hurt you',\r\n'Never gonna stop'].includes(x)).if('No', 'Yes').log()",
     "solution2": "",
-    "tags": ["집합"]
+    "tags": ["집합론"]
   },
   {
     "id": 30676,
@@ -1545,7 +1545,7 @@
     "summary": "조각 피자의 면적과 가격, 원형 피자의 반지름과 가격이 주어질 때, 가성비가 더 좋은 피자를 출력.",
     "solution1": "[v, c1, r, c2] = input(/\\s+/);\n['원형 피자, '조각 피자'][ Number( (v / c1) > (PI * r**2 / c2) ) ]\n.log();",
     "solution2": "",
-    "tags": ["기하학", "측도", "원", "대수", "단위당 양"]
+    "tags": ["기하학", "측도", "원", "대수학", "단위당 양"]
   },
   {
     "id": 28295,
@@ -1590,7 +1590,7 @@
     "summary": "물건의 가격과 수량, 소지금을 입력받아서, 물건을 구매하기에 금액이 얼마나 부족한지 출력",
     "solution1": "[a,b,c] = input(' ');\r\nlog( a*b <= c ? 0 : a*b - c ); ",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 2845,
@@ -1599,7 +1599,7 @@
     "summary": "인구 밀도와 넓이, 예상 인구를 입력받고, 예상 인구를 실제보다 얼마나 많이 추정하였는지 출력",
     "solution1": "[[d, v], p] = input('\\n', ' ').mapleaves(Number);\np.map(x => x - d*v).log(' ');",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 14924,
@@ -1608,7 +1608,7 @@
     "summary": "작성중",
     "solution1": "[t, p, d] = input(' ').mapleaves(Number);\r\nlog( p * d/(2*t) )",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 3046,
@@ -1617,7 +1617,7 @@
     "summary": "두 수의 평균과, 두 수 중의 하나를 입력받고, 나머지 하나의 수를 구하기",
     "solution1": "[r1, s] = input(' ');\nlog(2*s - r1);",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 21612,
@@ -1626,7 +1626,7 @@
     "summary": "해수면의 기압은 100이다. 해발 고도가 달라지면 기압과 끓는점도 달라진다. 액체의 끓는점을 입력받아 '기압 = 5 × 끓는점 - 400' 으로 기압을 계산하고, 해발 고도와 해수면의 높낮이를 비교하기",
     "solution1": "(5 * input() - 400).thru(p => [p, p > 100 ? -1 : p == 100 ? 0 : 1]).log('\\n');",
     "solution2": "",
-    "tags": ["대수"]
+    "tags": ["대수학"]
   },
   {
     "id": 26575,
@@ -1635,7 +1635,7 @@
     "summary": "강아지의 마릿수, 마리당 필요한 사료의 양, 사료의 가격을 입력받아, 총 구매 비용을 계산",
     "solution1": "input('\\n', ' ').slice(1).map(([마릿수, 마리당_사료, 사료당_가격]) => '$' + (마릿수 * 마리당_사료 * 사료당_가격).toFixed(2) ).log('\\n')",
     "solution2": "",
-    "tags": ["대수", "\n단위당 양"]
+    "tags": ["대수학", "\n단위당 양"]
   },
   {
     "id": 18414,
@@ -1644,7 +1644,7 @@
     "summary": "X, L, R을 입력받고. L이상 R이하의 정수 중에서 X와 가장 가까운 정수를 출력",
     "solution1": "( (x < L) ? L : (L <= x && x <= R) ? x : R ).log();\n// 또는\nmin(max(x, L), R).log();",
     "solution2": "",
-    "tags": ["대수", "부등식"]
+    "tags": ["대수학", "부등식"]
   },
   {
     "id": 4299,
@@ -1662,7 +1662,7 @@
     "summary": "쉬운 수학 문제를 만들려고한다. '미지수 = 값' 이라는 해를 입력받고, 그러한 해가 도출되는 가장 쉬운 수식을 출력",
     "solution1": "input().log()",
     "solution2": "",
-    "tags": ["독해력", "넌센스", "대수", "방정식", "부등식"]
+    "tags": ["독해력", "넌센스", "대수학", "방정식", "부등식"]
   },
   {
     "id": 25704,
@@ -2210,8 +2210,8 @@
     "tier": 2,
     "summary": "모든 과목의 성적 중에서, 과학 상위 3과목과 사회 상위 1과목의 점수를 합산하여 출력",
     "solution1": "[과학, 사회] = input('\\n').map(Number).chunk(4);\r\n[과학, 사회].map(seq => seq.toSorted((a,b)=>b-a).slice(0,-1).sum()).sum().log();\r",
-    "solution2": "정렬 // 집합 관계",
-    "tags": ["정렬", "집합", "수열"]
+    "solution2": "정렬 // 집합론 관계",
+    "tags": ["정렬", "집합론", "수열"]
   },
   {
     "id": 10480,
@@ -2643,7 +2643,7 @@
     "summary": "작성중",
     "solution1": "N = input();\r\nnatural(N).reduce((s,c) => !(c%6) ? s.concat(c, 'Go!') : s.concat(c), [] ).concat(!(N%6) ? [] : 'Go!').log(' ');",
     "solution2": "",
-    "tags": ["배열", "공집합"]
+    "tags": ["배열", "공집합론"]
   },
   {
     "id": 20673,
@@ -2661,7 +2661,7 @@
     "summary": "사령관은 N명의 장군을 거느리고 있고, 각 장군은 N명의 대령을 지휘하고 있다. 각 대령은 N명의 소령을 두고 있고, 각 소령은 다시 N명의 중위를 통솔하고 있다. N을 입력받고 군인의 수를 출력",
     "solution1": "input('\\n').slice(0,-1).map(지수 => [1,1,1,1,1].unbase(지수, bound=false).toFixed(2) ).log('\\n');",
     "solution2": "",
-    "tags": ["수열", "등비 수열", "대수", "단위당 양"]
+    "tags": ["수열", "등비 수열", "대수학", "단위당 양"]
   },
   {
     "id": 30017,
@@ -2706,7 +2706,7 @@
     "summary": "1갤런은 3.785411784리터이고, 1마일은 1609.344미터이다. 갤런당 주행거리를 마일 단위로 입력받고, 100km당 연료 소비량을 리터 단위로 출력",
     "solution1": "log( 235.214583 / +input() );",
     "solution2": "",
-    "tags": ["대수", "비례식", "단위 변환!"]
+    "tags": ["대수학", "비례식", "단위 변환!"]
   },
   {
     "id": 29736,
@@ -2715,7 +2715,7 @@
     "summary": "사람마다 해결한 문제 수는 서로 다르며, A개부터 B개까지 1명씩 고르게 분포되어 있다. 자신이 해결한 문제 수와의 차이가 특정 값 이하인 사람들과 친구를 맺으려 한다. 해결한 문제 수와, 허용되는 차이값을 입력받고, 친구가 될 수 있는 사람의 수를 구하기",
     "solution1": "[a, b, sol, diff] = input(/\\s+/).map(Number);\ncnt = natural(a,b).filter(x => abs(sol - x) <= diff).length;\n// 또는 cnt = max(0, min(b, sol+diff) - max(a, sol-diff) + 1);\nlog( cnt ? cnt : 'IMPOSSIBLE');",
     "solution2": "",
-    "tags": ["수열", "크기 비교", "집합", "교집합의 갯수"]
+    "tags": ["수열", "크기 비교", "집합론", "교집합론의 갯수"]
   },
   {
     "id": 20215,
@@ -2769,7 +2769,7 @@
     "summary": "A, B를 입력받고, A+B와 A-B의 결과값 중에서 큰 것과 작은 것을 차례대로 출력",
     "solution1": "[ a+abs(b), a-abs(b) ].log('\\n');",
     "solution2": "",
-    "tags": ["대수", "절댓값"]
+    "tags": ["대수학", "절댓값"]
   },
   {
     "id": 15128,
@@ -4054,7 +4054,7 @@
     "dup": false,
     "tier": 3,
     "summary": "직사각형 틀 안에 N개의 돌을 모두 배치할 수 있을 때, 가로 세로의 길이가 최소가 되는 경우를 출력",
-    "solution1": "예선: ({스택}, 가지) => (스택.length <= 0) || (스택.at(-1) * 가지 >= N);\n발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용\n가공: ({스택: [x, y]}) => [x+y, x, y];\ncartesian([1,1], [N, N], 정보).해집합\n.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' ');",
+    "solution1": "예선: ({스택}, 가지) => (스택.length <= 0) || (스택.at(-1) * 가지 >= N);\n발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용\n가공: ({스택: [x, y]}) => [x+y, x, y];\ncartesian([1,1], [N, N], 정보).해집합론\n.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' ');",
     "solution2": "",
     "tags": ["완전탐색", "기하학"]
   },

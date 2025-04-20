@@ -4,6 +4,12 @@ body {
 	color: #1f2937;
 	margin: 0;
 	padding: 0;
+	overflow: auto;               /* 스크롤은 가능하게 */
+	-ms-overflow-style: none;     /* IE, Edge */
+}
+
+body::-webkit-scrollbar {
+	display: none;                /* Chrome, Safari */
 }
 
 header {
@@ -59,6 +65,7 @@ button {
 
 #deck {
 	padding: 1rem;
+	width: 95%;
 }
 
 .card {
@@ -119,6 +126,14 @@ button {
 .group-button {
 	font-weight: bold;
 	background: floralwhite;
+}
+
+#more {
+	display: block;
+	width: 80px;
+	height: 50px;
+	margin: auto;
+	margin-bottom: 3%;
 }
 
 .tier {

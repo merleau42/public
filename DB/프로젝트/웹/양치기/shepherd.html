@@ -23,6 +23,7 @@
   </header>
   <main>
     <div id="deck"></div>
+    <button id="more" text-align="center">더 보기</div>
   </main>
   <script> 
     let Q = s => document.querySelector(s);
@@ -103,6 +104,8 @@
 
         if (problem.dup) card.classList.add('dup');
 
+        card.addEventListener('click', e=>window.open('https://www.acmicpc.net/problem/'+problem.id, '_blank', 'noopener,noreferrer'));
+
         container.appendChild(card);
         state.problemElements.push({ element: card, problem });
       });
@@ -159,6 +162,7 @@
       Q('#toggleDuple').addEventListener('change', e=> {state.showDuple = !state.showDuple; renderProblems()} );
       Q('#toggleSolution').addEventListener('change', e=>Q('body').classList.toggle('showSolution'));
       Q('#toggleSubTag').addEventListener('click', e=>Q('body').classList.toggle('showSubTag'));
+      Q('#more').addEventListener('click', e=> {state.renderMax += 50; renderProblems()})
     });
   </script>
 </body>
