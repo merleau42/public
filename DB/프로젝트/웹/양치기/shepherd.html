@@ -69,6 +69,7 @@
     function toggleTag(tag, mode) {
       const current = state.tagFilters[tag];
       state.tagFilters[tag] = current === mode ? null : mode;
+      renderCategoryNav(state.categories, Q('#toc'));
       renderProblems();
     }
 
