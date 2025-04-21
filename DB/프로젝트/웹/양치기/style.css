@@ -66,7 +66,6 @@ button {
 
 #deck {
 	padding: 1rem;
-	width: 95%;
 }
 
 .card {
@@ -82,7 +81,7 @@ button {
 }
 
 .card.random {
-	background: beige;
+	background: ivory;
 	grid-row: 1;
 }
 
@@ -95,9 +94,23 @@ button {
 	margin-right: 4px;
 }
 
+.random .summary::before,
+.tier {
+	font-weight: bold;
+	font-size: smaller; 
+	font-style: italic;
+	padding: 1px 4px 2px 2px;
+}
+
 .summary {
 	text-decoration: none;
 	color: black;
+}
+
+.random .summary::before {
+	content: "Random";
+	color: orangered;
+	padding: 1px 8px 2px 2px;
 }
 
 .summary:hover {
@@ -150,13 +163,6 @@ button {
 	margin-bottom: 3%;
 }
 
-.tier {
-	font-weight: bold;
-	font-size: smaller; 
-	font-style: italic;
-	padding: 1px 4px 2px 2px;
-}
-
 .브론즈 { color: brown; }
 .실버 { color: gray; }
 .골드 { color: goldenrod; }
@@ -167,7 +173,7 @@ button {
 /* display 관리 */
 #deck {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 	gap: 1rem;
 }
 
@@ -177,6 +183,7 @@ button {
 
 .card > *					{ display: none; }
 .showTier		.tier		{ display: inline; }
+.random			.tier		{ display: none; }
 .TRUE			.summary	{ display: inline; }
 .showTag		.tagbox		{ display: block; } 
 .showSolution	.hr			{ display: block; } 
