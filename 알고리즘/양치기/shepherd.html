@@ -120,8 +120,8 @@
         QQ('.draw').forEach(prev => prev.classList.remove('draw'));
 
         const search = Q('#searchInput').value.toLowerCase();
-        const min = Q('#tierMin').value*1||0;
-        const max = Q('#tierMax').value*1||0;
+        const 최소티어 = Q('#tierMin').value*1||0;
+        const 최대티어 = Q('#tierMax').value*1||30;
         state.valid = 0;
         
         let rendered = 0;
@@ -130,7 +130,7 @@
           const 실제태그 = 문제태그.length ? 문제태그 : ['미분류'];
 
           const 중복일치 = (!문제.dup || state.showDuple);
-          const 티어일치 = (!min || 문제.tier >= min) && (!max || 문제.tier <= max);
+          const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
           const 포함일치 = [...state.includeTags].every(tag => 실제태그.includes(tag));
           const 제외일치 = [...state.excludeTags].some(tag => 실제태그.includes(tag));
           const 검색일치 = 문제.summary.includes(search) || 실제태그.some(tag => tag.includes(search));
