@@ -34,7 +34,6 @@
       const DB = { problems: [], categories: [] };
       const state = {
         problemElements: [], renderMax: 30,
-        showSolution: false, showTier: true, showTag: true,
         showDuple: false, showSubTag: false,
         includeTags: new Set(), excludeTags: new Set(),
         tierMin: null, tierMax: null,
@@ -62,7 +61,6 @@
               e.target.classList.toggle('include');
               e.target.classList.remove('exclude');
               renderProblems();
-              console.log( state.includeTags, state.excludeTags );
             });
             btn.addEventListener('contextmenu', e => {
               e.preventDefault();
@@ -71,7 +69,6 @@
               e.target.classList.toggle('exclude');
               e.target.classList.remove('include');
               renderProblems();
-              console.log( state.includeTags, state.excludeTags );
             });
             container.appendChild(btn);
           });
@@ -123,32 +120,26 @@
         QQ('.draw').forEach(prev => prev.classList.remove('draw'));
 
         const search = Q('#searchInput').value.toLowerCase();
-        const minVal = Q('#tierMin').value.trim();
-        const maxVal = Q('#tierMax').value.trim();
-        const min = minVal === '' ? null : parseInt(minVal);
-        const max = maxVal === '' ? null : parseInt(maxVal);
-        state.tierMin = min;
-        state.tierMax = max;
-        state.rendered = 0;
+        const min = Q('#tierMin').value*1||0;
+        const max = Q('#tierMax').value*1||0;
         state.valid = 0;
-
+        
+        let rendered = 0;
         state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
-          const 문제태그 = (문제.tags || []).map(t => t.replace('!', ''));
+          const 문제태그 = 문제.tags.map(t => t.replace('!', ''));
           const 실제태그 = 문제태그.length ? 문제태그 : ['미분류'];
 
+          const 중복일치 = (!문제.dup || state.showDuple);
+          const 티어일치 = (!min || 문제.tier >= min) && (!max || 문제.tier <= max);
           const 포함일치 = [...state.includeTags].every(tag => 실제태그.includes(tag));
           const 제외일치 = [...state.excludeTags].some(tag => 실제태그.includes(tag));
           const 검색일치 = 문제.summary.includes(search) || 실제태그.some(tag => tag.includes(search));
-          const 티어일치 = (!min || 문제.tier >= min) && (!max || 문제.tier <= max);
-          const 중복일치 = (!문제.dup || state.showDuple);
 
-          const 조건만족 = 중복일치 && 포함일치 && !제외일치 && 검색일치 && 티어일치;
+          const 조건만족 = 중복일치 && 티어일치 && 포함일치 && !제외일치 && 검색일치;
 
           if (조건만족) state.valid++;
-          if (조건만족 && state.rendered < state.renderMax) {
+          if (조건만족 && rendered++ < state.renderMax)
             카드.classList.add('draw');
-            state.rendered++;
-          }
         });
 
         Q('#cardCount').textContent = `문제: ${state.valid}`;
