@@ -93,7 +93,7 @@
           card.append(구분선, 해답);
           
           const 태그박스 = createElement('div', 'tagbox');
-          const 주태그 = problem.tags.filter(t => t.endsWith('!')).map(t => t.slice(0, -1));
+          const 주태그 = problem.tags.filter(t =>  t.endsWith('!')).map(t => t.slice(0, -1));
           const 부태그 = problem.tags.filter(t => !t.endsWith('!'));
           주태그.forEach(tag => 태그박스.append(createElement('span', 'tag main-tag', `#${tag}`)));
           부태그.forEach(tag => 태그박스.append(createElement('span', 'tag sub-tag', `#${tag}`)));
@@ -121,14 +121,14 @@
         
         let rendered = 0;
         state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
-          const 문제태그 = 문제.tags.map(t => t.replace('!', ''));
-          const 실제태그 = 문제태그.length ? 문제태그 : ['미분류'];
+          const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
+          const 문제태그 = 태그원본.length ? 태그원본 : ['미분류'];
 
           const 중복일치 = (!문제.dup || state.showDuple);
           const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
-          const 포함일치 = [...state.includeTags].every(tag => 실제태그.includes(tag));
-          const 제외일치 = [...state.excludeTags].some(tag => 실제태그.includes(tag));
-          const 검색일치 = 문제.summary.includes(검색어) || 실제태그.some(tag => tag.includes(검색어));
+          const 포함일치 = [...state.includeTags].every(tag => 문제태그.includes(tag));
+          const 제외일치 = [...state.excludeTags].some(tag => 문제태그.includes(tag));
+          const 검색일치 = 문제.summary.includes(검색어) || 문제태그.some(tag => tag.includes(검색어));
 
           const 조건만족 = 중복일치 && 티어일치 && 포함일치 && !제외일치 && 검색일치;
 
