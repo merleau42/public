@@ -6,7 +6,7 @@
 		<title>문제 뷰어</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body class="TRUE showTag showTier showSubTag">
+	<body class="TRUE showTag showTier showToc showSubTag">
 		<header>
 			<div class="controls">
 				<label>검색:</label><input id="searchInput" type="text" style="width:10%" placeholder="...">
@@ -15,6 +15,7 @@
 				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:40px;" />
 				<button id="getRandom">랜덤</button>
 				<label>태그:</label><input type="checkbox" id="toggleTag" checked />
+				<button id="toggleToc">목차</button>
 				<button id="toggleSubTag">부태그</button>
 				<label>중복:</label><input type="checkbox" id="toggleDuple" />
 				<label>해답:</label><input type="checkbox" id="toggleSolution" />
@@ -174,6 +175,7 @@
 				Q('#toggleTag').addEventListener('change', e => Q('body').classList.toggle('showTag'));
 				Q('#toggleDuple').addEventListener('change', e => { state.showDuple = !state.showDuple; renderProblems(); });
 				Q('#toggleSolution').addEventListener('change', e => Q('body').classList.toggle('showSolution'));
+				Q('#toggleToc').addEventListener('click', e => Q('body').classList.toggle('showToc'));
 				Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
 				Q('#more').addEventListener('click', e => { state.renderMax += 50; renderProblems(); });
 			});

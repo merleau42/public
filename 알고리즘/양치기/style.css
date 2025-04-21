@@ -53,12 +53,16 @@ button {
 }
 
 #getRandom:active,
+.showToc #toggleToc,
 .showSubTag #toggleSubTag {
 	background: #999;
 	color: white
 }
-
 #toc {
+	display: none;
+}
+
+.showToc #toc {
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: 0.5rem;
