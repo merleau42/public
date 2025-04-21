@@ -510,7 +510,7 @@
     "summary": "세 수의 합이 21 이하인지 확인",
     "solution1": "[a,b,c] = input('\\n').map(Number);\n(a+b+c<=21 ? 1 : 0).log();",
     "solution2": "",
-    "tags": ["산술", "사칙 연산", "대수 비교"]
+    "tags": ["산술", "사칙 연산", "대소 비교"]
   },
   {
     "id": 8871,
@@ -798,7 +798,7 @@
     "summary": "a, b, c를 입력받고, a와 b의 합이 c와 같은지 확인",
     "solution1": "[a, b, c] = input(' ').map(Number);\nlog(a + b == c ? 'correct!' : 'wrong!');",
     "solution2": "",
-    "tags": ["산술", "사칙연산", "대수 비교"]
+    "tags": ["산술", "사칙연산", "대소 비교"]
   },
   {
     "id": 22193,
@@ -942,7 +942,7 @@
     "summary": "유리수를 분모와 분자의 정수로 표현하기",
     "solution1": "[a, b] = input(' ');\nlog( b-a, b );",
     "solution2": "",
-    "tags": ["수학"]
+    "tags": ["유리수"]
   },
   {
     "id": 26307,
@@ -2742,7 +2742,7 @@
     "summary": "행과 열로 칸이 나누어진 직사각형 공간에 사람들이 모여있다. 좌우나 앞뒤 칸에 다른 사람이 없도록 각자 자리를 잡는다. 행과 열의 길이를 입력받고, 직사각형 공간에 최대 몇명이 자리할 수 있는지 구하기",
     "solution1": "input('\\n', ' ').slice(1).mapleaves(Number).map(([R,C]) => floor(R*C / 2) ).log('\\n');",
     "solution2": "",
-    "tags": ["타일채우기"]
+    "tags": ["타일 채우기"]
   },
   {
     "id": 13580,
