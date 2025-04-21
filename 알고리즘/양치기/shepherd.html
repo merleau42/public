@@ -11,8 +11,9 @@
 			<div class="controls">
 				<label>검색:</label><input id="searchInput" type="text" style="width:12%" placeholder="...">
 				<label>티어:</label><input type="checkbox" id="toggleTier" checked />
-				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
-				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
+				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:40px;" /> ~
+				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:40px;" />
+				<button id="getRandom">랜덤</button>
 				<label>태그:</label><input type="checkbox" id="toggleTag" checked />
 				<button id="toggleSubTag">부태그</button>
 				<label>중복:</label><input type="checkbox" id="toggleDuple" />
@@ -27,8 +28,10 @@
 		</main>
 
 		<script>
-			const Q = s => document.querySelector(s);
-			const QQ = s => [...document.querySelectorAll(s)];
+			let Q = s => document.querySelector(s);
+			let QQ = s => [...document.querySelectorAll(s)];
+			let randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
 			Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
 
 			const DB = { problems: [], categories: [] };
@@ -85,7 +88,9 @@
 					const 티어표기 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
 					card.append(티어표기);
 
-					const 요약 = createElement('p', 'summary', `${problem.summary} `);
+					// const 요약 = createElement('p', 'summary', `${problem.summary} `);
+					const 요약 = createElement('a', 'summary', `${problem.summary} `);
+					요약.href='https://www.acmicpc.net/problem/' + problem.id;
 					card.append(요약);
 
 					const 구분선 = createElement('hr', 'hr');
@@ -102,8 +107,6 @@
 
 					if (problem.dup) card.classList.add('dup');
 
-					card.addEventListener('click', e => window.open('https://www.acmicpc.net/problem/' + problem.id, '_blank', 'noopener,noreferrer'));
-
 					container.appendChild(card);
 					state.problemElements.push({ element: card, problem });
 				});
@@ -115,11 +118,12 @@
 				QQ('.draw').forEach(prev => prev.classList.remove('draw'));
 
 				const 검색어 = Q('#searchInput').value.toLowerCase();
-				const 최소티어 = Q('#tierMin').value*1||0;
+				const 최소티어 = Q('#tierMin').value*1||1;
 				const 최대티어 = Q('#tierMax').value*1||30;
 				state.valid = 0;
-				
-				let rendered = 0;
+				state.randomAble = [];
+
+				rendered = 0;
 				state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
 					const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
 					const 문제태그 = 태그원본.length ? 태그원본 : ['미분류'];
@@ -131,13 +135,24 @@
 					const 검색일치 = 문제.summary.includes(검색어) || 문제태그.some(tag => tag.includes(검색어));
 
 					const 조건만족 = 중복확인 && 티어일치 && 태그포함 && !태그제외 && 검색일치;
+					const 랜덤조건 = 중복확인 && 티어일치;
 
 					if (조건만족) state.valid++;
 					if (조건만족 && rendered++ < state.renderMax)
 						카드.classList.add('draw');
+					if (랜덤조건) state.randomAble.push(카드);
 				});
 
 				Q('#cardCount').textContent = `문제: ${state.valid}`;
+			}
+
+			function randomDefence() {
+				QQ('.random').forEach(prev => prev.classList.remove('random'));
+				renderProblems();
+				
+				const 랜덤후보 = state.randomAble;
+				랜덤후보[randz(0, 랜덤후보.length - 1)].classList.add('random');
+				랜덤후보[randz(0, 랜덤후보.length - 1)].classList.add('random');
 			}
 
 			document.addEventListener('DOMContentLoaded', async () => {
@@ -150,6 +165,7 @@
 				renderProblems();
 
 				Q('#searchInput').addEventListener('input', renderProblems);
+				Q('#getRandom').addEventListener('click', randomDefence);
 				Q('#tierMin').addEventListener('input', renderProblems);
 				Q('#tierMax').addEventListener('input', renderProblems);
 				Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
