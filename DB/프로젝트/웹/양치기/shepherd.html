@@ -1,164 +1,164 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>문제 뷰어</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body class="TRUE showTag showTier showSubTag">
-    <header>
-      <div class="controls">
-        <label>검색:</label><input id="searchInput" type="text" style="width:12%" placeholder="...">
-        <label>티어:</label><input type="checkbox" id="toggleTier" checked />
-        <input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
-        <input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
-        <label>태그:</label><input type="checkbox" id="toggleTag" checked />
-        <button id="toggleSubTag">부태그</button>
-        <label>중복:</label><input type="checkbox" id="toggleDuple" />
-        <label>해답:</label><input type="checkbox" id="toggleSolution" />
-        <label id="cardCount">문제: 0</label>
-      </div>
-      <div id="toc"></div>
-    </header>
-    <main>
-      <div id="deck"></div>
-      <button id="more" style="text-align: center;">더 보기</button>
-    </main>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>문제 뷰어</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body class="TRUE showTag showTier showSubTag">
+		<header>
+			<div class="controls">
+				<label>검색:</label><input id="searchInput" type="text" style="width:12%" placeholder="...">
+				<label>티어:</label><input type="checkbox" id="toggleTier" checked />
+				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:45px;" /> ~
+				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:45px;" />
+				<label>태그:</label><input type="checkbox" id="toggleTag" checked />
+				<button id="toggleSubTag">부태그</button>
+				<label>중복:</label><input type="checkbox" id="toggleDuple" />
+				<label>해답:</label><input type="checkbox" id="toggleSolution" />
+				<label id="cardCount">문제: 0</label>
+			</div>
+			<div id="toc"></div>
+		</header>
+		<main>
+			<div id="deck"></div>
+			<button id="more" style="text-align: center;">더 보기</button>
+		</main>
 
-    <script>
-      const Q = s => document.querySelector(s);
-      const QQ = s => [...document.querySelectorAll(s)];
-      Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
+		<script>
+			const Q = s => document.querySelector(s);
+			const QQ = s => [...document.querySelectorAll(s)];
+			Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
 
-      const DB = { problems: [], categories: [] };
-      const state = { problemElements: [], renderMax: 30, showDuple: false, includeTags: new Set(), excludeTags: new Set() };
+			const DB = { problems: [], categories: [] };
+			const state = { problemElements: [], renderMax: 30, showDuple: false, includeTags: new Set(), excludeTags: new Set() };
 
-      function createElement(tag, className, content) {
-        const el = document.createElement(tag);
-        if (className) el.className = className;
-        if (content) el.textContent = content;
-        return el;
-      }
+			function createElement(tag, className, content) {
+				const el = document.createElement(tag);
+				if (className) el.className = className;
+				if (content) el.textContent = content;
+				return el;
+			}
 
-      function createCategoryElements() {
-        container = createElement('div');
-        container.id = "toc";
+			function createCategoryElements() {
+				container = createElement('div');
+				container.id = "toc";
 
-        DB.categories.forEach(({ group, tags }) => {
-          [group, ...tags].forEach(tag => {
-            const btn = createElement('button', `tag-button`, tag);
-            if (tag == group) btn.classList.add('group-button');
-            btn.addEventListener('click', e => {
-              e.preventDefault();
-              state.includeTags.toggle(tag); 
-              state.excludeTags.delete(tag);
-              e.target.classList.toggle('include');
-              e.target.classList.remove('exclude');
-              renderProblems();
-            });
-            btn.addEventListener('contextmenu', e => {
-              e.preventDefault();
-              state.excludeTags.toggle(tag);
-              state.includeTags.delete(tag);
-              e.target.classList.toggle('exclude');
-              e.target.classList.remove('include');
-              renderProblems();
-            });
-            container.appendChild(btn);
-          });
-        });
+				DB.categories.forEach(({ group, tags }) => {
+					[group, ...tags].forEach(tag => {
+						const btn = createElement('button', `tag-button`, tag);
+						if (tag == group) btn.classList.add('group-button');
+						btn.addEventListener('click', e => {
+							e.preventDefault();
+							state.includeTags.toggle(tag); 
+							state.excludeTags.delete(tag);
+							e.target.classList.toggle('include');
+							e.target.classList.remove('exclude');
+							renderProblems();
+						});
+						btn.addEventListener('contextmenu', e => {
+							e.preventDefault();
+							state.excludeTags.toggle(tag);
+							state.includeTags.delete(tag);
+							e.target.classList.toggle('exclude');
+							e.target.classList.remove('include');
+							renderProblems();
+						});
+						container.appendChild(btn);
+					});
+				});
 
-        return container;
-      }
+				return container;
+			}
 
-      function createProblemElements() {
-        container = createElement('div');
-        container.id = "deck";
-        state.problemElements = [];
+			function createProblemElements() {
+				container = createElement('div');
+				container.id = "deck";
+				state.problemElements = [];
 
-        DB.problems.forEach(problem => {
-          const card = createElement('div', 'card');
-          card.dataset.id = problem.id;
+				DB.problems.forEach(problem => {
+					const card = createElement('div', 'card');
+					card.dataset.id = problem.id;
 
-          const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
-          const 티어표기 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
-          card.append(티어표기);
+					const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
+					const 티어표기 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
+					card.append(티어표기);
 
-          const 요약 = createElement('p', 'summary', `${problem.summary} `);
-          card.append(요약);
+					const 요약 = createElement('p', 'summary', `${problem.summary} `);
+					card.append(요약);
 
-          const 구분선 = createElement('hr', 'hr');
-          const 해답 = createElement('p', 'solution', problem.solution1 || '');
-          card.append(구분선, 해답);
-          
-          const 태그박스 = createElement('div', 'tagbox');
-          const 주태그 = problem.tags.filter(t =>  t.endsWith('!')).map(t => t.slice(0, -1));
-          const 부태그 = problem.tags.filter(t => !t.endsWith('!'));
-          주태그.forEach(tag => 태그박스.append(createElement('span', 'tag main-tag', `#${tag}`)));
-          부태그.forEach(tag => 태그박스.append(createElement('span', 'tag sub-tag', `#${tag}`)));
-          if (!problem.tags[0]) 태그박스.append(createElement('span', 'tag sub-tag', '#미분류'));
-          card.append(태그박스);
+					const 구분선 = createElement('hr', 'hr');
+					const 해답 = createElement('p', 'solution', problem.solution1 || '');
+					card.append(구분선, 해답);
+					
+					const 태그박스 = createElement('div', 'tagbox');
+					const 주태그 = problem.tags.filter(t =>  t.endsWith('!')).map(t => t.slice(0, -1));
+					const 부태그 = problem.tags.filter(t => !t.endsWith('!'));
+					주태그.forEach(tag => 태그박스.append(createElement('span', 'tag main-tag', `#${tag}`)));
+					부태그.forEach(tag => 태그박스.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+					if (!problem.tags[0]) 태그박스.append(createElement('span', 'tag sub-tag', '#미분류'));
+					card.append(태그박스);
 
-          if (problem.dup) card.classList.add('dup');
+					if (problem.dup) card.classList.add('dup');
 
-          card.addEventListener('click', e => window.open('https://www.acmicpc.net/problem/' + problem.id, '_blank', 'noopener,noreferrer'));
+					card.addEventListener('click', e => window.open('https://www.acmicpc.net/problem/' + problem.id, '_blank', 'noopener,noreferrer'));
 
-          container.appendChild(card);
-          state.problemElements.push({ element: card, problem });
-        });
+					container.appendChild(card);
+					state.problemElements.push({ element: card, problem });
+				});
 
-        return container;
-      }
+				return container;
+			}
 
-      function renderProblems() {
-        QQ('.draw').forEach(prev => prev.classList.remove('draw'));
+			function renderProblems() {
+				QQ('.draw').forEach(prev => prev.classList.remove('draw'));
 
-        const 검색어 = Q('#searchInput').value.toLowerCase();
-        const 최소티어 = Q('#tierMin').value*1||0;
-        const 최대티어 = Q('#tierMax').value*1||30;
-        state.valid = 0;
-        
-        let rendered = 0;
-        state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
-          const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
-          const 문제태그 = 태그원본.length ? 태그원본 : ['미분류'];
+				const 검색어 = Q('#searchInput').value.toLowerCase();
+				const 최소티어 = Q('#tierMin').value*1||0;
+				const 최대티어 = Q('#tierMax').value*1||30;
+				state.valid = 0;
+				
+				let rendered = 0;
+				state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
+					const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
+					const 문제태그 = 태그원본.length ? 태그원본 : ['미분류'];
 
-          const 중복일치 = (!문제.dup || state.showDuple);
-          const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
-          const 포함일치 = [...state.includeTags].every(tag => 문제태그.includes(tag));
-          const 제외일치 = [...state.excludeTags].some(tag => 문제태그.includes(tag));
-          const 검색일치 = 문제.summary.includes(검색어) || 문제태그.some(tag => tag.includes(검색어));
+					const 중복확인 = (!문제.dup || state.showDuple);
+					const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
+					const 태그포함 = [...state.includeTags].every(tag => 문제태그.includes(tag));
+					const 태그제외 = [...state.excludeTags].some(tag => 문제태그.includes(tag));
+					const 검색일치 = 문제.summary.includes(검색어) || 문제태그.some(tag => tag.includes(검색어));
 
-          const 조건만족 = 중복일치 && 티어일치 && 포함일치 && !제외일치 && 검색일치;
+					const 조건만족 = 중복확인 && 티어일치 && 태그포함 && !태그제외 && 검색일치;
 
-          if (조건만족) state.valid++;
-          if (조건만족 && rendered++ < state.renderMax)
-            카드.classList.add('draw');
-        });
+					if (조건만족) state.valid++;
+					if (조건만족 && rendered++ < state.renderMax)
+						카드.classList.add('draw');
+				});
 
-        Q('#cardCount').textContent = `문제: ${state.valid}`;
-      }
+				Q('#cardCount').textContent = `문제: ${state.valid}`;
+			}
 
-      document.addEventListener('DOMContentLoaded', async () => {
-        const problems = await fetch('./problems.json').then(r => r.json());
-        const categories = await fetch('./categories.json').then(r => r.json());
-        DB.problems = problems;
-        DB.categories = categories;
-        Q('#toc').replaceWith( createCategoryElements() );
-        Q('#deck').replaceWith( createProblemElements() );
-        renderProblems();
+			document.addEventListener('DOMContentLoaded', async () => {
+				const problems = await fetch('./problems.json').then(r => r.json());
+				const categories = await fetch('./categories.json').then(r => r.json());
+				DB.problems = problems;
+				DB.categories = categories;
+				Q('#toc').replaceWith( createCategoryElements() );
+				Q('#deck').replaceWith( createProblemElements() );
+				renderProblems();
 
-        Q('#searchInput').addEventListener('input', renderProblems);
-        Q('#tierMin').addEventListener('input', renderProblems);
-        Q('#tierMax').addEventListener('input', renderProblems);
-        Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
-        Q('#toggleTag').addEventListener('change', e => Q('body').classList.toggle('showTag'));
-        Q('#toggleDuple').addEventListener('change', e => { state.showDuple = !state.showDuple; renderProblems(); });
-        Q('#toggleSolution').addEventListener('change', e => Q('body').classList.toggle('showSolution'));
-        Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
-        Q('#more').addEventListener('click', e => { state.renderMax += 50; renderProblems(); });
-      });
-    </script>
-  </body>
+				Q('#searchInput').addEventListener('input', renderProblems);
+				Q('#tierMin').addEventListener('input', renderProblems);
+				Q('#tierMax').addEventListener('input', renderProblems);
+				Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
+				Q('#toggleTag').addEventListener('change', e => Q('body').classList.toggle('showTag'));
+				Q('#toggleDuple').addEventListener('change', e => { state.showDuple = !state.showDuple; renderProblems(); });
+				Q('#toggleSolution').addEventListener('change', e => Q('body').classList.toggle('showSolution'));
+				Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
+				Q('#more').addEventListener('click', e => { state.renderMax += 50; renderProblems(); });
+			});
+		</script>
+	</body>
 </html>
