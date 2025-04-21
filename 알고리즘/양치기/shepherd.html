@@ -119,7 +119,7 @@
       function renderProblems() {
         QQ('.draw').forEach(prev => prev.classList.remove('draw'));
 
-        const search = Q('#searchInput').value.toLowerCase();
+        const 검색어 = Q('#searchInput').value.toLowerCase();
         const 최소티어 = Q('#tierMin').value*1||0;
         const 최대티어 = Q('#tierMax').value*1||30;
         state.valid = 0;
@@ -133,7 +133,7 @@
           const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
           const 포함일치 = [...state.includeTags].every(tag => 실제태그.includes(tag));
           const 제외일치 = [...state.excludeTags].some(tag => 실제태그.includes(tag));
-          const 검색일치 = 문제.summary.includes(search) || 실제태그.some(tag => tag.includes(search));
+          const 검색일치 = 문제.summary.includes(검색어) || 실제태그.some(tag => tag.includes(검색어));
 
           const 조건만족 = 중복일치 && 티어일치 && 포함일치 && !제외일치 && 검색일치;
 
