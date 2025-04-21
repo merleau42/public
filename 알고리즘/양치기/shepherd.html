@@ -163,6 +163,7 @@
 				Q('#toc').replaceWith( createCategoryElements() );
 				Q('#deck').replaceWith( createProblemElements() );
 				renderProblems();
+				randomDefence();
 
 				Q('#searchInput').addEventListener('input', renderProblems);
 				Q('#getRandom').addEventListener('click', randomDefence);

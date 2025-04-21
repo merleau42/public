@@ -173,7 +173,7 @@ button {
 
 .card						{ display: none; }
 .draw.card					{ display: block; }
-.random.card					{ display: block; }
+.random.card				{ display: block; }
 
 .card > *					{ display: none; }
 .showTier		.tier		{ display: inline; }
