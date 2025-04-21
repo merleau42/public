@@ -52,6 +52,7 @@ button {
 	padding-bottom: 1px;
 }
 
+#getRandom:active,
 .showSubTag #toggleSubTag {
 	background: #999;
 	color: white
@@ -80,6 +81,11 @@ button {
 	background: gainsboro;
 }
 
+.card.random {
+	background: beige;
+	grid-row: 1;
+}
+
 .card hr {
 	margin: 0.75rem 0;
 	border: 1px solid #eee;
@@ -89,6 +95,15 @@ button {
 	margin-right: 4px;
 }
 
+.summary {
+	text-decoration: none;
+	color: black;
+}
+
+.summary:hover {
+	text-decoration: underline;
+	color: cornflowerblue;
+}
 
 .tagbox {
 	text-align: right;
@@ -158,6 +173,7 @@ button {
 
 .card						{ display: none; }
 .draw.card					{ display: block; }
+.random.card					{ display: block; }
 
 .card > *					{ display: none; }
 .showTier		.tier		{ display: inline; }
