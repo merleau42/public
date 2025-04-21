@@ -89,6 +89,13 @@ button {
 	grid-row: 1;
 }
 
+.card.more {
+	justify-content: center;
+	align-items: center;
+	min-height: 50px;
+	cursor: zoom-in;
+}
+
 .card hr {
 	margin: 0.75rem 0;
 	border: 1px solid #eee;
@@ -159,14 +166,6 @@ button {
 	background: floralwhite;
 }
 
-#more {
-	display: block;
-	width: 80px;
-	height: 50px;
-	margin: auto;
-	margin-bottom: 3%;
-}
-
 .브론즈 { color: brown; }
 .실버 { color: gray; }
 .골드 { color: goldenrod; }
@@ -175,15 +174,12 @@ button {
 .루비 { color: red; }
 
 /* display 관리 */
-#deck {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 1rem;
-}
 
+#deck 						{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
 .card						{ display: none; }
 .draw.card					{ display: block; }
 .random.card				{ display: block; }
+.more.card					{ display: flex; }
 
 .card > *					{ display: none; }
 .showTier		.tier		{ display: inline; }

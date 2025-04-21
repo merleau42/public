@@ -3,7 +3,8 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>문제 뷰어</title>
+		<link rel="icon" href="favicon.png" type="image/png">
+		<title>양치기</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body class="TRUE showTag showTier showToc showSubTag">
@@ -25,7 +26,6 @@
 		</header>
 		<main>
 			<div id="deck"></div>
-			<button id="more" style="text-align: center;">더 보기</button>
 		</main>
 
 		<script>
@@ -89,7 +89,6 @@
 					const 티어표기 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
 					card.append(티어표기);
 
-					// const 요약 = createElement('p', 'summary', `${problem.summary} `);
 					const 요약 = createElement('a', 'summary', `${problem.summary} `);
 					요약.href='https://www.acmicpc.net/problem/' + problem.id;
 					card.append(요약);
@@ -111,6 +110,8 @@
 					container.appendChild(card);
 					state.problemElements.push({ element: card, problem });
 				});
+
+				container.appendChild( createElement('div', 'card more', '더 보기') );
 
 				return container;
 			}
@@ -177,7 +178,7 @@
 				Q('#toggleSolution').addEventListener('change', e => Q('body').classList.toggle('showSolution'));
 				Q('#toggleToc').addEventListener('click', e => Q('body').classList.toggle('showToc'));
 				Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
-				Q('#more').addEventListener('click', e => { state.renderMax += 50; renderProblems(); });
+				Q('.more').addEventListener('click', e => { state.renderMax += 20; renderProblems(); });
 			});
 		</script>
 	</body>

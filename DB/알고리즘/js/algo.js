@@ -173,6 +173,7 @@ log( {'fdsajkl;':'in-out', 'jkl;fdsa':'in-out',
 	'asdf;lkj':'out-in', ';lkjasdf':'out-in',
 	'asdfjkl;':'stairs', ';lkjfdsa':'reverse'}[input()]??'molu' );
 
+//28290 작성중
 
 //! 메모
 //> 형변환을 지양하다가 5분 동안 맞왜틀
