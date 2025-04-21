@@ -32,12 +32,7 @@
       Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
 
       const DB = { problems: [], categories: [] };
-      const state = {
-        problemElements: [], renderMax: 30,
-        showDuple: false, showSubTag: false,
-        includeTags: new Set(), excludeTags: new Set(),
-        tierMin: null, tierMax: null,
-      };
+      const state = { problemElements: [], renderMax: 30, showDuple: false, includeTags: new Set(), excludeTags: new Set() };
 
       function createElement(tag, className, content) {
         const el = document.createElement(tag);
