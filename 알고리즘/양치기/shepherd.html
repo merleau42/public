@@ -9,7 +9,7 @@
 	<body class="TRUE showTag showTier showSubTag">
 		<header>
 			<div class="controls">
-				<label>검색:</label><input id="searchInput" type="text" style="width:12%" placeholder="...">
+				<label>검색:</label><input id="searchInput" type="text" style="width:10%" placeholder="...">
 				<label>티어:</label><input type="checkbox" id="toggleTier" checked />
 				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:40px;" /> ~
 				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:40px;" />
@@ -151,8 +151,10 @@
 				renderProblems();
 				
 				const 랜덤후보 = state.randomAble;
-				랜덤후보[randz(0, 랜덤후보.length - 1)].classList.add('random');
-				랜덤후보[randz(0, 랜덤후보.length - 1)].classList.add('random');
+				[...Array(3)].map(_ => {
+					카드 = 랜덤후보[randz(0, 랜덤후보.length - 1)];
+					카드.classList.add('random');
+				});
 			}
 
 			document.addEventListener('DOMContentLoaded', async () => {
@@ -162,7 +164,6 @@
 				DB.categories = categories;
 				Q('#toc').replaceWith( createCategoryElements() );
 				Q('#deck').replaceWith( createProblemElements() );
-				renderProblems();
 				randomDefence();
 
 				Q('#searchInput').addEventListener('input', renderProblems);
