@@ -86,7 +86,6 @@ button {
 
 .card.random {
 	background: ivory;
-	grid-row: 1;
 }
 
 .card.more {
@@ -178,7 +177,7 @@ button {
 #deck 						{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
 .card						{ display: none; }
 .draw.card					{ display: block; }
-.random.card				{ display: block; }
+.random.card				{ display: block; grid-row: 1; }
 .more.card					{ display: flex; }
 
 .card > *					{ display: none; }
