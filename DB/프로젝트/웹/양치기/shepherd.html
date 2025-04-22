@@ -18,8 +18,9 @@
 				<label>태그:</label><input type="checkbox" id="toggleTag" checked />
 				<button id="toggleToc">목차</button>
 				<button id="toggleSubTag">부태그</button>
-				<label>중복:</label><input type="checkbox" id="toggleDuple" />
-				<label>해답:</label><input type="checkbox" id="toggleSolution" />
+				<label>보기:</label>
+				<input type="checkbox" id="toggleDuple" />
+				<input type="checkbox" id="toggleSolution" />
 				<label id="cardCount">문제: 0</label>
 			</div>
 			<div id="toc"></div>
@@ -85,15 +86,17 @@
 
 				DB.problems.forEach(problem => {
 					const card = createElement('div', 'card');
+					const content = createElement('div', 'content');
 					card.dataset.id = problem.id;
 
 					const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
 					const 티어표기 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
-					card.append(티어표기);
+					content.append(티어표기);
 
 					const 요약 = createElement('a', 'summary', `${problem.summary} `);
 					요약.href='https://www.acmicpc.net/problem/' + problem.id;
-					card.append(요약);
+					content.append(요약);
+					card.append(content);
 
 					const 구분선 = createElement('hr', 'hr');
 					const 해답 = createElement('p', 'solution', problem.solution1 || '');
@@ -173,6 +176,7 @@
 				Q('#getRandom').addEventListener('click', randomDefence);
 				Q('#tierMin').addEventListener('input', renderProblems);
 				Q('#tierMax').addEventListener('input', renderProblems);
+
 				Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
 				Q('#toggleTag').addEventListener('change', e => Q('body').classList.toggle('showTag'));
 				Q('#toggleDuple').addEventListener('change', e => { state.showDuple = !state.showDuple; renderProblems(); });
