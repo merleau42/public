@@ -81,7 +81,6 @@
 				container.id = "deck";
 				state.problemElements = [];
 
-				container.appendChild( createElement('div', 'card more', '더 보기') );
 				DB.problems.forEach(problem => {
 					const card = createElement('div', 'card');
 					card.dataset.id = problem.id;
@@ -111,6 +110,7 @@
 					container.appendChild(card);
 					state.problemElements.push({ element: card, problem });
 				});
+				container.appendChild( createElement('div', 'card more', '더 보기') );
 
 				return container;
 			}
