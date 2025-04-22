@@ -59,6 +59,7 @@
 							state.excludeTags.delete(tag);
 							e.target.classList.toggle('include');
 							e.target.classList.remove('exclude');
+							state.renderMax = 30;
 							renderProblems();
 						});
 						btn.addEventListener('contextmenu', e => {
@@ -67,6 +68,7 @@
 							state.includeTags.delete(tag);
 							e.target.classList.toggle('exclude');
 							e.target.classList.remove('include');
+							state.renderMax = 30;
 							renderProblems();
 						});
 						container.appendChild(btn);
