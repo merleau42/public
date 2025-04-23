@@ -7,7 +7,7 @@
 		<title>양치기</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body class="TRUE showTag showTier showToc showSubTag">
+	<body class="TRUE showTier showMainTag showSubTag showToc ">
 		<header>
 			<div class="controls">
 				<label>검색:</label><input id="searchInput" type="text" style="width:10%" placeholder="...">
@@ -15,9 +15,11 @@
 				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" style="width:40px;" /> ~
 				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" style="width:40px;" />
 				<button id="getRandom">랜덤</button>
-				<label>태그:</label><input type="checkbox" id="toggleTag" checked />
+				<div id="tierReset">↩</div>
+				<label>태그:</label>
 				<button id="toggleToc">목차</button>
-				<button id="toggleSubTag">부태그</button>
+				<button id="toggleMainTag">메인</button>
+				<button id="toggleSubTag">서브</button>
 				<label>보기:</label>
 				<button id="toggleSolution">해답</button>
 				<button id="toggleDuple">중복</button>
@@ -37,7 +39,7 @@
 			Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
 
 			const DB = { problems: [], categories: [] };
-			const state = { problemElements: [], renderMax: 20, showDuple: false, includeTags: new Set(), excludeTags: new Set() };
+			const state = { renderMax: 20, showDuple: false, includeTags: new Set(), excludeTags: new Set(), tierMin: 0, tierMax: 31 };
 
 			function createElement(tag, className, content) {
 				const el = document.createElement(tag);
@@ -123,14 +125,14 @@
 			}
 
 			function renderProblems() {
-				QQ('.draw').forEach(prev => prev.classList.remove('draw'));
+				QQ('.card.draw').forEach(prev => prev.classList.remove('draw'));
 
 				const 검색어 = Q('#searchInput').value.toLowerCase();
-				const 최소티어 = Q('#tierMin').value*1||1;
 				const 최대티어 = Q('#tierMax').value*1||30;
-				state.valid = 0;
+				const 최소티어 = Q('#tierMin').value*1||1;
 				state.randomAble = [];
 
+				state.valid = 0;
 				rendered = 0;
 				state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
 					const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
@@ -146,11 +148,13 @@
 					const 랜덤조건 = 중복확인 && 티어일치;
 
 					if (조건만족) state.valid++;
-					if (조건만족 && rendered < state.renderMax) { rendered++; 카드.classList.add('draw'); }
+					if (조건만족 && rendered < state.renderMax) { 카드.classList.add('draw'); rendered++; }
 					if (랜덤조건) state.randomAble.push(카드);
 				});
-
-				Q('.card.more').innerText = `더 보기 (${rendered}/${state.valid})`;
+				
+				state.remain = rendered < state.valid;
+				if (state.remain) Q('.card.more').innerText = `더 보기 (${rendered}/${state.valid})`;
+				else {Q('.card.more').innerText = `총 ${rendered}문제`;}
 			}
 
 			function randomDefence() {
@@ -174,20 +178,23 @@
 				randomDefence();
 
 				Q('#searchInput').addEventListener('input', renderProblems);
-				Q('#getRandom').addEventListener('click', randomDefence);
+
 				Q('#tierMin').addEventListener('input', renderProblems);
 				Q('#tierMax').addEventListener('input', renderProblems);
+				Q('#tierReset').addEventListener('click', _ => {Q('#tierMin').value = Q('#tierMax').value = ''; renderProblems()} );
+
+				Q('#getRandom').addEventListener('click', randomDefence);
 
 				Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
-				Q('#toggleTag').addEventListener('change', e => Q('body').classList.toggle('showTag'));
-				Q('#toggleDuple').addEventListener('click', e => { Q('body').classList.toggle('showDuple'); state.showDuple = !state.showDuple; renderProblems(); });
-				Q('#toggleSolution').addEventListener('click', e => Q('body').classList.toggle('showSolution'));
-				Q('#toggleToc').addEventListener('click', e => Q('body').classList.toggle('showToc'));
+				Q('#toggleMainTag').addEventListener('click', e => Q('body').classList.toggle('showMainTag'));
 				Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
+				Q('#toggleToc').addEventListener('click', e => Q('body').classList.toggle('showToc'));
+				Q('#toggleSolution').addEventListener('click', e => Q('body').classList.toggle('showSolution'));
+				Q('#toggleDuple').addEventListener('click', e => { Q('body').classList.toggle('showDuple'); state.showDuple = !state.showDuple; renderProblems(); });
 
 				QQ('.tag').forEach(tag => tag.onclick = e=>Q(`[name=${tag.innerText.slice(1)}]`).click() );
 
-				Q('.more').addEventListener('click', e => { state.renderMax += 20; renderProblems(); });
+				Q('.more').addEventListener('click', e => { if(state.remain) {state.renderMax += 20; renderProblems();} });
 			});
 		</script>
 	</body>
