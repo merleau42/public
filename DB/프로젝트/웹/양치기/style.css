@@ -125,11 +125,6 @@ button {
 	color: black;
 }
 
-.card:hover .tagbox::before {
-	text-align: left;
-	content: "213";
-}
-
 .random .summary::before {
 	content: "Random";
 	color: orangered;
