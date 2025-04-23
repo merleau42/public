@@ -54,6 +54,8 @@ button {
 
 #getRandom:active,
 .showToc #toggleToc,
+.showDuple #toggleDuple,
+.showSolution #toggleSolution,
 .showSubTag #toggleSubTag {
 	background: #999;
 	color: white
@@ -85,16 +87,20 @@ button {
 	background: gainsboro;
 }
 
-.card.more {
+.card.random,
+.card.create {
+	background: ivory;
+}
+
+.card.more,
+.card.create {
 	justify-content: center;
 	align-items: center;
 	min-height: 50px;
 	cursor: zoom-in;
-}
-
-.card hr {
-	margin: 0.75rem 0;
-	border: 1px solid #eee;
+	color: #ccc;
+	font-size: medium;
+	font-weight: bold;
 }
 
 .card span {
@@ -135,8 +141,14 @@ button {
 	padding: 1px 4px 2px 2px;
 }
 
+.tag:hover {
+	cursor: pointer;
+	color: cornflowerblue;
+}
+
+
 .main-tag {
-	color: teal;
+	color: lightsalmon;
 }
 
 .sub-tag {
@@ -169,13 +181,20 @@ button {
 .다이아 { color: blue; }
 .루비 { color: red; }
 
+.hr {
+	margin: 0.75rem 0;
+	border: 1px solid #eee;
+}
+  
 /* display 관리 */
 
 #deck 						{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+
 .card						{ display: none; }
-.draw.card					{ display: flex; flex-direction: column; }
-.random.card				{ display: flex; flex-direction: column; grid-row: 1; }
-.more.card					{ display: flex; }
+.card.draw					{ display: flex; flex-direction: column; }
+.card.random				{ display: flex; flex-direction: column; grid-row: 1; }
+.card.more					{ display: flex; }
+.card.create				{ display: flex; grid-row: 1; grid-column: 1;}
 
 .card > *					{ display: none; }
 .TRUE			.content	{ display: block; }
