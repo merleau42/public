@@ -44,6 +44,11 @@ input[type="number"] {
 	border-radius: 0.375rem;
 }
 
+input:not(:placeholder-shown) {
+	background: teal;
+	color: white;
+}
+
 button {
 	border: 1px solid #ccc;
 	border-radius: 0.375rem;
@@ -118,6 +123,11 @@ button {
 .summary {
 	text-decoration: none;
 	color: black;
+}
+
+.card:hover .tagbox::before {
+	text-align: left;
+	content: "213";
 }
 
 .random .summary::before {
