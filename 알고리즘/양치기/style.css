@@ -89,7 +89,7 @@ button {
 	background: white;
 	border-radius: 0.5rem;
 	/* border: solid 1px lightgray; */
-	padding: 1rem;
+	padding: 0.8rem;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	font-size: small;
 }
@@ -144,19 +144,22 @@ button {
 
 .tagbox {
 	text-align: right;
+	font-size: smaller;
+	font-style: italic;
+}
+
+.editCard, .solved {
+	cursor: pointer;
 }
 
 .tag {
-	font-size: smaller;
-	font-style: italic;
 	padding: 1px 4px 2px 2px;
+	cursor: default;
 }
 
 .tag:hover {
-	cursor: pointer;
 	color: cornflowerblue;
 }
-
 
 .main-tag {
 	color: lightsalmon;
@@ -211,6 +214,7 @@ button {
 .TRUE			.content	{ display: block; }
 .showSolution	.hr			{ display: block; } 
 .showSolution	.solution	{ display: block; }
+.card:hover		.tagbox		{ display: block; margin-top: auto; } 
 .showMainTag	.tagbox		{ display: block; margin-top: auto; } 
 .showSubTag		.tagbox		{ display: block; margin-top: auto; } 
 
@@ -222,3 +226,5 @@ button {
 .tagbox > *					{ display: none; }
 .showMainTag	.main-tag	{ display: inline-block; }
 .showSubTag		.sub-tag	{ display: inline-block; }
+.card:hover		.editCard	{ display: inline; }
+.card:hover		.solved		{ display: inline; }
