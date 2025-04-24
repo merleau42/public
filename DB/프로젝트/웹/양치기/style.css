@@ -156,7 +156,8 @@ button {
 	font-style: italic;
 }
 
-.editCard, .solved {
+.editCard, .editCancel, .editSave,
+.viewSolved {
 	cursor: pointer;
 }
 
@@ -223,38 +224,42 @@ hr {
 
 
 /* display 관리 */
+#deck 							{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
 
-#deck 						{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.card							{ display: none; }
+.card.draw						{ display: flex; flex-direction: column; }
+.card.random					{ display: flex; flex-direction: column; grid-row: 1; }
+.card.more						{ display: flex; }
+.card.create					{ display: flex; grid-row: 1; grid-column: 1;}
 
-.card						{ display: none; }
-.card.draw					{ display: flex; flex-direction: column; }
-.card.random				{ display: flex; flex-direction: column; grid-row: 1; }
-.card.more					{ display: flex; }
-.card.create				{ display: flex; grid-row: 1; grid-column: 1;}
+.card > *						{ display: none; }
+.NORMAL			.content		{ display: block; }
+.showSolution	.solution		{ display: block; }
+.edit			.solution		{ display: block; }
+.card:hover		.tagbox			{ display: block; margin-top: auto; } 
+.showMainTag	.tagbox			{ display: block; margin-top: auto; } 
+.showSubTag		.tagbox			{ display: block; margin-top: auto; } 
 
-.card > *					{ display: none; }
-.NORMAL			.content	{ display: block; }
-.showSolution	.solution	{ display: block; }
-.card:hover		.tagbox		{ display: block; margin-top: auto; } 
-.showMainTag	.tagbox		{ display: block; margin-top: auto; } 
-.showSubTag		.tagbox		{ display: block; margin-top: auto; } 
+.content > *					{ display: none; }
+.showTier		.tier			{ display: inline; }
+.random			.tier			{ display: none; }
+.edit			.tier			{ display: none; }
+.NORMAL			.summary		{ display: inline; }
+.edit			.summary		{ display: none; }
+.edit			.editContent	{ display: inline; }
 
-.content > *				{ display: none; }
-.showTier		.tier		{ display: inline; }
-.random			.tier		{ display: none; }
-.edit			.tier		{ display: none; }
-.NORMAL			.summary	{ display: inline; }
-.edit			.summary	{ display: none; }
-.edit			.editContent{ display: inline; }
+.solution > *					{ display: none; }
+.NORMAL			hr				{ display: block; }
+.NORMAL			.code			{ display: block; }
+.edit			.code			{ display: none; }
+.edit			.editSolution	{ display: inline; }
 
-.solution > *				{ display: none; }
-.NORMAL			hr			{ display: block; }
-.NORMAL			.code		{ display: block; }
-.edit			.code		{ display: none; }
-.edit			.editSolution{ display: inline; }
-
-.tagbox > *					{ display: none; }
-.showMainTag	.main-tag	{ display: inline-block; }
-.showSubTag		.sub-tag	{ display: inline-block; }
-.card:hover		.editCard	{ display: inline; }
-.card:hover		.solved		{ display: inline; }
+.tagbox > *						{ display: none; }
+.showMainTag	.main-tag		{ display: inline-block; }
+.showSubTag		.sub-tag		{ display: inline-block; }
+.card:hover		.viewSolved		{ display: inline; }
+:hover.edit		.viewSolved		{ display: none; }
+.card:hover		.editCard		{ display: inline; }
+:hover.edit		.editCard		{ display: none; }
+.edit			.editSave		{ display: inline; }
+.edit			.editCancel		{ display: inline; }
