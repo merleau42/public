@@ -49,9 +49,17 @@ input:not(:placeholder-shown) {
 	color: white;
 }
 
+#searchInput {
+	width: 10%;
+}
+
 #tierReset {
 	color: crimson;
 	cursor: pointer;
+}
+
+#tierMin, #tierMax {
+	width: 5%;
 }
 
 button {
