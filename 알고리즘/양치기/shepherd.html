@@ -7,11 +7,11 @@
 		<title>양치기</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body class="TRUE showTier showMainTag showSubTag showToc ">
+	<body class="NORMAL showTier showMainTag showSubTag showToc ">
 		<header>
 			<div class="controls">
 				<label>검색:</label><input id="searchInput" type="text" placeholder="...">
-				<label>티어:</label><input type="checkbox" id="toggleTier" checked />
+				<label>티어:</label><input id="toggleTier" type="checkbox" checked />
 				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" /> ~
 				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" />
 				<div id="tierReset">↩</div>
@@ -28,7 +28,7 @@
 			<div id="toc"></div>
 		</header>
 		<main>
-			<div id="deck"></div>
+			<div id="deck"></div>		
 		</main>
 
 		<script>
@@ -91,20 +91,27 @@
 					const card = createElement('div', 'card');
 					card.dataset.id = problem.id;
 
-					const content = createElement('div', 'content');
+					const 본문1 = createElement('div', 'content');
 					const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
 					const 티어 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
 					const 요약 = createElement('a', 'summary', `${problem.summary} `);
+					const 수정1 = createElement('textarea', 'editContent');
 					요약.href = 'https://www.acmicpc.net/problem/' + problem.id;
 					요약.target = "_blank";
 					요약.rel = "noopener noreferrer"; 
-					content.append(티어);
-					content.append(요약);
-					card.append(content);
+					본문1.append(티어);
+					본문1.append(요약);
+					본문1.append(수정1);
+					card.append(본문1);
 					
-					const 구분선 = createElement('hr', 'hr');
-					const 해답 = createElement('p', 'solution', problem.solution1 || '');
-					card.append(구분선, 해답);
+					const 본문2 = createElement('div', 'solution');
+					const 구분선 = createElement('hr');
+					const 해답 = createElement('p', 'code', problem.solution1 || '');
+					const 수정2 = createElement('textarea', 'editSolution');
+					본문2.append(구분선);
+					본문2.append(해답);
+					본문2.append(수정2);
+					card.append(본문2);
 					
 					const 태그박스 = createElement('div', 'tagbox');
 					const 편집 = createElement('span', 'editCard', '📝');
@@ -197,11 +204,13 @@
 				Q('#toggleSolution').addEventListener('click', e => Q('body').classList.toggle('showSolution'));
 				Q('#toggleDuple').addEventListener('click', e => { Q('body').classList.toggle('showDuple'); state.showDuple = !state.showDuple; renderProblems(); });
 
-				QQ('.tag').forEach(tag => tag.onclick = e=>Q(`[name=${tag.innerText.slice(1)}]`).click() );
-				QQ('.solved').forEach(eye => eye.onclick = e=>e.target.closest('.card').classList.toggle('showSolution') );
-
 				Q('.more').addEventListener('click', e => { if(state.remain) {state.renderMax += 20; renderProblems();} });
+
+				QQ('.tag').forEach(tag => tag.onclick = e=>Q(`[name=${tag.innerText.slice(1)}]`).click() );
+				QQ('.editCard').forEach(edit => edit.onclick = e=>e.target.closest('.card').classList.toggle('edit') );
+				QQ('.solved').forEach(eye => eye.onclick = e=>e.target.closest('.card').classList.toggle('showSolution') );
 			});
+
 		</script>
 	</body>
 </html>

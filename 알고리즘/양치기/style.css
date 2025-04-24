@@ -196,18 +196,32 @@ button {
 	background: floralwhite;
 }
 
-.브론즈 { color: brown; }
-.실버 { color: gray; }
-.골드 { color: goldenrod; }
-.플래 { color: mediumaquamarine; }
-.다이아 { color: blue; }
-.루비 { color: red; }
+.브론즈	{ color: brown; }
+.실버	{ color: gray; }
+.골드	{ color: goldenrod; }
+.플래	{ color: mediumaquamarine; }
+.다이아	{ color: blue; }
+.루비	{ color: red; }
 
-.hr {
+hr {
 	margin: 0.75rem 0;
 	border: 1px solid #eee;
 }
-  
+
+.editContent,
+.editSolution {
+    background: transparent;
+    border: 1px solid;
+    resize: none;
+    overflow: hidden; /*스크롤*/
+    width: 100%;
+    font-size: inherit;
+    box-sizing: border-box;
+	font-family: inherit;     /* 부모 요소의 글꼴을 상속 */
+	line-height: inherit;
+}
+
+
 /* display 관리 */
 
 #deck 						{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
@@ -219,8 +233,7 @@ button {
 .card.create				{ display: flex; grid-row: 1; grid-column: 1;}
 
 .card > *					{ display: none; }
-.TRUE			.content	{ display: block; }
-.showSolution	.hr			{ display: block; } 
+.NORMAL			.content	{ display: block; }
 .showSolution	.solution	{ display: block; }
 .card:hover		.tagbox		{ display: block; margin-top: auto; } 
 .showMainTag	.tagbox		{ display: block; margin-top: auto; } 
@@ -229,7 +242,16 @@ button {
 .content > *				{ display: none; }
 .showTier		.tier		{ display: inline; }
 .random			.tier		{ display: none; }
-.TRUE			.summary	{ display: inline; }
+.edit			.tier		{ display: none; }
+.NORMAL			.summary	{ display: inline; }
+.edit			.summary	{ display: none; }
+.edit			.editContent{ display: inline; }
+
+.solution > *				{ display: none; }
+.NORMAL			hr			{ display: block; }
+.NORMAL			.code		{ display: block; }
+.edit			.code		{ display: none; }
+.edit			.editSolution{ display: inline; }
 
 .tagbox > *					{ display: none; }
 .showMainTag	.main-tag	{ display: inline-block; }
