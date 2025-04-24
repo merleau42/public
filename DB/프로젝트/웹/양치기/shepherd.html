@@ -200,8 +200,6 @@
 				const 수정카드 = card;
 				const 문제정보 = DB.problems.find(p => p.id == 수정카드.dataset.id);
 
-				console.log( 수정카드.Q('.editContent'), 수정카드.Q('.editContent').value );
-
 				수정카드.Q('.summary').innerText = 수정카드.Q('.editContent').value;
 				수정카드.Q('.code').innerText = 수정카드.Q('.editSolution').value;
 				수정카드.classList.remove('edit');
