@@ -36,6 +36,8 @@
 			let QQ = s => [...document.querySelectorAll(s)];
 			let randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+			Element.prototype.Q = function(s, ele=this) { return ele.querySelector(s) };
+			Element.prototype.QQ = function(s, ele=this) { return ele.querySelectorAll(s) };
 			Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
 
 			const DB = { problems: [], categories: [] };
@@ -114,14 +116,19 @@
 					card.append(본문2);
 					
 					const 태그박스 = createElement('div', 'tagbox');
+					const 저장 = createElement('span', 'editSave', '💾');
+					const 취소 = createElement('span', 'editCancel', '❌');
 					const 편집 = createElement('span', 'editCard', '📝');
-					const 답보기 = createElement('span', 'solved', '👀');
+					const 답보기 = createElement('span', 'viewSolved', '👀');
 					const 주태그 = problem.tags.filter(t =>  t.endsWith('!')).map(t => t.slice(0, -1));
 					const 부태그 = problem.tags.filter(t => !t.endsWith('!'));
+					태그박스.append(저장);
+					태그박스.append(취소);
 					태그박스.append(편집);
 					태그박스.append(답보기);
-					주태그.forEach(tag => 태그박스.append(createElement('span', 'tag main-tag', `#${tag}`)));
-					부태그.forEach(tag => 태그박스.append(createElement('span', 'tag sub-tag', `#${tag}`)));
+					태그박스.append( ...주태그.map(tag => createElement('span', 'tag main-tag', `#${tag}`)) );
+					태그박스.append( ...부태그.map(tag => createElement('span', 'tag sub-tag', `#${tag}`)) );
+
 					if (!problem.tags[0]) 태그박스.append(createElement('span', 'tag sub-tag', '#미분류'));
 					card.append(태그박스);
 
@@ -179,6 +186,26 @@
 					카드.classList.add('random');
 				});
 			}
+			
+			function editCard(card) {
+				const 수정카드 = card;
+				const 문제정보 = DB.problems.find(p => p.id == 수정카드.dataset.id);
+				수정카드.classList.add('edit');
+
+				수정카드.Q('.editContent').value = 문제정보.summary;
+				수정카드.Q('.editSolution').value = 문제정보.solution1;
+			}
+	
+			function editSave(card) {
+				const 수정카드 = card;
+				const 문제정보 = DB.problems.find(p => p.id == 수정카드.dataset.id);
+
+				console.log( 수정카드.Q('.editContent'), 수정카드.Q('.editContent').value );
+
+				수정카드.Q('.summary').innerText = 수정카드.Q('.editContent').value;
+				수정카드.Q('.code').innerText = 수정카드.Q('.editSolution').value;
+				수정카드.classList.remove('edit');
+			}
 
 			document.addEventListener('DOMContentLoaded', async () => {
 				const problems = await fetch('./problems.json').then(r => r.json());
@@ -207,8 +234,11 @@
 				Q('.more').addEventListener('click', e => { if(state.remain) {state.renderMax += 20; renderProblems();} });
 
 				QQ('.tag').forEach(tag => tag.onclick = e=>Q(`[name=${tag.innerText.slice(1)}]`).click() );
-				QQ('.editCard').forEach(edit => edit.onclick = e=>e.target.closest('.card').classList.toggle('edit') );
-				QQ('.solved').forEach(eye => eye.onclick = e=>e.target.closest('.card').classList.toggle('showSolution') );
+				QQ('.viewSolved').forEach(eye => eye.onclick = e=>e.target.closest('.card').classList.toggle('showSolution') );
+
+				QQ('.editCard').forEach(edit => edit.onclick = e=> editCard(e.target.closest('.card')) );
+				QQ('.editSave').forEach(disc => disc.onclick = e=> editSave(e.target.closest('.card')) );
+				QQ('.editCancel').forEach(X => X.onclick = e=>e.target.closest('.card').classList.remove('edit') );
 			});
 
 		</script>
