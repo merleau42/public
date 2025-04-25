@@ -2210,7 +2210,7 @@
     "tier": 2,
     "summary": "모든 과목의 성적 중에서, 과학 상위 3과목과 사회 상위 1과목의 점수를 합산하여 출력",
     "solution1": "[과학, 사회] = input('\\n').map(Number).chunk(4);\r\n[과학, 사회].map(seq => seq.toSorted((a,b)=>b-a).slice(0,-1).sum()).sum().log();\r",
-    "solution2": "정렬 // 집합론 관계",
+    "solution2": "정렬 // 집합 관계",
     "tags": ["정렬", "집합론", "수열"]
   },
   {
@@ -2643,7 +2643,7 @@
     "summary": "작성중",
     "solution1": "N = input();\r\nnatural(N).reduce((s,c) => !(c%6) ? s.concat(c, 'Go!') : s.concat(c), [] ).concat(!(N%6) ? [] : 'Go!').log(' ');",
     "solution2": "",
-    "tags": ["배열", "공집합론"]
+    "tags": ["배열", "공집합"]
   },
   {
     "id": 20673,
@@ -2715,7 +2715,7 @@
     "summary": "사람마다 해결한 문제 수는 서로 다르며, A개부터 B개까지 1명씩 고르게 분포되어 있다. 자신이 해결한 문제 수와의 차이가 특정 값 이하인 사람들과 친구를 맺으려 한다. 해결한 문제 수와, 허용되는 차이값을 입력받고, 친구가 될 수 있는 사람의 수를 구하기",
     "solution1": "[a, b, sol, diff] = input(/\\s+/).map(Number);\ncnt = natural(a,b).filter(x => abs(sol - x) <= diff).length;\n// 또는 cnt = max(0, min(b, sol+diff) - max(a, sol-diff) + 1);\nlog( cnt ? cnt : 'IMPOSSIBLE');",
     "solution2": "",
-    "tags": ["수열", "크기 비교", "집합론", "교집합론의 갯수"]
+    "tags": ["수열", "크기 비교", "집합론", "교집합의 갯수"]
   },
   {
     "id": 20215,
@@ -4054,7 +4054,7 @@
     "dup": false,
     "tier": 3,
     "summary": "직사각형 틀 안에 N개의 돌을 모두 배치할 수 있을 때, 가로 세로의 길이가 최소가 되는 경우를 출력",
-    "solution1": "예선: ({스택}, 가지) => (스택.length <= 0) || (스택.at(-1) * 가지 >= N);\n발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용\n가공: ({스택: [x, y]}) => [x+y, x, y];\ncartesian([1,1], [N, N], 정보).해집합론\n.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' ');",
+    "solution1": "예선: ({스택}, 가지) => (스택.length <= 0) || (스택.at(-1) * 가지 >= N);\n발견: ({스택: [x, y]}) => x*y >= N; // 예선 또는 발견을 사용\n가공: ({스택: [x, y]}) => [x+y, x, y];\ncartesian([1,1], [N, N], 정보).해집합\n.toSorted((a,b)=>a[0]-b[0]).thru(x => x[0].slice(1)).log(' ');",
     "solution2": "",
     "tags": ["완전탐색", "기하학"]
   },
