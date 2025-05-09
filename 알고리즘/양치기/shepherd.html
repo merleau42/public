@@ -96,7 +96,7 @@
 					const 본문1 = createElement('div', 'content');
 					const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
 					const 티어 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
-					const 요약 = createElement('a', 'summary', `${problem.summary ? problem.summary : '요약'}`);
+					const 요약 = createElement('a', 'summary', `${problem.summary ? problem.summary : `${problem.id}번`}`);
 					const 수정1 = createElement('textarea', 'editContent');
 					요약.href = `https://www.acmicpc.net/problem/${problem.id}`;
 					요약.target = "_blank";
