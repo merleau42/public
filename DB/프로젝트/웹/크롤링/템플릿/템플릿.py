@@ -11,24 +11,48 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
 import chromedriver_autoinstaller
+
+
+if '설정':
+	헤더 = { 'Accept': 'text/html', 'range': 'Bytes=0-20',
+		'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
+		'Accept-Encoding':'gzip, deflate, br',
+		'Accept-Language':'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+		'Connection':'keep-alive',
+		'Sec-Fetch-Dest':'document',
+		'Sec-Fetch-Mode':'navigate',
+		'Sec-Fetch-Site':'none',
+		'Sec-Fetch-User':'?1',
+		'Upgrade-Insecure-Requests':'1',
+	}
 
 if '셀레늄':
 	def 구동(url="", headless=False):
+		#: 옵션 설정
 		chrome_options = Options()
-
 		if headless:
-			chrome_options.add_argument('headless')
+			chrome_options.add_argument("--headless=new") 
+		chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+		chrome_options.add_argument("--no-sandbox")
+		chrome_options.add_argument("--disable-dev-shm-usage")
+		chrome_options.add_argument("--window-size=1920,1080")
 
+		#: 드라이버 경로 선텍
 		#path = 'D:\크롤링\__크롬드라이버\chromedriver.exe'
 		path = chromedriver_autoinstaller.install()
-		a = webdriver.Chrome(path, options=chrome_options)
+		service = Service(executable_path=path)
+
+		#: 드라이버 구동
+		드라이버 = webdriver.Chrome(service=service, options=chrome_options)
 		print ('크롬 구동 완료')
 
-		if url!="":
-			a.get(url)
-			print ('url 이동')
-		return a
+		#: URL 이동
+		if url:
+			드라이버.get(url)
+			print (f'URL 이동: {url}')
+		return 드라이버
 	
 	def 대기(driver, 방법, 값, 최대=5): #리턴되는 wait 객체는 또 하나의 driver 객체와 유사함
 		return WebDriverWait(driver, 최대).until (
@@ -140,7 +164,7 @@ if '셀레늄 조작법':
 	# 1구동 >>> DRIVER = 구동()	----	드라이버 객체 리턴
 	# 2이동 >>> DRIVER.get(주소)
 	# 3갱신 >>> DRIVER.refresh()
-	# 4소스 >>> DRIVER.page_source()
+	# 4소스 >>> DRIVER.page_source
 	# 5선택 >>> 요소에 접근 DRIVER.find_element("방법", "값")
 	#			부분에 접근 DRIVER.find_element().find_element().find_element()...
 	#			요소 리스트 DRIVER.find_elements("방법", "값")
@@ -159,16 +183,5 @@ if '셀레늄 조작법':
 	# 8비움 >>> ELEMENT.clear()
 	pass
 
-헤더 = { 'Accept': 'text/html', 'range': 'Bytes=0-20',
-	'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
-	'Accept-Encoding':'gzip, deflate, br',
-	'Accept-Language':'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-	'Connection':'keep-alive',
-	'Sec-Fetch-Dest':'document',
-	'Sec-Fetch-Mode':'navigate',
-	'Sec-Fetch-Site':'none',
-	'Sec-Fetch-User':'?1',
-	'Upgrade-Insecure-Requests':'1',
-}
 
-#코드 작성
+#! 코드 작성
