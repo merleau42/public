@@ -94,5 +94,7 @@
     },
     "python.pythonPath": "C:\\Python38",
     "C_Cpp.errorSquiggles": "disabled",
-    "livePreview.defaultPreviewPath": "/네비게이터/네비게이터.html"
+    "livePreview.defaultPreviewPath": "/네비게이터/네비게이터.html",
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }
