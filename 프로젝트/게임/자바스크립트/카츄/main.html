@@ -28,19 +28,19 @@
       display: flex;
       align-items: center;
       min-height: 45px;
-      width: max(35vw, max(30vw, 50vh)); /* 반응형 너비 */
+      width: max(31vw, 50vh); /* 반응형 너비 */
       max-width: 40vw;
     }
 
     .circle {
-      width: max(40px, min(12vh, 13vw));
-      height: max(40px, min(12vh, 13vw));
+      width: max(45px, min(12vh, 13vw));
+      height: max(45px, min(12vh, 13vw));
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid #4a90e2;
       background-color: white;
       flex-shrink: 0;
-      margin-right: max(7px, 2vh);
+      margin-right: min(15px, max(7px, 2vh));
     }
 
     .circle img {
@@ -53,12 +53,12 @@
       background: white;
       border: 2px solid #ccc;
       border-radius: 10px;
-      padding: max(3.5px, 1.5vh);
+      padding: min(11px, max(3.5px, 1.5vh));
       width: 100%;
-      height: max(40px, 12vh);
+      height: min(100px, max(45px, 12vh));
       box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
       word-break: keep-all;
-      font-size: min(16px, max(0.8vw, max(12px, 1.8vh)));
+      font-size: min(15px, max(0.8vw, max(12px, 1.8vh)));
     }
   </style>
 </head>
