@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>동물 퍼즐 - 반응형</title>
+  <title>동물 퍼즐 - Flex 기반</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,36 +11,36 @@
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
-      padding: 40px;
       margin: 0;
-      display: flex;
-      justify-content: center;
+      padding: 20px;
     }
 
     .grid-container {
-      display: grid;
-      gap: 32px 40px;
-      justify-content: start;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4vh 25px;
+      justify-content: center;
       width: 100%;
-      max-width: 100%;
+      margin: 0 auto;
     }
 
     .statement-container {
       display: flex;
       align-items: center;
-      width: 100%;
-      min-height: 60px;
+      min-height: 45px;
+      width: max(35vw, max(30vw, 50vh)); /* 반응형 너비 */
+      max-width: 40vw;
     }
 
     .circle {
-      width: 12vh;
-      height: 12vh;
+      width: max(40px, min(12vh, 13vw));
+      height: max(40px, min(12vh, 13vw));
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid #4a90e2;
       background-color: white;
       flex-shrink: 0;
-      margin-right: 2vh;
+      margin-right: max(7px, 2vh);
     }
 
     .circle img {
@@ -53,10 +53,12 @@
       background: white;
       border: 2px solid #ccc;
       border-radius: 10px;
-      padding: 10px 15px;
+      padding: max(3.5px, 1.5vh);
       width: 100%;
-      max-width: min(240px, 40vw);
+      height: max(40px, 12vh);
       box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      word-break: keep-all;
+      font-size: min(16px, max(0.8vw, max(12px, 1.8vh)));
     }
   </style>
 </head>
@@ -66,46 +68,34 @@
 
   <script>
     const container = document.getElementById('grid');
-    const totalItems = 12;  // 동물 수
-    const cardMinWidth = 320;
+    const totalItems = 12;
 
     const animals = Array.from({ length: totalItems }, (_, i) => ({
       src: `assets/동물${i + 1}.png`,
       text: `문장 ${(i + 1) % 8 + 1}은 ${((i + 1) * 13 % 2 === 0) ? '참' : '거짓'}이다.`
     }));
 
-    const viewportWidth = document.body.clientWidth;
-    const columns = Math.floor(viewportWidth / (cardMinWidth + 40)) || 1;
-    const rows = Math.ceil(totalItems / columns);
+    for (let i = 0; i < animals.length; i++) {
+      const animal = animals[i];
 
-    container.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'statement-container';
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < columns; col++) {
-        const i = col * rows + row;
-        if (i >= animals.length) continue;
+      const circle = document.createElement('div');
+      circle.className = 'circle';
 
-        const animal = animals[i];
+      const img = document.createElement('img');
+      img.src = animal.src;
+      img.alt = `동물${i + 1}`;
+      circle.appendChild(img);
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'statement-container';
+      const bubble = document.createElement('div');
+      bubble.className = 'speech-bubble';
+      bubble.textContent = animal.text;
 
-        const circle = document.createElement('div');
-        circle.className = 'circle';
-
-        const img = document.createElement('img');
-        img.src = animal.src;
-        img.alt = `동물${i + 1}`;
-        circle.appendChild(img);
-
-        const bubble = document.createElement('div');
-        bubble.className = 'speech-bubble';
-        bubble.textContent = animal.text;
-
-        wrapper.appendChild(circle);
-        wrapper.appendChild(bubble);
-        container.appendChild(wrapper);
-      }
+      wrapper.appendChild(circle);
+      wrapper.appendChild(bubble);
+      container.appendChild(wrapper);
     }
   </script>
 
