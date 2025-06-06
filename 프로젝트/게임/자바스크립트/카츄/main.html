@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>동물 퍼즐 - 반응형</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .grid-container {
+      display: grid;
+      gap: 32px 40px;
+      justify-content: start;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .statement-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 60px;
+    }
+
+    .circle {
+      width: 12vh;
+      height: 12vh;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #4a90e2;
+      background-color: white;
+      flex-shrink: 0;
+      margin-right: 2vh;
+    }
+
+    .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .speech-bubble {
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 10px 15px;
+      width: 100%;
+      max-width: min(240px, 40vw);
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-container" id="grid"></div>
+
+  <script>
+    const container = document.getElementById('grid');
+    const totalItems = 12;  // 동물 수
+    const cardMinWidth = 320;
+
+    const animals = Array.from({ length: totalItems }, (_, i) => ({
+      src: `assets/동물${i + 1}.png`,
+      text: `문장 ${(i + 1) % 8 + 1}은 ${((i + 1) * 13 % 2 === 0) ? '참' : '거짓'}이다.`
+    }));
+
+    const viewportWidth = document.body.clientWidth;
+    const columns = Math.floor(viewportWidth / (cardMinWidth + 40)) || 1;
+    const rows = Math.ceil(totalItems / columns);
+
+    container.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < columns; col++) {
+        const i = col * rows + row;
+        if (i >= animals.length) continue;
+
+        const animal = animals[i];
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'statement-container';
+
+        const circle = document.createElement('div');
+        circle.className = 'circle';
+
+        const img = document.createElement('img');
+        img.src = animal.src;
+        img.alt = `동물${i + 1}`;
+        circle.appendChild(img);
+
+        const bubble = document.createElement('div');
+        bubble.className = 'speech-bubble';
+        bubble.textContent = animal.text;
+
+        wrapper.appendChild(circle);
+        wrapper.appendChild(bubble);
+        container.appendChild(wrapper);
+      }
+    }
+  </script>
+
+</body>
+</html>

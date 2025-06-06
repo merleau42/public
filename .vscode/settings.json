@@ -1,4 +1,5 @@
 {
     "IDX.aI.enableInlineCompletion": true,
-    "IDX.aI.enableCodebaseIndexing": true
+    "IDX.aI.enableCodebaseIndexing": true,
+    "livePreview.defaultPreviewPath": "/프로젝트/게임/자바스크립트/위플레이/main.html"
 }
