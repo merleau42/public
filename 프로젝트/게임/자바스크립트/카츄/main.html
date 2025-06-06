@@ -28,7 +28,7 @@
       display: flex;
       align-items: center;
       min-height: 45px;
-      width: max(31vw, 50vh); /* 반응형 너비 */
+      width: max(31vw, 50vh);
       max-width: 40vw;
     }
 
@@ -40,7 +40,7 @@
       border: 2px solid #4a90e2;
       background-color: white;
       flex-shrink: 0;
-      margin-right: min(15px, max(7px, 2vh));
+      margin: 0 min(7.5px, max(3.5px, 1.5vh));
     }
 
     .circle img {
@@ -60,11 +60,36 @@
       word-break: keep-all;
       font-size: min(15px, max(0.8vw, max(12px, 1.8vh)));
     }
+
+    .statement-container.reverse {
+        flex-direction: row-reverse;
+    }
+
+
+    #debug {
+        display: inline;
+        float: left;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="grid-container" id="grid"></div>
+    <div class="grid-container" id="grid"></div>
+    <div id="debug">디버그</div>
+
+<script>
+    Q = (x, y=document) => y.querySelector(x);
+    QQ = (x, y=document) => [...y.querySelectorAll(x)];
+
+    range = (a, l=0, d=1) => [...Array(abs(l - a)/d)].map((_,i)=>l ? a*1 + d * i * sign(l - a) : d * i * sign(a));
+    natural = (n, m=undefined) => m ? range(+n, (+m)+1) : range(1, (+n)+1);
+    vector = (n, f=()=>0) => [...Array(n)].map((_,i)=>f(i,n));
+    matrix = (rows, cols, f=()=>0) => vector(rows).map((_,i) => vector(cols).map((_,j) => f(i,j,rows,cols)));
+
+    randz = (min, max, arr=0) => arr ? range(arr).map(x => randz(min,max)) : floor(random() *(max - min + 1)) + min;
+</script>    
+
 
   <script>
     const container = document.getElementById('grid');
@@ -97,6 +122,34 @@
       wrapper.appendChild(bubble);
       container.appendChild(wrapper);
     }
+  </script>
+  <script>
+    function getColumnCount() {
+        const items = QQ('.statement-container');
+        const rowTops = new Set();
+
+        items.forEach(item => {
+            rowTops.add(item.offsetTop);
+        });
+
+        const columnCount = items.length / rowTops.size;
+        return Math.round(columnCount);
+    }
+
+    function updateLayoutBasedOnColumn() {
+        QQ('.reverse').forEach(x => x.classList.remove('reverse'));
+
+        const count = getColumnCount();
+        const items = QQ('.statement-container').filter((_, i) => i % 2 === 1);
+
+        if (count === 2)
+            items.forEach(el => el.classList.add('reverse'));
+    }
+
+    // 초기 및 리사이즈 반응
+    updateLayoutBasedOnColumn();
+    window.addEventListener('resize', updateLayoutBasedOnColumn);
+
   </script>
 
 </body>
