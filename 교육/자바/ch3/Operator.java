@@ -54,7 +54,6 @@ class OperatorExamples {
 		c2 = (char)(c1 + 1);
 		System.out.println(c2);
 		
-
 		// char = int 구문에서, int가 리터럴이면 암시적으로 할당 가능
 		// char = int 구문에서, int가 변수이면 명시적으로 선을 넘어버려서 불가능
 		// 뷔페에서 남몰래 음식 싸가는 건 봐주는데, 대놓고 싸가는 건 안 봐줌.

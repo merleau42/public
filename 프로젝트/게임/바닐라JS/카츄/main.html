@@ -57,8 +57,7 @@
 		.placard {
 			position: absolute;
 			top: 70%;
-			left: 100%;
-			transform: translateX(-50%);
+			left: 75%;
 			background-color: lightyellow;
 			border: 1px solid #ccc;
 			border-radius: 6px;
@@ -70,6 +69,7 @@
 			z-index: 2;
 			cursor: pointer;
 			transition: transform 0.2s ease;
+			transform-origin: center center;
 		}
 		.placard.expanded {
 			position: fixed;
@@ -80,7 +80,8 @@
 			align-items: center;
 			gap: 3px;
 			background-color: lightyellow;
-			width: 200px;
+			width: 250px;
+			font-size: 14px;
 			word-break: break-word;
 			padding: 6px;
 			opacity: 0.85;
@@ -204,9 +205,8 @@
 				const centerY = rect.top + rect.height / 2;
 
 				placard.classList.add('expanded');
-				placard.style.left = `${centerX}px`;
-				placard.style.top = `${centerY}px`;
-				placard.style.transform = 'translate(-50%, -40%) scale(1.5)';
+				placard.style.left = `${centerX - 125}px`;
+				placard.style.top = `${centerY - 30}px`;
 				placard.style.transformOrigin = 'center center';
 
 				const selected = placard.dataset.selected;
@@ -251,6 +251,7 @@
 			const count = getColumnCount();
 			const items = QQ('.statement-container').filter((_, i) => i % 2 === 1);
 			if (count === 2) items.forEach(el => el.classList.add('reverse'));
+			// QQ('.reverse .placard')
 		}
 
 		function manager() {
