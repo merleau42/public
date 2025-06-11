@@ -1,3 +1,4 @@
+// clear; gcc c.c; ./a.out; rm a.out
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -5,10 +6,27 @@
 #include <fcntl.h>
 // size_t Exist[67108864];
 
-int main()
-{
-	printf("%zu", (size_t)((unsigned int)(-42)));
+void main() {
+	char c1 = 'a';
+	char c2;
+
+	c2 = 'a' + 1;
+	printf("%c", c2);
+
+	c2 = c1 + 1;
+	printf("%c", c2);
+
+	c2 = (char)(c1 + 1);
+	printf("%c", c2);
 }
+
+
+
+
+
+
+
+// printf("%zu", (size_t)((unsigned int)(-42)));
 
 // // 1바이트보다 작은 자료형으로 계수 정렬하기
 // 142를 존재 명부에 등록하려면? 64로 나눈 몫(2), 나머지(14)

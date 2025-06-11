@@ -1,8 +1,8 @@
-package ch2;
+package ch3;
 
 class OperatorExamples {
 	public static void main(String[] args) {
-		ex13();
+		ex24();
 	}
 	public static void ex5() {
 		int a = 10;
@@ -33,7 +33,7 @@ class OperatorExamples {
 		System.out.printf("%d * %d / %d = %d\n", a, a, a, result1); // a*a 에서 오버플로우 발생
 		System.out.printf("%d / %d * %d = %d\n", a, a, a, result2); // a/a 부터 계산되어서 오버플로우 예방
 	}
-	public static void ex13(){
+	public static void ex13() {
 		char c1 = 'a';
 		char c2;
 		char c3;
@@ -48,8 +48,10 @@ class OperatorExamples {
 
 		// (1). c2는 이미 char로 간주되므로, char + int가 되어 결과 타입은 int가 됨.
 		// (2). int값을 char변수에 대놓고 할당하므로 오류 발생.
-		c2 = c1 + 1;	// 에러
-		System.out.println(c2);
+		/**
+			c2 = c1 + 1;	// 에러
+			System.out.println(c2);
+		**/
 
 		c2 = (char)(c1 + 1);
 		System.out.println(c2);
@@ -57,5 +59,32 @@ class OperatorExamples {
 		// char = int 구문에서, int가 리터럴이면 암시적으로 할당 가능
 		// char = int 구문에서, int가 변수이면 명시적으로 선을 넘어버려서 불가능
 		// 뷔페에서 남몰래 음식 싸가는 건 봐주는데, 대놓고 싸가는 건 안 봐줌.
+	}
+	public static void ex20() {
+		System.out.println(-10%8);
+		System.out.println((-10)%8);
+		System.out.println(-(10%8));
+		System.out.println(10%-8);
+		System.out.println(-10%-8);
+	}
+	public static void ex24() {
+		int x;
+		char ch;
+
+		x = 15;
+		System.out.printf("10 < %d && %d < 20  ==  [%b]\n", x, x, // %b는 불리언
+							10 < x && x < 20);
+
+		x = 6;
+		System.out.printf("%d%%2==0 || %d==3 && %d%%6!=0  ==  [%b]\n", x, x, x, // %b는 불리언
+							x%2==0 || x==3 && x%6!=0); // AND와 OR중에서, 우선 순위가 높은 AND연산부터 함.
+
+		ch = '1';
+		System.out.printf("'0' <= '%c' && '%c' <= '9'  ==  [%b]\n", ch, ch, // %b는 불리언
+							'0' <= ch && ch <= '9');
+
+		ch = 'k';
+		System.out.printf("'a' <= '%c' && '%c' <= 'z'  ==  [%b]\n", ch, ch, // %b는 불리언
+							'a' <= ch && ch <= 'z');
 	}
 }
