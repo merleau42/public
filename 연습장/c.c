@@ -7,17 +7,11 @@
 // size_t Exist[67108864];
 
 void main() {
-	char c1 = 'a';
-	char c2;
+	int w = 777;
 
-	c2 = 'a' + 1;
-	printf("%c", c2);
-
-	c2 = c1 + 1;
-	printf("%c", c2);
-
-	c2 = (char)(c1 + 1);
-	printf("%c", c2);
+	printf("%d\n", w);
+	printf("%d\n", w >> 31);
+	printf("%d", w >> 16 >> 16 >> 16 >> 16);
 }
 
 

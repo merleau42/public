@@ -1,9 +1,6 @@
-package ch3;
+package chapter;
 
 class OperatorExamples {
-	public static void main(String[] args) {
-		ex24();
-	}
 	public static void ex5() {
 		int a = 10;
 		int b = 4;
@@ -86,5 +83,33 @@ class OperatorExamples {
 		ch = 'k';
 		System.out.printf("'a' <= '%c' && '%c' <= 'z'  ==  [%b]\n", ch, ch, // %b는 불리언
 							'a' <= ch && ch <= 'z');
+	}
+	public static void ex25() {
+		double	pi	= 3.141592; // 소수 리터럴은 기본적으로 double 객체
+		float	pi2	= 3.141592f; // 소수가 float 임을 표시
+
+		double shortPi = Math.round(pi * 1000)/1000.0;
+		System.out.println(shortPi);
+	}
+	public static void ex26() {
+ 		char c = 77;
+		System.out.println(c >> 15 >> 1);
+		System.out.println(c >> 16);
+		System.out.println(c >> 31 >> 1);
+		System.out.println(c >> 32); // 자료형의 크기가 32비트 이하이므로, 16비트를 초월해서 31까지 쉬프트함
+
+		// 비트 쉬프트를 수행하는 Barrel Shifter 라는 회로는, 31비트를 한번에 (1클럭만에) 이동시킬 수 있음
+		// 32비트를 넘어가면 한번에 시프트할 수 없어서, [연산을 나눠서 수행하거나] [%32를 적용하고 수행하거나] 선택함
+		int i = 7777;
+		System.out.println(i >> 31 >> 1);
+		System.out.println(i >> 32); // 자료형의 크기가 32비트 이하라면 %32를 적용하고 수행함
+
+		long x = 777777;
+		System.out.println(x >> 40); // 자료형의 크기가 32비트 초과하면 나누어서 수행함 (x >> 32 >> 8 처럼)
+		System.out.println(x >> 63 >> 1);
+		System.out.println(x >> 64);
+	}
+	public static void main(String[] args) {
+		ex26();
 	}
 }

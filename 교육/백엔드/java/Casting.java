@@ -1,4 +1,4 @@
-package ch2;
+package chapter;
 
 class CastingExamples {
 	public static void main(String[] args) {
@@ -96,5 +96,14 @@ class CastingExamples {
 		System.out.printf("%f\n", 오차3);
 		System.out.printf("%f\n", 오차4);
 		System.out.printf("%f\n", 오차5);
+	}
+	public static void ex5() {
+        char ch = 'A';
+
+        int code = (int)ch;
+        System.out.printf("%c=%d(%#x)\n", ch, code, code);
+
+        char hch = '가';
+        System.out.printf("%c=%d(%#x)\n", hch, (int)hch, (int)hch);
 	}
 }

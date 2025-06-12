@@ -1,12 +1,6 @@
-package ch3;
+package chapter;
 
 class StringExamples {
-	public static void main(String[] args) {
-		// ex1();
-		// ex2();
-		// ex3();
-		ex4();
-	}
 	public static void ex1() {
 		String s1 = "";
 		String s2 = null;
@@ -90,5 +84,24 @@ class StringExamples {
 
 		if (str2.toLowerCase().equalsIgnoreCase(str1)) //str2가 소문자가 되었지만.
 			System.out.println("대소문자 무시하고 같은 문자열");		
+	}
+    public static void ex5() {
+        String name = "Ja" + "Va";
+
+        System.out.printf("%s\n", name);
+        System.out.printf("%d\n", 1 + 1);
+        System.out.printf("%s\n", "Ja" + "Va");
+        System.out.printf("%s\n", "Java" + 1.0);
+        System.out.printf("%s\n", 1 + "Java");
+
+        System.out.println("" + 7);
+    }
+    public static String ex6(int zs, int x) {
+        String zero = "00000000000000000000000000000000";
+
+		return zero.substring(zero.length() - zs) + x;
+    }
+	public static void main(String[] args) {
+		System.out.println( ex6(5, 7777) );
 	}
 }
