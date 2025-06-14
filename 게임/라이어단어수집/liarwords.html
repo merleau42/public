@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <!-- 모바일 전체화면 모드 -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#121212">
-
-  <!-- manifest 연결 -->
   <link rel="manifest" href="/manifest.json">
   <title>라이어게임 족보</title>
   <style>
@@ -51,6 +47,7 @@
       color: #e0e0e0;
       border: 1px solid #444;
       cursor: pointer;
+      height: 5vw;
     }
 
     button:hover {
@@ -62,7 +59,7 @@
       flex-wrap: wrap;
       gap: 10px;
       width: 90vw;
-      justify-content: flex-start;
+      justify-content: center;
     }
 
     .group {
@@ -81,10 +78,10 @@
     }
 
     .highlight {
-      border-color: #ff5555;
-      color: #ff8888;
+      border-color: #55ff55;
+      color: #aaffaa;
       font-weight: bold;
-      background: #2a0000;
+      background: #003300;
     }
 
     #div3 {
@@ -150,7 +147,7 @@
         document.getElementById(`input${i}`).value = '';
       }
       document.getElementById("singleInput").value = '';
-      renderGroups();
+      updateHighlights();
     };
 
     function buildGroups(pairs) {
@@ -185,6 +182,14 @@
       return groups;
     }
 
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
     window.loadFromDB = async function () {
       const output = document.getElementById("output");
       output.innerHTML = "불러오는 중...";
@@ -196,8 +201,9 @@
           const raw = Object.values(snapshot.val());
           const pairs = raw.map(line => line.split(',').map(w => w.trim()).filter(Boolean));
           groupList = buildGroups(pairs);
-          groupList.sort((a, b) => a.join('').length - b.join('').length);
-          renderGroups();
+
+          shuffleArray(groupList);  // 랜덤 정렬
+          updateHighlights();
         } else {
           output.innerHTML = "🔥 데이터 없음";
         }
@@ -207,7 +213,13 @@
       }
     };
 
-    function renderGroups(highlightWord = '') {
+    function updateHighlights() {
+      const value = document.getElementById("singleInput").value.trim();
+      const keywords = value.split(',').map(v => v.trim()).filter(Boolean);
+      renderGroups(keywords);
+    }
+
+    function renderGroups(highlightWords = []) {
       const output = document.getElementById("output");
       output.innerHTML = "";
 
@@ -221,9 +233,10 @@
         div.innerText = text;
         div.onclick = () => {
           document.getElementById("singleInput").value = text;
+          updateHighlights();  // 클릭으로 변경된 값도 즉시 반영
         };
 
-        if (highlightWord && group.includes(highlightWord)) {
+        if (highlightWords.some(w => group.includes(w))) {
           div.classList.add("highlight");
           highlighted.push(div);
         } else {
@@ -231,18 +244,10 @@
         }
       }
 
-      highlighted.forEach(div => output.appendChild(div));
-      rest.forEach(div => output.appendChild(div));
+      [...highlighted, ...rest].forEach(div => output.appendChild(div));
     }
 
-    document.getElementById("singleInput").addEventListener("input", (e) => {
-      const value = e.target.value.trim();
-      if (groupList.length === 0) {
-        loadFromDB().then(() => renderGroups(value));
-      } else {
-        renderGroups(value);
-      }
-    });
+    document.getElementById("singleInput").addEventListener("input", updateHighlights);
   </script>
 </body>
 </html>
