@@ -109,7 +109,14 @@ class OperatorExamples {
 		System.out.println(x >> 63 >> 1);
 		System.out.println(x >> 64);
 	}
+	public static void ex27() {
+		int a = -765;
+
+		System.out.println(a);
+		System.out.println(  (1 + 2 * (a >> 31) ) * a  );
+		
+	}
 	public static void main(String[] args) {
-		ex26();
+		ex27();
 	}
 }
