@@ -139,7 +139,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-    const firebaseConfig = {
+    const app = initializeApp({
       apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
       authDomain: "liarwords-af033.firebaseapp.com",
       databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
@@ -147,9 +147,8 @@
       storageBucket: "liarwords-af033.appspot.com",
       messagingSenderId: "171671976030",
       appId: "1:171671976030:web:59371970ec6b2a70035ccf"
-    };
+    });
 
-    const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let groupList = [];
     let visibleCount = 7;
@@ -181,8 +180,8 @@
         output.innerHTML = "";
         if (snapshot.exists()) {
           const rawData = snapshot.val();
-          const sortedKeys = Object.keys(rawData).sort((a, b) => b.localeCompare(a));
-          const raw = sortedKeys.map(key => rawData[key]);
+          const entries = Object.entries(rawData).reverse(); // 최신부터 시작
+          const raw = entries.map(entry => entry[1]);
           const pairs = raw.map(line => line.split(',').map(w => w.trim()).filter(Boolean));
           groupList = buildGroups(pairs);
           updateHighlights();
@@ -194,28 +193,44 @@
       }
     };
 
+
     function buildGroups(pairs) {
-      const map = {}, visited = new Set(), groups = [];
+      const map = {}, visited = new Set(), groups = [], wordToAge = {};
+
+      pairs.forEach((group, idx) => {
+        const age = idx; // 낮을수록 최신
+        group.forEach(word => {
+          wordToAge[word] = Math.min(wordToAge[word] ?? Infinity, age);
+        });
+      });
+
       for (const group of pairs) {
         for (const word of group) {
           if (!map[word]) map[word] = new Set();
-          group.forEach(w => { if (w !== word) map[word].add(w); });
+          group.forEach(w => {
+            if (w !== word) map[word].add(w);
+          });
         }
       }
+
       function dfs(word, currentGroup) {
         if (visited.has(word)) return;
         visited.add(word);
         currentGroup.add(word);
         map[word]?.forEach(w => dfs(w, currentGroup));
       }
+
       Object.keys(map).forEach(word => {
         if (!visited.has(word)) {
           const currentGroup = new Set();
           dfs(word, currentGroup);
-          groups.push(Array.from(currentGroup).sort((a, b) => a.localeCompare(b, 'ko')));
+          const groupArr = Array.from(currentGroup).sort((a, b) => a.localeCompare(b, 'ko'));
+          const groupAge = Math.min(...groupArr.map(w => wordToAge[w]));
+          groups.push({ words: groupArr, age: groupAge });
         }
       });
-      return groups;
+
+      return groups.sort((a, b) => a.age - b.age).map(g => g.words);
     }
 
     function updateHighlights() {
@@ -249,9 +264,7 @@
 
     function getVisibleBoxes() {
       const ids = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8", "singleInput"];
-      return ids
-        .map(id => document.getElementById(id))
-        .filter(el => el && getComputedStyle(el).display !== 'none');
+      return ids.map(id => document.getElementById(id)).filter(el => el && getComputedStyle(el).display !== 'none');
     }
 
     function attachFocusListeners() {
