@@ -119,6 +119,13 @@
       pointer-events: auto;
     }
   </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('✅ 서비스워커 등록됨'))
+        .catch(err => console.error('❌ 서비스워커 등록 실패:', err));
+    }
+  </script>
 </head>
 <body>
   <div id="div1" class="flex-container">
