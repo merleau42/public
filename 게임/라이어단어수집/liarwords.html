@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#121212">
   <link rel="manifest" href="/manifest.json">
-  <title>라이어게임 족보</title>
+  <title>단어 수집기</title>
   <style>
     body {
       margin: 0;
@@ -23,16 +23,16 @@
     .flex-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 9px;
       justify-content: center;
       margin-bottom: 2vh;
     }
 
     input {
-      width: 40vw;
+      width: 41vw;
       height: 5vw;
       padding: 8px;
-      font-size: 16px;
+      font-size: 15px;
       border-radius: 10px;
       background-color: #1e1e1e;
       color: #f0f0f0;
@@ -40,8 +40,8 @@
     }
 
     button {
-      width: 13vw;
-      font-size: 16px;
+      width: 13.5vw;
+      font-size: 15px;
       border-radius: 10px;
       background-color: #2c2c2c;
       color: #e0e0e0;
@@ -63,7 +63,7 @@
 
     .group {
       padding: 10px 12px;
-      font-size: 16px;
+      font-size: 15px;
       border: 1px solid #333;
       border-radius: 10px;
       background: #1a1a1a;
@@ -136,6 +136,7 @@
           .then(() => {
             console.log("✅ 저장됨:", val);
             document.getElementById("singleInput").value = '';
+            loadFromDB();  // 저장 후 불러오기
           })
           .catch(err => console.error("❌ 저장 실패:", err));
       }
@@ -181,14 +182,6 @@
       return groups;
     }
 
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
     window.loadFromDB = async function () {
       const output = document.getElementById("output");
       output.innerHTML = "불러오는 중...";
@@ -197,11 +190,13 @@
         output.innerHTML = "";
 
         if (snapshot.exists()) {
-          const raw = Object.values(snapshot.val());
+          const rawData = snapshot.val();
+          const sortedKeys = Object.keys(rawData).sort((a, b) => b.localeCompare(a)); // 최신순 정렬
+          const raw = sortedKeys.map(key => rawData[key]);
+
           const pairs = raw.map(line => line.split(',').map(w => w.trim()).filter(Boolean));
           groupList = buildGroups(pairs);
 
-          shuffleArray(groupList);  // 랜덤 정렬
           updateHighlights();
         } else {
           output.innerHTML = "🔥 데이터 없음";
@@ -232,7 +227,7 @@
         div.innerText = text;
         div.onclick = () => {
           document.getElementById("singleInput").value = text;
-          updateHighlights();  // 클릭으로 변경된 값도 즉시 반영
+          updateHighlights();
         };
 
         if (highlightWords.some(w => group.includes(w))) {
