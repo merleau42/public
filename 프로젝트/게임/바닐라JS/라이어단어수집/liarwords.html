@@ -6,7 +6,6 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#121212">
-  <link rel="manifest" href="/manifest.json">
   <title>라이어게임 족보</title>
   <style>
     body {
@@ -39,7 +38,7 @@
       color: #f0f0f0;
       border: 1px solid #333;
       resize: none;
-      overflow: hidden; /* ✅ 스크롤바 제거 */
+      overflow: hidden;
     }
 
     button {
@@ -113,46 +112,38 @@
       font-size: 18px;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
       background-color: transparent;
       border: none;
       padding: 2px;
       pointer-events: auto;
-      user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
     }
   </style>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('✅ 서비스워커 등록됨'))
-        .catch(err => console.error('❌ 서비스워커 등록 실패:', err));
-    }
-  </script>
 </head>
 <body>
   <div id="div1" class="flex-container">
-    <textarea id="input1" rows="2"></textarea>
-    <textarea id="input2" rows="2"></textarea>
-    <textarea id="input3" rows="2"></textarea>
-    <textarea id="input4" rows="2"></textarea>
-    <textarea id="input5" rows="2"></textarea>
-    <textarea id="input6" rows="2"></textarea>
-    <textarea id="input7" rows="2"></textarea>
+    <textarea id="input1" class="wordbox" rows="2" tabindex="1"></textarea>
+    <textarea id="input2" class="wordbox" rows="2" tabindex="5"></textarea>
+    <textarea id="input3" class="wordbox" rows="2" tabindex="2"></textarea>
+    <textarea id="input4" class="wordbox" rows="2" tabindex="6"></textarea>
+    <textarea id="input5" class="wordbox" rows="2" tabindex="3"></textarea>
+    <textarea id="input6" class="wordbox" rows="2" tabindex="7"></textarea>
+    <textarea id="input7" class="wordbox" rows="2" tabindex="4"></textarea>
     <div id="input8-wrapper">
-      <textarea id="input8" rows="2"></textarea>
+      <textarea id="input8" class="wordbox" rows="2" tabindex="8"></textarea>
       <div class="overlay-icons">
-        <span class="icon-btn" id="removeBtn" onclick="removeInput()">➖</span>
-        <span class="icon-btn" id="addBtn" onclick="addInput()">➕</span>
+        <span class="icon-btn" id="removeBtn" onclick="removeInput()" tabindex="-1">➖</span>
+        <span class="icon-btn" id="addBtn" onclick="addInput()" tabindex="-1">➕</span>
       </div>
     </div>
   </div>
 
   <div id="div2" class="flex-container">
     <input type="text" id="singleInput">
-    <button onclick="addSingle()">추가</button>
-    <button onclick="clearInputs()">비우기</button>
-    <button onclick="loadFromDB()">불러오기</button>
+    <button onclick="addSingle()" tabindex="-1">추가</button>
+    <button onclick="clearInputs()" tabindex="-1">비우기</button>
+    <button onclick="loadFromDB()" tabindex="-1">불러오기</button>
   </div>
 
   <div id="div3">
@@ -296,12 +287,8 @@
         if (input) {
           input.style.display = 'none';
           visibleCount--;
-          if (visibleCount < 7) {
-            document.getElementById('addBtn').style.display = 'inline';
-          }
-          if (visibleCount === 3) {
-            document.getElementById('removeBtn').style.display = 'none';
-          }
+          if (visibleCount < 7) document.getElementById('addBtn').style.display = 'inline';
+          if (visibleCount === 3) document.getElementById('removeBtn').style.display = 'none';
         }
       }
     };
@@ -312,23 +299,27 @@
         const input = document.getElementById(`input${visibleCount}`);
         if (input) {
           input.style.display = 'inline';
-          if (visibleCount === 7) {
-            document.getElementById('addBtn').style.display = 'none';
-          }
-          if (visibleCount > 3) {
-            document.getElementById('removeBtn').style.display = 'inline';
-          }
+          if (visibleCount === 7) document.getElementById('addBtn').style.display = 'none';
+          if (visibleCount > 3) document.getElementById('removeBtn').style.display = 'inline';
         }
       }
     };
 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (visibleCount === 7) {
-        document.getElementById('addBtn').style.display = 'none';
-      }
-      if (visibleCount === 3) {
-        document.getElementById('removeBtn').style.display = 'none';
-      }
+    // ✅ Enter 누르면 다음 textarea로 이동
+    document.addEventListener("DOMContentLoaded", () => {
+      const boxes = document.querySelectorAll(".wordbox");
+      boxes.forEach((box, idx) => {
+        box.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const next = boxes[idx + 1];
+            if (next) next.focus();
+          }
+        });
+      });
+
+      if (visibleCount === 7) document.getElementById('addBtn').style.display = 'none';
+      if (visibleCount === 3) document.getElementById('removeBtn').style.display = 'none';
     });
 
     document.getElementById("singleInput").addEventListener("input", updateHighlights);
