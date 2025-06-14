@@ -11,10 +11,6 @@
       flex-direction: column;
       align-items: center;
     }
-    
-    div * {
-      font-size: 16px;
-    }
 
     .flex-container {
       display: flex;
@@ -27,40 +23,36 @@
       width: 40vw;
       height: 5vw;
       padding: 8px;
+      border-radius: 10px;
     }
-
-	input, .section {
-		border-radius: 10px;
-	}
-
-	#div1, #div2, #div3 {
-		margin-bottom: 3vh;
-	}
 
     #div2 button {
       width: 20vw;
       padding: 8px;
+      border-radius: 10px;
     }
 
     #output {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 8px;
       width: 100%;
       justify-content: center;
-      margin: 10px auto 0 auto; /* 가운데 정렬 */
+      margin-top: 10px;
     }
 
-    .section {
-      width: 29vw;
-      border: 1px solid rgba(0,0,0,0.1);
-      box-sizing: border-box;
+    #output div {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 16px;
+      white-space: normal;
+      word-break: break-word;
+      max-width: 90vw;
     }
 
-    .section h3 {
-      margin: 0;
-      text-align: center;
-      color: powderblue;
+    #div1, #div2, #div3 {
+      margin-bottom: 3vh;
     }
 
     #div3 {
@@ -84,6 +76,7 @@
     <input type="text" id="singleInput">
     <button onclick="addSingle()">추가</button>
     <button onclick="loadFromDB()">불러오기</button>
+    <button onclick="clearInputs()">비우기</button>
   </div>
 
   <div id="div3">
@@ -108,7 +101,8 @@
     const db = getDatabase(app);
 
     window.addSingle = function () {
-      const val = document.getElementById("singleInput").value.trim();
+      const raw = document.getElementById("singleInput").value;
+      const val = raw.replace(/\s+/g, '');
       if (val) {
         push(ref(db, "strings"), val)
           .then(() => {
@@ -121,75 +115,61 @@
       }
     };
 
-    function getInitialGroupByRange(char) {
-      const code = char.charCodeAt(0);
-      if (char >= '0' && char <= '9') return '숫자/기타';
-      if ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')) return '영어';
-      if (code < 0xAC00 || code > 0xD7A3) return '숫자/기타';
-
-      const cho = Math.floor((code - 0xAC00) / (21 * 28));
-      const choMap = [
-        '가','가','나','다','다','라','마','바','바','사',
-        '사','아','자','자','차','카','타','파','하'
-      ];
-      return choMap[cho] || '숫자/기타';
-    }
+    window.clearInputs = function () {
+      for (let i = 1; i <= 8; i++) {
+        document.getElementById("input" + i).value = "";
+      }
+      document.getElementById("singleInput").value = "";
+    };
 
     window.loadFromDB = async function () {
       const output = document.getElementById("output");
       output.innerHTML = "불러오는 중...";
+
       try {
         const snapshot = await get(ref(db, "strings"));
         output.innerHTML = "";
 
-        const sectionLabels = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하','영어','숫자/기타'];
-        const grouped = {};
-        sectionLabels.forEach(label => grouped[label] = []);
-
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          const groups = Object.values(data).map(str =>
-            str.split(',').map(word => word.trim()).filter(Boolean)
-          );
-
-          const map = {};
-          for (const group of groups) {
-            for (const word of group) {
-              if (!map[word]) map[word] = new Set();
-              for (const peer of group) {
-                if (peer !== word) map[word].add(peer);
-              }
-            }
-          }
-
-          const sortedWords = Object.keys(map).sort((a, b) => a.localeCompare(b, 'ko'));
-
-          for (const word of sortedWords) {
-            const initial = getInitialGroupByRange(word[0]);
-            if (!grouped[initial]) grouped['숫자/기타'].push(word);
-            else grouped[initial].push(word);
-          }
-
-          sectionLabels.forEach(label => {
-            const section = document.createElement('div');
-            section.className = 'section';
-            const title = document.createElement('h3');
-            title.textContent = label;
-            section.appendChild(title);
-
-            grouped[label].forEach(word => {
-              const peers = Array.from(map[word]).sort((a, b) => a.localeCompare(b, 'ko'));
-              const div = document.createElement("div");
-              div.textContent = `${word} → ${peers.join(", ")}`;
-              section.appendChild(div);
-            });
-
-            output.appendChild(section);
-          });
-
-        } else {
+        if (!snapshot.exists()) {
           output.textContent = "🔥 데이터 없음";
+          return;
         }
+
+        const data = Object.values(snapshot.val());
+        const wordGroups = data.map(str =>
+          str.split(',').map(w => w.replace(/\s+/g, '')).filter(Boolean)
+        );
+
+        const parent = {};
+        function find(x) {
+          if (!parent[x]) parent[x] = x;
+          if (parent[x] !== x) parent[x] = find(parent[x]);
+          return parent[x];
+        }
+        function union(x, y) {
+          parent[find(x)] = find(y);
+        }
+
+        for (const group of wordGroups) {
+          for (let i = 0; i < group.length - 1; i++) {
+            union(group[i], group[i + 1]);
+          }
+        }
+
+        const groupMap = {};
+        for (const word of Object.keys(parent)) {
+          const root = find(word);
+          if (!groupMap[root]) groupMap[root] = new Set();
+          groupMap[root].add(word);
+        }
+
+        for (const key of Object.keys(groupMap)) {
+          const div = document.createElement('div');
+          const words = Array.from(groupMap[key]).sort((a, b) => a.localeCompare(b, 'ko'));
+          div.innerText = words.join(", ");
+          output.appendChild(div);
+        }
+
       } catch (err) {
         console.error("❌ 불러오기 실패:", err);
         output.textContent = "❌ 불러오기 실패";
