@@ -18,7 +18,6 @@
       color: #e0e0e0;
       font-family: sans-serif;
     }
-
     .flex-container {
       display: flex;
       flex-wrap: wrap;
@@ -27,20 +26,21 @@
       margin-bottom: 2vh;
       width: 90vw;
     }
-
-    input, textarea {
-      width: 40vw;
-      height: 5vw;
-      padding: 8px;
+    textarea {
+      width: 43vw;
       font-size: 16px;
+      padding: 8px;
       border-radius: 10px;
-      background-color: #1e1e1e;
-      color: #f0f0f0;
       border: 1px solid #333;
       resize: none;
       overflow: hidden;
+      line-height: 1.4;
+      min-height: 5vw;
+      max-height: 10vw;
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      box-sizing: border-box;
     }
-
     button {
       width: 13vw;
       font-size: 16px;
@@ -50,11 +50,9 @@
       border: 1px solid #444;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #3a3a3a;
     }
-
     #output {
       display: flex;
       flex-wrap: wrap;
@@ -62,7 +60,6 @@
       width: 90vw;
       justify-content: center;
     }
-
     .group {
       padding: 10px 12px;
       font-size: 16px;
@@ -73,28 +70,21 @@
       white-space: nowrap;
       color: #ddd;
     }
-
     .group:hover {
       background-color: #222;
     }
-
     .highlight {
       border-color: #55ff55;
       color: #aaffaa;
       font-weight: bold;
       background: #003300;
     }
-
-    #div3 {
-      width: 100%;
-    }
-
+    #div3 { width: 100%; }
     #input8-wrapper {
       position: relative;
       display: flex;
       align-items: center;
     }
-
     .overlay-icons {
       position: absolute;
       top: -10%;
@@ -107,13 +97,10 @@
       align-items: flex-end;
       pointer-events: none;
     }
-
     .icon-btn {
       font-size: 18px;
       cursor: pointer;
       user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
       background-color: transparent;
       border: none;
       padding: 2px;
@@ -123,15 +110,15 @@
 </head>
 <body>
   <div id="div1" class="flex-container">
-    <textarea id="input1" class="wordbox" rows="2" tabindex="1"></textarea>
-    <textarea id="input2" class="wordbox" rows="2" tabindex="5"></textarea>
-    <textarea id="input3" class="wordbox" rows="2" tabindex="2"></textarea>
-    <textarea id="input4" class="wordbox" rows="2" tabindex="6"></textarea>
-    <textarea id="input5" class="wordbox" rows="2" tabindex="3"></textarea>
-    <textarea id="input6" class="wordbox" rows="2" tabindex="7"></textarea>
-    <textarea id="input7" class="wordbox" rows="2" tabindex="4"></textarea>
+    <textarea id="input1" class="wordbox" maxlength="40" tabindex="1"></textarea>
+    <textarea id="input2" class="wordbox" maxlength="40" tabindex="5"></textarea>
+    <textarea id="input3" class="wordbox" maxlength="40" tabindex="2"></textarea>
+    <textarea id="input4" class="wordbox" maxlength="40" tabindex="6"></textarea>
+    <textarea id="input5" class="wordbox" maxlength="40" tabindex="3"></textarea>
+    <textarea id="input6" class="wordbox" maxlength="40" tabindex="7"></textarea>
+    <textarea id="input7" class="wordbox" maxlength="40" tabindex="4"></textarea>
     <div id="input8-wrapper">
-      <textarea id="input8" class="wordbox" rows="2" tabindex="8"></textarea>
+      <textarea id="input8" class="wordbox" maxlength="40" tabindex="8"></textarea>
       <div class="overlay-icons">
         <span class="icon-btn" id="removeBtn" onclick="removeInput()" tabindex="-1">➖</span>
         <span class="icon-btn" id="addBtn" onclick="addInput()" tabindex="-1">➕</span>
@@ -140,15 +127,13 @@
   </div>
 
   <div id="div2" class="flex-container">
-    <input type="text" id="singleInput">
+    <textarea id="singleInput" class="wordbox" maxlength="40" tabindex="17"></textarea>
     <button onclick="addSingle()" tabindex="-1">추가</button>
     <button onclick="clearInputs()" tabindex="-1">비우기</button>
     <button onclick="loadFromDB()" tabindex="-1">불러오기</button>
   </div>
 
-  <div id="div3">
-    <div id="output"></div>
-  </div>
+  <div id="div3"><div id="output"></div></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
@@ -167,17 +152,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let groupList = [];
+    let visibleCount = 7;
 
     window.addSingle = function () {
       const val = document.getElementById("singleInput").value.replace(/\s+/g, "");
       if (val) {
-        push(ref(db, "strings"), val)
-          .then(() => {
-            console.log("✅ 저장됨:", val);
-            document.getElementById("singleInput").value = '';
-            loadFromDB();
-          })
-          .catch(err => console.error("❌ 저장 실패:", err));
+        push(ref(db, "strings"), val).then(() => {
+          document.getElementById("singleInput").value = '';
+          loadFromDB();
+        });
       }
     };
 
@@ -196,7 +179,6 @@
       try {
         const snapshot = await get(ref(db, "strings"));
         output.innerHTML = "";
-
         if (snapshot.exists()) {
           const rawData = snapshot.val();
           const sortedKeys = Object.keys(rawData).sort((a, b) => b.localeCompare(a));
@@ -207,33 +189,25 @@
         } else {
           output.innerHTML = "🔥 데이터 없음";
         }
-      } catch (err) {
-        console.error("❌ 불러오기 실패:", err);
+      } catch {
         output.innerHTML = "❌ 불러오기 실패";
       }
     };
 
     function buildGroups(pairs) {
-      const map = {};
-      const visited = new Set();
-      const groups = [];
-
+      const map = {}, visited = new Set(), groups = [];
       for (const group of pairs) {
         for (const word of group) {
           if (!map[word]) map[word] = new Set();
-          group.forEach(w => {
-            if (w !== word) map[word].add(w);
-          });
+          group.forEach(w => { if (w !== word) map[word].add(w); });
         }
       }
-
       function dfs(word, currentGroup) {
         if (visited.has(word)) return;
         visited.add(word);
         currentGroup.add(word);
         map[word]?.forEach(w => dfs(w, currentGroup));
       }
-
       Object.keys(map).forEach(word => {
         if (!visited.has(word)) {
           const currentGroup = new Set();
@@ -241,7 +215,6 @@
           groups.push(Array.from(currentGroup).sort((a, b) => a.localeCompare(b, 'ko')));
         }
       });
-
       return groups;
     }
 
@@ -254,10 +227,7 @@
     function renderGroups(highlightWords = []) {
       const output = document.getElementById("output");
       output.innerHTML = "";
-
-      const highlighted = [];
-      const rest = [];
-
+      const highlighted = [], rest = [];
       for (const group of groupList) {
         const text = group.join(", ");
         const div = document.createElement("div");
@@ -267,7 +237,6 @@
           document.getElementById("singleInput").value = text;
           updateHighlights();
         };
-
         if (highlightWords.some(w => group.includes(w))) {
           div.classList.add("highlight");
           highlighted.push(div);
@@ -275,51 +244,56 @@
           rest.push(div);
         }
       }
-
       [...highlighted, ...rest].forEach(div => output.appendChild(div));
     }
 
-    let visibleCount = 7;
+    function getVisibleBoxes() {
+      const ids = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8", "singleInput"];
+      return ids
+        .map(id => document.getElementById(id))
+        .filter(el => el && getComputedStyle(el).display !== 'none');
+    }
 
-    window.removeInput = function () {
-      if (visibleCount > 3) {
-        const input = document.getElementById(`input${visibleCount}`);
-        if (input) {
-          input.style.display = 'none';
-          visibleCount--;
-          if (visibleCount < 7) document.getElementById('addBtn').style.display = 'inline';
-          if (visibleCount === 3) document.getElementById('removeBtn').style.display = 'none';
-        }
-      }
-    };
+    function attachFocusListeners() {
+      const boxes = getVisibleBoxes();
+      boxes.forEach((box, idx) => {
+        box.onkeydown = (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const next = boxes[idx + 1] || boxes[0];
+            next.focus();
+          }
+        };
+      });
+    }
 
     window.addInput = function () {
       if (visibleCount < 7) {
         visibleCount++;
         const input = document.getElementById(`input${visibleCount}`);
-        if (input) {
-          input.style.display = 'inline';
-          if (visibleCount === 7) document.getElementById('addBtn').style.display = 'none';
-          if (visibleCount > 3) document.getElementById('removeBtn').style.display = 'inline';
-        }
+        if (input) input.style.display = 'inline';
+        if (visibleCount === 7) document.getElementById("addBtn").style.display = 'none';
+        document.getElementById("removeBtn").style.display = 'inline';
+        attachFocusListeners();
       }
     };
 
-    // ✅ Enter 누르면 다음 textarea로 이동
-    document.addEventListener("DOMContentLoaded", () => {
-      const boxes = document.querySelectorAll(".wordbox");
-      boxes.forEach((box, idx) => {
-        box.addEventListener("keydown", e => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const next = boxes[idx + 1];
-            if (next) next.focus();
-          }
-        });
-      });
+    window.removeInput = function () {
+      if (visibleCount > 3) {
+        const input = document.getElementById(`input${visibleCount}`);
+        if (input) input.style.display = 'none';
+        visibleCount--;
+        if (visibleCount === 3) document.getElementById("removeBtn").style.display = 'none';
+        document.getElementById("addBtn").style.display = 'inline';
+        attachFocusListeners();
+      }
+    };
 
-      if (visibleCount === 7) document.getElementById('addBtn').style.display = 'none';
-      if (visibleCount === 3) document.getElementById('removeBtn').style.display = 'none';
+    document.addEventListener("DOMContentLoaded", () => {
+      attachFocusListeners();
+      if (visibleCount === 7) {
+        document.getElementById("addBtn").style.display = 'none';
+      }
     });
 
     document.getElementById("singleInput").addEventListener("input", updateHighlights);
