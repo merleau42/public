@@ -28,7 +28,7 @@
       width: 90vw;
     }
 
-    input {
+    input, textarea {
       width: 40vw;
       height: 5vw;
       padding: 8px;
@@ -37,6 +37,8 @@
       background-color: #1e1e1e;
       color: #f0f0f0;
       border: 1px solid #333;
+      resize: none;
+      overflow: hidden; /* ✅ 스크롤바 제거 */
     }
 
     button {
@@ -119,15 +121,15 @@
 </head>
 <body>
   <div id="div1" class="flex-container">
-    <input type="text" id="input1">
-    <input type="text" id="input2">
-    <input type="text" id="input3">
-    <input type="text" id="input4">
-    <input type="text" id="input5">
-    <input type="text" id="input6">
-    <input type="text" id="input7">
+    <textarea id="input1" rows="2"></textarea>
+    <textarea id="input2" rows="2"></textarea>
+    <textarea id="input3" rows="2"></textarea>
+    <textarea id="input4" rows="2"></textarea>
+    <textarea id="input5" rows="2"></textarea>
+    <textarea id="input6" rows="2"></textarea>
+    <textarea id="input7" rows="2"></textarea>
     <div id="input8-wrapper">
-      <input type="text" id="input8">
+      <textarea id="input8" rows="2"></textarea>
       <div class="overlay-icons">
         <span class="icon-btn" id="removeBtn" onclick="removeInput()">➖</span>
         <span class="icon-btn" id="addBtn" onclick="addInput()">➕</span>
