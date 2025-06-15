@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#121212">
   <title>단어수집기 1.0v</title>
   <style>
     body {
@@ -33,10 +30,6 @@
       border-radius: 10px;
       border: 1px solid #333;
       resize: none;
-      overflow: hidden;
-      line-height: 1.4;
-      /* min-height: 5vw; */
-      /* max-height: 10vw; */
       height: 9vw;
       background-color: #1e1e1e;
       color: #f0f0f0;
@@ -44,6 +37,7 @@
     }
     button {
       width: 13vw;
+      height: 9vw;
       font-size: 16px;
       border-radius: 10px;
       background-color: #2c2c2c;
@@ -111,15 +105,15 @@
 </head>
 <body>
   <div id="div1" class="flex-container">
-    <textarea id="input1" class="wordbox" maxlength="50" tabindex="1"></textarea>
-    <textarea id="input2" class="wordbox" maxlength="50" tabindex="5"></textarea>
-    <textarea id="input3" class="wordbox" maxlength="50" tabindex="2"></textarea>
-    <textarea id="input4" class="wordbox" maxlength="50" tabindex="6"></textarea>
-    <textarea id="input5" class="wordbox" maxlength="50" tabindex="3"></textarea>
-    <textarea id="input6" class="wordbox" maxlength="50" tabindex="7"></textarea>
-    <textarea id="input7" class="wordbox" maxlength="50" tabindex="4"></textarea>
+    <textarea id="input1" maxlength="50" tabindex="1"></textarea>
+    <textarea id="input2" maxlength="50" tabindex="5"></textarea>
+    <textarea id="input3" maxlength="50" tabindex="2"></textarea>
+    <textarea id="input4" maxlength="50" tabindex="6"></textarea>
+    <textarea id="input5" maxlength="50" tabindex="3"></textarea>
+    <textarea id="input6" maxlength="50" tabindex="7"></textarea>
+    <textarea id="input7" maxlength="50" tabindex="4"></textarea>
     <div id="input8-wrapper">
-      <textarea id="input8" class="wordbox" maxlength="50" tabindex="8"></textarea>
+      <textarea id="input8" maxlength="50" tabindex="8"></textarea>
       <div class="overlay-icons">
         <span class="icon-btn" id="removeBtn" onclick="removeInput()" tabindex="-1">➖</span>
         <span class="icon-btn" id="addBtn" onclick="addInput()" tabindex="-1">➕</span>
@@ -128,10 +122,10 @@
   </div>
 
   <div id="div2" class="flex-container">
-    <textarea id="singleInput" class="wordbox" maxlength="50" tabindex="9"></textarea>
+    <textarea id="singleInput" maxlength="50" tabindex="9"></textarea>
     <button onclick="addSingle()" tabindex="-1">추가</button>
     <button onclick="clearInputs()" tabindex="-1">비우기</button>
-    <button onclick="loadFromDB()" tabindex="-1">불러오기</button>
+    <button onclick="loadFromDB()" tabindex="-1">리스트</button>
   </div>
 
   <div id="div3"><div id="output"></div></div>
@@ -155,13 +149,26 @@
     let visibleCount = 7;
 
     window.addSingle = function () {
-      const val = document.getElementById("singleInput").value.replace(/\s+/g, "");
-      if (val) {
-        push(ref(db, "strings"), val).then(() => {
-          document.getElementById("singleInput").value = '';
-          loadFromDB();
-        });
+      const singleVal = document.getElementById("singleInput").value.trim();
+      if (!singleVal) return;
+
+      const compressed = singleVal.replace(/\s+/g, "");
+      push(ref(db, "strings"), compressed);
+
+      const inputs = [];
+      for (let i = 1; i <= 8; i++) {
+        const input = document.getElementById(`input${i}`);
+        if (input && getComputedStyle(input).display !== 'none' && input.value.trim()) {
+          inputs.push(input.value.trim());
+        }
       }
+
+      if (inputs.length) {
+        const sentence = `${singleVal}: ${inputs.join(', ')}`;
+        push(ref(db, "statements"), sentence);
+      }
+
+      loadFromDB();
     };
 
     window.clearInputs = function () {
@@ -181,7 +188,7 @@
         output.innerHTML = "";
         if (snapshot.exists()) {
           const rawData = snapshot.val();
-          const entries = Object.entries(rawData).reverse(); // 최신부터 시작
+          const entries = Object.entries(rawData).reverse();
           const raw = entries.map(entry => entry[1]);
           const pairs = raw.map(line => line.split(',').map(w => w.trim()).filter(Boolean));
           groupList = buildGroups(pairs);
@@ -194,17 +201,14 @@
       }
     };
 
-
     function buildGroups(pairs) {
       const map = {}, visited = new Set(), groups = [], wordToAge = {};
-
       pairs.forEach((group, idx) => {
-        const age = idx; // 낮을수록 최신
+        const age = idx;
         group.forEach(word => {
           wordToAge[word] = Math.min(wordToAge[word] ?? Infinity, age);
         });
       });
-
       for (const group of pairs) {
         for (const word of group) {
           if (!map[word]) map[word] = new Set();
@@ -213,14 +217,12 @@
           });
         }
       }
-
       function dfs(word, currentGroup) {
         if (visited.has(word)) return;
         visited.add(word);
         currentGroup.add(word);
         map[word]?.forEach(w => dfs(w, currentGroup));
       }
-
       Object.keys(map).forEach(word => {
         if (!visited.has(word)) {
           const currentGroup = new Set();
@@ -230,7 +232,6 @@
           groups.push({ words: groupArr, age: groupAge });
         }
       });
-
       return groups.sort((a, b) => a.age - b.age).map(g => g.words);
     }
 
