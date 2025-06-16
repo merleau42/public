@@ -6,8 +6,16 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="top-bar">
+    인원수:
+    <button id="decreaseBtn">◀</button>
+    <span id="playerCount">8</span>
+    <button id="increaseBtn">▶</button>
+  </div>
+
   <div class="grid-container" id="grid"></div>
-  <div id="debug" align="center">디버그</div>
+
+  <div class="bottom-bar">하단바</div>
 
   <script>
     function Elem(tag, cls) {
@@ -30,26 +38,18 @@
     function vector(count, fn) {
       return Array.from({ length: count }, (_, i) => fn(i));
     }
-    function debug(val) {
-      Q('#debug').textContent = val;
-    }
+	let debug = (val) => Q('.bottom-bar').innerHTML = val;
 
     const container = Q('#grid');
-    const cards = 12;
     const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
-    const 무작위 = randz(0, 동물.length - 1, cards, false);
     const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
-
-    const animals = vector(cards, i => ({
-      id: i,
-      img: 무작위[i],
-      demo: 팻말[randz(0, 팻말.length - 1)],
-      text: 동물[무작위[i]],
-    }));
-
     const 이모지선택지 = ['🚫','⭕','❌','😈','🔴','🟠','🤔','🟡','🟣','😇','🟢','🔵'];
-    const 이모지각도 = [26, 58, 90];
+    const 이모지각도 = [26, 58, 91];
     const 이모지반지름비율 = 45;
+
+    let playerCount = 8;
+    const minCount = 4;
+    const maxCount = 12;
 
     function setupEmojiInterface(profileEl) {
       const 상태 = { 이모지들: [] };
@@ -104,63 +104,92 @@
       profileEl._emojiUpdater = 갱신;
     }
 
-    animals.forEach(animal => {
-      const wrapper = Elem('div', 'statement-container');
-      const profile = Elem('div', 'profile');
-      const circle = Elem('div', 'circle');
-      const img = Elem('img');
-      img.src = `assets/동물${animal.img}.png`;
-      circle.appendChild(img);
-      profile.appendChild(circle);
+    function regenerateCards() {
+      container.innerHTML = '';
+      const 무작위 = randz(0, 동물.length - 1, playerCount, false);
 
-      setupEmojiInterface(profile);
+      const animals = vector(playerCount, i => ({
+        id: i,
+        img: 무작위[i],
+        demo: 팻말[randz(0, 팻말.length - 1)],
+        text: 동물[무작위[i]],
+      }));
 
-      const placard = Elem('div', 'placard');
-      placard.textContent = animal.demo;
-      placard.dataset.selected = animal.demo;
-      profile.appendChild(placard);
+      animals.forEach(animal => {
+        const wrapper = Elem('div', 'statement-container');
+        const profile = Elem('div', 'profile');
+        const circle = Elem('div', 'circle');
+        const img = Elem('img');
+        img.src = `assets/동물${animal.img}.png`;
+        circle.appendChild(img);
+        profile.appendChild(circle);
 
-      const bubble = Elem('div', 'bubble');
-      bubble.textContent = animal.text;
+        setupEmojiInterface(profile);
 
-      wrapper.appendChild(profile);
-      wrapper.appendChild(bubble);
-      container.appendChild(wrapper);
+        const placard = Elem('div', 'placard');
+        placard.textContent = animal.demo;
+        placard.dataset.selected = animal.demo;
+        profile.appendChild(placard);
 
-      placard.addEventListener('click', e => {
-        e.stopPropagation();
-        QQ('.placard.expanded').forEach(p => {
-          p.classList.remove('expanded');
-          p.removeAttribute('style');
-          p.textContent = p.dataset.selected;
-        });
+        const bubble = Elem('div', 'bubble');
+        bubble.textContent = animal.text;
 
-        const rect = placard.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        wrapper.appendChild(profile);
+        wrapper.appendChild(bubble);
+        container.appendChild(wrapper);
 
-        placard.classList.add('expanded');
-        placard.style.left = `${centerX - 125}px`;
-        placard.style.top = `${centerY - 30}px`;
-        placard.innerHTML = '';
-
-        for (let row = 0; row < 2; row++) {
-          const rowDiv = Elem('div', 'choice-row');
-          팻말.slice(row * 5, (row + 1) * 5).forEach(text => {
-            const span = Elem('span', 'choice');
-            span.innerHTML = (text === placard.dataset.selected) ? `<strong>${text}</strong>` : text;
-            span.addEventListener('click', e => {
-              e.stopPropagation();
-              placard.textContent = text;
-              placard.dataset.selected = text;
-              placard.classList.remove('expanded');
-              placard.removeAttribute('style');
-            });
-            rowDiv.appendChild(span);
+        placard.addEventListener('click', e => {
+          e.stopPropagation();
+          QQ('.placard.expanded').forEach(p => {
+            p.classList.remove('expanded');
+            p.removeAttribute('style');
+            p.textContent = p.dataset.selected;
           });
-          placard.appendChild(rowDiv);
-        }
+
+          const rect = placard.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          placard.classList.add('expanded');
+          placard.style.left = `${centerX - 125}px`;
+          placard.style.top = `${centerY - 30}px`;
+          placard.innerHTML = '';
+
+          for (let row = 0; row < 2; row++) {
+            const rowDiv = Elem('div', 'choice-row');
+            팻말.slice(row * 5, (row + 1) * 5).forEach(text => {
+              const span = Elem('span', 'choice');
+              span.innerHTML = (text === placard.dataset.selected) ? `<strong>${text}</strong>` : text;
+              span.addEventListener('click', e => {
+                e.stopPropagation();
+                placard.textContent = text;
+                placard.dataset.selected = text;
+                placard.classList.remove('expanded');
+                placard.removeAttribute('style');
+              });
+              rowDiv.appendChild(span);
+            });
+            placard.appendChild(rowDiv);
+          }
+        });
       });
+
+      updateLayoutBasedOnColumn();
+    }
+
+    Q('#decreaseBtn').addEventListener('click', () => {
+      if (playerCount > minCount) {
+        playerCount--;
+        Q('#playerCount').textContent = playerCount;
+        regenerateCards();
+      }
+    });
+    Q('#increaseBtn').addEventListener('click', () => {
+      if (playerCount < maxCount) {
+        playerCount++;
+        Q('#playerCount').textContent = playerCount;
+        regenerateCards();
+      }
     });
 
     document.addEventListener('click', () => {
@@ -172,12 +201,15 @@
       });
     });
 
-    function getColumnCount() {
-      const items = QQ('.statement-container');
-      const rowTops = new Set();
-      items.forEach(item => rowTops.add(item.offsetTop));
-      return Math.round(items.length / rowTops.size);
-    }
+	function getColumnCount() {
+		const items = QQ('.statement-container');
+		const left = items.map(x => x.offsetLeft);
+
+		let cols = 0;
+		while (left.indexOf(left[cols]) == cols)
+      cols++;
+		return cols;
+	}
 
     function updateLayoutBasedOnColumn() {
       QQ('.reverse').forEach(x => x.classList.remove('reverse'));
@@ -187,20 +219,21 @@
     }
 
     setInterval(() => {
-      const placard = Q('.placard.expanded');
-      if (placard) {
-        const offset = placard.getBoundingClientRect();
+      QQ('.placard.expanded, .emoji-picker').forEach(expanded => {
+        const offset = expanded.getBoundingClientRect();
+
         const shiftX = Math.min(0, offset.left - 10);
         const shiftY = Math.min(0, offset.top - 10);
         const overX = offset.right - window.innerWidth + 10;
         const overY = offset.bottom - window.innerHeight + 10;
 
         if (shiftX < 0 || overX > 0)
-          placard.style.left = `calc(${placard.style.left} - ${shiftX || overX}px)`;
+          expanded.style.left = `calc(${expanded.style.left} - ${shiftX || overX}px)`;
         if (shiftY < 0 || overY > 0)
-          placard.style.top = `calc(${placard.style.top} - ${shiftY || overY}px)`;
-      }
-    }, 500);
+          expanded.style.top = `calc(${expanded.style.top} - ${shiftY || overY}px)`;
+      });
+  }, 500);
+
 
     window.addEventListener('resize', () => {
       QQ('.profile').forEach(p => {
@@ -209,7 +242,7 @@
       updateLayoutBasedOnColumn();
     });
 
-    updateLayoutBasedOnColumn();
+    regenerateCards();
   </script>
 </body>
 </html>

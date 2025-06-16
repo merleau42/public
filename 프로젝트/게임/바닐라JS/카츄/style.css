@@ -1,3 +1,4 @@
+/* 기본 설정 */
 * {
     box-sizing: border-box;
   }
@@ -15,18 +16,57 @@
     font-family: Arial, sans-serif;
     background-color: ghostwhite;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    padding-bottom: 5vh; /* 하단바 높이만큼 여백 확보 */
   }
   
+  /* ✅ 상단바 (자리를 차지함, 고정 아님) */
+  .top-bar {
+    height: 60px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  /* ✅ 하단바 (항상 화면 아래 고정됨) */
+  .bottom-bar {
+    height: 60px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+  
+  /* 상단바 버튼 */
+  .top-bar button {
+    padding: 0;
+    font-size: 1em;
+    border: 0;
+    cursor: pointer;
+  }
+  
+  /* ✅ 퍼즐 카드 영역 */
   .grid-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 4vh 22px;
+    gap: 3vh 22px;
     justify-content: center;
     width: 100%;
     margin: 0 auto;
+    padding: 2vh 0;
   }
   
+  /* 이하 기존 정의 유지 */
   .statement-container {
     display: flex;
     align-items: center;
@@ -34,7 +74,6 @@
     width: max(215px, 31vw, 50vh);
     max-width: max(215px, min(40vw, 400px));
   }
-  
   .statement-container.reverse {
     flex-direction: row-reverse;
   }
@@ -55,18 +94,17 @@
     margin: 0 min(7.5px, max(3px, 1.5vh));
     position: relative;
   }
-  
   .circle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
   
-  /* ✅ 이모지 버튼 위치 및 크기 보정 */
+  /* ✅ 이모지 버튼 */
   .emoji-button {
     position: absolute;
-    /* font-size: max(14px, min(24px, max(0.9vw, 1.8vh))); */
-    font-size: max(14px, min(19px, 1.2vw), min(19px, 1.75vh));
+    /* font-size: max(14px, min(19px, 1.2vw), min(19px, 1.75vh)); */
+    font-size: max(calc(13px + 0.2vw), calc(13px + 0.5vh));
     width: 1.8em;
     height: 1.8em;
     line-height: 1.8em;
@@ -82,12 +120,12 @@
     position: absolute;
     display: flex;
     flex-wrap: wrap;
-    background-color: lightyellow;
+    background: #fff8dc;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 4px;
-    z-index: 1000;
     opacity: 0.85;
+    z-index: 1000;
     width: 100px;
   }
   .emoji-picker span {
@@ -98,7 +136,7 @@
     background: #eee;
   }
   
-  /* ✅ 팻말 위치 및 팝업 */
+  /* ✅ 팻말 */
   .placard {
     position: absolute;
     top: 70%;
@@ -115,14 +153,12 @@
     transition: transform 0.2s ease;
     transform-origin: center center;
   }
-  
   .placard:not(.expanded) {
     font-size: max(12px, min(19px, max(1.3vw, 1.4vh)));
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  
   .placard.expanded {
     position: fixed;
     white-space: normal;
@@ -138,7 +174,6 @@
     opacity: 0.85;
     z-index: 1000;
   }
-  
   .placard .choice-row {
     display: flex;
     gap: 3px;
@@ -172,11 +207,5 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-  }
-  
-  /* ✅ 디버그 표시 */
-  #debug {
-    font-size: 24px;
-    margin-top: 20px;
   }
   
