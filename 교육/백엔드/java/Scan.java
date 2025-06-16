@@ -35,7 +35,20 @@ class ScannerExamples {
 		else 
 			System.out.printf("입력하신 문자는 한글이거나 특수문자입니다.\n");
 	}
+	static void ex3() {
+		System.out.print("점수를 입력하세요: ");
+		int score = sc.nextInt();
+
+		if (400 <= score)
+			System.out.println("A");
+		else if (300 <= score && score < 400)
+			System.out.println("B");
+		else if (200 <= score && score < 300)
+			System.out.println("C");
+		else
+			System.out.println("자격증 없음");
+	}
 	public static void main(String[] args) {
-		ex2();
+		ex3();
 	}
 }
