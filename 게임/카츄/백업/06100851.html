@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<title>논리 퍼즐 플랫폼</title>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+	
+			html {
+				overflow: auto;
+				scrollbar-width: none;		/* Firefox: 스크롤바 숨김 */
+				-ms-overflow-style: none;	/* IE/Edge 구버전 */
+			}
+	
+			html::-webkit-scrollbar {
+				display: none;				/* Chrome, Safari, Edge */
+			}
+	
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f9f9f9;
+				margin: 0;
+				padding: 20px;
+			}
+	
+			.grid-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 4vh 22px;
+				justify-content: center;
+				width: 100%;
+				margin: 0 auto;
+			}
+	
+			.statement-container {
+				display: flex;
+				align-items: center;
+				min-height: 40px;
+				width: max(215px, 31vw, 50vh);
+				max-width: max(215px, min(40vw, 400px));
+			}
+	
+			.statement-container.reverse {
+				flex-direction: row-reverse;
+			}
+
+			.profile {
+				position: relative;
+			}
+	
+			.circle {
+				width: max(65px, min(12vh, 13vw));
+				height: max(65px, min(12vh, 13vw));
+				border-radius: 50%;
+				overflow: hidden;
+				border: 2px solid #4a90e2;
+				background-color: white;
+				flex-shrink: 0;
+				margin: 0 min(7.5px, max(3px, 1.5vh));
+			}
+	
+			.circle img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.placard {
+				position: absolute;
+				top: 70%; /* circle의 아래 */
+				left: 100%;
+				transform: translateX(-50%);
+				background-color: lightyellow;
+				border: 1px solid #ccc;
+				border-radius: 6px;
+				padding: 2px 6px;
+				min-height: 24px;
+				text-align: center;
+				font-size: 11px;
+				white-space: nowrap;
+				z-index: 2;
+			}
+	
+			.bubble {
+				background: white;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				padding: min(11px, max(3.5px, 1.5vh)) 3.5px;
+				width: 100%;
+				height: min(100px, max(50px, 12vh));
+				box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+				word-break: keep-all;
+				display: flex;
+				font-size: max(12px, min(19px, max(1.3vw, 1.7vh)));
+				line-height: 1.3;
+				align-items: center;		/* 수직 정렬 */
+				justify-content: center;	/* 수평 가운데 정렬1 */
+				text-align: center;			/* 수평 가운데 정렬2 */
+			}
+	
+			#debug {
+				display: inline;
+				float: left;
+			}
+		</style>
+	</head>
+<body>
+	<div class="grid-container" id="grid"></div>
+	<div id="debug">디버그</div>
+
+	<script src="lib.js"></script>
+	<script>
+		const container = Q('#grid');
+		const cards = 12;
+
+		동물 = ['원숭이', '여우', '부엉이', '곰', '토끼',
+				'돼지', '강아지', '고양이', '햄스터', '펭귄',
+				'사자', '호랑이', '판다', '너구리', '다람쥐',
+				'얼룩말', '고슴도치', '코끼리', '악어', '캥거루'];
+		무작위 = randz(0, 동물.length - 1, cards, false);
+
+		팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기']
+
+
+		const animals = vector(cards, i => ({
+				id: i,
+				img: 무작위[i],
+				demo: 팻말[randz(0,4)],
+				text: 동물[무작위[i]],
+			}));
+
+		animals.forEach((animal, i) => {
+			const wrapper = Elem('div', 'statement-container');
+
+			const profile = Elem('div', 'profile');
+				const circle = Elem('div', 'circle');
+					const img = Elem('img');
+					img.src = `assets/동물${animal.img}.png`;
+					circle.appendChild(img);
+
+				const placard = Elem('div', 'placard');
+					placard.textContent = animal.demo;
+
+				profile.appendChild(circle);
+				profile.appendChild(placard);
+
+			const bubble = Elem('div', 'bubble');
+				bubble.textContent = animal.text;
+
+			wrapper.appendChild(profile);
+			wrapper.appendChild(bubble);
+			container.appendChild(wrapper);
+		});
+
+		function getColumnCount() {
+			const items = QQ('.statement-container');
+			const rowTops = new Set();
+			items.forEach(item => rowTops.add(item.offsetTop));
+			const columnCount = items.length / rowTops.size;
+			return Math.round(columnCount);
+		}
+
+		function updateLayoutBasedOnColumn() {
+			QQ('.reverse').forEach(x => x.classList.remove('reverse'));
+			const count = getColumnCount();
+			const items = QQ('.statement-container').filter((_, i) => i % 2 === 1);
+			if (count === 2)
+				items.forEach(el => el.classList.add('reverse'));
+		}
+
+		updateLayoutBasedOnColumn(); 
+		window.addEventListener('resize', updateLayoutBasedOnColumn);
+
+		debug(randz(1, 20, 12, false));
+	</script>
+</body>
+</html>
