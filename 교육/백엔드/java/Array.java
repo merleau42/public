@@ -23,7 +23,7 @@ class ArrayExamples {
 
 	static void ex2() {
 		char[] result = {'A', 'B', 'C', 'D', '0', '1', '2',
-				 '3', '4', '5', '6', '7', '8', '9'};
+						 '3', '4', '5', '6', '7', '8', '9'};
 		char[] reverse = new char[result.length];
 		
 		for (int i=0;  i<reverse.length;  i++)
@@ -38,7 +38,7 @@ class ArrayExamples {
 		
 		int max = score[0];
 		int min = score[0];
-		
+
 		for (int i=0; i<score.length; i++) {
 			if (score[i] > max)
 				max = score[i];
