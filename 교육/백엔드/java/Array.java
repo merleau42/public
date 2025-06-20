@@ -22,7 +22,7 @@ class ArrayExamples {
 	}
 
 	static void ex2() {
-		char[] result = {'A', 'B', 'C', 'D', '0', '1', '2',
+		char[] result =	{'A', 'B', 'C', 'D', '0', '1', '2',
 						 '3', '4', '5', '6', '7', '8', '9'};
 		char[] reverse = new char[result.length];
 		
@@ -103,7 +103,22 @@ class ArrayExamples {
 		System.out.println(Arrays.toString(arr));
 	}
 
+	static void ex7() {
+		String[] names = {"Kim", "Park", "Yi"};
+
+		for (int i=0; i<names.length; i++) {
+			System.out.println("names[" + i + "] = " + names[i]);
+		}
+
+		String tmp = names[2];
+		System.out.println("tmp = " + tmp);
+		names[0] = "Yu";
+
+		for (String str : names)
+			System.out.println(str);
+	}
+
 	public static void main(String[] args) {
-		ex6();
+		ex7();
 	}
 }
