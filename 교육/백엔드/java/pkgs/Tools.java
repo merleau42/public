@@ -15,6 +15,10 @@ class Tools {
 		return sum;
 	}
 
+	static float arr_average(int[] arr) {
+		return (float) arr_sum(arr) / arr.length;
+	}
+
 	static int[] arr_sort(int[] arr) {
 		int tmp;
 		for (int wave=0; wave < arr.length; wave++)

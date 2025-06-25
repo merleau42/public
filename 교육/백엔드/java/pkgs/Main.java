@@ -121,16 +121,18 @@ class Main {
 	}
 
 	static void ex6() {
-		int[] a = new int[10];
+		final int SIZE = 13;
+		int[] a = new int[SIZE];
 
 		for (int i=0; i < a.length; i++)
-			a[i] = (int)(Math.random()*100) - 50;
+			a[i] = (int)(Math.random()*SIZE) - 5;
 
 		Tools arrayTools = new Tools();
 
-		arrayTools.arr_print( a );
-		System.out.println( arrayTools.arr_sum( a ) );
-		arrayTools.arr_print(  at.arr_sort( a )  );
+		arrayTools.arr_print(  a  );
+		arrayTools.arr_print(  arrayTools.arr_sort( a )  );
+		System.out.println(  arrayTools.arr_sum( a )  );
+		System.out.printf(  "%.2f\n", arrayTools.arr_average( a )  );
 	}
 
 	public static void main(String[] args) {
