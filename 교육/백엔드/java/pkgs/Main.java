@@ -1,5 +1,7 @@
 package pkgs;
 
+import practice.Flow;
+
 class Main {
 	static void status(Tv t) {
 		System.out.println(t.name + "의 색상은 " + t.color + " 입니다.");
@@ -14,20 +16,19 @@ class Main {
 
 	static void ex1() {
 		Tv t3 = new Tv();
+			t3.color = "red";
+			t3.name = "T3";
+			t3.channel = 10;
+			t3.channelUp();
+			t3.channelUp();
+
 		Tv t4 = new Tv();
-
-		t3.color = "red";
-		t3.name = "T3";
-		t3.channel = 10;
-		t3.channelUp();
-		t3.channelUp();
-
-		t4.color = "green";
-		t4.name = "T4";
-		t4.power();
-		t4.channel = 10;
-		t4.channelDown();
-		t4.channelDown();
+			t4.color = "green";
+			t4.name = "T4";
+			t4.power();
+			t4.channel = 10;
+			t4.channelDown();
+			t4.channelDown();
 
 		status(t3);
 		status(t4);
@@ -83,7 +84,53 @@ class Main {
 		cd2.getMembers();
 	}
 
-	public static void main(String[] args) {
-		ex4();
+	static void ex5() {
+		Calc sh = new Calc();
+
+		int		result1 = sh.add( 5, 3 );
+		int		result2 = sh.substract( 5, 3 );
+		int		result3 = sh.multiply( 5, 3 );
+		float	result4 = sh.divide( 5, 3 );
+
+		System.out.println( result1 );
+		System.out.println( result2 );
+		System.out.println( result3 );
+		System.out.println( result4 );
 	}
+
+	static void f1() {
+		System.out.println("   ㄴf1() 시작");
+		f2();
+		System.out.println("   ㄴf1() 종료");
+	}
+
+	static void f2() {
+		System.out.println("      ㄴf2() 시작");
+		System.out.println("      ㄴf2() 종료");
+	}
+
+	public static void main2(String[] args) {
+		System.out.println("main() 시작");
+		f1();
+		System.out.println("main() 종료");
+	}
+
+	public static void main3(String[] args) {
+		Flow fl = new Flow();
+		fl.ex2();
+	}
+
+	static void ex6() {
+		int[] a = {1, 2, 9, 0, -4, 5, -2, -3};
+		Tools at = new Tools();
+
+		at.arr_print( a );
+		System.out.println( at.arr_sum( a ) );
+		at.arr_print(  at.arr_sort( a )  );
+	}
+
+	public static void main(String[] args) {
+		ex6();
+	}
+
 }

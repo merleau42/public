@@ -48,6 +48,7 @@ class ScannerExamples {
 		else
 			System.out.println("자격증 없음");
 	}
+/*
 	static void ex4() {
 		String str1 = sc.nextLine();	// 개행 문자를 함께 가져옴
 		System.out.println(str1);
@@ -57,6 +58,7 @@ class ScannerExamples {
 		System.out.println(str2);
 		System.out.println(int);
 	}
+*/
 	public static void main(String[] args) {
 		ex4();
 	}

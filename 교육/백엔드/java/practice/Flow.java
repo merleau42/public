@@ -1,25 +1,25 @@
-package chapter;
+package practice;
 import java.util.*; // Scanner 클래스를 사용하기 위해 추가
 
-class FlowExamples {
-	static void ex1() {
+public class Flow {
+	public static void ex1() {
         for(int i=1, j=9;  i<=9;  i++, j--)
             System.out.printf("i=%d, j=%d\n", i, j);
 	}
-    static void ex2() {
+    public static void ex2() {
         for(int i=1; i<=9; i++){
             for(int j=2; j<=9; j++)
                 System.out.printf("%d x  %d = %2d\t", j, i, j*i);
             System.out.printf("\n");
         }
 	}
-    static void ex3() {
+    public static void ex3() {
         for (int i=0; i<=23; i++)
             for (int j=0; j<=59; j++)
                 for (int k=0; k<=59; k++)
                     System.out.printf("%02d:%02d:%02d\n", i, j, k);
 	}
-    static void ex4() {
+    public static void ex4() {
         int i = 11;
         System.out.println("카운트 다운을 시작합니다.");
         while(i-- > 0) {
@@ -28,7 +28,7 @@ class FlowExamples {
         }
         System.out.println("땡!");
 	}
-    static void ex5() {
+    public static void ex5() {
         int i=0;
         int sum=0;
 
@@ -36,7 +36,7 @@ class FlowExamples {
             System.out.println(i + "\t" + sum);
         }
 	}
-    static void ex6() {
+    public static void ex6() {
         int input, answer;
         Scanner sc = new Scanner(System.in);
         
@@ -51,7 +51,7 @@ class FlowExamples {
         } while (input != answer);
         System.out.println("정답입니다!");
 	}
-    static void ex7() {
+    public static void ex7() {
         for(int i=1; i<=333; i++){
             System.out.printf("%d: ", i);
 
@@ -64,7 +64,7 @@ class FlowExamples {
             System.out.printf("\n");
         }
 	}
-    static void ex8() {
+    public static void ex8() {
         Scanner sc = new Scanner(System.in);
         String items = "[장바구니]: ";
         int price = 0;
