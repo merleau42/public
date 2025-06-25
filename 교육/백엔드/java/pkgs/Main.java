@@ -121,12 +121,16 @@ class Main {
 	}
 
 	static void ex6() {
-		int[] a = {1, 2, 9, 0, -4, 5, -2, -3};
-		Tools at = new Tools();
+		int[] a = new int[10];
 
-		at.arr_print( a );
-		System.out.println( at.arr_sum( a ) );
-		at.arr_print(  at.arr_sort( a )  );
+		for (int i=0; i < a.length; i++)
+			a[i] = (int)(Math.random()*100) - 50;
+
+		Tools arrayTools = new Tools();
+
+		arrayTools.arr_print( a );
+		System.out.println( arrayTools.arr_sum( a ) );
+		arrayTools.arr_print(  at.arr_sort( a )  );
 	}
 
 	public static void main(String[] args) {
