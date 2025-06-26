@@ -136,7 +136,15 @@ class Main {
 	}
 
 	public static void main(String[] args) {
-		ex6();
+		Calc cc = new Calc();
+
+		int[] w = {1, 2, 3, 4, 5};
+
+		for (int i : w )
+			System.out.println( cc.power(2, i) );
+
+		for (int i=1; i<10; i++)
+			System.out.println( cc.factorical(i) );
 	}
 
 }
