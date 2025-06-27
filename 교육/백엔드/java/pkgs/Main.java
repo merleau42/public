@@ -135,16 +135,73 @@ class Main {
 		System.out.printf(  "%.2f\n", arrayTools.arr_average( a )  );
 	}
 
-	public static void main(String[] args) {
+	static void ex7() {
 		Calc cc = new Calc();
 
 		int[] w = {1, 2, 3, 4, 5};
 
-		for (int i : w )
+		for (int i : w)
 			System.out.println( cc.power(2, i) );
 
 		for (int i=1; i<10; i++)
 			System.out.println( cc.factorical(i) );
+	}
+
+	static Container copy(Container original) {
+		Container clone = new Container();
+		clone.x = original.x;
+		clone.y = original.y;
+		return clone;
+	}
+
+	static void ex8() {
+		CaptionTv ctv = new CaptionTv();
+
+		System.out.println("자막 사용: " + ctv.caption);
+		ctv.displayCaption("자막 테스트1");
+
+		ctv.caption = true;
+		System.out.println("자막 사용: " + ctv.caption);
+		ctv.displayCaption("자막 테스트2");
+	}
+
+	static void ex9() {
+		Shape sp = new Shape();
+		Point p1 = new Point();
+		Point p2 = new Point(5, 12);
+		Circle c1 = new Circle();
+		Circle c2 = new Circle(new Point(7, 7), 10);
+
+		Point[] ppp = {new Point(1,1), new Point(2,2), new Point(3,3)};
+		Triangle t1 = new Triangle(ppp);
+
+		sp.draw();
+		c1.draw();
+		c2.draw();
+		t1.draw();
+	}
+
+	static void ex10() {
+		Data1 d1 = new Data1();
+		Data2 d2 = new Data2(20);
+		Data2 d3 = new Data2();
+
+		System.out.println(d2.value);
+		System.out.println(d3.value);
+	}
+
+	static void ex11() {
+		Car c1 = new Car();
+		c1.color = "white";
+		c1.gearType = "auto";
+		c1.door = 4;
+
+		Car c2 = new Car("black", "auto", 6);
+
+	}
+
+	public static void main(String[] args) {
+		ex11();
 	}
 
 }
