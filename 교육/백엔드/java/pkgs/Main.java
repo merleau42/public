@@ -198,6 +198,21 @@ class Main {
 
 		Car c2 = new Car("black", "auto", 6);
 
+		Car c3 = new Car(c2);
+
+		c1.get();
+		c2.get();
+		c3.get();
+		System.out.println();
+
+		c2.color = "green";
+		c2.get();
+		c3.get();
+		System.out.println();
+
+		c3.door = 10;
+		c2.get();
+		c3.get();
 	}
 
 	public static void main(String[] args) {
