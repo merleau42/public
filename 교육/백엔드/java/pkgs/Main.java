@@ -215,8 +215,72 @@ class Main {
 		c3.get();
 	}
 
-	public static void main(String[] args) {
-		ex11();
+	static void ex12() {
+		Marine m = new Marine();
+		m.move(0, 0);
+        System.out.printf("공격력:%d   체력:%d\n",   m.x,   m.y);
+		m.stimPack();
+        System.out.printf("공격력:%d   체력:%d\n",   m.x,   m.y);
+
+		Tank t = new Tank();
+		t.move(0, 0);
+        System.out.printf("공격력:%d   체력:%d\n",   m.x,   m.y);
+		t.changeMode();
+        System.out.printf("공격력:%d   체력:%d\n",   m.x,   m.y);
+
+		Dropship d = new Dropship();
+		d.move(0, 0);
+        System.out.printf("공격력:%d   체력:%d\n",   m.x,   m.y);
+		d.load();
+		d.unload();
 	}
 
+	static void ex13() {
+		System.out.println(1);
+		System.out.println(2);
+		try {
+			System.out.println(3);
+			System.out.println(4); // 오류 발생 직전까지 실행됨
+			System.out.println(0/0); // 오류 발생시 프로그램 카운터에서 지정된 주소로 점프함
+			System.out.println(5);
+			System.out.println(6);
+		}
+		catch (ArithmeticException e) {
+			System.out.println("e=="+ e);
+			if(e instanceof ArithmeticException)
+				System.out.println("true");
+		}
+		catch (Exception e) {
+			System.out.println("e=="+ e);
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		System.out.println(7);
+		System.out.println(8);
+		System.out.println(9);
+	}
+
+	static void ex14() {
+		try {
+			System.out.println("try문 시작");
+			Exception e = new Exception("고의로 발생시킴");
+			throw e;
+			// System.out.println("try문 종료"); ----- 실행될 수 없음, 컴파일 에러
+		}
+		catch (Exception e) { 
+			System.out.println("catch문 시작");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			System.out.println("catch문 종료");
+		}
+		finally {
+			System.out.println("finally문 시작");
+			System.out.println("finally문 종료");
+		}
+		System.out.println("프로그램이 정상 종료되었음");
+	}
+
+	public static void main(String[] args) {
+		ex14();
+	}
 }
