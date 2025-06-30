@@ -814,3 +814,5 @@ NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED -
 30-Jun-2025 07:44:43.597 INFO [main] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-8080"]
 30-Jun-2025 07:55:38.025 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [GET / HTTP/1.1] received
 30-Jun-2025 07:55:38.032 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [] received
+30-Jun-2025 08:17:32.501 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [GET / HTTP/1.1] received
+30-Jun-2025 08:17:32.514 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [] received
