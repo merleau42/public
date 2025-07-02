@@ -1,0 +1,89 @@
+body {
+    background: #121212;
+    color: #eee;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .bottom-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  textarea {
+    flex: 1;
+    height: 40px;
+    border-radius: 8px;
+    padding: 5px 10px;
+    background: #1a1a1a;
+    color: white;
+    border: 1px solid #333;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #555;
+  }
+  
+  #group-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .group-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(33.33% - 20px);
+    box-sizing: border-box;
+  }
+  
+  .group-title {
+    display: flex;
+    gap: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    word-break: break-word;
+  }
+  
+  .statement-list {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .statement-list li {
+    cursor: pointer;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  
+  .statement-list li textarea {
+    width: 100%;
+    height: auto;
+    min-height: 24px;
+    border-radius: 5px;
+  }
+
+  .delete-btn {
+    color: red;
+    margin-left: 3px;
+  }
+  

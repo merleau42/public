@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>단어 그룹 관리자</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bottom-bar">
+  <button onclick="loadGroups()">불러오기</button>
+  <button onclick="saveGroups()">저장</button>
+</div>
+
+<div id="group-container"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+  authDomain: "liarwords-af033.firebaseapp.com",
+  databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+  projectId: "liarwords-af033",
+  storageBucket: "liarwords-af033.appspot.com",
+  messagingSenderId: "171671976030",
+  appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+});
+const db = getDatabase(app);
+
+let groupData = {};
+
+window.loadGroups = async function() {
+  const container = document.getElementById('group-container');
+  container.innerHTML = '불러오는 중...';
+  try {
+    const snapshot = await get(ref(db, 'groups'));
+    container.innerHTML = '';
+    if (snapshot.exists()) {
+      groupData = snapshot.val();
+      renderGroups();
+    } else {
+      container.innerHTML = '🔥 데이터 없음';
+      groupData = {};
+    }
+  } catch {
+    container.innerHTML = '❌ 불러오기 실패';
+  }
+};
+
+window.saveGroups = async function() {
+  await set(ref(db, 'groups'), groupData);
+  alert('저장 완료');
+};
+
+function renderGroups() {
+  const container = document.getElementById('group-container');
+  container.innerHTML = '';
+
+  const sorted = Object.entries(groupData).sort((a, b) => b[1].timestamp - a[1].timestamp);
+
+  sorted.forEach(([groupId, data]) => {
+    const div = document.createElement('div');
+    div.className = 'group-card';
+
+    // 그룹명 표시 및 수정
+    const title = createEditableList(
+      groupId,
+      data.words,
+      'words',
+      true
+    );
+    div.appendChild(title);
+
+    // 발언 리스트 표시 및 수정
+    const statementList = createEditableList(
+      groupId,
+      data.statements || [],
+      'statements',
+      false
+    );
+    div.appendChild(statementList);
+
+    container.appendChild(div);
+  });
+}
+
+function createEditableList(groupId, items, key, isTitle = false) {
+  const container = document.createElement(isTitle ? 'div' : 'ul');
+  container.className = isTitle ? 'group-title' : 'statement-list';
+
+  const currentItems = [...items];
+
+  currentItems.forEach((item, idx) => {
+    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle);
+    container.appendChild(el);
+  });
+
+  // 공란 추가
+  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle);
+  container.appendChild(emptyEl);
+
+  return container;
+}
+
+function createItemElement(groupId, items, idx, text, key, isTitle = false) {
+  const wrapper = document.createElement(isTitle ? 'div' : 'li');
+  wrapper.className = 'item-wrapper';
+
+  const span = document.createElement('span');
+  span.className = 'item-text';
+  span.textContent = text || '...';
+
+  // 삭제 버튼
+  const del = document.createElement('span');
+  del.className = 'delete-btn';
+  del.textContent = '✖';
+  del.onclick = (e) => {
+    e.stopPropagation();
+    if (text) {
+      items.splice(idx, 1);
+      groupData[groupId][key] = [...items];
+      renderGroups();
+    }
+  };
+  del.style.display = 'none';
+
+  // Hover 시 삭제 버튼 표시
+  wrapper.onmouseenter = () => { if (text) del.style.display = 'inline'; };
+  wrapper.onmouseleave = () => { del.style.display = 'none'; };
+
+  // 클릭 시 수정
+  wrapper.onclick = () => {
+    const input = document.createElement('textarea');
+    input.value = text;
+    input.rows = 1;
+    input.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.blur();
+      }
+    };
+    input.onblur = () => {
+      const newText = input.value.trim();
+      if (newText) {
+        items[idx] = newText;
+      } else {
+        if (text) {
+          items.splice(idx, 1);
+        }
+      }
+      groupData[groupId][key] = [...items];
+      renderGroups();
+    };
+    wrapper.innerHTML = '';
+    wrapper.appendChild(input);
+    input.focus();
+  };
+
+  wrapper.appendChild(span);
+  wrapper.appendChild(del);
+  return wrapper;
+}
+</script>
+
+</body>
+</html>
