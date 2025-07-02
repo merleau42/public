@@ -1,0 +1,177 @@
+02-Jul-2025 01:43:46.133 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+02-Jul-2025 01:43:46.142 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+02-Jul-2025 01:43:46.142 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87+
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Jul-2025 01:43:46.143 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:43:46.144 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:43:46.201 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+02-Jul-2025 01:43:46.203 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Jul-2025 01:43:46.205 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Jul-2025 01:43:46.206 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Jul-2025 01:43:46.206 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Jul-2025 01:43:46.206 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:43:46.206 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:43:46.207 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+02-Jul-2025 01:43:46.221 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Jul-2025 01:43:46.982 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:43:47.045 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1306] milliseconds
+02-Jul-2025 01:43:47.151 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Jul-2025 01:43:47.151 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+02-Jul-2025 01:43:47.181 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+02-Jul-2025 01:43:47.714 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [537] ms
+02-Jul-2025 01:43:47.724 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:43:47.759 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [710] milliseconds
+02-Jul-2025 01:43:50.563 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [GET / HTTP/1.1] received
+02-Jul-2025 01:43:50.571 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [] received
+02-Jul-2025 01:45:44.322 INFO [Thread-1] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:45:44.330 INFO [Thread-1] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+02-Jul-2025 01:45:44.358 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches When running on Java 9 or later you need to add "--add-opens=java.base/java.io=ALL-UNNAMED" to the JVM command line arguments to enable ObjectStream cache memory leak protection. Alternatively, you can suppress this warning by disabling ObjectStream class cache memory leak protection.
+02-Jul-2025 01:45:44.358 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.checkThreadLocalsForLeaks When running on Java 9 or later you need to add "--add-opens=java.base/java.lang=ALL-UNNAMED" to the JVM command line arguments to enable ThreadLocal memory leak detection. Alternatively, you can suppress this warning by disabling ThreadLocal memory leak detection.
+02-Jul-2025 01:45:44.371 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesRmiTargets When running on Java 9 or later you need to add "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" to the JVM command line arguments to enable RMI Target memory leak detection. Alternatively, you can suppress this warning by disabling RMI Target memory leak detection.
+02-Jul-2025 01:45:44.395 INFO [Thread-1] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:45:44.413 INFO [Thread-1] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:46:05.801 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+02-Jul-2025 01:46:05.814 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+02-Jul-2025 01:46:05.814 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+02-Jul-2025 01:46:05.814 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Jul-2025 01:46:05.814 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87+
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:46:05.815 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:46:05.838 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+02-Jul-2025 01:46:05.840 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Jul-2025 01:46:05.840 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Jul-2025 01:46:05.840 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Jul-2025 01:46:05.840 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Jul-2025 01:46:05.840 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:46:05.848 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 01:46:05.848 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+02-Jul-2025 01:46:05.854 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Jul-2025 01:46:06.523 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:46:06.588 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1132] milliseconds
+02-Jul-2025 01:46:06.672 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Jul-2025 01:46:06.673 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+02-Jul-2025 01:46:06.699 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+02-Jul-2025 01:46:07.349 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [649] ms
+02-Jul-2025 01:46:07.362 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:46:07.393 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [802] milliseconds
+02-Jul-2025 01:48:05.195 INFO [Thread-1] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:48:05.201 INFO [Thread-1] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+02-Jul-2025 01:48:05.229 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches When running on Java 9 or later you need to add "--add-opens=java.base/java.io=ALL-UNNAMED" to the JVM command line arguments to enable ObjectStream cache memory leak protection. Alternatively, you can suppress this warning by disabling ObjectStream class cache memory leak protection.
+02-Jul-2025 01:48:05.229 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.checkThreadLocalsForLeaks When running on Java 9 or later you need to add "--add-opens=java.base/java.lang=ALL-UNNAMED" to the JVM command line arguments to enable ThreadLocal memory leak detection. Alternatively, you can suppress this warning by disabling ThreadLocal memory leak detection.
+02-Jul-2025 01:48:05.232 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesRmiTargets When running on Java 9 or later you need to add "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" to the JVM command line arguments to enable RMI Target memory leak detection. Alternatively, you can suppress this warning by disabling RMI Target memory leak detection.
+02-Jul-2025 01:48:05.241 INFO [Thread-1] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 01:48:05.259 INFO [Thread-1] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:16:53.440 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+02-Jul-2025 02:16:53.450 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+02-Jul-2025 02:16:53.450 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+02-Jul-2025 02:16:53.450 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87+
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:16:53.451 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:16:53.474 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+02-Jul-2025 02:16:53.478 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Jul-2025 02:16:53.482 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Jul-2025 02:16:53.484 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Jul-2025 02:16:53.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Jul-2025 02:16:53.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:16:53.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:16:53.485 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+02-Jul-2025 02:16:53.493 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Jul-2025 02:16:54.142 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:16:54.192 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1297] milliseconds
+02-Jul-2025 02:16:54.266 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Jul-2025 02:16:54.270 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+02-Jul-2025 02:16:54.286 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+02-Jul-2025 02:16:54.803 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [517] ms
+02-Jul-2025 02:16:54.829 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:16:54.850 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [653] milliseconds
+02-Jul-2025 02:18:52.459 INFO [Thread-1] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:18:52.470 INFO [Thread-1] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+02-Jul-2025 02:18:52.487 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches When running on Java 9 or later you need to add "--add-opens=java.base/java.io=ALL-UNNAMED" to the JVM command line arguments to enable ObjectStream cache memory leak protection. Alternatively, you can suppress this warning by disabling ObjectStream class cache memory leak protection.
+02-Jul-2025 02:18:52.488 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.checkThreadLocalsForLeaks When running on Java 9 or later you need to add "--add-opens=java.base/java.lang=ALL-UNNAMED" to the JVM command line arguments to enable ThreadLocal memory leak detection. Alternatively, you can suppress this warning by disabling ThreadLocal memory leak detection.
+02-Jul-2025 02:18:52.489 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesRmiTargets When running on Java 9 or later you need to add "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" to the JVM command line arguments to enable RMI Target memory leak detection. Alternatively, you can suppress this warning by disabling RMI Target memory leak detection.
+02-Jul-2025 02:18:52.497 INFO [Thread-1] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:18:52.508 INFO [Thread-1] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:25:53.813 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+02-Jul-2025 02:25:53.822 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+02-Jul-2025 02:25:53.822 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+02-Jul-2025 02:25:53.822 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Jul-2025 02:25:53.822 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87+
+02-Jul-2025 02:25:53.825 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Jul-2025 02:25:53.826 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+02-Jul-2025 02:25:53.826 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+02-Jul-2025 02:25:53.826 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Jul-2025 02:25:53.826 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:25:53.826 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:25:53.850 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+02-Jul-2025 02:25:53.850 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Jul-2025 02:25:53.850 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Jul-2025 02:25:53.851 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Jul-2025 02:25:53.851 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Jul-2025 02:25:53.851 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:25:53.851 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:25:53.851 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+02-Jul-2025 02:25:53.862 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Jul-2025 02:25:54.472 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:25:54.532 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1018] milliseconds
+02-Jul-2025 02:25:54.605 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Jul-2025 02:25:54.605 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+02-Jul-2025 02:25:54.632 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+02-Jul-2025 02:25:55.141 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [511] ms
+02-Jul-2025 02:25:55.152 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:25:55.185 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [653] milliseconds
+02-Jul-2025 02:27:53.259 INFO [Thread-1] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:27:53.264 INFO [Thread-1] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+02-Jul-2025 02:27:53.287 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches When running on Java 9 or later you need to add "--add-opens=java.base/java.io=ALL-UNNAMED" to the JVM command line arguments to enable ObjectStream cache memory leak protection. Alternatively, you can suppress this warning by disabling ObjectStream class cache memory leak protection.
+02-Jul-2025 02:27:53.288 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.checkThreadLocalsForLeaks When running on Java 9 or later you need to add "--add-opens=java.base/java.lang=ALL-UNNAMED" to the JVM command line arguments to enable ThreadLocal memory leak detection. Alternatively, you can suppress this warning by disabling ThreadLocal memory leak detection.
+02-Jul-2025 02:27:53.290 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesRmiTargets When running on Java 9 or later you need to add "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" to the JVM command line arguments to enable RMI Target memory leak detection. Alternatively, you can suppress this warning by disabling RMI Target memory leak detection.
+02-Jul-2025 02:27:53.294 INFO [Thread-1] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:27:53.305 INFO [Thread-1] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:30:26.571 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87+
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Jul-2025 02:30:26.594 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+02-Jul-2025 02:30:26.595 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+02-Jul-2025 02:30:26.595 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Jul-2025 02:30:26.595 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:30:26.595 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:30:26.645 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+02-Jul-2025 02:30:26.646 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Jul-2025 02:30:26.646 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Jul-2025 02:30:26.646 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Jul-2025 02:30:26.646 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Jul-2025 02:30:26.646 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:30:26.656 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+02-Jul-2025 02:30:26.656 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+02-Jul-2025 02:30:26.665 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Jul-2025 02:30:27.818 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:30:27.901 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [2144] milliseconds
+02-Jul-2025 02:30:28.044 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Jul-2025 02:30:28.048 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+02-Jul-2025 02:30:28.072 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+02-Jul-2025 02:30:28.841 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [767] ms
+02-Jul-2025 02:30:28.855 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:30:28.891 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [987] milliseconds
+02-Jul-2025 02:32:25.237 INFO [Thread-1] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:32:25.244 INFO [Thread-1] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+02-Jul-2025 02:32:25.274 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches When running on Java 9 or later you need to add "--add-opens=java.base/java.io=ALL-UNNAMED" to the JVM command line arguments to enable ObjectStream cache memory leak protection. Alternatively, you can suppress this warning by disabling ObjectStream class cache memory leak protection.
+02-Jul-2025 02:32:25.276 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.checkThreadLocalsForLeaks When running on Java 9 or later you need to add "--add-opens=java.base/java.lang=ALL-UNNAMED" to the JVM command line arguments to enable ThreadLocal memory leak detection. Alternatively, you can suppress this warning by disabling ThreadLocal memory leak detection.
+02-Jul-2025 02:32:25.277 WARNING [Thread-1] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesRmiTargets When running on Java 9 or later you need to add "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" to the JVM command line arguments to enable RMI Target memory leak detection. Alternatively, you can suppress this warning by disabling RMI Target memory leak detection.
+02-Jul-2025 02:32:25.293 INFO [Thread-1] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-7777"]
+02-Jul-2025 02:32:25.302 INFO [Thread-1] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-7777"]

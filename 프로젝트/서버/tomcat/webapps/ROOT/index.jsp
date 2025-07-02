@@ -9,15 +9,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>page 디렉티브 연습 - import 속성</title>
 </head>
 <body>
-    <h2>page 디렉티브 연습 - import 속성</h2>
+    <%@ include file="/section/top.jsp" %>
+    <%@ include file="/section/bottom.jsp" %>
     <%
         Timestamp now = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = format.format(now);
     %>
-    오늘은 <%=strDate %> 입니다.
+    <p>오늘은 <%=strDate%> 입니다.</p>
+    <p>현재는 <%=now.getHours()%>시 <%=now.getMinutes()%>분 <%=now.getSeconds()%>초 입니다.</p>
+    <%@ include file="/page/array.jsp" %>
+    <%@ include file="/page/string.jsp" %>
 </body>
 </html>
