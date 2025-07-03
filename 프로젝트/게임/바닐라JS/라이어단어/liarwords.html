@@ -297,9 +297,34 @@ window.addSingle = async function () {
   )];
 
   if (matchedGroupIds.length === 0) {
-    alert("일치하는 그룹이 없습니다. 그룹 생성은 불가합니다.");
+    // ✅ 새 그룹 ID 생성: group0000 ~ group9999 중 비어있는 것 찾기
+    const allIds = new Set(Object.keys(groupsData));
+    let newGroupId = null;
+    for (let i = 0; i <= 9999; i++) {
+      const candidate = 'group' + i.toString().padStart(4, '0');
+      if (!allIds.has(candidate)) {
+        newGroupId = candidate;
+        break;
+      }
+    }
+
+    if (!newGroupId) {
+      alert("더 이상 생성 가능한 그룹이 없습니다.");
+      return;
+    }
+
+    const latestTimestamp = Date.now();
+    const newGroupData = {
+      words: [...new Set(words)],
+      statements: [...new Set(statements)],
+      timestamp: latestTimestamp
+    };
+
+    await set(ref(db, `groups/${newGroupId}`), newGroupData);
+    loadFromDB();
     return;
   }
+
 
   let mergedWords = [];
   let mergedStatements = [];
@@ -331,7 +356,6 @@ window.addSingle = async function () {
   });
 
   await update(ref(db), updates);
-  alert("업데이트 완료");
   loadFromDB();
 };
 
