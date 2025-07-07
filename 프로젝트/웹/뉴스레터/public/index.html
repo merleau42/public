@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>나만의 뉴스레터</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>📰 나만의 뉴스레터</h1>
+
+  <div class="card">
+    <input type="text" class="url-input" placeholder="뉴스 URL 입력" />
+    <textarea class="code-input" placeholder="예: const title = document.querySelector('title')?.innerText; return `<h2>${title}</h2>`;"></textarea>
+    <button class="load-btn">불러오기</button>
+    <div class="output">[결과 출력 영역]</div>
+  </div>
+
+  <div class="card">
+    <input type="text" class="url-input" placeholder="뉴스 URL 입력" />
+    <textarea class="code-input" placeholder="예: const p = document.querySelector('p')?.innerText; return `<p>${p}</p>`;"></textarea>
+    <button class="load-btn">불러오기</button>
+    <div class="output">[결과 출력 영역]</div>
+  </div>
+
+  <button id="load-all">전체 불러오기</button>
+
+  <script>
+    async function processCard(card) {
+      const url = card.querySelector('.url-input').value.trim();
+      const code = card.querySelector('.code-input').value;
+      const output = card.querySelector('.output');
+
+      if (!url) {
+        output.textContent = "URL을 입력해주세요.";
+        return;
+      }
+
+      output.textContent = "불러오는 중...";
+
+      try {
+        const res = await fetch('/get-page', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, code })
+        });
+
+        const data = await res.json();
+
+        if (data.result) {
+          output.innerHTML = data.result;
+        } else {
+          output.textContent = "오류: " + data.error;
+        }
+      } catch (err) {
+        output.textContent = "요청 실패: " + err.message;
+      }
+    }
+
+    document.querySelectorAll('.load-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.card');
+        processCard(card);
+      });
+    });
+
+    document.getElementById('load-all').addEventListener('click', () => {
+      document.querySelectorAll('.card').forEach(card => processCard(card));
+    });
+  </script>
+</body>
+</html>
