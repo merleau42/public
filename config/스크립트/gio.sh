@@ -18,8 +18,9 @@
 clear; cd ~/dev; git add .; git commit -m "$(date '+%Y-%m-%d %H:%M:%S')"; git push;
 
 ## 로컬 저장소의 일부 디렉토리만 서브 저장소에 push 함.
-REV=$(git subtree split --prefix=subtree/github.io)
-git push https://github.com/merleau42/public $REV:main --rejoin
+REV=$(git subtree split --prefix=subtree/github.io  --rejoin)
+echo 'split 완료';
+git push https://github.com/merleau42/public $REV:main
 
 
 
