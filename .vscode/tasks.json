@@ -7,10 +7,6 @@
       "type": "shell",
       "command": "~/dev/config/tasks/pull.sh",
       "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
       "presentation": {
         "reveal": "never",
         "panel": "new",
@@ -22,10 +18,6 @@
       "type": "shell",
       "command": "~/dev/config/tasks/push.sh",
       "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
       "presentation": {
         "reveal": "never",
         "panel": "new",
@@ -33,14 +25,10 @@
       }
     },
     {
-      "label": "push_all",
+      "label": "github_io",
       "type": "shell",
-      "command": "~/dev/config/tasks/push.sh",
+      "command": "~/dev/config/tasks/gio.sh",
       "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
       "presentation": {
         "reveal": "never",
         "panel": "new",
