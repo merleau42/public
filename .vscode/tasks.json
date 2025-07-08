@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "push_all",
+        "type": "shell",
+        "command": "clear; cd ~/dev; git add .; git commit -m 'Auto push'; git push",
+        "problemMatcher": [],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+  
