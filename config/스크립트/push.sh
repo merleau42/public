@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clear;
-echo '▲PUSH 실행 $(date '+%Y-%m-%d %H:%M:%S')' >> ~/dev/config/tasks/.log;
+echo '▲PUSH 실행 $(date '+%Y-%m-%d %H:%M:%S')' >> ~/dev/config/스크립트/.log;
 cd ~/dev;
 git add .;
 git commit -m 'Auto push';
