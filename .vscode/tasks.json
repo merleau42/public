@@ -3,6 +3,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "pull_all",
+      "type": "shell",
+      "command": "~/dev/config/tasks/pull.sh",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "never",
+        "panel": "new",
+        "focus": false
+      }
+    },
+    {
       "label": "push_all",
       "type": "shell",
       "command": "~/dev/config/tasks/push.sh",
@@ -16,6 +31,21 @@
         "panel": "new",
         "focus": false
       }
-    }
+    },
+    {
+      "label": "push_all",
+      "type": "shell",
+      "command": "~/dev/config/tasks/push.sh",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "never",
+        "panel": "new",
+        "focus": false
+      }
+    },
   ]
 }
