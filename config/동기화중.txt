@@ -57,8 +57,8 @@
       "id": "pull_all",
       "name": "pull_all",
       "text": "▼PULL",
-      "command": "workbench.action.tasks.runTask",
-      "arguments": ["pull_all"],
+      "command": "workbench.action.tasks.runTask",  // 터미널 명령어는 tasks를 통해서 실행
+      "arguments": ["pull_all"],                    // .vscode에서 tasks 정의함.
       "priority": 10,
     },
     {
@@ -70,19 +70,19 @@
       "priority": 9,
     },
     {
-      "id": "github.io",
-      "name": "github.io",
-      "text": "▲github.io",
-      "command": "workbench.action.tasks.runTask",
-      "arguments": ["github_io"],
-      "priority": 8,
-    },
-    {
       "id": "current_terminal",
       "name": "current_terminal",
       "text": "널뛰기",
       "command": "openInIntegratedTerminal",
       "priority": 8,
+    },
+    {
+      "id": "github.io",
+      "name": "github.io",
+      "text": "▲github.io",
+      "command": "workbench.action.tasks.runTask",
+      "arguments": ["github_io"],
+      "priority": 7,
     },
     {
       "id": "dynamic_status",
