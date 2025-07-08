@@ -6,4 +6,4 @@ cd ~/dev;
 git add .;
 git commit -m 'Auto push';
 git push;
-exit 0
+exit 0;
