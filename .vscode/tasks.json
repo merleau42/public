@@ -5,7 +5,7 @@
     {
       "label": "pull_all",
       "type": "shell",
-      "command": "~/dev/config/tasks/pull.sh",
+      "command": "~/dev/config/스크립트/pull.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
@@ -16,7 +16,7 @@
     {
       "label": "push_all",
       "type": "shell",
-      "command": "~/dev/config/tasks/push.sh",
+      "command": "~/dev/config/스크립트/push.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
@@ -27,7 +27,7 @@
     {
       "label": "github_io",
       "type": "shell",
-      "command": "~/dev/config/tasks/gio.sh",
+      "command": "~/dev/config/스크립트/gio.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
