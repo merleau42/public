@@ -1,1 +1,7 @@
-// 25.05.29 본컴 버전
+// 메인 기기에서 가져와서 다른 기기에 복사할 것
+[
+    {
+        "key": "ctrl+alt+`",
+        "command": "openInIntegratedTerminal"
+    }
+]
