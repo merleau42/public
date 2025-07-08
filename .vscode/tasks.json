@@ -5,7 +5,7 @@
     {
       "label": "push_all",
       "type": "shell",
-      "command": "clear; echo '▲DEV 실행'; cd ~/dev; git add .; git commit -m 'Auto push'; git push; exit",
+      "command": "~/dev/config/tasks/push.sh",
       "problemMatcher": [],
       "group": {
         "kind": "build",
