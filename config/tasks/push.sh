@@ -6,4 +6,5 @@ cd ~/dev;
 git add .;
 git commit -m 'Auto push';
 git push;
+echo '완료' > recent;
 exit 0;
