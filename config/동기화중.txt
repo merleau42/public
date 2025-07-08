@@ -43,8 +43,15 @@
       "text": "$(gear)",
       "tooltip": "환경설정",
       "command": "workbench.action.openWorkspaceSettings",
-      "alignment": "left",
       "priority": 100,
+    },
+    {
+      "id": "settings_json",
+      "name": "settings_json",
+      "text": "📝",
+      "tooltip": "Settings.json",
+      "command": "workbench.action.openSettingsJson",
+      "priority": 99,
     },
     {
       "id": "pull_all",
@@ -52,7 +59,7 @@
       "text": "▼PULL",
       "command": "workbench.action.tasks.runTask",
       "arguments": ["pull_all"],
-      "priority": 99,
+      "priority": 10,
     },
     {
       "id": "push_all",
@@ -60,25 +67,22 @@
       "text": "▲PUSH",
       "command": "workbench.action.tasks.runTask",
       "arguments": ["push_all"],
-      "priority": 98,
+      "priority": 9,
     },
     {
       "id": "github.io",
       "name": "github.io",
-      "text": "▲PUSH",
+      "text": "▲github.io",
       "command": "workbench.action.tasks.runTask",
-      "arguments": ["push_all"],
-      "priority": 97,
+      "arguments": ["github_io"],
+      "priority": 8,
     },
     {
-      "id": "sbc_format",
-      "name": "formatDocument",
-      "text": "$(file-text)",
-      "tooltip": "format",
-      "command": "editor.action.formatDocument",
-      "include": "\\.[js|json]",
-      "alignment": "left",
-      "priority": 1,
+      "id": "current_terminal",
+      "name": "current_terminal",
+      "text": "널뛰기",
+      "command": "openInIntegratedTerminal",
+      "priority": 8,
     },
     {
       "id": "dynamic_status",
@@ -86,7 +90,7 @@
       "script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
       "scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
       "alignment": "right",
-      "priority": 80
+      "priority": -1
     },
     
     // {

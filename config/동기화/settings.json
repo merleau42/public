@@ -1,1 +1,101 @@
-// 25.05.29 본컴 버전
+{
+    "http.proxySupport": "off",
+    "terminal.integrated.localEchoLatencyThreshold": -1,
+    "terminal.integrated.localEchoEnabled": "off",
+    "terminal.integrated.fontSize": 13,
+    "workbench.startupEditor": "none",
+    "editor.fontFamily": "JetBrains Mono, Menlo, Monaco, Courier New, monospace",
+    "editor.fontWeight": "normal",
+    "editor.fontSize": 13,
+    "editor.lineHeight": 1.5,
+    "editor.letterSpacing": 0,
+    "debug.console.fontSize": 13,
+    "window.commandCenter": true,
+    "workbench.preferredDarkColorTheme": "Google Dark",
+    "workbench.preferredLightColorTheme": "Google Light",
+    "workbench.iconTheme": "monospace",
+    "window.autoDetectColorScheme": true,
+    "workbench.layoutControl.enabled": true,
+    "inlineChat.mode": "preview",
+    "workbench.activityBar.location": "top",
+    "window.menuBarVisibility": "classic",
+    "editor.minimap.enabled": false,
+    "redhat.telemetry.enabled": false,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "IDX.aI.geminiApiKey": "AIzaSyD7oVbWhEhqsOkMoh2dtKYoGkOGv_AMeBQ",
+    "IDX.aI.geminiModel": "gemini-2.5-pro",
+    "IDX.aI.modelProvider": "gemini-api",
+    "better-comments.tags": [
+      {
+        "tag": "!",
+        "color": "yellow",
+        "strikethrough": false,
+        "underline": false,
+        "backgroundColor": "transparent",
+        "bold": false,
+        "italic": false
+      }
+    ],
+    "statusbar_command.commands": [
+      {
+        "id": "sbc_settings",
+        "name": "settings",
+        "text": "$(gear)",
+        "tooltip": "환경설정",
+        "command": "workbench.action.openWorkspaceSettings",
+        "priority": 100
+      },
+      {
+        "id": "settings_json",
+        "name": "settings_json",
+        "text": "📝",
+        "tooltip": "Settings.json",
+        "command": "workbench.action.openSettingsJson",
+        "priority": 99
+      },
+      {
+        "id": "pull_all",
+        "name": "pull_all",
+        "text": "▼PULL",
+        "command": "workbench.action.tasks.runTask",
+        "arguments": ["pull_all"],
+        "priority": 10
+      },
+      {
+        "id": "push_all",
+        "name": "push_all",
+        "text": "▲PUSH",
+        "command": "workbench.action.tasks.runTask",
+        "arguments": ["push_all"],
+        "priority": 9
+      },
+      {
+        "id": "github.io",
+        "name": "github.io",
+        "text": "▲github.io",
+        "command": "workbench.action.tasks.runTask",
+        "arguments": ["github_io"],
+        "priority": 8
+      },
+      {
+        "id": "dynamic_status",
+        "text": "1",
+        "script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
+        "scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
+        "alignment": "right",
+        "priority": -1
+      }
+      
+      // {
+      //   "id": "sbc.copilot",
+      //   "text": "abcde",
+      //   "command": "github.copilot.toggleCopilot",
+      //   "alignment": "left",
+      //   "scriptEvents": [
+      //     "vscode.workspace.onDidChangeConfiguration"
+      //   ],
+      //   "script": "statusBarItem.text = vscode.workspace.getConfiguration('github.copilot.inlineSuggest').enable ? '$(github)' : '$(github-inverted)'",
+      //   "priority": -1000,
+      // },
+    ]
+  }
