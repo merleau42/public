@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<title>논리 퍼즐 플랫폼</title>
+	<style>
+		* { box-sizing: border-box; }
+		html {
+			overflow: auto;
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+		html::-webkit-scrollbar { display: none; }
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f9f9f9;
+			margin: 0;
+			padding: 20px;
+		}
+		.grid-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4vh 22px;
+			justify-content: center;
+			width: 100%;
+			margin: 0 auto;
+		}
+		.statement-container {
+			display: flex;
+			align-items: center;
+			min-height: 40px;
+			width: max(215px, 31vw, 50vh);
+			max-width: max(215px, min(40vw, 400px));
+		}
+		.statement-container.reverse {
+			flex-direction: row-reverse;
+		}
+		.profile {
+			position: relative;
+			overflow: visible;
+		}
+		.circle {
+			width: max(65px, min(12vh, 13vw));
+			height: max(65px, min(12vh, 13vw));
+			border-radius: 50%;
+			overflow: hidden;
+			border: 2px solid #4a90e2;
+			background-color: white;
+			flex-shrink: 0;
+			margin: 0 min(7.5px, max(3px, 1.5vh));
+		}
+		.circle img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		.placard {
+			position: absolute;
+			top: 70%;
+			left: 75%;
+			background-color: lightyellow;
+			border: 1px solid #ccc;
+			border-radius: 6px;
+			padding: 2px 5px;
+			min-height: 24px;
+			text-align: center;
+			white-space: nowrap;
+			z-index: 2;
+			cursor: pointer;
+			transition: transform 0.2s ease;
+			transform-origin: center center;
+		}
+		.placard:not(.expanded) {
+			font-size: max(12px, min(19px, max(1.3vw, 1.4vh)));
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.placard.expanded {
+			position: fixed;
+			white-space: normal;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 3px;
+			background-color: lightyellow;
+			width: 250px;
+			font-size: 14px;
+			word-break: break-word;
+			padding: 6px;
+			opacity: 0.85;
+		}
+		.placard .choice-row {
+			display: flex;
+			gap: 3px;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+		.placard .choice {
+			/* font-size: max(10px, min(17px, max(1.3vw, 1.7vh))); */
+			padding: 2px 6px;
+			cursor: pointer;
+			background: transparent;
+			border-radius: 3px;
+			transition: background 0.2s;
+		}
+		.placard .choice:hover {
+			background-color: #eee;
+		}
+		.bubble {
+			background: white;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			padding: min(11px, max(3.5px, 1.5vh)) 3.5px;
+			width: 100%;
+			height: min(100px, max(50px, 12vh));
+			box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+			word-break: keep-all;
+			display: flex;
+			font-size: max(12px, min(19px, max(1.3vw, 1.7vh)));
+			line-height: 1.3;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+		}
+		#debug {
+			display: inline;
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<div id="debug">디버그</div>
+	<div class="grid-container" id="grid"></div>
+
+	<script>
+		function Elem(tag, className) {
+			const el = document.createElement(tag);
+			if (className) el.className = className;
+			return el;
+		}
+		function Q(selector) {
+			return document.querySelector(selector);
+		}
+		function QQ(selector) {
+			return Array.from(document.querySelectorAll(selector));
+		}
+		function randz(min, max, count = 1, allowDuplicates = true) {
+			const result = [];
+			while (result.length < count) {
+				const num = Math.floor(Math.random() * (max - min + 1)) + min;
+				if (allowDuplicates || !result.includes(num)) {
+					result.push(num);
+				}
+			}
+			return count === 1 ? result[0] : result;
+		}
+		function vector(count, fn) {
+			return Array.from({ length: count }, (_, i) => fn(i));
+		}
+		function debug(val) {
+			document.getElementById('debug').textContent = `디버그: ${val}`;
+		}
+
+		const container = Q('#grid');
+		const cards = 12;
+		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
+		const 무작위 = randz(0, 동물.length - 1, cards, false);
+		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
+
+		const animals = vector(cards, i => ({
+			id: i,
+			img: 무작위[i],
+			demo: 팻말[randz(0, 팻말.length - 1)],
+			text: 동물[무작위[i]],
+		}));
+
+		animals.forEach(animal => {
+			const wrapper = Elem('div', 'statement-container');
+			const profile = Elem('div', 'profile');
+			const circle = Elem('div', 'circle');
+			const img = Elem('img');
+			img.src = `assets/동물${animal.img}.png`;
+			circle.appendChild(img);
+
+			const placard = Elem('div', 'placard');
+			placard.textContent = animal.demo;
+			placard.dataset.selected = animal.demo;
+
+			profile.appendChild(circle);
+			profile.appendChild(placard);
+
+			const bubble = Elem('div', 'bubble');
+			bubble.textContent = animal.text;
+
+			wrapper.appendChild(profile);
+			wrapper.appendChild(bubble);
+			container.appendChild(wrapper);
+
+			placard.addEventListener('click', e => {
+				e.stopPropagation();
+				QQ('.placard.expanded').forEach(p => {
+					p.classList.remove('expanded');
+					p.removeAttribute('style');
+					p.textContent = p.dataset.selected;
+				});
+
+				const rect = placard.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2;
+				const centerY = rect.top + rect.height / 2;
+
+				placard.classList.add('expanded');
+				placard.style.left = `${centerX - 125}px`;
+				placard.style.top = `${centerY - 30}px`;
+				placard.style.transformOrigin = 'center center';
+
+				const selected = placard.dataset.selected;
+				placard.innerHTML = '';
+
+				for (let row = 0; row < 2; row++) {
+					const rowDiv = Elem('div', 'choice-row');
+					팻말.slice(row * 5, (row + 1) * 5).forEach(text => {
+						const span = Elem('span', 'choice');
+						span.innerHTML = (text === selected) ? `<strong>${text}</strong>` : text;
+						span.addEventListener('click', e => {
+							e.stopPropagation();
+							placard.textContent = text;
+							placard.dataset.selected = text;
+							placard.classList.remove('expanded');
+							placard.removeAttribute('style');
+						});
+						rowDiv.appendChild(span);
+					});
+					placard.appendChild(rowDiv);
+				}
+			});
+		});
+
+		document.addEventListener('click', () => {
+			QQ('.placard.expanded').forEach(p => {
+				p.classList.remove('expanded');
+				p.removeAttribute('style');
+				p.textContent = p.dataset.selected;
+			});
+		});
+
+		function getColumnCount() {
+			const items = QQ('.statement-container');
+			const rowTops = new Set();
+			items.forEach(item => rowTops.add(item.offsetTop));
+			return Math.round(items.length / rowTops.size);
+		}
+
+		function updateLayoutBasedOnColumn() {
+			QQ('.reverse').forEach(x => x.classList.remove('reverse'));
+			const count = getColumnCount();
+			const items = QQ('.statement-container').filter((_, i) => i % 2 === 1);
+			if (count === 2) items.forEach(el => el.classList.add('reverse'));
+			// QQ('.reverse .placard')
+		}
+
+		function manager() {
+			const placard = Q('.placard.expanded');
+			if (placard) {
+				const offset = placard.getBoundingClientRect();
+				const shiftX = Math.min(0, offset.left - 10);
+				const shiftY = Math.min(0, offset.top - 10);
+				const overX = offset.right - window.innerWidth + 10;
+				const overY = offset.bottom - window.innerHeight + 10;
+
+				if (shiftX < 0 || overX > 0)
+					placard.style.left = `calc(${placard.style.left} - ${shiftX || overX}px)`;
+				if (shiftY < 0 || overY > 0)
+					placard.style.top = `calc(${placard.style.top} - ${shiftY || overY}px)`;
+			}
+		}
+
+		updateLayoutBasedOnColumn();
+		window.addEventListener('resize', updateLayoutBasedOnColumn);
+		setInterval(manager, 500);
+		debug(randz(1, 20, 12, false));
+	</script>
+</body>
+</html>
