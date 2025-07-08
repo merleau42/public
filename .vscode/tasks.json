@@ -4,7 +4,7 @@
       {
         "label": "push_all",
         "type": "shell",
-        "command": "clear; cd ~/dev; git add .; git commit -m 'Auto push'; git push",
+        "command": "clear; cd ~/dev; git add .; git commit -m 'Auto push'; git push; close",
         "problemMatcher": [],
         "group": {
           "kind": "build",
