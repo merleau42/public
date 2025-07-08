@@ -1,4 +1,4 @@
-// 기기마다 dev 폴더의 .vscode 경로에 저장
+//    기기마다 ~/dev/.vscode 폴더에 tasks.json 덮어쓰기
 {
   "version": "2.0.0",
   "tasks": [
