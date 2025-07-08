@@ -5,4 +5,5 @@ echo '▲DEV 실행';
 cd ~/dev;
 git add .;
 git commit -m 'Auto push';
-git push; exit
+git push;
+exit 0
