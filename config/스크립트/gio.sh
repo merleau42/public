@@ -1,3 +1,6 @@
+clear;
+echo '▲github.io 실행' >> ~/dev/config/tasks/.log;
+
 ## 서브 저장소에 업로드할 내용을, 커밋 역할 폴더에 복사하기
 # 게임
     cp -r ~/dev/프로젝트/게임/바닐라JS/라이어단어/		~/dev/subtree/github.io/게임;
