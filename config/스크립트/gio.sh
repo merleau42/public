@@ -1,6 +1,6 @@
 clear;
 
-time_kst=$(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M:%S');
+time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d %H:%M:%S');
 echo "▲github.io 실행 $time_kst" >> ~/dev/config/스크립트/.log
 
 ## 서브 저장소에 업로드할 내용을, 커밋 역할 폴더에 복사하기
