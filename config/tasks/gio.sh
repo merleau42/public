@@ -19,3 +19,7 @@ clear; cd ~/dev; git add .; git commit -m "$(date '+%Y-%m-%d %H:%M:%S')"; git pu
 
 ## 디렉토리 commit 내용과, subtree 기능을 통해, 로컬 저장소의 일부 디렉토리만 서브 저장소에 push 함.
 git subtree push --prefix=subtree/github.io https://github.com/merleau42/public main
+
+
+
+exit 0;
