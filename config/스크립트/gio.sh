@@ -17,8 +17,10 @@
 ## 일부 디렉토리만 add/commit 해도 되지만, 하나하나 지정하기 번거로움.
 clear; cd ~/dev; git add .; git commit -m "$(date '+%Y-%m-%d %H:%M:%S')"; git push;
 
-## 디렉토리 commit 내용과, subtree 기능을 통해, 로컬 저장소의 일부 디렉토리만 서브 저장소에 push 함.
-git subtree push --prefix=subtree/github.io https://github.com/merleau42/public main
+## 로컬 저장소의 일부 디렉토리만 서브 저장소에 push 함.
+REV=$(git subtree split --prefix=subtree/github.io)
+git push https://github.com/merleau42/public $REV:main
+# git subtree push --prefix=subtree/github.io https://github.com/merleau42/public main
 
 
 
