@@ -58,7 +58,7 @@
       "name": "pull_all",
       "text": "▼PULL",
       "command": "workbench.action.tasks.runTask",  // 터미널 명령어는 tasks를 통해서 실행
-      "arguments": ["pull_all"],                    // .vscode에서 tasks 정의함.
+      "arguments": ["pull_all"],                    // .vscode 폴더에서 tasks 정의
       "priority": 10,
     },
     {
