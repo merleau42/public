@@ -1,16 +1,16 @@
+// 기기마다 dev 폴더의 .vscode 경로에 저장
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "push_all",
-        "type": "shell",
-        "command": "clear; cd ~/dev; git add .; git commit -m 'Auto push'; git push; close",
-        "problemMatcher": [],
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        }
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "push_all",
+      "type": "shell",
+      "command": "clear; echo '▲DEV 실행'; cd ~/dev; git add .; git commit -m 'Auto push'; git push; exit",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
       }
-    ]
-  }
-  
+    }
+  ]
+}
