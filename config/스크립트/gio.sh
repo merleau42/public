@@ -1,5 +1,5 @@
 clear;
-echo '▲github.io 실행 $(date '+%Y-%m-%d %H:%M:%S')' >> ~/dev/config/스크립트/.log;
+echo '▲github.io 실행 '"$(date '+%Y-%m-%d %H:%M:%S')" >> ~/dev/config/스크립트/.log
 
 ## 서브 저장소에 업로드할 내용을, 커밋 역할 폴더에 복사하기
 # 게임
