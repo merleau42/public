@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<title>논리 퍼즐 플랫폼</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+	<div class="top-bar">
+		인원수:
+		<button id="decreaseBtn">◀</button>
+		<span id="playerCount">8</span>
+		<button id="increaseBtn">▶</button>
+		<button id="refreshBtn">[새로고침]</button>
+	</div>
+
+	<div class="grid-container" id="grid"></div>
+	<div class="bottom-bar">하단바</div>
+
+	<script>
+		const Q = sel => document.querySelector(sel);
+		const QQ = sel => Array.from(document.querySelectorAll(sel));
+		const Elem = (tag, cls) => {
+			const el = document.createElement(tag);
+			if (cls) el.className = cls;
+			return el;
+		};
+		const vector = (n, fn) => Array.from({ length: n }, (_, i) => fn(i));
+		const randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+		const container = Q('#grid');
+		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
+		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
+		const 이모지선택지 = ['🚫','⭕','❌','😈','🔴','🟠','🤔','🟡','🟣','😇','🟢','🔵'];
+		const 이모지각도 = [26, 58, 91];
+		const 이모지반지름비율 = 45;
+
+		let playerCount = 8;
+		const minCount = 4, maxCount = 12;
+		let 동물인덱스 = []; // 중복 방지용
+
+		function setupEmojiInterface(profileEl) {
+			const 상태 = { 이모지들: [] };
+			const 갱신 = () => {
+				profileEl.querySelectorAll('.emoji-button').forEach(el => el.remove());
+				상태.이모지들.forEach((emj, i) => {
+					const rad = Math.PI * 이모지각도[i] / 180;
+					const btn = Elem('div', 'emoji-button');
+					btn.textContent = emj;
+					btn.style.left = `${50 + 이모지반지름비율 * Math.sin(rad)}%`;
+					btn.style.top = `${50 - 이모지반지름비율 * Math.cos(rad)}%`;
+					btn.addEventListener('click', e => 열기(i, e));
+					profileEl.appendChild(btn);
+				});
+				if (상태.이모지들.length < 이모지각도.length) {
+					const i = 상태.이모지들.length;
+					const rad = Math.PI * 이모지각도[i] / 180;
+					const plus = Elem('div', 'emoji-button');
+					plus.textContent = '➕';
+					plus.style.left = `${50 + 이모지반지름비율 * Math.sin(rad)}%`;
+					plus.style.top = `${50 - 이모지반지름비율 * Math.cos(rad)}%`;
+					plus.addEventListener('click', e => 열기(i, e));
+					profileEl.appendChild(plus);
+				}
+			};
+			const 열기 = (idx, ev) => {
+				ev.stopPropagation();
+				QQ('.emoji-picker').forEach(p => p.remove());
+				const picker = Elem('div', 'emoji-picker');
+				이모지선택지.forEach(emj => {
+					const span = Elem('span');
+					span.textContent = emj;
+					span.addEventListener('click', e => {
+						e.stopPropagation();
+						if (emj === '🚫') 상태.이모지들.splice(idx, 1);
+						else 상태.이모지들[idx] = emj;
+						갱신();
+						picker.remove();
+					});
+					picker.appendChild(span);
+				});
+				picker.style.left = ev.clientX + 'px';
+				picker.style.top = ev.clientY + 'px';
+				document.body.appendChild(picker);
+			};
+			갱신();
+			profileEl._emojiUpdater = 갱신;
+		}
+
+		function createCard(index, animalIndex) {
+			const wrapper = Elem('div', 'statement-container');
+			const profile = Elem('div', 'profile');
+			const circle = Elem('div', 'circle');
+			const img = Elem('img');
+			img.src = `assets/동물${animalIndex}.png`;
+			circle.appendChild(img);
+			profile.appendChild(circle);
+
+			setupEmojiInterface(profile);
+
+			const demo = 팻말[randz(0, 팻말.length - 1)];
+			const placard = Elem('div', 'placard');
+			placard.textContent = demo;
+			placard.dataset.selected = demo;
+			profile.appendChild(placard);
+
+			const bubble = Elem('div', 'bubble');
+			bubble.textContent = 동물[animalIndex];
+
+			wrapper.appendChild(profile);
+			wrapper.appendChild(bubble);
+			container.appendChild(wrapper);
+
+			placard.addEventListener('click', e => {
+				e.stopPropagation();
+				QQ('.placard.expanded').forEach(p => {
+					p.classList.remove('expanded');
+					p.removeAttribute('style');
+					p.textContent = p.dataset.selected;
+				});
+				const rect = placard.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2;
+				const centerY = rect.top + rect.height / 2;
+				placard.classList.add('expanded');
+				placard.style.left = `${centerX - 125}px`;
+				placard.style.top = `${centerY - 30}px`;
+				placard.innerHTML = '';
+				for (let row = 0; row < 2; row++) {
+					const rowDiv = Elem('div', 'choice-row');
+					팻말.slice(row * 5, (row + 1) * 5).forEach(text => {
+						const span = Elem('span', 'choice');
+						span.innerHTML = (text === placard.dataset.selected) ? `<strong>${text}</strong>` : text;
+						span.addEventListener('click', e => {
+							e.stopPropagation();
+							placard.textContent = text;
+							placard.dataset.selected = text;
+							placard.classList.remove('expanded');
+							placard.removeAttribute('style');
+						});
+						rowDiv.appendChild(span);
+					});
+					placard.appendChild(rowDiv);
+				}
+			});
+		}
+
+		function fillGrid() {
+			container.innerHTML = '';
+			동물인덱스 = randzSet(동물.length, playerCount);
+			for (let i = 0; i < playerCount; i++) {
+				createCard(i, 동물인덱스[i]);
+			}
+			updateLayoutBasedOnColumn();
+		}
+
+		function randzSet(max, count) {
+			const pool = vector(max, i => i);
+			const result = [];
+			while (result.length < count) {
+				const idx = randz(0, pool.length - 1);
+				result.push(pool.splice(idx, 1)[0]);
+			}
+			return result;
+		}
+
+		Q('#refreshBtn').addEventListener('click', fillGrid);
+
+		Q('#increaseBtn').addEventListener('click', () => {
+			if (playerCount >= maxCount) return;
+			const newIndex = playerCount++;
+			Q('#playerCount').textContent = playerCount;
+			const used = new Set(동물인덱스);
+			const remain = vector(동물.length, i => i).filter(i => !used.has(i));
+			const next = remain[randz(0, remain.length - 1)];
+			동물인덱스.push(next);
+			createCard(newIndex, next);
+			updateLayoutBasedOnColumn();
+		});
+
+		Q('#decreaseBtn').addEventListener('click', () => {
+			if (playerCount <= minCount) return;
+			container.lastChild.remove();
+			playerCount--;
+			동물인덱스.pop();
+			Q('#playerCount').textContent = playerCount;
+			updateLayoutBasedOnColumn();
+		});
+
+		document.addEventListener('click', () => {
+			QQ('.emoji-picker').forEach(p => p.remove());
+			QQ('.placard.expanded').forEach(p => {
+				p.classList.remove('expanded');
+				p.removeAttribute('style');
+				p.textContent = p.dataset.selected;
+			});
+		});
+
+		function getColumnCount() {
+			const items = QQ('.statement-container');
+			const left = items.map(x => x.offsetLeft);
+			let cols = 0;
+			while (left.indexOf(left[cols]) === cols) cols++;
+			return cols;
+		}
+
+		function updateLayoutBasedOnColumn() {
+			QQ('.reverse').forEach(x => x.classList.remove('reverse'));
+			const count = getColumnCount();
+			QQ('.statement-container').forEach((el, i) => {
+				if (count === 2 && i % 2 === 1) el.classList.add('reverse');
+			});
+		}
+
+		setInterval(() => {
+			QQ('.placard.expanded, .emoji-picker').forEach(expanded => {
+				const offset = expanded.getBoundingClientRect();
+				const shiftX = Math.min(0, offset.left - 10);
+				const shiftY = Math.min(0, offset.top - 10);
+				const overX = offset.right - window.innerWidth + 10;
+				const overY = offset.bottom - window.innerHeight + 10;
+				if (shiftX < 0 || overX > 0)
+					expanded.style.left = `calc(${expanded.style.left} - ${shiftX || overX}px)`;
+				if (shiftY < 0 || overY > 0)
+					expanded.style.top = `calc(${expanded.style.top} - ${shiftY || overY}px)`;
+			});
+		}, 500);
+
+		window.addEventListener('resize', () => {
+			QQ('.profile').forEach(p => p._emojiUpdater && p._emojiUpdater());
+			updateLayoutBasedOnColumn();
+		});
+
+		fillGrid();
+	</script>
+</body>
+</html>

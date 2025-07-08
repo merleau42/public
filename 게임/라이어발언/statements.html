@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>단어 그룹 관리자</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bottom-bar">
+  <button onclick="loadGroups()">불러오기</button>
+  <button onclick="saveGroups()">저장</button>
+</div>
+
+<div id="group-container"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+  authDomain: "liarwords-af033.firebaseapp.com",
+  databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+  projectId: "liarwords-af033",
+  storageBucket: "liarwords-af033.appspot.com",
+  messagingSenderId: "171671976030",
+  appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+});
+const db = getDatabase(app);
+
+let groupData = {};
+
+function toggleModified(isModified) {
+  document.body.classList.toggle('modified', isModified);
+}
+
+window.loadGroups = async function() {
+  const container = document.getElementById('group-container');
+  container.innerHTML = '불러오는 중...';
+  try {
+    const snapshot = await get(ref(db, 'groups'));
+    container.innerHTML = '';
+    if (snapshot.exists()) {
+      groupData = snapshot.val();
+      renderGroups();
+    } else {
+      container.innerHTML = '🔥 데이터 없음';
+      groupData = {};
+    }
+    toggleModified(false);
+  } catch(error) {
+    console.error("데이터 불러오기 실패:", error);
+    container.innerHTML = '❌ 불러오기 실패';
+    toggleModified(false);
+  }
+};
+
+async function processAndSaveGroups() {
+	const groupsToDelete = Object.entries(groupData)
+		.filter(([groupId, data]) => !data.words || (Array.isArray(data.words) && data.words.filter(word => String(word).trim() !== '').length === 0));
+
+	for (const [groupId] of groupsToDelete) {
+		const groupRef = ref(db, `groups/${groupId}`);
+		try {
+			await remove(groupRef);
+			delete groupData[groupId];
+			console.log(`그룹 "${groupId}"가 단어가 없어 삭제되었습니다.`);
+		} catch (error) {
+			console.error(`그룹 "${groupId}" 삭제 실패:`, error);
+			alert(`그룹 "${groupId}" 삭제에 실패했습니다. 권한 문제일 수 있습니다.`);
+		}
+	}
+
+	try {
+		await set(ref(db, 'groups'), groupData);
+		alert('저장 완료');
+		toggleModified(false);
+		renderGroups();
+	} catch (error) {
+		console.error("데이터 저장 실패:", error);
+		alert("데이터 저장에 실패했습니다. 권한 문제일 수 있습니다.");
+	}
+}
+
+window.saveGroups = async function() {
+	if (localStorage.getItem('승인') === 'true') {
+		await processAndSaveGroups();
+		return;
+	}
+
+	const password = prompt("비밀번호를 입력하세요:");
+	if (password === null) return;
+
+	try {
+		const pwSnapshot = await get(ref(db, 'pw'));
+		const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
+
+		if (password === storedPassword) {
+			localStorage.setItem('승인', 'true');
+			await processAndSaveGroups();
+		} else {
+			alert('비밀번호가 틀렸습니다. 저장이 취소됩니다.');
+		}
+	} catch (error) {
+		 alert('비밀번호 확인 중 오류가 발생했습니다.');
+		 console.error("비밀번호 가져오기 오류:", error);
+	}
+};
+
+function renderGroups() {
+  const container = document.getElementById('group-container');
+  container.innerHTML = '';
+
+  const sorted = Object.entries(groupData || {}).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+
+  sorted.forEach(([groupId, data]) => {
+    const div = document.createElement('div');
+    div.className = 'group-card';
+
+    const titleEl = createEditableList(
+      groupId,
+      data.words,
+      'words',
+      true
+    );
+    titleEl.title = groupId;
+    div.appendChild(titleEl);
+
+    const statementList = createEditableList(
+      groupId,
+      data.statements || [],
+      'statements',
+      false
+    );
+    div.appendChild(statementList);
+
+    container.appendChild(div);
+  });
+}
+
+function createEditableList(groupId, items, key, isTitle = false) {
+  const container = document.createElement(isTitle ? 'div' : 'ul');
+  container.className = isTitle ? 'group-title' : 'statement-list';
+
+  const currentItems = [...(items || [])];
+
+  currentItems.forEach((item, idx) => {
+    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle);
+    container.appendChild(el);
+  });
+
+  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle);
+  container.appendChild(emptyEl);
+
+  return container;
+}
+
+function createItemElement(groupId, items, idx, text, key, isTitle = false) {
+  const wrapper = document.createElement(isTitle ? 'div' : 'li');
+  wrapper.className = 'item-wrapper';
+
+  const span = document.createElement('span');
+  span.className = 'item-text';
+  span.textContent = text || '...';
+
+  const del = document.createElement('span');
+  del.className = 'delete-btn';
+  del.textContent = '✖';
+  del.onclick = (e) => {
+    e.stopPropagation();
+    if (text) {
+      items.splice(idx, 1);
+      groupData[groupId][key] = [...items];
+      toggleModified(true);
+      renderGroups();
+    }
+  };
+  del.style.display = 'none';
+
+  wrapper.onmouseenter = () => { if (text) del.style.display = 'inline'; };
+  wrapper.onmouseleave = () => { del.style.display = 'none'; };
+
+  wrapper.onclick = () => {
+    if (wrapper.querySelector('.editable-textarea')) return;
+
+    const input = document.createElement('textarea');
+    input.className = 'editable-textarea';
+    input.value = text;
+    
+    input.onclick = (e) => e.stopPropagation();
+
+    input.onkeydown = (e) => {
+      if (e.key === 'Escape') {
+        e.target.dataset.escapePressed = 'true';
+        e.preventDefault();
+        input.blur();
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.blur();
+      }
+    };
+    
+    input.onblur = () => {
+      if (input.dataset.escapePressed !== 'true') {
+        const newText = input.value.trim();
+        const originalText = text || "";
+        let hasChanged = false;
+
+        if (newText !== originalText) {
+            if (newText) {
+                items[idx] = newText;
+            } else {
+                items.splice(idx, 1);
+            }
+            hasChanged = true;
+        }
+
+        if (hasChanged) {
+            groupData[groupId][key] = [...items];
+            toggleModified(true);
+        }
+      }
+      renderGroups();
+    };
+
+    wrapper.appendChild(input);
+    input.focus();
+    input.select();
+  };
+
+  wrapper.appendChild(span);
+  wrapper.appendChild(del);
+  return wrapper;
+}
+
+window.addEventListener('load', () => {
+  localStorage.removeItem('승인');
+  loadGroups();
+});
+</script>
+
+</body>
+</html>

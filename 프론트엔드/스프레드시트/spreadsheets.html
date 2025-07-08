@@ -1,0 +1,495 @@
+<html>
+<head>
+	<style>
+		:root {
+			--to_small: 3px dotted;
+			--to_big: 1px solid;
+		}
+		body {
+			margin: 0;
+			font-family: Arial, Helvetica, sans-serif;
+			background-color: inherit !important;
+		}
+		.slot {
+			margin: auto;
+			margin-top: 30;
+			min-height: 10%;
+			text-align: center;
+		}
+		.container
+		{
+			margin-top: -30px;
+			height: 30px;
+			width: 100%;
+			position: fixed;
+			background-color: ghostwhite;
+			opacity: 70%;
+			text-align: center;
+			font-size: 0;
+			/* font-size: 0 --- HTML 코드의 개행/공백 크기를 없애서 메뉴들이 다닥다닥 달라붙게함 */
+		}
+		#Search, #Clear, #Total, #Bin, #Refresh, #Save, #Load
+		{
+			display: inline-block;
+			text-align: center;
+			font-size: large;
+			background: 0;
+		}
+		#Search
+		{
+			width: 40%;
+		}
+		#Clear
+		{
+			opacity: 60%;
+		}
+		#Bin, #Refresh, #Save, #Load
+		{
+			padding-left: 3;
+			padding-right: 0;
+			cursor: pointer;
+			border: 0;
+		}
+		#Bin
+		{
+			color: red;
+		}
+		#Refresh
+		{
+			color: darkgreen;
+			font-size: small;
+			font-weight: bold;
+			opacity: 80%;
+		}
+		#Total
+		{
+			opacity: 80%;
+		}
+		table {
+			max-height: 0;
+			height: 100%;
+			width: 100%;
+			border: 1;
+			border-collapse: collapse;
+			text-align: center;
+			font-size: 14;
+		}
+		.Cell {
+			height: 100%;
+			width: 100%;
+			border: 0;
+			text-align: center;
+			background-color: inherit;
+		}
+		[paint=P0] {background-color: rgb(192, 192, 192);}
+		[paint=P1] {background-color: rgb(255, 192, 0);}
+		[paint=P2] {background-color: rgb(255, 255, 0);}
+		[paint=P3] {background-color: rgb(255, 255, 170);}
+		[paint=P4] {background-color: rgb(0, 204, 0);}
+		[paint=P5] {background-color: rgb(0, 255, 0);}
+		[paint=P6] {background-color: rgb(187, 255, 187);}
+		[paint=P7] {background-color: rgb(255, 136, 255);}
+		[paint=P8] {background-color: rgb(136, 136, 255);}
+		[paint=P9] {background-color: rgb(192, 192, 255);}
+		.index {
+			width: 4vw;
+		}
+		.index, .roof, .edge {
+			padding: 2;
+			background-color: rgb(210, 210, 210);
+		}
+		.mousedown:not([rclick], .Cell), .dragging:not(.Cell) {
+			background-color: rgb(160, 160, 160) !important;
+		}
+		tr:has(.mousedown.index),
+		tr.dropable .index:not([rclick]),
+		.dropable:not([paint], .Cell, .warn),
+		.index:hover:not(.mousedown, [rclick]),
+		.roof:hover:not(.mousedown, [rclick]) {
+			background-color: rgb(230, 230, 230);
+		}
+		tr.dropable { /* tr은 td,th보다 css 우선 순위가 낮음 */
+			border-top: var(--to_small);
+			border-bottom: var(--to_big);
+		}
+		td.dropable, th.dropable {
+			border-left: var(--to_small);
+			border-right: var(--to_big);
+		}
+		.warn,
+		tr:has([rclick="2"].index) td:not(.index),
+		[rclick="1"].index, [rclick="1"].roof {
+			background: coral;
+		}
+		[rclick="2"].index, [rclick="2"].roof {
+			background: crimson;
+		}
+		.debug {
+			padding: 2;
+			border-top: 1px dotted;
+			border-right: 1px dotted;
+			display: inline-table;
+			min-width: 34%;
+			max-width: 65%;
+			font-size: 12px;
+		}
+	</style>
+	<script>
+		let xhttp = new XMLHttpRequest();
+		let bugs = ['🐌','🦋','🐛','🐜','🐝','🪲','🐞','🦗','🪳','🦟','🪰','🪱'];
+		let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		let files = {};
+		let vecs = {};
+		let tabs = {};
+		let html = document.querySelector('html');
+		let head = document.querySelector('head');
+		let body = document.querySelector('body');
+		let E = x => document.createElement(x);
+		let dummy = E('dummy');
+		let Q = (x, y=document) => y.querySelector(x);
+		let QQ = (x, y=document) => [...y.querySelectorAll(x)];
+		let RND = x => QQ('*')[ Math.ceil( Math.random() * (QQ('*').length - 1) ) ];
+		function leak(kind, name='')
+		{
+			if (kind.includes('class'))
+			{
+				not_special = ['debug'];
+				if (!name)
+					return QQ('[class]').reduce((s,c)=>[...s, [...c.classList]
+							.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []).toSorted();
+				else
+					return QQ(`[class*=${name}]`)
+			}
+			if (kind.includes('attr'))
+			{
+				not_special = ['border', 'class', 'placeholder', 'id', 'src', 'style', 'type', 'value'];
+				if (!name)
+					return QQ(`*`).reduce((s,c)=>[...s, [...c.getAttributeNames()]
+							.filter(x=>!s.includes(x) && !not_special.includes(x))].flat(), []);
+				else
+					return QQ(`[${name}]`)
+			}
+		}
+		function load_file(fd, path)
+		{
+			xhttp.open("GET", path, false);
+			xhttp.send();
+			if (xhttp.readyState == 4 && xhttp.status == 200)
+				files[fd] = xhttp.response;
+		}
+		function swap_key_value(map)
+		{
+			return JSON.parse(`{${keys(map).map(x=>`"${map[x]}":"${x}"`).join(',')}}`);
+		}
+		function parse(category, keyword)
+		{
+			parsed = {};
+			category = `\x00${category}\x7F`;
+			keyword = `\x00${keyword}\x7F`;
+
+			[...category]
+			.map((x,i,a) => [keyword.indexOf(x), x])
+			.toSorted((x,y) => x[0] - y[0])
+			.forEach((x,i,a) =>{
+				if (i < a.length - 1) parsed[a[i][1]] = keyword.substring(a[i][0] + 1, a[i+1][0])
+			});
+
+			return parsed;
+		}
+		function debug(channel, msg, ...argvs)
+		{
+			if (!Q(`.debug[channel='${channel}']`))
+			{
+				div = Q('body').appendChild(E('div'))
+				div.classList.add('debug');
+				div.setAttribute('channel', channel);
+				div.setAttribute('icon', bugs[Math.round(Math.random() * 9999) % 12]);
+				div.innerText = `Debug : ${channel}\n`;
+				red = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+				grn = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+				blu = Math.round(Math.random() * 0x50 + 0x30).toString(16);
+				div.style.color = `#${red}${grn}${blu}`;
+			}
+			dbg = Q(`.debug[channel='${channel}']`);
+			if (typeof(msg) == typeof(Object()))
+				if (attrs = msg.getAttributeNames().toSorted()
+							   .map(attr=>` [${attr}:=${msg.getAttribute(attr).split(' ').join(', ')}]`))
+					msg = `${msg.tagName}, ${attrs}${msg.value ? `, [value=${msg.value}]` : ''}`;
+			tail = `${dbg.getAttribute('icon')}${msg}${argvs.length ? `, ${argvs}` : ''}`;
+			spl = dbg.innerText.replace(/\n$/,'').split('\n');
+			if (spl.length >= 8)
+				spl = [spl[0], ...spl.splice(2)];
+			spl.push(tail);
+			dbg.innerText = spl.join('\n');
+		}
+		function free_class(classNames, wildcard=false)
+		{
+			if (wildcard)
+				classNames.forEach(cn => QQ(`[class*=${cn}]`).forEach(el =>
+					[...el.classList].forEach(c => {if(c.includes(cn)) el.classList.remove(c)})))
+			else
+				classNames.forEach(cn => QQ(`.${cn}`).forEach(el => el.classList.remove(cn)));
+		}
+		function free_attr(attrNames)
+		{
+			attrNames.forEach(attr => QQ(`[${attr}]`).forEach(el => el.removeAttribute(attr)));
+		}
+	</script>
+	<script>
+		let category = "@#$%^&*";
+		window.addEventListener('DOMContentLoaded',	main)
+		function main()
+		{
+			body = document.body;
+			load_file(1, '저장.json');
+			vecs[1] = map_to_vec( JSON.parse( files[1] ) );
+			tabs[1] = vec_to_table( vecs[1], 1 );
+			slot1.innerText = '';
+			slot1.appendChild( tabs[1] );
+			slot1.insertBefore(menu, slot1.firstChild);
+
+			load_file(2, '저장.txt')
+			vecs[2] = (files[2].split('\n').map(x=>x.split(',')));
+			tabs[2] = vec_to_table( vecs[2], 2 );
+			slot2.innerText = '';
+			slot2.appendChild( tabs[2] );
+			// slot2.insertBefore(menu, slot2.firstChild);
+
+			mouse_listner();
+			setInterval(debug_monitor, 100);
+		}
+		function debug_monitor()
+		{
+			debug("활성화된 클래스", [leak('class').length, leak('class').join(' ')].join(': '));
+			debug("활성화된 속성", [leak('attr').length, leak('attr').join(' ')].join(': '));
+			debug("마우스 오버", Q('.mouseover'));
+			debug("클릭한 대상", Q('.mousedown'));
+			// debug("드래그 오버", Q('.dargover')); 이벤트 내에서 실행할 것
+		}
+		function mouse_listner()
+		{
+			document.addEventListener('dblclick', e => {
+				e.target.classList.add('dblclick');
+				slot = Q('.slot:has(.dblclick)');
+				table = Q('table:has(.dblclick)');
+				if (Q('.index.dblclick')) {
+					new_row = vec_to_table( [[], QQ('th', table).map(x=>'')] ).querySelector('tbody tr');
+					move_table_row( new_row, Q('tr:has(.dblclick.index)') );
+				}
+				if (Q('.roof.dblclick')) {
+					col_index = Q('.roof.dblclick').getAttribute('col') * 1;
+					new_table = table_to_vec( table ).map(x=>x.toSpliced(col_index + 1, 0, ''));
+					table.remove();
+					slot.appendChild( vec_to_table(new_table) );
+				}
+				free_class(['dblclick']);
+			})
+			document.addEventListener('contextmenu', e => {
+				event.preventDefault(); // 기본 오른쪽 클릭 메뉴 안 뜨도록.
+				count = e.target.getAttribute('rclick') * 1;
+				if (!count)
+					QQ('[rclick]').forEach(el => el.removeAttribute('rclick'));
+				e.target.setAttribute('rclick', ++count);
+				if (Q('.index[rclick="3"]'))
+				{
+					Q('tr:has(.index[rclick="3"])').remove();
+					refresh_table_index();
+				}
+				if (Q('.roof[rclick="2"]'))
+				{
+					table = Q(`table:has(.roof[rclick="2"])`);
+					col_line = Q('.roof[rclick="2"]').getAttribute('col');
+					QQ(`td[col="${col_line}"]`, table).forEach(td => td.classList.add('warn'));
+				}
+				if (Q('.roof[rclick="3"]'))
+				{
+					QQ('.roof[rclick="3"], .warn').forEach(col => col.remove());
+					refresh_table_index();					
+				}
+			})
+			document.addEventListener('mousedown', e => {
+				e.target.classList.add('mousedown');
+				if (!e.target.getAttribute('rclick'))
+					free_attr(['rclick']);
+				/// if (Q('.mousedown.index'))
+				/// 	Q('tr:has(.mousedown.index)').classList.add('dropable');
+				if (Q('.mousedown.roof')) {
+					col_line = Q('.mousedown.roof').getAttribute('col');
+					QQ(`table:has(.mousedown.roof) [col="${col_line}"]`).forEach(td => td.classList.add('dropable'));
+				}
+			})
+			document.addEventListener('mouseup', e => { // 누르던 마우스를 떼었을 때
+				free_class(['dropable','mousedown','dblclick']);
+			})
+			document.addEventListener('mouseover', e => {
+				free_class(['mouseover', 'warn']);
+				e.target.classList.add('mouseover');
+				free_attr(['rclick']);
+			})
+			// dragstart ---> drag(움직임) ---> dragenter ---> dragover ---> drop ---> dragend
+			document.addEventListener('dragstart', e => {
+				free_attr(['rclick']);
+				e.target.classList.add('dragging');
+			})
+			document.addEventListener('dragenter', e => {
+				free_class(['enter', 'dropable']);
+				e.target.classList.add('enter');
+				if (Q('.dragging.index'))
+					Q('tr:has(.enter)').classList.add('dropable');
+				if (Q('.dragging.roof')){
+					insert_to = Q('td.enter, td:has(.enter), .roof.enter').getAttribute('col');
+					QQ(`table:has(.dragging.roof) [col="${insert_to}"]`).forEach(td => td.classList.add('dropable'));
+				}
+			})
+			document.addEventListener('dragover', e => { // 'over' 있어야 'drop' 가능
+				e.target.classList.add('dragover');
+				debug('드래그 오버', e.target);
+				if (Q('table:has(.dragging):not(:has(.dragover))'))
+					free_class(['enter','dropable','dragging','to_drop','mousedown', 'dblclick', 'dragover']);
+				free_class(['dragover']);
+				e.preventDefault();
+			})
+			document.addEventListener('drop', e => { // 'over' 있어야 'drop' 가능
+				e.target.classList.add('to_drop');
+				slot = Q('.slot:has(.dragging):has(.to_drop)');
+				table = Q('table:has(.dragging):has(.to_drop)');
+	
+				if (table && Q('.dragging.index') && Q('tbody tr:has(.to_drop)'))
+					move_table_row(Q('tr:has(.dragging)'), Q('tbody tr:has(.to_drop)'));
+				if (table && Q('.dragging.roof') && Q('.dropable.to_drop')) 
+				{
+					copy_col = Q('.dragging').getAttribute('col') * 1;
+					paste_col = e.target.getAttribute('col') * 1;
+
+					new_vec = table_to_vec( table )
+							.map((x,i,a)=>x.toSpliced(paste_col + (copy_col < paste_col), 0, a[i][copy_col]))
+							.map(x=>x.toSpliced(copy_col + (copy_col > paste_col), 1))
+					
+					table.remove();
+					slot.appendChild( vec_to_table(new_vec) );
+				}
+				debug("기타", `dropped : ${e.target.tagName}`);
+			})
+			document.addEventListener('dragend', e => {
+				free_class(['enter','dropable','dragging','to_drop','mousedown', 'dblclick'])
+			})
+		}
+		// 테이블 <==> 벡터 <==> 맵
+		function vec_to_table(arr, fd=null)
+		{
+			table = document.createElement('table');
+			thead = document.createElement('thead');
+			tbody = document.createElement('tbody');
+			arr.forEach((row, i) => {
+				tr = document.createElement('tr');
+				row.forEach((col, j) => {
+					parsed = parse('ㅷ', col);
+					td = i > 0 ? document.createElement('td') : document.createElement('th');
+					if (i > 0 && j > 0){
+						input = document.createElement('input');
+						input.setAttribute('col', j); // input.value대신에 td.innerText를 쓰게될 수 있음
+						input.classList.add( "Cell" );
+						input.value = parsed['\x00'];
+						td.appendChild(input);
+						if (parsed['ㅷ']) td.setAttribute('paint', parsed['ㅷ']);
+					}
+					else if (i != 0 && j == 0){
+						td.classList.add ("index");
+						td.innerText = i
+					}
+					else if (i == 0 && j != 0){
+						td.classList.add ("roof");
+						td.innerText = j
+					}
+					else if (i == 0 && j == 0)
+						td.classList.add ("edge");
+					td.setAttribute('col', j);
+					td.setAttribute("draggable", true)
+					tr.appendChild(td);
+					tr.setAttribute('row', i);
+				})
+				i > 0 ? tbody.appendChild(tr) : thead.appendChild(tr)
+			})
+			table.appendChild(thead);
+			table.appendChild(tbody);
+			table.border = 1;
+			if (fd) table.id = `table${fd}`;
+			return table;
+		}
+		function table_to_vec(table)
+		{
+			return [...table.querySelectorAll('tr')].map((tr,i) => {
+				return [...tr.querySelectorAll('th, td')].map((td,j) => {
+					if (i==0 || j==0)
+						return '';
+					text = td.querySelector('.Cell').value;
+					bg = td.getAttribute('paint');
+					bg = bg ? `ㅷ${bg}` : ''
+					return text + bg;
+				})
+			})
+		}
+		//	map['행,열'] = '셀정보' <===> vec[행][열] = '셀정보'
+		function vec_to_map(arr, map={})
+		{
+			arr.forEach((row,i) => {
+				row.forEach((col,j) => {
+					if (col)
+						map[`${i},${j}`] = col;
+				})
+			});
+			return map;
+		}
+		function map_to_vec(map)
+		{
+			points = Object.keys(map).map(x=>x.split(',').map(e=>e*1))
+			max_row = points.toSorted((a,b)=>b[0] - a[0])[0][0] + 1;
+			max_col = points.toSorted((a,b)=>b[1] - a[1])[0][1] + 1;
+			arr = Array.from({length:max_row}, x => Array.from({length:max_col}))
+			arr.forEach((row,i)=>{
+				row.forEach((col,j)=>{
+					arr[i][j] = map[`${i},${j}`]??'';
+				})
+			});
+			return arr;
+		}
+		function table_to_map(table, map={})
+		{
+			return vec_to_map(table_to_vec(table), map);
+		}
+		function map_to_table(map, fd=null)
+		{
+			return vec_to_table(map_to_vec(map), fd);
+		}
+		function move_table_row(tr1, tr2)
+		{
+			if (tr1.rowIndex > tr2.rowIndex)
+				tr2.before(tr1);
+			else if (tr1.rowIndex < tr2.rowIndex)
+				tr2.after(tr1);
+			refresh_table_index();
+		}
+		function refresh_table_index()
+		{
+			[...document.querySelectorAll('tbody tr')].forEach(tr => {
+				tr.setAttribute('row', tr.rowIndex);
+				tr.querySelector('.index').innerText = tr.rowIndex;
+			})
+		}
+
+	</script>
+</head>
+<body>
+<div id="menu" class="container">
+	<input id="Search" type="text" placeholder="검색어!제외#필드, ...">
+	<input id="Clear" type="button" value="X">
+	<div id="Total"></div>
+	<a download="80000.json"><input id="Save" type="button" value="💾"></a>
+	<input id="Load" type="button" value="📂">
+	<input id="Bin" type="button" value="🗑">
+	<input id="Refresh" type="button" value="새로고침">
+</div>
+<div class="slot" id="slot1">1</div>
+<div class="slot" id="slot2">2</div>
+</body>
+</html>

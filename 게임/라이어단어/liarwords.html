@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>단어수집기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 입력창 -->
+<div id="div1" class="flex-container"></div>
+
+<!-- 단일 입력 + 버튼 -->
+<div id="div2" class="flex-container">
+  <textarea id="singleInput" maxlength="50" tabindex="9"></textarea>
+  <button onclick="addSingle()">추가</button>
+  <button onclick="clearInputs()">비우기</button>
+  <button onclick="loadFromDB()">리스트</button>
+</div>
+
+<!-- 출력 -->
+<div id="div3"><div id="output"></div></div>
+
+<!-- 이모지 선택 모달 -->
+<div class="modal-backdrop" id="modal-backdrop"></div>
+<div class="modal" id="emoji-modal">
+  <div>이모지 선택</div>
+  <div id="emoji-buttons"></div>
+  <div class="modal-footer">
+    <button id="reset-button">초기화</button>
+    <button id="confirm-button">확인</button>
+    <button id="cancel-button">취소</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+// Firebase 초기화
+const app = initializeApp({
+  apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+  authDomain: "liarwords-af033.firebaseapp.com",
+  databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+  projectId: "liarwords-af033",
+  storageBucket: "liarwords-af033.appspot.com",
+  messagingSenderId: "171671976030",
+  appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+});
+const db = getDatabase(app);
+
+// 상태 변수
+let groupList = [];
+let visibleCount = 7;
+const emojiMap = {};
+let currentEmojiTarget = null;
+let tempEmojiSelection = [];
+const emojiList = ['1','2','3','4','5','6','7','8'];
+
+// 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  localStorage.setItem('승인', 'false');
+  generateInputs();
+  restoreInputs();
+  attachInputListeners();
+  attachFocusListeners();
+  setupEmojiButtons();
+
+  document.getElementById('confirm-button').addEventListener('click', confirmEmojiSelection);
+  document.getElementById('cancel-button').addEventListener('click', cancelEmojiSelection);
+  document.getElementById('reset-button').addEventListener('click', resetEmojiSelection);
+  document.getElementById('modal-backdrop').addEventListener('click', cancelEmojiSelection);
+
+  if (visibleCount === 7) {
+    document.getElementById("addBtn").style.display = 'none';
+  }
+});
+
+// 입력창 생성
+function generateInputs() {
+  const div1 = document.getElementById('div1');
+  for (let i = 1; i <= 8; i++) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'textarea-wrapper';
+    wrapper.id = `wrapper-input${i}`;
+
+    const textarea = document.createElement('textarea');
+    textarea.id = `input${i}`;
+    textarea.tabIndex = i;
+
+    const emojiOverlay = document.createElement('div');
+    emojiOverlay.className = 'emoji-overlay';
+    emojiOverlay.id = `emoji-overlay-input${i}`;
+
+    const emojiButton = document.createElement('button');
+    emojiButton.className = 'emoji-button';
+    emojiButton.innerText = '🏹';
+    emojiButton.onclick = () => openEmojiModal(`input${i}`);
+
+    wrapper.appendChild(textarea);
+    wrapper.appendChild(emojiOverlay);
+    wrapper.appendChild(emojiButton);
+
+    if (i === 8) {
+      const input8Wrapper = document.createElement('div');
+      input8Wrapper.id = 'input8-wrapper';
+      input8Wrapper.style.display = 'inline-flex';
+      input8Wrapper.style.alignItems = 'center';
+      input8Wrapper.style.gap = '8px';
+
+      const overlayIcons = document.createElement('div');
+      overlayIcons.className = 'overlay-icons';
+
+      const removeBtn = document.createElement('span');
+      removeBtn.className = 'icon-btn';
+      removeBtn.innerText = '➖';
+      removeBtn.onclick = removeInput;
+
+      const addBtn = document.createElement('span');
+      addBtn.className = 'icon-btn';
+      addBtn.innerText = '➕';
+      addBtn.onclick = addInput;
+
+      overlayIcons.appendChild(removeBtn);
+      overlayIcons.appendChild(addBtn);
+
+      input8Wrapper.appendChild(wrapper);
+      input8Wrapper.appendChild(overlayIcons);
+
+      div1.appendChild(input8Wrapper);
+    } else {
+      div1.appendChild(wrapper);
+    }
+  }
+}
+
+// 이모지 모달 기능
+function setupEmojiButtons() {
+  const container = document.getElementById('emoji-buttons');
+  container.innerHTML = '';
+  emojiList.forEach(emoji => {
+    const btn = document.createElement('button');
+    btn.innerText = emoji;
+    btn.onclick = () => toggleTempEmoji(emoji);
+    container.appendChild(btn);
+  });
+}
+
+function openEmojiModal(targetId) {
+  currentEmojiTarget = targetId;
+  tempEmojiSelection = [...(emojiMap[targetId] || [])];
+  updateModalButtonStates();
+  document.getElementById('emoji-modal').style.display = 'block';
+  document.getElementById('modal-backdrop').style.display = 'block';
+}
+
+function toggleTempEmoji(emoji) {
+  if (tempEmojiSelection.includes(emoji)) {
+    tempEmojiSelection = tempEmojiSelection.filter(e => e !== emoji);
+  } else {
+    tempEmojiSelection.push(emoji);
+  }
+  updateModalButtonStates();
+}
+
+function updateModalButtonStates() {
+  const buttons = document.querySelectorAll('#emoji-buttons button');
+  buttons.forEach(btn => {
+    if (tempEmojiSelection.includes(btn.innerText)) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+function confirmEmojiSelection() {
+  if (currentEmojiTarget) {
+    emojiMap[currentEmojiTarget] = [...tempEmojiSelection];
+    renderEmojis(currentEmojiTarget);
+  }
+  closeEmojiModal();
+}
+
+function cancelEmojiSelection() {
+  closeEmojiModal();
+}
+
+function resetEmojiSelection() {
+  tempEmojiSelection = [];
+  updateModalButtonStates();
+}
+
+function closeEmojiModal() {
+  document.getElementById('emoji-modal').style.display = 'none';
+  document.getElementById('modal-backdrop').style.display = 'none';
+}
+
+function renderEmojis(targetId) {
+  const num = targetId.replace('input','');
+  const overlay = document.getElementById(`emoji-overlay-input${num}`);
+  if (!overlay) return;
+  overlay.innerHTML = '';
+  const emojis = emojiMap[targetId] || [];
+  emojis.forEach(e => {
+    const span = document.createElement('span');
+    span.textContent = e;
+    overlay.appendChild(span);
+  });
+}
+
+// ➕➖ 버튼
+window.addInput = function () {
+  if (visibleCount < 7) {
+    visibleCount++;
+    const wrapper = document.getElementById(`wrapper-input${visibleCount}`);
+    if (wrapper) wrapper.style.display = 'inline-block';
+    if (visibleCount === 7) document.querySelector(".icon-btn:nth-child(2)").style.display = 'none';
+    document.querySelector(".icon-btn:nth-child(1)").style.display = 'inline';
+  }
+};
+
+window.removeInput = function () {
+  if (visibleCount > 3) {
+    const wrapper = document.getElementById(`wrapper-input${visibleCount}`);
+    if (wrapper) wrapper.style.display = 'none';
+    visibleCount--;
+    if (visibleCount === 3) document.querySelector(".icon-btn:nth-child(1)").style.display = 'none';
+    document.querySelector(".icon-btn:nth-child(2)").style.display = 'inline';
+  }
+};
+
+// 비밀번호 인증
+async function checkPassword() {
+  const pwRef = ref(db, "pw");
+  const snapshot = await get(pwRef);
+  if (!snapshot.exists()) {
+    alert("서버에 비밀번호가 존재하지 않습니다.");
+    return false;
+  }
+  const correctPw = snapshot.val();
+  const inputPw = prompt("비밀번호를 입력하세요");
+  if (inputPw === null) return false;
+  if (inputPw === correctPw) {
+    localStorage.setItem('승인', 'true');
+    alert("인증되었습니다.");
+    return true;
+  } else {
+    alert("비밀번호가 일치하지 않습니다.");
+    return false;
+  }
+}
+
+// ✅ 데이터 추가
+window.addSingle = async function () {
+  const isApproved = localStorage.getItem('승인') === 'true';
+  if (!isApproved) {
+    const success = await checkPassword();
+    if (!success) return;
+  }
+
+  const singleVal = document.getElementById("singleInput").value.trim();
+  const words = singleVal.split(',').map(w => w.trim().replace(/\s+/g, '')).filter(Boolean);
+  if (!words.length) {
+    alert("단어를 입력하세요.");
+    return;
+  }
+
+  const statements = [];
+  for (let i = 1; i <= 8; i++) {
+    const wrapper = document.getElementById(`wrapper-input${i}`);
+    if (wrapper && getComputedStyle(wrapper).display !== 'none') {
+      const input = document.getElementById(`input${i}`);
+      if (input && input.value.trim()) {
+        const items = input.value.split(',').map(v => v.trim()).filter(Boolean);
+        statements.push(...items);
+      }
+    }
+  }
+
+  const snapshot = await get(ref(db, "groups"));
+  const groupsData = snapshot.exists() ? snapshot.val() : {};
+
+  const wordToGroup = {};
+  const groupMap = {};
+
+  Object.entries(groupsData).forEach(([groupId, group]) => {
+    groupMap[groupId] = group;
+    group.words.forEach(word => {
+      wordToGroup[word] = groupId;
+    });
+  });
+
+  const matchedGroupIds = [...new Set(
+    words.map(word => wordToGroup[word]).filter(Boolean)
+  )];
+
+  if (matchedGroupIds.length === 0) {
+    // ✅ 새 그룹 ID 생성: group0000 ~ group9999 중 비어있는 것 찾기
+    const allIds = new Set(Object.keys(groupsData));
+    let newGroupId = null;
+    for (let i = 0; i <= 9999; i++) {
+      const candidate = 'group' + i.toString().padStart(4, '0');
+      if (!allIds.has(candidate)) {
+        newGroupId = candidate;
+        break;
+      }
+    }
+
+    if (!newGroupId) {
+      alert("더 이상 생성 가능한 그룹이 없습니다.");
+      return;
+    }
+
+    const latestTimestamp = Date.now();
+    const newGroupData = {
+      words: [...new Set(words)],
+      statements: [...new Set(statements)],
+      timestamp: latestTimestamp
+    };
+
+    await set(ref(db, `groups/${newGroupId}`), newGroupData);
+    loadFromDB();
+    return;
+  }
+
+
+  let mergedWords = [];
+  let mergedStatements = [];
+  matchedGroupIds.forEach(groupId => {
+    const group = groupMap[groupId];
+    mergedWords.push(...group.words);
+    mergedStatements.push(...(group.statements || []));
+  });
+
+  mergedWords.push(...words);
+  mergedWords = [...new Set(mergedWords)];
+
+  mergedStatements.push(...statements);
+  mergedStatements = [...new Set(mergedStatements)];
+
+  const latestTimestamp = Date.now();
+
+  const primaryGroupId = matchedGroupIds[0];
+
+  const updates = {};
+  updates[`groups/${primaryGroupId}`] = {
+    words: mergedWords,
+    statements: mergedStatements,
+    timestamp: latestTimestamp
+  };
+
+  matchedGroupIds.slice(1).forEach(groupId => {
+    updates[`groups/${groupId}`] = null;
+  });
+
+  await update(ref(db), updates);
+  loadFromDB();
+};
+
+// 비우기
+window.clearInputs = function () {
+  for (let i = 1; i <= 8; i++) {
+    const input = document.getElementById(`input${i}`);
+    if (input) input.value = '';
+  }
+  document.getElementById("singleInput").value = '';
+
+  Object.keys(emojiMap).forEach(key => {
+    emojiMap[key] = [];
+    renderEmojis(key);
+  });
+
+  localStorage.removeItem('입력값백업');
+  updateHighlights();
+};
+
+// 리스트
+window.loadFromDB = async function () {
+  const output = document.getElementById("output");
+  output.innerHTML = "불러오는 중...";
+  try {
+    const snapshot = await get(ref(db, "groups"));
+    output.innerHTML = "";
+    if (snapshot.exists()) {
+      const rawData = snapshot.val();
+      const entries = Object.entries(rawData)
+        .sort((a, b) => b[1].timestamp - a[1].timestamp);
+      groupList = entries.map(entry => entry[1].words);
+      updateHighlights();
+    } else {
+      output.innerHTML = "🔥 데이터 없음";
+    }
+  } catch {
+    output.innerHTML = "❌ 불러오기 실패";
+  }
+};
+
+function updateHighlights() {
+  const value = document.getElementById("singleInput").value.trim();
+  const keywords = value.split(',').map(v => v.trim()).filter(Boolean);
+  renderGroups(keywords);
+}
+
+function renderGroups(highlightWords = []) {
+  const output = document.getElementById("output");
+  output.innerHTML = "";
+  const highlighted = [], rest = [];
+  for (const group of groupList) {
+    const text = group.join(", ");
+    const div = document.createElement("div");
+    div.className = "group";
+    div.innerText = text;
+    div.onclick = () => {
+      document.getElementById("singleInput").value = text;
+      updateHighlights();
+    };
+    if (highlightWords.some(w => group.includes(w))) {
+      div.classList.add("highlight");
+      highlighted.push(div);
+    } else {
+      rest.push(div);
+    }
+  }
+  [...highlighted, ...rest].forEach(div => output.appendChild(div));
+}
+
+// 로컬스토리지 백업 및 복원
+function saveInputsToLocal() {
+  const data = {};
+  for (let i = 1; i <= 8; i++) {
+    const input = document.getElementById(`input${i}`);
+    if (input) data[`input${i}`] = input.value;
+  }
+  data['singleInput'] = document.getElementById('singleInput').value;
+  localStorage.setItem('입력값백업', JSON.stringify(data));
+}
+
+function restoreInputs() {
+  const saved = localStorage.getItem('입력값백업');
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    for (let key in data) {
+      const el = document.getElementById(key);
+      if (el) el.value = data[key];
+    }
+    updateHighlights();
+  } catch (e) {
+    console.error("입력값 복원 실패:", e);
+  }
+}
+
+// 포커스 이동
+function getVisibleBoxes() {
+  const ids = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8", "singleInput"];
+  return ids.map(id => document.getElementById(id)).filter(el => {
+    const wrapper = document.getElementById(`wrapper-${el.id}`) || el;
+    return wrapper && getComputedStyle(wrapper).display !== 'none';
+  });
+}
+
+function attachFocusListeners() {
+  const boxes = getVisibleBoxes();
+  boxes.forEach((box, idx) => {
+    box.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const next = boxes[idx + 1] || boxes[0];
+        next.focus();
+      }
+    };
+  });
+}
+
+function attachInputListeners() {
+  const ids = ["input1", "input2", "input3", "input4", "input5", "input6", "input7", "input8", "singleInput"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', saveInputsToLocal);
+    }
+  });
+}
+
+document.getElementById("singleInput").addEventListener("input", updateHighlights);
+</script>
+
+</body>
+</html>

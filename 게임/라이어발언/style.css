@@ -1,0 +1,110 @@
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    padding-top: 60px;
+  }
+  
+  .bottom-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: #121212;
+    padding: 10px 20px;
+  }
+  
+  body.modified .bottom-bar button:nth-child(2) {
+    background-color: #ff6347;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #555;
+  }
+  
+  #group-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .group-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(50% - 20px);
+    box-sizing: border-box;
+  }
+  
+  .group-title {
+    display: flex;
+    gap: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    word-break: break-word;
+  }
+  
+  .statement-list {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .item-wrapper {
+    position: relative;
+  }
+
+  .statement-list li {
+    cursor: pointer;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  
+  .delete-btn {
+    color: red;
+    margin-left: 3px;
+  }
+
+  .editable-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 5em;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    z-index: 10;
+    resize: none;
+    overflow: hidden; /* 스크롤바 숨김 */
+    
+    background-color: #1a1a1a;
+    color: #eee;
+    border: 1px solid #00aaff;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }

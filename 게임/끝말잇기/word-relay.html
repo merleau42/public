@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>끝말잇기</title>
+</head>
+<body>
+	<div><span id="order">1</span>번째 참가자</div>
+	<div><span id="label">제시어: </span><span id="begin"></span></div>
+	<input id="text" type="text">
+	<button id="input">입력</button>
+	<button id="clear">지우기</button>
+	<div id="msg">제시어를 입력해주세요</div>
+	<script>
+	const {log} = console;
+	Q=x=>document.querySelector(x);
+
+	String.prototype.toNumber = function () { return this.match(/\-?\d+/)?.[0]*1||0 };
+
+	// let party = prompt('참가자는 몇 명인가요?').toNumber();
+
+	let party = 3;
+	let prev;
+	let current;
+	let order;
+
+	Q('button#input').onclick = () => {
+		if (!(current = Q('#text').value))
+			return Q('#msg').classList.add('invalid');
+	
+		if (!Q('#begin').innerText || prev.at(-1) === current[0]) {
+			Q('#label').innerText = '이전 단어: ';
+			prev = current;
+			Q('#begin').innerText = prev;
+			Q('#order').innerText = (Q('#order').innerText*1) % party + 1
+			Q('#text').value = '';
+			Q('#msg').classList.add('valid');
+			Q('#msg').classList.remove('invalid');
+		}
+		else {
+			Q('#msg').innerText = `틀린 단어입니다!  ${Q('#text').value}`;
+			Q('#text').value = '';
+			Q('#msg').classList.add('invalid');
+			Q('#msg').classList.remove('valid');
+		}
+		Q('#text').focus();
+	};
+	Q('button#clear').onclick = ()=> {
+		Q('#text').value = '';
+		Q('#text').focus();
+	}
+	</script>
+	<style>
+		#msg.valid{
+			visibility: hidden;
+		}
+		#msg.invalid {
+			color: red;
+			font-weight: bold;
+		}
+	</style>
+</body>
+</html>
