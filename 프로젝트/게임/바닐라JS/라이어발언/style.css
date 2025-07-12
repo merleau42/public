@@ -51,7 +51,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    flex: 1 1 calc(50% - 20px);
+    flex: 1 1 calc(50% - 10px);
     box-sizing: border-box;
   }
   
@@ -112,4 +112,10 @@
   
   .item-text.modified-text {
     color: lightgreen;
+  }
+
+  @media (min-width: 1000px) {
+    .group-card {
+      flex-basis: calc(33.333% - 10px);
+    }
   }
