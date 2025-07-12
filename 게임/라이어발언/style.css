@@ -10,6 +10,7 @@
   .bottom-bar {
     margin-bottom: 20px;
     display: flex;
+    justify-content: center;
     gap: 10px;
     position: fixed;
     top: 0;
@@ -107,4 +108,8 @@
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+  }
+  
+  .item-text.modified-text {
+    color: lightgreen;
   }
