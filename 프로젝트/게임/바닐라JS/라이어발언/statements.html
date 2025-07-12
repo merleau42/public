@@ -57,6 +57,31 @@ window.loadGroups = async function() {
   }
 };
 
+async function confirmPasswordAndProceed(permissionKey, callback) {
+  if (localStorage.getItem(permissionKey) === 'true') {
+    callback();
+    return;
+  }
+
+  const password = prompt("비밀번호를 입력하세요:");
+  if (password === null) return; // 사용자가 취소
+
+  try {
+    const pwSnapshot = await get(ref(db, 'pw'));
+    const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
+
+    if (password === storedPassword) {
+      localStorage.setItem(permissionKey, 'true');
+      callback();
+    } else {
+      alert('비밀번호가 틀렸습니다.');
+    }
+  } catch (error) {
+     alert('비밀번호 확인 중 오류가 발생했습니다.');
+     console.error("비밀번호 가져오기 오류:", error);
+  }
+}
+
 async function processAndSaveGroups() {
 	const groupsToDelete = Object.entries(groupData)
 		.filter(([groupId, data]) => !data.words || (Array.isArray(data.words) && data.words.filter(word => String(word).trim() !== '').length === 0));
@@ -84,32 +109,11 @@ async function processAndSaveGroups() {
 	}
 }
 
-window.saveGroups = async function() {
-	if (localStorage.getItem('승인') === 'true') {
-		await processAndSaveGroups();
-		return;
-	}
-
-	const password = prompt("비밀번호를 입력하세요:");
-	if (password === null) return;
-
-	try {
-		const pwSnapshot = await get(ref(db, 'pw'));
-		const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
-
-		if (password === storedPassword) {
-			localStorage.setItem('승인', 'true');
-			await processAndSaveGroups();
-		} else {
-			alert('비밀번호가 틀렸습니다. 저장이 취소됩니다.');
-		}
-	} catch (error) {
-		 alert('비밀번호 확인 중 오류가 발생했습니다.');
-		 console.error("비밀번호 가져오기 오류:", error);
-	}
+window.saveGroups = function() {
+  confirmPasswordAndProceed('저장', processAndSaveGroups);
 };
 
-function renderGroups() {
+function renderGroups(highlightInfo) {
   const container = document.getElementById('group-container');
   container.innerHTML = '';
 
@@ -123,7 +127,8 @@ function renderGroups() {
       groupId,
       data.words,
       'words',
-      true
+      true,
+      highlightInfo
     );
     titleEl.title = groupId;
     div.appendChild(titleEl);
@@ -132,7 +137,8 @@ function renderGroups() {
       groupId,
       data.statements || [],
       'statements',
-      false
+      false,
+      highlightInfo
     );
     div.appendChild(statementList);
 
@@ -140,24 +146,24 @@ function renderGroups() {
   });
 }
 
-function createEditableList(groupId, items, key, isTitle = false) {
+function createEditableList(groupId, items, key, isTitle = false, highlightInfo) {
   const container = document.createElement(isTitle ? 'div' : 'ul');
   container.className = isTitle ? 'group-title' : 'statement-list';
 
   const currentItems = [...(items || [])];
 
   currentItems.forEach((item, idx) => {
-    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle);
+    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle, highlightInfo);
     container.appendChild(el);
   });
 
-  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle);
+  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle, null);
   container.appendChild(emptyEl);
 
   return container;
 }
 
-function createItemElement(groupId, items, idx, text, key, isTitle = false) {
+function createItemElement(groupId, items, idx, text, key, isTitle = false, highlightInfo) {
   const wrapper = document.createElement(isTitle ? 'div' : 'li');
   wrapper.className = 'item-wrapper';
 
@@ -165,16 +171,22 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
   span.className = 'item-text';
   span.textContent = text || '...';
 
+  if (highlightInfo && highlightInfo.groupId === groupId && highlightInfo.key === key && highlightInfo.index === idx) {
+    span.classList.add('modified-text');
+  }
+
   const del = document.createElement('span');
   del.className = 'delete-btn';
   del.textContent = '✖';
   del.onclick = (e) => {
     e.stopPropagation();
     if (text) {
-      items.splice(idx, 1);
-      groupData[groupId][key] = [...items];
-      toggleModified(true);
-      renderGroups();
+      confirmPasswordAndProceed('삭제', () => {
+        items.splice(idx, 1);
+        groupData[groupId][key] = [...items];
+        toggleModified(true);
+        renderGroups();
+      });
     }
   };
   del.style.display = 'none';
@@ -204,18 +216,20 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
     };
     
     input.onblur = () => {
+      let highlightInfo = null;
       if (input.dataset.escapePressed !== 'true') {
         const newText = input.value.trim();
         const originalText = text || "";
         let hasChanged = false;
 
         if (newText !== originalText) {
+            hasChanged = true;
             if (newText) {
                 items[idx] = newText;
+                highlightInfo = { groupId, key, index: idx };
             } else {
                 items.splice(idx, 1);
             }
-            hasChanged = true;
         }
 
         if (hasChanged) {
@@ -223,7 +237,7 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
             toggleModified(true);
         }
       }
-      renderGroups();
+      renderGroups(highlightInfo);
     };
 
     wrapper.appendChild(input);
@@ -237,7 +251,8 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
 }
 
 window.addEventListener('load', () => {
-  localStorage.removeItem('승인');
+  localStorage.removeItem('저장');
+  localStorage.removeItem('삭제');
   loadGroups();
 });
 </script>
