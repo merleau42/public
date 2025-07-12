@@ -194,10 +194,6 @@ button:hover {
   background-color: #005500;
 }
 
-#emoji-buttons button:hover {
-  background-color: #555;
-}
-
 .modal-footer {
   display: flex;
   justify-content: space-between;
