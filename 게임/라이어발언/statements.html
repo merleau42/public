@@ -11,6 +11,18 @@
 <div class="bottom-bar">
   <button onclick="loadGroups()">불러오기</button>
   <button onclick="saveGroups()">저장</button>
+  <select id="theme-selector" onchange="changeTheme(this.value)">
+    <option value="light">라이트 테마</option>
+    <option value="dark">다크 테마</option>
+    <option value="crimson">크림슨 테마</option>
+    <option value="ocean">오션 테마</option>
+    <option value="forest">포레스트 테마</option>
+  </select>
+  <select id="sort-selector" onchange="changeSort(this.value)">
+    <option value="timestamp">최신순</option>
+    <option value="length_desc">분량 많은 순</option>
+    <option value="length_asc">분량 적은 순</option>
+  </select>
 </div>
 
 <div id="group-container"></div>
@@ -31,12 +43,15 @@ const app = initializeApp({
 const db = getDatabase(app);
 
 let groupData = {};
+let modifiedItems = new Set();
+let currentSortMethod = 'timestamp';
 
 function toggleModified(isModified) {
   document.body.classList.toggle('modified', isModified);
 }
 
-window.loadGroups = async function() {
+window.loadGroups = async function(restoreScrollY = null) {
+  const currentScrollY = window.scrollY;
   const container = document.getElementById('group-container');
   container.innerHTML = '불러오는 중...';
   try {
@@ -50,28 +65,28 @@ window.loadGroups = async function() {
       groupData = {};
     }
     toggleModified(false);
+    modifiedItems.clear();
   } catch(error) {
     console.error("데이터 불러오기 실패:", error);
     container.innerHTML = '❌ 불러오기 실패';
     toggleModified(false);
+    modifiedItems.clear();
   }
+  window.scrollTo(0, restoreScrollY !== null ? restoreScrollY : currentScrollY);
 };
 
 async function confirmPasswordAndProceed(permissionKey, callback) {
-  if (localStorage.getItem(permissionKey) === 'true') {
+  if (sessionStorage.getItem(permissionKey) === 'true') {
     callback();
     return;
   }
-
   const password = prompt("비밀번호를 입력하세요:");
-  if (password === null) return; // 사용자가 취소
-
+  if (password === null) return;
   try {
     const pwSnapshot = await get(ref(db, 'pw'));
     const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
-
     if (password === storedPassword) {
-      localStorage.setItem(permissionKey, 'true');
+      sessionStorage.setItem(permissionKey, 'true');
       callback();
     } else {
       alert('비밀번호가 틀렸습니다.');
@@ -91,7 +106,6 @@ async function processAndSaveGroups() {
 		try {
 			await remove(groupRef);
 			delete groupData[groupId];
-			console.log(`그룹 "${groupId}"가 단어가 없어 삭제되었습니다.`);
 		} catch (error) {
 			console.error(`그룹 "${groupId}" 삭제 실패:`, error);
 			alert(`그룹 "${groupId}" 삭제에 실패했습니다. 권한 문제일 수 있습니다.`);
@@ -102,6 +116,7 @@ async function processAndSaveGroups() {
 		await set(ref(db, 'groups'), groupData);
 		alert('저장 완료');
 		toggleModified(false);
+		modifiedItems.clear();
 		renderGroups();
 	} catch (error) {
 		console.error("데이터 저장 실패:", error);
@@ -113,68 +128,68 @@ window.saveGroups = function() {
   confirmPasswordAndProceed('저장', processAndSaveGroups);
 };
 
-function renderGroups(highlightInfo) {
+function renderGroups() {
   const container = document.getElementById('group-container');
   container.innerHTML = '';
 
-  const sorted = Object.entries(groupData || {}).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+  let sorted = Object.entries(groupData || {});
+  
+  sorted.sort((a, b) => {
+    const [idA, dataA] = a;
+    const [idB, dataB] = b;
+
+    switch (currentSortMethod) {
+      case 'length_desc': {
+        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).join('').length;
+        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).join('').length;
+        return lengthB - lengthA;
+      }
+      case 'length_asc': {
+        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).join('').length;
+        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).join('').length;
+        return lengthA - lengthB;
+      }
+      case 'timestamp':
+      default:
+        return (dataB.timestamp || 0) - (dataA.timestamp || 0);
+    }
+  });
 
   sorted.forEach(([groupId, data]) => {
     const div = document.createElement('div');
     div.className = 'group-card';
-
-    const titleEl = createEditableList(
-      groupId,
-      data.words,
-      'words',
-      true,
-      highlightInfo
-    );
+    const titleEl = createEditableList(groupId, data.words, 'words', true);
     titleEl.title = groupId;
     div.appendChild(titleEl);
-
-    const statementList = createEditableList(
-      groupId,
-      data.statements || [],
-      'statements',
-      false,
-      highlightInfo
-    );
+    const statementList = createEditableList(groupId, data.statements || [], 'statements', false);
     div.appendChild(statementList);
-
     container.appendChild(div);
   });
 }
 
-function createEditableList(groupId, items, key, isTitle = false, highlightInfo) {
+function createEditableList(groupId, items, key, isTitle = false) {
   const container = document.createElement(isTitle ? 'div' : 'ul');
   container.className = isTitle ? 'group-title' : 'statement-list';
-
   const currentItems = [...(items || [])];
-
   currentItems.forEach((item, idx) => {
-    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle, highlightInfo);
+    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle);
     container.appendChild(el);
   });
-
-  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle, null);
+  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle);
   container.appendChild(emptyEl);
-
   return container;
 }
 
-function createItemElement(groupId, items, idx, text, key, isTitle = false, highlightInfo) {
+function createItemElement(groupId, items, idx, text, key, isTitle = false) {
   const wrapper = document.createElement(isTitle ? 'div' : 'li');
   wrapper.className = 'item-wrapper';
-
   const span = document.createElement('span');
   span.className = 'item-text';
   span.textContent = text || '...';
-
-  if (highlightInfo && highlightInfo.groupId === groupId && highlightInfo.key === key && highlightInfo.index === idx) {
+  const itemId = `${groupId}-${key}-${idx}`;
+  if (modifiedItems.has(itemId)) {
     span.classList.add('modified-text');
   }
-
   const del = document.createElement('span');
   del.className = 'delete-btn';
   del.textContent = '✖';
@@ -184,25 +199,21 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false, high
       confirmPasswordAndProceed('삭제', () => {
         items.splice(idx, 1);
         groupData[groupId][key] = [...items];
-        toggleModified(true);
+        modifiedItems.delete(itemId);
+        toggleModified(modifiedItems.size > 0);
         renderGroups();
       });
     }
   };
   del.style.display = 'none';
-
   wrapper.onmouseenter = () => { if (text) del.style.display = 'inline'; };
   wrapper.onmouseleave = () => { del.style.display = 'none'; };
-
   wrapper.onclick = () => {
     if (wrapper.querySelector('.editable-textarea')) return;
-
     const input = document.createElement('textarea');
     input.className = 'editable-textarea';
     input.value = text;
-    
     input.onclick = (e) => e.stopPropagation();
-
     input.onkeydown = (e) => {
       if (e.key === 'Escape') {
         e.target.dataset.escapePressed = 'true';
@@ -214,47 +225,74 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false, high
         input.blur();
       }
     };
-    
     input.onblur = () => {
-      let highlightInfo = null;
       if (input.dataset.escapePressed !== 'true') {
         const newText = input.value.trim();
         const originalText = text || "";
+        const itemId = `${groupId}-${key}-${idx}`;
         let hasChanged = false;
-
         if (newText !== originalText) {
+          hasChanged = true;
+          if (newText) {
+            items[idx] = newText;
+            modifiedItems.add(itemId);
+          } else {
+            items.splice(idx, 1);
+            modifiedItems.delete(itemId);
+          }
+        } else {
+          if (modifiedItems.has(itemId)) {
             hasChanged = true;
-            if (newText) {
-                items[idx] = newText;
-                highlightInfo = { groupId, key, index: idx };
-            } else {
-                items.splice(idx, 1);
-            }
+            modifiedItems.delete(itemId);
+          }
         }
-
         if (hasChanged) {
-            groupData[groupId][key] = [...items];
-            toggleModified(true);
+          groupData[groupId][key] = [...items];
         }
       }
-      renderGroups(highlightInfo);
+      toggleModified(modifiedItems.size > 0);
+      renderGroups();
     };
-
     wrapper.appendChild(input);
     input.focus();
     input.select();
   };
-
   wrapper.appendChild(span);
   wrapper.appendChild(del);
   return wrapper;
 }
 
+window.changeTheme = function(themeName) {
+  document.body.dataset.theme = themeName;
+  localStorage.setItem('theme', themeName);
+}
+
+window.changeSort = function(sortMethod) {
+  currentSortMethod = sortMethod;
+  localStorage.setItem('sortMethod', sortMethod);
+  renderGroups();
+}
+
+function applyInitialSettings() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.body.dataset.theme = savedTheme;
+  document.getElementById('theme-selector').value = savedTheme;
+
+  const savedSortMethod = localStorage.getItem('sortMethod') || 'timestamp';
+  currentSortMethod = savedSortMethod;
+  document.getElementById('sort-selector').value = savedSortMethod;
+}
+
 window.addEventListener('load', () => {
-  localStorage.removeItem('저장');
-  localStorage.removeItem('삭제');
-  loadGroups();
+  applyInitialSettings();
+  const savedScrollY = sessionStorage.getItem('scrollPosition');
+  loadGroups(savedScrollY ? parseInt(savedScrollY, 10) : null);
 });
+
+window.addEventListener('beforeunload', () => {
+  sessionStorage.setItem('scrollPosition', window.scrollY);
+});
+
 </script>
 
 </body>
