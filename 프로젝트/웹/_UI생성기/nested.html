@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>슬라이드 모드 - 생성자 추가</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="navbar">
+    <div>
+      <label for="modeSelect">모드: </label>
+      <select id="modeSelect">
+        <option value="tree">tree</option>
+        <option value="card">card</option>
+        <option value="slide">slide</option>
+      </select>
+    </div>
+    <div>
+      <label for="emmetInput">생성자: </label>
+      <input type="text" id="emmetInput" placeholder="예: text>emoji+text>emoji+emoji" style="width: 300px;" />
+      <button onclick="generateFromEmmet()">생성</button>
+    </div>
+  </div>
+
+  <div class="content" id="contentArea">
+    <div id="app"></div>
+  </div>
+
+  <!-- 콘텐츠 선택 모달 -->
+  <div id="contentModal" class="modal">
+    <div class="modal-content">
+      <div><strong>콘텐츠 선택</strong></div>
+      <div id="emojiOptions"></div>
+      <button onclick="closeModal()">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    const contentTypes = [
+      { type: 'emoji', label: '😀' },
+      { type: 'emoji', label: '🚀' },
+      { type: 'emoji', label: '✅' },
+      { type: 'emoji', label: '📦' },
+      { type: 'emoji', label: '🔥' },
+      { type: 'text', label: '📝' }
+    ];
+
+    let data = [{ id: generateId(), children: [] }];
+    let selectedItem = null;
+    let slideIndex = 0;
+
+    function generateId() {
+      return '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function getMode() {
+      return document.documentElement.style.getPropertyValue('--mode').replace(/['"]/g, '');
+    }
+
+    function openModal(item) {
+      selectedItem = item;
+      document.getElementById('contentModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('contentModal').classList.remove('active');
+    }
+
+    function setupEmojiOptions() {
+      const container = document.getElementById('emojiOptions');
+      container.innerHTML = '';
+      contentTypes.forEach(entry => {
+        const btn = document.createElement('button');
+        btn.className = 'emoji-button';
+        btn.textContent = entry.label;
+        btn.onclick = () => {
+          selectedItem._contentType = entry.type;
+          selectedItem._contentValue = entry.type === 'text' ? '비어 있음' : entry.label;
+          selectedItem.element = null;
+          closeModal();
+          rerender();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderItem(item, container, level = 1) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'item';
+      wrapper.dataset.level = level;
+
+      const hr = document.createElement('hr');
+      hr.className = 'slot-divider';
+      wrapper.appendChild(hr);
+
+      if (getMode() === 'tree') {
+        wrapper.style.marginLeft = (level - 1) * 20 + 'px';
+      }
+
+      const row = document.createElement('div');
+      row.className = 'card-row';
+
+      const contentSlot = document.createElement('div');
+      contentSlot.className = 'content-slot';
+      if (item._contentType === 'emoji') {
+        const comp = document.createElement('div');
+        comp.className = 'emoji-component';
+        comp.textContent = item._contentValue;
+        contentSlot.appendChild(comp);
+      } else if (item._contentType === 'text') {
+        const comp = document.createElement('div');
+        comp.className = 'text-component';
+        comp.textContent = item._contentValue || '비어 있음';
+        contentSlot.appendChild(comp);
+      }
+
+      const selectDiv = document.createElement('div');
+      selectDiv.className = 'select-control';
+      const selectBtn = document.createElement('button');
+      selectBtn.textContent = '📄 콘텐츠 선택';
+      selectBtn.onclick = () => openModal(item);
+      selectDiv.appendChild(selectBtn);
+
+      const slotDiv = document.createElement('div');
+      slotDiv.className = 'slot-control';
+      const slotBtn = document.createElement('button');
+      slotBtn.textContent = '➕ 슬롯 추가';
+      slotBtn.onclick = () => {
+        item.children.push({ id: generateId(), children: [] });
+        rerender();
+      };
+      slotDiv.appendChild(slotBtn);
+
+      row.appendChild(contentSlot);
+      row.appendChild(selectDiv);
+      row.appendChild(slotDiv);
+      wrapper.appendChild(row);
+
+      const childrenDiv = document.createElement('div');
+      childrenDiv.className = 'children';
+      wrapper.appendChild(childrenDiv);
+
+      item.children.forEach(child => {
+        if (getMode() === 'slide' && slideIndex === 0 && level === 1) return;
+        renderItem(child, childrenDiv, level + 1);
+      });
+
+      container.appendChild(wrapper);
+    }
+
+    function renderSlide(container) {
+      const root = data[0];
+      const allSlides = [root, ...root.children];
+      const item = allSlides[slideIndex];
+      if (!item) return;
+
+      renderItem(item, container, item === root ? 1 : 2);
+
+      const nav = document.createElement('div');
+      nav.className = 'slide-nav';
+
+      const prev = document.createElement('button');
+      prev.textContent = '← 이전';
+      prev.onclick = () => {
+        slideIndex = (slideIndex - 1 + allSlides.length) % allSlides.length;
+        rerender();
+      };
+
+      const next = document.createElement('button');
+      next.textContent = '다음 →';
+      next.onclick = () => {
+        slideIndex = (slideIndex + 1) % allSlides.length;
+        rerender();
+      };
+
+      nav.appendChild(prev);
+      nav.appendChild(next);
+      container.appendChild(nav);
+    }
+
+    function rerender() {
+      const app = document.getElementById('app');
+      app.innerHTML = '';
+      const mode = getMode();
+      if (mode === 'slide') {
+        renderSlide(app);
+      } else {
+        data.forEach(item => renderItem(item, app, 1));
+      }
+    }
+
+    function parseEmmetToTree(emmetStr) {
+  const tokens = tokenizeEmmet(emmetStr);
+  const ast = parseTokens(tokens);
+  return ast;
+}
+
+    function tokenizeEmmet(str) {
+      const regex = /[>+()]/g;
+      const tokens = [];
+      let lastIndex = 0;
+      let match;
+
+      while ((match = regex.exec(str)) !== null) {
+        if (match.index > lastIndex) {
+          tokens.push({ type: 'tag', value: str.slice(lastIndex, match.index).trim() });
+        }
+        tokens.push({ type: 'op', value: match[0] });
+        lastIndex = match.index + 1;
+      }
+
+      if (lastIndex < str.length) {
+        tokens.push({ type: 'tag', value: str.slice(lastIndex).trim() });
+      }
+
+      return tokens;
+    }
+
+    function parseTokens(tokens) {
+      let i = 0;
+
+      function parseGroup() {
+        let root = null;
+        let current = null;
+
+        while (i < tokens.length) {
+          const token = tokens[i];
+
+          if (token.type === 'tag') {
+            const node = createNode(token.value);
+            if (!root) {
+              root = node;
+              current = node;
+            } else {
+              current.siblings.push(node);
+              current = node;
+            }
+            i++;
+          } else if (token.type === 'op') {
+            if (token.value === '>') {
+              i++;
+              const child = parseGroup();
+              current.children.push(child);
+            } else if (token.value === '+') {
+              i++;
+              continue;
+            } else if (token.value === '(') {
+              i++;
+              const group = parseGroup();
+              if (!root) {
+                root = group;
+                current = group;
+              } else {
+                current.siblings.push(group);
+              }
+            } else if (token.value === ')') {
+              i++;
+              break;
+            }
+          }
+        }
+
+        return root;
+      }
+
+      const tree = parseGroup();
+
+      function flatten(node) {
+        const result = [node];
+        if (node.siblings) {
+          node.siblings.forEach(s => result.push(...flatten(s)));
+        }
+        return result;
+      }
+
+      const flatTree = flatten(tree).map(cleanNode);
+      return flatTree;
+    }
+
+    function createNode(type) {
+      return {
+        type,
+        id: generateId(),
+        _contentType: type === 'emoji' ? 'emoji' : 'text',
+        _contentValue: type === 'emoji' ? '😀' : '비어 있음',
+        children: [],
+        siblings: []
+      };
+    }
+
+    function cleanNode(node) {
+      delete node.siblings;
+      node.children = node.children.map(cleanNode);
+      return node;
+    }
+
+    function generateFromEmmet() {
+      const input = document.getElementById('emmetInput').value.trim();
+      if (!input) return;
+
+      try {
+        const result = parseEmmetToTree(input);
+        data = result;
+        slideIndex = 0;
+        rerender();
+      } catch (err) {
+        alert('Emmet 구문 오류: ' + err.message);
+      }
+    }
+
+
+    
+    document.getElementById('modeSelect').addEventListener('change', (e) => {
+      document.documentElement.style.setProperty('--mode', `'${e.target.value}'`);
+      slideIndex = 0;
+      rerender();
+    });
+
+    document.documentElement.style.setProperty('--mode', `'tree'`);
+    setupEmojiOptions();
+    rerender();
+  </script>
+</body>
+</html>
