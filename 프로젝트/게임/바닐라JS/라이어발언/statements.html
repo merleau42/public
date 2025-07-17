@@ -55,7 +55,7 @@ window.loadGroups = async function(restoreScrollY = null) {
   const container = document.getElementById('group-container');
   container.innerHTML = '불러오는 중...';
   try {
-    const snapshot = await get(ref(db, 'groups'));
+    const snapshot = await get(ref(db, 'liar_groups'));
     container.innerHTML = '';
     if (snapshot.exists()) {
       groupData = snapshot.val();
@@ -102,7 +102,7 @@ async function processAndSaveGroups() {
 		.filter(([groupId, data]) => !data.words || (Array.isArray(data.words) && data.words.filter(word => String(word).trim() !== '').length === 0));
 
 	for (const [groupId] of groupsToDelete) {
-		const groupRef = ref(db, `groups/${groupId}`);
+		const groupRef = ref(db, `liar_groups/${groupId}`);
 		try {
 			await remove(groupRef);
 			delete groupData[groupId];
@@ -113,7 +113,7 @@ async function processAndSaveGroups() {
 	}
 
 	try {
-		await set(ref(db, 'groups'), groupData);
+		await set(ref(db, 'liar_groups'), groupData);
 		alert('저장 완료');
 		toggleModified(false);
 		modifiedItems.clear();
