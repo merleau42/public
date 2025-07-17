@@ -422,7 +422,7 @@ window.addSingle = async function () {
     }
   }
 
-  const snapshot = await get(ref(db, "groups"));
+  const snapshot = await get(ref(db, "liar_groups"));
   const groupsData = snapshot.exists() ? snapshot.val() : {};
 
   const wordToGroup = {};
@@ -527,7 +527,7 @@ window.loadFromDB = async function () {
   const output = document.getElementById("output");
   output.innerHTML = "불러오는 중...";
   try {
-    const snapshot = await get(ref(db, "groups"));
+    const snapshot = await get(ref(db, "liar_groups"));
     output.innerHTML = "";
     if (snapshot.exists()) {
       const rawData = snapshot.val();
