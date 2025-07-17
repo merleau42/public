@@ -443,7 +443,7 @@ window.addSingle = async function () {
     const allIds = new Set(Object.keys(groupsData));
     let newGroupId = null;
     for (let i = 0; i <= 9999; i++) {
-      const candidate = 'group' + i.toString().padStart(4, '0');
+      const candidate = i.toString().padStart(4, '0');
       if (!allIds.has(candidate)) {
         newGroupId = candidate;
         break;
