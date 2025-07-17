@@ -462,7 +462,7 @@ window.addSingle = async function () {
       timestamp: latestTimestamp
     };
 
-    await set(ref(db, `groups/${newGroupId}`), newGroupData);
+    await set(ref(db, `liar_groups/${newGroupId}`), newGroupData);
     loadFromDB();
     return;
   }
@@ -486,14 +486,14 @@ window.addSingle = async function () {
   const primaryGroupId = matchedGroupIds[0];
 
   const updates = {};
-  updates[`groups/${primaryGroupId}`] = {
+  updates[`liar_groups/${primaryGroupId}`] = {
     words: mergedWords,
     statements: mergedStatements,
     timestamp: latestTimestamp
   };
 
   matchedGroupIds.slice(1).forEach(groupId => {
-    updates[`groups/${groupId}`] = null;
+    updates[`liar_groups/${groupId}`] = null;
   });
 
   await update(ref(db), updates);
