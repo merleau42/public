@@ -29,8 +29,8 @@ body[data-theme="crimson"] {
   --border-color: #ffcdd2;
   --button-bg-color: #ffebee;
   --button-text-color: #8B0000;
-  --modified-text-color: #006400;
-  --modified-button-bg-color: #ff6347;
+  --modified-text-color: red;
+  --modified-button-bg-color: #DC143C;
   --input-border-color: #DC143C;
 }
 
@@ -41,8 +41,8 @@ body[data-theme="ocean"] {
   --border-color: #b3e5fc;
   --button-bg-color: #e1f5fe;
   --button-text-color: #004080;
-  --modified-text-color: #008080;
-  --modified-button-bg-color: #ffc107;
+  --modified-text-color: blue;
+  --modified-button-bg-color: #03A9F4;
   --input-border-color: #03A9F4;
 }
 
@@ -53,8 +53,8 @@ body[data-theme="forest"] {
   --border-color: #dcedc8;
   --button-bg-color: #e6ee9c;
   --button-text-color: #33691e;
-  --modified-text-color: #558b2f;
-  --modified-button-bg-color: #ff9800;
+  --modified-text-color: purple;
+  --modified-button-bg-color: #8bc34a;
   --input-border-color: #8bc34a;
 }
 
