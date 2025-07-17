@@ -3,39 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DB 데이터 개수 확인</title>
+    <title>DB 데이터 상태 및 관리</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
-        #status { margin-top: 20px; font-size: 18px; }
-        .count-result {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-top: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; background-color: #f0f2f5; }
+        h1, h2 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; border-radius: 5px; border: 1px solid #aaa; background-color: #e9e9e9; margin: 5px; }
+        button:hover { background-color: #ddd; }
+        .management-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        #status-counts { font-size: 18px; }
+        .safe-btn { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .safe-btn:hover { background-color: #b1dfbb; }
+        .danger-btn { background-color: #ffdddd; color: #d8000c; border-color: #ffbaba; }
+        .danger-btn:hover { background-color: #ffcccc; }
+        .result-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e9f5e9;
+            border: 1px solid #c8e6c9;
+            min-height: 50px;
+            white-space: pre-wrap;
+            font-family: monospace;
         }
     </style>
 </head>
 <body>
 
-    <h1>데이터베이스 항목 개수 확인</h1>
-    <p>
-        'groups'와 'liar_groups' 경로에 각각 몇 개의 데이터 항목이 있는지 확인합니다.
-    </p>
+    <h1>데이터베이스 상태 및 관리</h1>
 
-    <button onclick="runCheck()">개수 확인</button>
+    <div class="management-section">
+        <h2>데이터 개수 확인</h2>
+        <button onclick="runCheck()">개수 확인</button>
+        <div id="status-counts">
+            <div id="groups-count"><strong>Groups:</strong> -</div>
+            <div id="liar-groups-count"><strong>Liar Groups:</strong> -</div>
+        </div>
+    </div>
+    
+    <div class="management-section">
+        <h2>데이터 백업</h2>
+        <p>데이터베이스 경로의 전체 데이터를 JSON 파일로 다운로드합니다.</p>
+        <button class="safe-btn" onclick="runBackup('groups')">'groups' 백업</button>
+        <button class="safe-btn" onclick="runBackup('liar_groups')">'liar_groups' 백업</button>
+    </div>
 
-    <div id="status">
-        <div id="groups-count"><strong>Groups:</strong> -</div>
-        <div id="liar-groups-count"><strong>Liar Groups:</strong> -</div>
+    <div class="management-section">
+        <h2>데이터 관리 (주의!)</h2>
+        <p><strong>위험:</strong> 아래 작업은 데이터를 영구적으로 삭제할 수 있습니다.</p>
+        <button class="danger-btn" onclick="runDelete('groups')">'groups' 전체 삭제</button>
+        <button class="danger-btn" onclick="runDelete('liar_groups')">'liar_groups' 전체 삭제</button>
+    </div>
+
+    <div class="management-section">
+        <h2>데이터 진단</h2>
+        <button onclick="runDiagnostics()">빈 그룹 찾기</button>
+        <div id="diagnostics-result" class="result-box">진단 결과가 여기에 표시됩니다.</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-        // Firebase 앱 초기화 설정
+        // Firebase 앱 초기화
         const app = initializeApp({
             apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
             authDomain: "liarwords-af033.firebaseapp.com",
@@ -48,19 +82,17 @@
         const db = getDatabase(app);
         const groupsCountDiv = document.getElementById('groups-count');
         const liarGroupsCountDiv = document.getElementById('liar-groups-count');
+        const diagResultDiv = document.getElementById('diagnostics-result');
 
-        // 비밀번호를 확인하고 콜백 함수를 실행하는 함수
+        // --- 유틸리티 함수 ---
         async function confirmPasswordAndProceed(permissionKey, callback) {
             if (sessionStorage.getItem(permissionKey) === 'true') {
                 callback();
                 return;
             }
-            const password = prompt("이 작업을 수행하려면 관리자 비밀번호를 입력하세요:");
-            if (password === null) {
-                groupsCountDiv.innerHTML = '<strong>Groups:</strong> 작업이 취소되었습니다.';
-                liarGroupsCountDiv.innerHTML = '<strong>Liar Groups:</strong> 작업이 취소되었습니다.';
-                return;
-            }
+            const password = prompt("관리자 비밀번호를 입력하세요:");
+            if (password === null) return;
+
             try {
                 const pwSnapshot = await get(ref(db, 'pw'));
                 const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
@@ -76,38 +108,115 @@
             }
         }
 
-        // 실제 데이터 개수를 확인하는 함수
+        // --- 기능별 로직 ---
         async function checkCounts() {
             groupsCountDiv.innerHTML = '<strong>Groups:</strong> 확인 중...';
             liarGroupsCountDiv.innerHTML = '<strong>Liar Groups:</strong> 확인 중...';
+            try {
+                const groupsSnapshot = await get(ref(db, 'groups'));
+                groupsCountDiv.innerHTML = `<strong>Groups:</strong> ${groupsSnapshot.exists() ? groupsSnapshot.size : 0}개`;
+
+                const liarGroupsSnapshot = await get(ref(db, 'liar_groups'));
+                liarGroupsCountDiv.innerHTML = `<strong>Liar Groups:</strong> ${liarGroupsSnapshot.exists() ? liarGroupsSnapshot.size : 0}개`;
+            } catch (error) {
+                console.error('데이터 개수 확인 오류:', error);
+                alert('데이터 개수 확인에 실패했습니다.');
+            }
+        }
+        
+        async function backupCollection(groupName) {
+            const statusDiv = document.getElementById(`${groupName.replace('_', '-')}-count`);
+            statusDiv.innerHTML = `<strong>${groupName}:</strong> 백업 데이터 생성 중...`;
 
             try {
-                // 'groups' 개수 확인
-                const groupsRef = ref(db, 'groups');
-                const groupsSnapshot = await get(groupsRef);
-                const groupsCount = groupsSnapshot.exists() ? groupsSnapshot.size : 0;
-                groupsCountDiv.innerHTML = `<strong>Groups:</strong> ${groupsCount}개`;
+                const snapshot = await get(ref(db, groupName));
+                if (!snapshot.exists()) {
+                    alert(`'${groupName}' 경로에 데이터가 없습니다.`);
+                    statusDiv.innerHTML = `<strong>${groupName}:</strong> 데이터 없음`;
+                    return;
+                }
 
-                // 'liar_groups' 개수 확인
-                const liarGroupsRef = ref(db, 'liar_groups');
-                const liarGroupsSnapshot = await get(liarGroupsRef);
-                const liarGroupsCount = liarGroupsSnapshot.exists() ? liarGroupsSnapshot.size : 0;
-                liarGroupsCountDiv.innerHTML = `<strong>Liar Groups:</strong> ${liarGroupsCount}개`;
+                const data = snapshot.val();
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                a.download = `${groupName}_backup_${timestamp}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                statusDiv.innerHTML = `<strong>${groupName}:</strong> 백업 파일 다운로드 시작됨`;
+                alert(`'${groupName}' 백업 파일 생성이 완료되었습니다.`);
 
             } catch (error) {
-                console.error('데이터 개수 확인 중 오류 발생:', error);
-                alert('데이터를 가져오는 데 실패했습니다. 콘솔을 확인해주세요.');
-                groupsCountDiv.innerHTML = '<strong>Groups:</strong> 오류 발생';
-                liarGroupsCountDiv.innerHTML = '<strong>Liar Groups:</strong> 오류 발생';
+                console.error(`'${groupName}' 백업 오류:`, error);
+                statusDiv.innerHTML = `<strong>${groupName}:</strong> 백업 실패`;
+                alert(`'${groupName}' 백업에 실패했습니다.`);
             }
         }
 
-        // 버튼 클릭 시 실행될 전역 함수
-        window.runCheck = function() {
-            confirmPasswordAndProceed('db_check_permission', checkCounts);
+        async function deleteCollection(groupName) {
+            const targetRef = ref(db, groupName);
+            const statusDiv = document.getElementById(`${groupName.replace('_', '-')}-count`);
+            statusDiv.innerHTML = `<strong>${groupName}:</strong> 삭제 중...`;
+            try {
+                await set(targetRef, null);
+                statusDiv.innerHTML = `<strong>${groupName}:</strong> 삭제 완료 (0개)`;
+                alert(`'${groupName}' 경로의 모든 데이터가 성공적으로 삭제되었습니다.`);
+            } catch (error) {
+                console.error(`'${groupName}' 삭제 오류:`, error);
+                statusDiv.innerHTML = `<strong>${groupName}:</strong> 삭제 실패`;
+                alert(`'${groupName}' 삭제에 실패했습니다.`);
+            }
         }
 
-    </script>
+        async function findEmptyGroups() {
+            diagResultDiv.textContent = '진단 중: "liar_groups"에서 단어가 비어있는 그룹을 찾고 있습니다...';
+            try {
+                const snapshot = await get(ref(db, 'liar_groups'));
+                if (!snapshot.exists()) {
+                    diagResultDiv.textContent = '"liar_groups"에 데이터가 없습니다.';
+                    return;
+                }
+                const groupsData = snapshot.val();
+                const emptyGroupKeys = Object.keys(groupsData).filter(key => 
+                    !groupsData[key].words || !Array.isArray(groupsData[key].words) || groupsData[key].words.length === 0
+                );
+                
+                if (emptyGroupKeys.length > 0) {
+                    diagResultDiv.textContent = `총 ${emptyGroupKeys.length}개의 빈 그룹을 찾았습니다:
 
+${emptyGroupKeys.join(', ')}`;
+                } else {
+                    diagResultDiv.textContent = '모든 그룹이 정상입니다. 빈 그룹을 찾지 못했습니다.';
+                }
+            } catch (error) {
+                console.error('진단 중 오류 발생:', error);
+                diagResultDiv.textContent = `진단 실패: ${error.message}`;
+            }
+        }
+
+        // --- 전역 이벤트 핸들러 ---
+        window.runCheck = () => confirmPasswordAndProceed('db_check', checkCounts);
+        window.runBackup = (groupName) => confirmPasswordAndProceed('db_backup', () => backupCollection(groupName));
+        window.runDiagnostics = () => confirmPasswordAndProceed('db_diag', findEmptyGroups);
+
+        window.runDelete = (groupName) => {
+            const confirmation = prompt(`경고: '${groupName}' 경로의 모든 데이터가 영구적으로 삭제됩니다.
+
+이 작업을 계속하려면 '${groupName}'을(를) 정확히 입력하세요.`);
+            if (confirmation === groupName) {
+                confirmPasswordAndProceed('db_delete', () => deleteCollection(groupName));
+            } else if (confirmation !== null) { // 사용자가 취소 버튼을 누르지 않은 경우에만
+                alert("입력 내용이 일치하지 않아 작업을 취소했습니다.");
+            }
+        };
+
+    </script>
 </body>
 </html>
