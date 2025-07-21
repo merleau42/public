@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase DB 마이그레이션 도구 (3단계 - 파싱)</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; }
+        #log-container { 
+            background-color: #f4f4f4; 
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            margin-top: 20px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase DB 마이그레이션 (3단계 - 파싱)</h1>
+    <p>이 도구는 <code>liar_groups</code>의 각 발언(statement)에 대해 다음 작업을 수행합니다:</p>
+    <ul>
+        <li><code>elaborate1</code> 필드의 내용을 정규식 <code>(^[^:]+):([^ㅡ]+)ㅡ(.+)</code>으로 파싱합니다.</li>
+        <li>성공 시, 파싱된 그룹들을 각각 <code>subject</code>, <code>opening</code>, <code>elaborate1</code> 필드에 분배합니다.</li>
+        <li>매칭되지 않는 경우, 해당 발언은 변경되지 않습니다.</li>
+    </ul>
+    <button id="backup-button" onclick="backupDatabase()">JSON으로 백업</button>
+    <button id="migration-button" onclick="migrateDatabaseStep3()">3단계 마이그레이션 시작</button>
+    <div id="log-container">진행 상황이 여기에 표시됩니다...</div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+            authDomain: "liarwords-af033.firebaseapp.com",
+            databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+            projectId: "liarwords-af033",
+            storageBucket: "liarwords-af033.appspot.com",
+            messagingSenderId: "171671976030",
+            appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const logContainer = document.getElementById('log-container');
+
+        function log(message) {
+            console.log(message);
+            const timestamp = new Date().toLocaleTimeString();
+            logContainer.textContent += `
+[${timestamp}] ${message}`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        async function backupDatabase() {
+            log('백업을 시작합니다...');
+            document.getElementById('backup-button').disabled = true;
+            try {
+                const snapshot = await get(ref(db, 'liar_groups'));
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    const jsonString = JSON.stringify(data, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const date = new Date();
+                    const timestamp = date.getFullYear().toString() + 
+                                    ('0' + (date.getMonth() + 1)).slice(-2) + 
+                                    ('0' + date.getDate()).slice(-2) + '_' +
+                                    ('0' + date.getHours()).slice(-2) + 
+                                    ('0' + date.getMinutes()).slice(-2) +
+                                    ('0' + date.getSeconds()).slice(-2);
+                    a.download = `liar_groups_backup_step3_${timestamp}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    log('✅ 백업 파일이 성공적으로 다운로드되었습니다.');
+                } else {
+                    log('🔥 백업할 데이터가 없습니다.');
+                }
+            } catch (error) {
+                log('❌ 백업 실패: ' + error.message);
+                console.error(error);
+            } finally {
+                document.getElementById('backup-button').disabled = false;
+            }
+        }
+
+        async function migrateDatabaseStep3() {
+            document.getElementById('migration-button').disabled = true;
+            log('3단계 마이그레이션 (파싱)을 시작합니다...');
+
+            const groupsRef = ref(db, 'liar_groups');
+            const regex = /^([^:]+):([^ㅡ]+)ㅡ(.+)/;
+
+            try {
+                const snapshot = await get(groupsRef);
+                if (!snapshot.exists()) {
+                    log('🔥 마이그레이션할 데이터가 없습니다.');
+                    return;
+                }
+
+                const originalData = snapshot.val();
+                // Deep copy to avoid modifying original data during loop
+                const migratedData = JSON.parse(JSON.stringify(originalData));
+                let changesMade = 0;
+
+                for (const groupId in migratedData) {
+                    const group = migratedData[groupId];
+
+                    if (Array.isArray(group.statements)) {
+                        group.statements.forEach(statement => {
+                            if (typeof statement.elaborate1 === 'string') {
+                                const match = statement.elaborate1.match(regex);
+                                
+                                if (match) {
+                                    // 정규식 매칭 성공
+                                    statement.subject = match[1].trim();
+                                    statement.opening = match[2].trim();
+                                    statement.elaborate1 = match[3].trim();
+                                    changesMade++;
+                                }
+                            }
+                        });
+                    }
+                }
+
+                if (changesMade === 0) {
+                    log('✅ 파싱할 데이터가 없거나 모든 데이터가 이미 파싱된 구조입니다.');
+                    return;
+                }
+
+                log(`총 ${changesMade}개의 발언이 파싱되었습니다.`);
+                log('---------- 새로운 데이터 구조 미리보기 ----------');
+                log(JSON.stringify(migratedData, null, 2));
+                log('-------------------------------------------');
+
+                const userConfirmation = prompt("위의 구조로 데이터를 마이그레이션하시겠습니까? 데이터베이스를 덮어쓰려면 'yes'를 입력하세요.");
+
+                if (userConfirmation === 'yes') {
+                    log('데이터베이스에 쓰는 중...');
+                    await set(groupsRef, migratedData);
+                    log('✅ 3단계 마이그레이션이 성공적으로 완료되었습니다.');
+                } else {
+                    log('❌ 사용자가 마이그레이션을 취소했습니다.');
+                }
+
+            } catch (error) {
+                log('❌ 마이그레이션 중 오류가 발생했습니다: ' + error.message);
+                console.error(error);
+            } finally {
+                document.getElementById('migration-button').disabled = false;
+            }
+        }
+        
+        window.migrateDatabaseStep3 = migrateDatabaseStep3;
+        window.backupDatabase = backupDatabase;
+    </script>
+</body>
+</html>

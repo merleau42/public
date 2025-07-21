@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DB 데이터 뷰어 & 편집기</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; margin: 0; padding: 15px; padding-bottom: 80px; /* bottom-bar height */ }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; font-size: 14px; }
+    /* transition 속성 제거 */
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: top; }
+    thead th { background-color: #f2f2f2; position: sticky; top: 0; z-index: 10;}
+    .group-id-cell { font-weight: bold; color: #005a9c; }
+    .editable { cursor: pointer; }
+    textarea.edit-area { width: 95%; min-height: 80px; border: 1px solid #999; font-family: inherit; font-size: inherit; resize: vertical; }
+    .bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #f8f8f8; padding: 10px 20px; border-top: 1px solid #ddd; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; z-index: 20; }
+    body.modified .bottom-bar { background-color: #fffbe6; }
+    
+    .group-odd td { background-color: #f9f9f9; }
+    
+    /* 행 전체에 hover 효과 적용 */
+    .data-row:hover td, .add-new-row:hover td {
+        background-color: #e8f4ff;
+    }
+    .add-new-row { cursor: pointer; }
+    .add-new-row-placeholder { color: #888; font-style: italic; }
+
+    /* Themes */
+    body[data-theme="dark"] { background-color: #121212; color: #e0e0e0; }
+    [data-theme="dark"] table, [data-theme="dark"] th, [data-theme="dark"] td { border-color: #444; }
+    [data-theme="dark"] thead th { background-color: #333; }
+    [data-theme="dark"] .bottom-bar { background-color: #1e1e1e; border-top-color: #444;}
+    [data-theme="dark"] .group-odd td { background-color: #222222; }
+    /* 다크 모드에서 행 전체 hover 효과 */
+    [data-theme="dark"] .data-row:hover td, [data-theme="dark"] .add-new-row:hover td {
+        background-color: #2a3b4d;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Liar Groups DB 뷰어</h1>
+<div class="bottom-bar">
+  <button onclick="loadData()">불러오기</button>
+  <button onclick="saveData()">저장</button>
+  <button onclick="backupToJson()">JSON 백업</button>
+  <select onchange="changeTheme(this.value)">
+    <option value="light">라이트</option>
+    <option value="dark">다크</option>
+  </select>
+</div>
+
+<div id="table-container"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+    authDomain: "liarwords-af033.firebaseapp.com",
+    databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+    projectId: "liarwords-af033",
+    storageBucket: "liarwords-af033.appspot.com",
+    messagingSenderId: "171671976030",
+    appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+let fullData = {};
+const HEADERS = ['groupID', 'words', 'stmt_idx', 'subject', 'opening', 'elaborate1', 'elaborate2', 'family', 'unique', 'property1', 'property2', 'tags'];
+
+function renderTable() {
+    const container = document.getElementById('table-container');
+    container.innerHTML = '로딩 중...';
+
+    if (!fullData || Object.keys(fullData).length === 0) {
+        container.innerHTML = '데이터가 없습니다.';
+        return;
+    }
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    
+    const trHead = document.createElement('tr');
+    HEADERS.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+
+    const sortedGroupIds = Object.keys(fullData).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+    sortedGroupIds.forEach(groupId => {
+        const group = fullData[groupId];
+        const numericGroupId = parseInt(groupId, 10);
+        const isOddGroup = !isNaN(numericGroupId) && numericGroupId % 2 !== 0;
+
+        if (!Array.isArray(group.statements)) {
+            group.statements = [];
+        }
+
+        group.statements.forEach((stmt, index) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('data-row'); // 데이터 행 클래스 추가
+            if (isOddGroup) tr.classList.add('group-odd');
+            
+            const groupFields = { groupID: groupId, words: group.words };
+            const stmtFields = { stmt_idx: index, ...stmt };
+
+            HEADERS.forEach(header => {
+                const td = document.createElement('td');
+                let value;
+                if (header in groupFields) value = groupFields[header];
+                else if(header in stmtFields) value = stmtFields[header];
+                else value = '';
+                
+                td.textContent = (typeof value === 'object' && value !== null) ? JSON.stringify(value) : value;
+                td.dataset.groupId = groupId;
+                td.dataset.stmtIndex = index;
+                td.dataset.field = header;
+                
+                if (header !== 'groupID' && header !== 'stmt_idx') {
+                    td.classList.add('editable');
+                    td.onclick = makeEditable;
+                }
+                if(header === 'groupID') td.classList.add('group-id-cell');
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        const addRow = document.createElement('tr');
+        addRow.className = 'add-new-row';
+        if (isOddGroup) addRow.classList.add('group-odd');
+        
+        const nextIndex = group.statements.length;
+        HEADERS.forEach(header => {
+            const td = document.createElement('td');
+            switch (header) {
+                case 'groupID':
+                    td.textContent = groupId;
+                    td.classList.add('group-id-cell');
+                    break;
+                case 'words':
+                    td.textContent = (typeof group.words === 'object' && group.words !== null) ? JSON.stringify(group.words) : group.words;
+                    break;
+                case 'stmt_idx':
+                    td.textContent = nextIndex;
+                    td.classList.add('add-new-row-placeholder');
+                    break;
+                default:
+                    td.textContent = '...';
+                    td.classList.add('add-new-row-placeholder');
+                    break;
+            }
+            addRow.appendChild(td);
+        });
+        
+        addRow.onclick = () => {
+            const newStatement = { subject: "", opening: "", elaborate1: "", elaborate2: "", family: 0, unique: 0, property1: 999, property2: 999, tags: [] };
+            fullData[groupId].statements.push(newStatement);
+            document.body.classList.add('modified');
+            renderTable();
+        };
+        tbody.appendChild(addRow);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.innerHTML = '';
+    container.appendChild(table);
+}
+
+function makeEditable(event) {
+    const td = event.currentTarget;
+    if (td.querySelector('textarea')) return;
+
+    const currentValue = td.textContent;
+    td.innerHTML = '';
+
+    const textarea = document.createElement('textarea');
+    textarea.value = currentValue;
+    textarea.className = 'edit-area';
+    
+    textarea.onblur = () => {
+        const newValue = textarea.value;
+        td.innerHTML = newValue;
+
+        const { groupId, stmtIndex, field } = td.dataset;
+        let valueToSave = newValue;
+
+        try {
+            valueToSave = JSON.parse(newValue);
+        } catch (e) {
+            if (!isNaN(newValue) && newValue.trim() !== '') {
+                valueToSave = Number(newValue);
+            } else if (field === 'words') {
+                valueToSave = newValue.split(',').map(s => s.trim()).filter(Boolean);
+            }
+        }
+        
+        if (field === 'words') {
+             fullData[groupId][field] = valueToSave;
+        } else if(fullData[groupId]?.statements?.[stmtIndex]) {
+             fullData[groupId].statements[stmtIndex][field] = valueToSave;
+        }
+        document.body.classList.add('modified');
+    };
+
+    td.appendChild(textarea);
+    textarea.focus();
+}
+
+window.loadData = async function() {
+    console.log("Loading data from Firebase...");
+    try {
+        const snapshot = await get(ref(db, 'liar_groups'));
+        if (snapshot.exists()) {
+            fullData = snapshot.val();
+            renderTable();
+            document.body.classList.remove('modified');
+        } else {
+            console.log("No data available.");
+            document.getElementById('table-container').innerHTML = 'Firebase에 데이터가 없습니다.';
+        }
+    } catch (error) {
+        console.error("Error loading data: ", error);
+        alert("데이터 로딩 중 오류 발생: " + error.message);
+    }
+};
+
+window.saveData = async function() {
+    if (!document.body.classList.contains('modified')) {
+        alert("변경된 내용이 없습니다.");
+        return;
+    }
+    const userConfirm = confirm("정말로 현재 데이터를 Firebase에 저장하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+    if (userConfirm) {
+        try {
+            await set(ref(db, 'liar_groups'), fullData);
+            alert("성공적으로 저장되었습니다.");
+            document.body.classList.remove('modified');
+        } catch (error) {
+            console.error("Error saving data: ", error);
+            alert("데이터 저장 중 오류 발생: " + error.message);
+        }
+    }
+};
+
+window.backupToJson = function() {
+    if (!fullData || Object.keys(fullData).length === 0) {
+        alert("백업할 데이터가 없습니다.");
+        return;
+    }
+    const jsonString = JSON.stringify(fullData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `liar_groups_dataview_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+window.changeTheme = function(theme) {
+    document.body.dataset.theme = theme;
+}
+
+window.makeEditable = makeEditable;
+window.loadData = loadData;
+window.saveData = saveData;
+window.backupToJson = backupToJson;
+window.changeTheme = changeTheme;
+
+window.onload = loadData;
+</script>
+</body>
+</html>

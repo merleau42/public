@@ -11,6 +11,7 @@
 <div class="bottom-bar">
   <button onclick="loadGroups()">불러오기</button>
   <button onclick="saveGroups()">저장</button>
+  <button onclick="backupToJson()">JSON 백업</button>
   <select id="theme-selector" onchange="changeTheme(this.value)">
     <option value="light">라이트 테마</option>
     <option value="dark">다크 테마</option>
@@ -126,6 +127,37 @@ async function processAndSaveGroups() {
 
 window.saveGroups = function() {
   confirmPasswordAndProceed('저장', processAndSaveGroups);
+};
+
+window.backupToJson = async function() {
+  try {
+    const snapshot = await get(ref(db, 'liar_groups'));
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const date = new Date();
+      const timestamp = date.getFullYear().toString().slice(-2) + 
+                        ('0' + (date.getMonth() + 1)).slice(-2) + 
+                        ('0' + date.getDate()).slice(-2) + 
+                        ('0' + date.getHours()).slice(-2) + 
+                        ('0' + date.getMinutes()).slice(-2);
+      a.download = `liar_groups_backup_${timestamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert('백업 파일이 다운로드되었습니다.');
+    } else {
+      alert('백업할 데이터가 없습니다.');
+    }
+  } catch (error) {
+    console.error("백업 실패:", error);
+    alert('백업에 실패했습니다.');
+  }
 };
 
 function renderGroups() {
