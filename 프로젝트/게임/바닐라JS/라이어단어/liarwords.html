@@ -379,6 +379,62 @@ function updateDiv1Visuals() {
 
 // --- 데이터 처리 (Data Handling) ---
 
+function parseStatement(text) {
+    const stmt = {};
+    if (!text) return stmt;
+
+    let remaining = text.trim();
+
+    // 1. Respond (//)
+    let parts = remaining.split('//');
+    if (parts.length > 1) {
+        const respond = parts.pop().trim();
+        if (respond) stmt.respond = respond;
+        remaining = parts.join('//').trim();
+    }
+
+    // 2. Elaborate2 (>>)
+    parts = remaining.split('>>');
+    if (parts.length > 1) {
+        const elaborate2 = parts.pop().trim();
+        if (elaborate2) stmt.elaborate2 = elaborate2;
+        remaining = parts.join('>>').trim();
+    }
+
+    // 3. Elaborate1 (ㅡ)
+    parts = remaining.split('ㅡ');
+    if (parts.length > 1) {
+        const elaborate1 = parts.pop().trim();
+        if (elaborate1) stmt.elaborate1 = elaborate1;
+        remaining = parts.join('ㅡ').trim();
+    }
+
+    // 4. Subject and Opening (:)
+    parts = remaining.split(':');
+    if (parts.length > 1) {
+        const subject = parts.shift().trim();
+        if (subject) stmt.subject = subject;
+        const opening = parts.join(':').trim();
+        if (opening) stmt.opening = opening;
+    } else {
+        const opening = remaining.trim();
+        if (opening) stmt.opening = opening;
+    }
+
+    return stmt;
+}
+
+function getStmtSignature(stmt) {
+    if (!stmt) return '';
+    const parts = [
+        stmt.subject,
+        stmt.opening,
+        stmt.elaborate1,
+        stmt.elaborate2
+    ];
+    return parts.join('').replace(/\s+/g, '');
+}
+
 async function checkPassword() {
   const pwRef = ref(db, "pw");
   const snapshot = await get(pwRef);
@@ -413,12 +469,14 @@ window.addSingle = async function () {
     return;
   }
 
-  const statements = [];
+  const newStatements = [];
   for (let i = 1; i <= visibleCount; i++) {
     const input = document.getElementById(`input${i}`);
-    if (input && input.value.trim()) {
-      const items = input.value.split(',').map(v => v.trim()).filter(Boolean);
-      statements.push(...items);
+    const rawText = input.value.trim();
+    if (input && rawText) {
+      const items = rawText.split(',').map(v => v.trim()).filter(Boolean);
+      const parsedItems = items.map(parseStatement);
+      newStatements.push(...parsedItems);
     }
   }
 
@@ -458,7 +516,7 @@ window.addSingle = async function () {
     const latestTimestamp = Date.now();
     const newGroupData = {
       words: [...new Set(words)],
-      statements: [...new Set(statements)],
+      statements: newStatements,
       timestamp: latestTimestamp
     };
 
@@ -479,8 +537,13 @@ window.addSingle = async function () {
   mergedWords.push(...words);
   mergedWords = [...new Set(mergedWords)];
 
-  mergedStatements.push(...statements);
-  mergedStatements = [...new Set(mergedStatements)];
+  const existingSignatures = new Set(mergedStatements.map(getStmtSignature));
+  const uniqueNewStatements = newStatements.filter(stmt => {
+      const signature = getStmtSignature(stmt);
+      return signature && !existingSignatures.has(signature);
+  });
+  
+  mergedStatements.push(...uniqueNewStatements);
 
   const latestTimestamp = Date.now();
   const primaryGroupId = matchedGroupIds[0];

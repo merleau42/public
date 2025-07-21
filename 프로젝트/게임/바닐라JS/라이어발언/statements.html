@@ -47,6 +47,79 @@ let groupData = {};
 let modifiedItems = new Set();
 let currentSortMethod = 'timestamp';
 
+function formatStatement(stmt) {
+    if (!stmt) return '';
+    if (typeof stmt === 'string') return stmt; // 이전 버전 호환
+
+    let text = '';
+    
+    // Part 1: Subject and Opening
+    if (stmt.subject) {
+        text += stmt.subject;
+        if (stmt.opening) {
+            text += ': ';
+        }
+    }
+    if (stmt.opening) {
+        text += stmt.opening;
+    }
+
+    // Part 2: Elaborate1
+    if (stmt.elaborate1) {
+        // Add separator only if there is preceding text
+        if (text) {
+            text += ' ㅡ ';
+        }
+        text += stmt.elaborate1;
+    }
+    
+    // Part 3: Elaborate2
+    if (stmt.elaborate2) {
+        // Add separator only if there is preceding text
+        if (text) {
+            text += ' >> ';
+        }
+        text += stmt.elaborate2;
+    }
+
+    return text.trim();
+}
+
+function parseStatement(text) {
+    const stmt = {};
+    if (!text) return stmt;
+
+    let remaining = text.trim();
+
+    let parts = remaining.split(' >> ');
+    if (parts.length > 1) {
+        const elaborate2 = parts.pop().trim();
+        if (elaborate2) stmt.elaborate2 = elaborate2;
+        remaining = parts.join(' >> ').trim();
+    }
+
+    parts = remaining.split(' ㅡ ');
+    if (parts.length > 1) {
+        const elaborate1 = parts.pop().trim();
+        if (elaborate1) stmt.elaborate1 = elaborate1;
+        remaining = parts.join(' ㅡ ').trim();
+    }
+
+    parts = remaining.split(': ');
+    if (parts.length > 1) {
+        const subject = parts.shift().trim();
+        if (subject) stmt.subject = subject;
+        const opening = parts.join(': ').trim();
+        if (opening) stmt.opening = opening;
+    } else {
+        const opening = remaining.trim();
+        if (opening) stmt.opening = opening;
+    }
+
+    return stmt;
+}
+
+
 function toggleModified(isModified) {
   document.body.classList.toggle('modified', isModified);
 }
@@ -172,13 +245,13 @@ function renderGroups() {
 
     switch (currentSortMethod) {
       case 'length_desc': {
-        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).join('').length;
-        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).join('').length;
+        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).map(s => JSON.stringify(s)).join('').length;
+        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).map(s => JSON.stringify(s)).join('').length;
         return lengthB - lengthA;
       }
       case 'length_asc': {
-        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).join('').length;
-        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).join('').length;
+        const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).map(s => JSON.stringify(s)).join('').length;
+        const lengthB = (dataB.words || []).join('').length + (dataB.statements || []).map(s => JSON.stringify(s)).join('').length;
         return lengthA - lengthB;
       }
       case 'timestamp':
@@ -204,30 +277,39 @@ function createEditableList(groupId, items, key, isTitle = false) {
   container.className = isTitle ? 'group-title' : 'statement-list';
   const currentItems = [...(items || [])];
   currentItems.forEach((item, idx) => {
-    const el = createItemElement(groupId, currentItems, idx, item, key, isTitle);
+    const el = createItemElement(groupId, currentItems, idx, key, isTitle);
     container.appendChild(el);
   });
-  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, '', key, isTitle);
+  const emptyEl = createItemElement(groupId, currentItems, currentItems.length, key, isTitle);
   container.appendChild(emptyEl);
   return container;
 }
 
-function createItemElement(groupId, items, idx, text, key, isTitle = false) {
+function createItemElement(groupId, items, idx, key, isTitle = false) {
   const wrapper = document.createElement(isTitle ? 'div' : 'li');
   wrapper.className = 'item-wrapper';
+  
+  const item = items[idx];
+  const isStatement = key === 'statements';
+  
+  const displayText = isStatement ? formatStatement(item) : item;
+  const originalText = (isStatement ? displayText : (item || '')) || '';
+
   const span = document.createElement('span');
   span.className = 'item-text';
-  span.textContent = text || '...';
+  span.textContent = displayText || '...';
+  
   const itemId = `${groupId}-${key}-${idx}`;
   if (modifiedItems.has(itemId)) {
     span.classList.add('modified-text');
   }
+  
   const del = document.createElement('span');
   del.className = 'delete-btn';
   del.textContent = '✖';
   del.onclick = (e) => {
     e.stopPropagation();
-    if (text) {
+    if (item) {
       confirmPasswordAndProceed('삭제', () => {
         items.splice(idx, 1);
         groupData[groupId][key] = [...items];
@@ -238,14 +320,18 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
     }
   };
   del.style.display = 'none';
-  wrapper.onmouseenter = () => { if (text) del.style.display = 'inline'; };
+
+  wrapper.onmouseenter = () => { if (item) del.style.display = 'inline'; };
   wrapper.onmouseleave = () => { del.style.display = 'none'; };
+  
   wrapper.onclick = () => {
     if (wrapper.querySelector('.editable-textarea')) return;
+    
     const input = document.createElement('textarea');
     input.className = 'editable-textarea';
-    input.value = text;
+    input.value = originalText;
     input.onclick = (e) => e.stopPropagation();
+    
     input.onkeydown = (e) => {
       if (e.key === 'Escape') {
         e.target.dataset.escapePressed = 'true';
@@ -257,16 +343,17 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
         input.blur();
       }
     };
+    
     input.onblur = () => {
       if (input.dataset.escapePressed !== 'true') {
         const newText = input.value.trim();
-        const originalText = text || "";
         const itemId = `${groupId}-${key}-${idx}`;
         let hasChanged = false;
+
         if (newText !== originalText) {
           hasChanged = true;
           if (newText) {
-            items[idx] = newText;
+            items[idx] = isStatement ? parseStatement(newText) : newText;
             modifiedItems.add(itemId);
           } else {
             items.splice(idx, 1);
@@ -278,6 +365,7 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
             modifiedItems.delete(itemId);
           }
         }
+        
         if (hasChanged) {
           groupData[groupId][key] = [...items];
         }
@@ -285,10 +373,12 @@ function createItemElement(groupId, items, idx, text, key, isTitle = false) {
       toggleModified(modifiedItems.size > 0);
       renderGroups();
     };
+
     wrapper.appendChild(input);
     input.focus();
     input.select();
   };
+
   wrapper.appendChild(span);
   wrapper.appendChild(del);
   return wrapper;

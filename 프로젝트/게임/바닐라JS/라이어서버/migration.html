@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase DB 마이그레이션 도구</title>
+    <title>Firebase DB 마이그레이션 (Elaborate1 필드 분리)</title>
     <style>
         body { font-family: sans-serif; padding: 20px; }
         button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; }
@@ -20,15 +20,16 @@
     </style>
 </head>
 <body>
-    <h1>Firebase DB 마이그레이션</h1>
-    <p>이 도구는 <code>liar_groups</code> 데이터베이스의 구조를 다음과 같이 변경합니다:</p>
+    <h1>Firebase DB 마이그레이션 (Elaborate1 필드 분리)</h1>
+    <p>이 도구는 <code>liar_groups</code>의 각 발언(statement)에 대해 다음 작업을 수행합니다:</p>
     <ul>
-        <li><code>family</code> 필드를 추가합니다 (기본값: {}).</li>
-        <li><code>statements</code> 필드를 문자열 배열에서 상세 정보가 담긴 객체로 변환합니다.</li>
-        <li>기존 <code>statements</code>의 문자열은 새 객체의 <code>elaborate1</code> 필드로 이동합니다.</li>
+        <li><code>elaborate1</code> 필드에 'ㅡ' 문자가 있는지 확인합니다.</li>
+        <li>'ㅡ' 문자가 있는 경우, 첫 번째 'ㅡ'를 기준으로 문자열을 분리합니다.</li>
+        <li>'ㅡ' 앞의 내용은 <code>opening</code> 필드에, 뒤의 내용은 새로운 <code>elaborate1</code> 필드에 저장합니다.</li>
+        <li>'ㅡ' 문자가 없는 경우, 해당 발언은 변경되지 않습니다.</li>
     </ul>
-    <button id="backup-button" onclick="backupDatabase()">JSON으로 백업</button>
-    <button id="migration-button" onclick="migrateDatabase()">마이그레이션 시작</button>
+    <button id="backup-button">JSON으로 백업</button>
+    <button id="migration-button">마이그레이션 시작</button>
     <div id="log-container">진행 상황이 여기에 표시됩니다...</div>
 
     <script type="module">
@@ -51,130 +52,104 @@
 
         function log(message) {
             console.log(message);
-            const timestamp = new Date().toLocaleTimeString();
-            logContainer.textContent += `
-[${timestamp}] ${message}`;
-            logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll
+            logContainer.innerHTML += message + '';
+            logContainer.scrollTop = logContainer.scrollHeight;
         }
 
         async function backupDatabase() {
             log('백업을 시작합니다...');
-            document.getElementById('backup-button').disabled = true;
             try {
-                const snapshot = await get(ref(db, 'liar_groups'));
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    const jsonString = JSON.stringify(data, null, 2);
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    const date = new Date();
-                    const timestamp = date.getFullYear().toString() + 
-                                    ('0' + (date.getMonth() + 1)).slice(-2) + 
-                                    ('0' + date.getDate()).slice(-2) + '_' +
-                                    ('0' + date.getHours()).slice(-2) + 
-                                    ('0' + date.getMinutes()).slice(-2) +
-                                    ('0' + date.getSeconds()).slice(-2);
-                    a.download = `liar_groups_backup_${timestamp}.json`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    log('✅ 백업 파일이 성공적으로 다운로드되었습니다.');
-                } else {
-                    log('🔥 백업할 데이터가 없습니다.');
-                }
+                const snapshot = await get(ref(db));
+                const data = snapshot.val();
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `firebase_backup_${new Date().toISOString()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                log('백업 파일이 성공적으로 다운로드되었습니다.');
             } catch (error) {
-                log('❌ 백업 실패: ' + error.message);
+                log('백업 중 오류 발생: ' + error.message);
                 console.error(error);
-            } finally {
-                document.getElementById('backup-button').disabled = false;
             }
         }
 
         async function migrateDatabase() {
-            document.getElementById('migration-button').disabled = true;
             log('마이그레이션을 시작합니다...');
-
-            const groupsRef = ref(db, 'liar_groups');
-
+            const dbRef = ref(db, 'liar_groups');
+            let snapshot;
             try {
-                const snapshot = await get(groupsRef);
-                if (!snapshot.exists()) {
-                    log('🔥 마이그레이션할 데이터가 없습니다.');
-                    return;
-                }
-
-                const originalData = snapshot.val();
-                const migratedData = {};
-                let isMigrationNeeded = false;
-
-                for (const groupId in originalData) {
-                    const group = originalData[groupId];
-                    const newGroup = JSON.parse(JSON.stringify(group)); // Deep copy
-
-                    if (typeof newGroup.family === 'undefined') {
-                        newGroup.family = {};
-                        isMigrationNeeded = true;
-                    }
-
-                    if (Array.isArray(newGroup.statements)) {
-                        isMigrationNeeded = true;
-                        const newStatements = {};
-                        
-                        newGroup.statements.forEach((statementString, index) => {
-                            const statementId = `s${index}`;
-                            
-                            newStatements[statementId] = {
-                                remarks: "",
-                                subject: "",
-                                opening: "",
-                                elaborate1: statementString,
-                                elaborate2: "",
-                                respond0: "",
-                                respond1: "",
-                                respond2: "",
-                                property1: 999,
-                                property2: 999,
-                                tags: []
-                            };
-                        });
-                        newGroup.statements = newStatements;
-                    }
-                    
-                    migratedData[groupId] = newGroup;
-                }
-
-                if (!isMigrationNeeded) {
-                    log('✅ 모든 데이터가 이미 최신 구조입니다. 마이그레이션이 필요하지 않습니다.');
-                    return;
-                }
-
-                log('---------- 새로운 데이터 구조 미리보기 ----------');
-                log(JSON.stringify(migratedData, null, 2));
-                log('-------------------------------------------');
-
-                const userConfirmation = prompt("위의 구조로 데이터를 마이그레이션하시겠습니까? 데이터베이스를 덮어쓰려면 'yes'를 입력하세요.");
-
-                if (userConfirmation === 'yes') {
-                    log('데이터베이스에 쓰는 중...');
-                    await set(groupsRef, migratedData);
-                    log('✅ 데이터베이스 마이그레이션이 성공적으로 완료되었습니다.');
-                } else {
-                    log('❌ 사용자가 마이그레이션을 취소했습니다.');
-                }
-
+                snapshot = await get(dbRef);
             } catch (error) {
-                log('❌ 마이그레이션 중 오류가 발생했습니다: ' + error.message);
-                console.error(error);
-            } finally {
-                document.getElementById('migration-button').disabled = false;
+                log('데이터를 불러오는 중 오류 발생: ' + error.message);
+                return;
+            }
+
+            if (!snapshot.exists()) {
+                log('liar_groups 데이터가 존재하지 않습니다.');
+                return;
+            }
+
+            const fullData = snapshot.val();
+            let changesMade = 0;
+            let changesLog = '변경될 내용 미리보기:';
+
+            for (const groupId in fullData) {
+                const group = fullData[groupId];
+                if (group.statements && Array.isArray(group.statements)) {
+                    group.statements.forEach((stmt, index) => {
+                        if (typeof stmt.elaborate1 === 'string' && stmt.elaborate1.includes('ㅡ')) {
+                            const original = stmt.elaborate1;
+                            const splitIndex = original.indexOf('ㅡ');
+                            
+                            const newOpening = original.substring(0, splitIndex).trim();
+                            const newElaborate1 = original.substring(splitIndex + 1).trim();
+
+                            changesLog += `[Group ${groupId}, Stmt ${index}]`;
+                            changesLog += `  기존 opening: "${stmt.opening}"`;
+                            changesLog += `  기존 elaborate1: "${original}"`;
+                            changesLog += `  --> 새 opening: "${newOpening}"`;
+                            changesLog += `  --> 새 elaborate1: "${newElaborate1}"`;
+
+                            // Apply changes to the object that will be saved
+                            stmt.opening = newOpening;
+                            stmt.elaborate1 = newElaborate1;
+                            changesMade++;
+                        }
+                    });
+                }
+            }
+
+            if (changesMade === 0) {
+                log('변경할 항목이 없습니다. 모든 데이터가 이미 올바른 형식입니다.');
+                return;
+            }
+
+            log(changesLog);
+            
+            const userConfirm = confirm(`${changesMade}개의 항목이 변경됩니다. DB에 적용하시겠습니까? 이 작업은 되돌릴 수 없습니다.`);
+
+            if (userConfirm) {
+                log('사용자가 변경을 승인했습니다. 데이터베이스에 쓰는 중...');
+                try {
+                    await set(dbRef, fullData);
+                    log('마이그레이션이 성공적으로 완료되었습니다!');
+                } catch (error) {
+                    log('데이터베이스에 쓰는 중 오류 발생: ' + error.message);
+                    console.error(error);
+                }
+            } else {
+                log('사용자가 변경을 취소했습니다. 작업이 중단되었습니다.');
             }
         }
         
-        window.migrateDatabase = migrateDatabase;
-        window.backupDatabase = backupDatabase;
+        document.getElementById('backup-button').addEventListener('click', backupDatabase);
+        document.getElementById('migration-button').addEventListener('click', migrateDatabase);
+
     </script>
 </body>
 </html>
