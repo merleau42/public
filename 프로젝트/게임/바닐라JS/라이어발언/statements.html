@@ -298,6 +298,11 @@ function createItemElement(groupId, items, idx, key, isTitle = false) {
   const span = document.createElement('span');
   span.className = 'item-text';
   span.textContent = displayText || '...';
+
+  // Add title attribute for author tooltip
+  if (isStatement && item && item.author) {
+    span.title = `작성자: ${item.author}`;
+  }
   
   const itemId = `${groupId}-${key}-${idx}`;
   if (modifiedItems.has(itemId)) {
