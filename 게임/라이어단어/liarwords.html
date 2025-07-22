@@ -57,7 +57,7 @@ const db = getDatabase(app);
 
 // --- 상태 변수 (State Variables) ---
 let groupList = [];
-let visibleCount = 7;
+let visibleCount = 8;
 let currentEmojiTarget = null;
 let tempEmojiSelection = [];
 const emojiList = ['1','2','3','4','5','6','7','8'];
@@ -687,26 +687,33 @@ function restoreState() {
 // --- 이벤트 리스너 (Event Listeners) ---
 
 function attachFocusListeners() {
-  // 현재 가시적인 박스만 대상으로 포커스 이동
+  // 원하는 순서대로 input ID 배열 정의
+  const customOrder = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8", "singleInput"];
+
+  // 현재 visibleCount까지만 고려하여 필터링
   const getVisibleBoxes = () => {
-    const ids = [];
-    for(let i=1; i<=visibleCount; i++) ids.push(`input${i}`);
-    ids.push("singleInput");
-    return ids.map(id => document.getElementById(id));
+    const ids = customOrder.filter(id => {
+      if (id === "singleInput") return true;
+      const index = parseInt(id.replace("input", ""));
+      return index <= visibleCount;
+    });
+    return ids.map(id => document.getElementById(id)).filter(Boolean);
   };
 
   const boxes = getVisibleBoxes();
   boxes.forEach((box, idx) => {
     box.onkeydown = (e) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" || e.key === "Tab") {
         e.preventDefault();
-        const nextBoxes = getVisibleBoxes(); 
-        const next = nextBoxes[idx + 1] || nextBoxes[0];
+        const nextBoxes = getVisibleBoxes();
+        const next = nextBoxes[(idx + 1) % (nextBoxes.length-1)]; // 순환 구조
         next.focus();
       }
     };
   });
 }
+
+
 
 function attachInputListeners() {
   // 모든 input 엘리먼트에 대한 이벤트 리스너 (input1-8, singleInput)
