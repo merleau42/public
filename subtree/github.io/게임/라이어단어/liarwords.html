@@ -16,7 +16,7 @@
   <textarea id="singleInput" maxlength="50" tabindex="9"></textarea>
   <button onclick="addSingle()">추가</button>
   <button onclick="clearInputs()">비우기</button>
-  <button onclick="loadFromDB()">리스트</button>
+  <button onclick="showHintModal()">힌트</button>
 </div>
 
 <!-- 출력 -->
@@ -38,6 +38,16 @@
     <button id="cancel-button">취소</button>
   </div>
 </div>
+
+<!-- 힌트 모달 -->
+<div class="modal-backdrop" id="hint-backdrop" style="display:none;"></div>
+<div class="modal" id="hint-modal" style="display:none;">
+  <div id="hint-content"></div>
+  <div class="modal-footer">
+    <button onclick="closeHintModal()">닫기</button>
+  </div>
+</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
@@ -87,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
   attachFocusListeners();
   setupEmojiButtons();
   setupPhaseButtons();
+  loadFromDB();
 
   // 모달 버튼 이벤트 리스너
   document.getElementById('clear-current-button').addEventListener('click', handleClearCurrentVote);
@@ -352,6 +363,54 @@ function handleResetAllVotes() {
         updateModalButtonStates();
     }
 }
+
+async function showHintModal() {
+  const query = document.getElementById("singleInput").value.trim();
+  if (!query) {
+    alert("단어를 입력하세요.");
+    return;
+  }
+  const keywords = query.split(',').map(w => w.trim()).filter(Boolean);
+  if (!keywords.length) return;
+
+  const snapshot = await get(ref(db, "liar_groups"));
+  if (!snapshot.exists()) {
+    alert("DB에 그룹이 없습니다.");
+    return;
+  }
+
+  const data = snapshot.val();
+  const matchingGroups = Object.values(data).filter(group =>
+    group.words.some(word => keywords.includes(word))
+  );
+
+  const hintContent = document.getElementById("hint-content");
+  hintContent.innerHTML = '';
+
+  if (matchingGroups.length === 0) {
+    hintContent.innerText = '❌ 관련된 단어 그룹이 없습니다.';
+  } else {
+    matchingGroups.forEach(group => {
+      const wordsLine = `🧩 ${group.words.join(', ')}`;
+      const summaryLines = (group.statements || []).map(stmt =>
+        `${stmt.subject ? stmt.subject + ': ' : ''}` +
+        `${stmt.opening ? stmt.opening + ' ㅡ ' : ''}` +
+        `${stmt.elaborate1 ? stmt.elaborate1 + ' ' : ''}` +
+        `${stmt.elaborate2 ? ' >> ' + stmt.elaborate2 + ' ' : ''}`
+      );
+      hintContent.innerText += `${wordsLine}\n\n${summaryLines.join('\n')}\n\n`;
+    });
+  }
+
+  document.getElementById("hint-modal").style.display = 'block';
+  document.getElementById("hint-backdrop").style.display = 'block';
+}
+
+function closeHintModal() {
+  document.getElementById("hint-modal").style.display = 'none';
+  document.getElementById("hint-backdrop").style.display = 'none';
+}
+
 
 // --- UI 업데이트 (UI Updates) ---
 
@@ -696,7 +755,7 @@ function restoreState() {
 // --- 이벤트 리스너 (Event Listeners) ---
 
 function attachFocusListeners() {
-   [..."13572468"]
+  [..."13572468"]
     .map(id => document.querySelector(`#wrapper-input${id}`))
     .filter(wr => wr.style.display!='none')
     .map(wr => wr.querySelector("textarea"))
@@ -704,11 +763,17 @@ function attachFocusListeners() {
       box.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === "Tab") {
           e.preventDefault();
+          if (e.target.id.startsWith("input")) { // input1~8에만 적용
+            const currentValue = e.target.value.trim();
+            if (currentValue !== '' && !currentValue.includes('ㅡ')) {
+              e.target.value = e.target.value.trim() + ' ㅡ ';
+            }
+          }
           const next = arr[(idx + 1) % (arr.length)]; // 순환 구조
           next.focus();
         }
-    };
-  });
+      };
+    });
 }
 
 
@@ -735,6 +800,8 @@ window.addInput = addInput;
 window.removeInput = removeInput; 
 window.handleClearCurrentVote = handleClearCurrentVote;
 window.handleResetAllVotes = handleResetAllVotes;
+window.showHintModal = showHintModal;
+window.closeHintModal = closeHintModal;
 </script>
 
 </body>
