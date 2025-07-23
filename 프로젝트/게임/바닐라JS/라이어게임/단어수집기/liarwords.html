@@ -200,8 +200,8 @@ function updateInputVisibility() {
 
     // + - 버튼 컨테이너의 위치 조절
     [...document.querySelectorAll('.textarea-wrapper')]
-      .filter(wr => wr.style.display!='none').pop()
-      .appendChild(document.querySelector('#icon-container'))
+      .filter(wr => wr.style.display!='none')
+      .at(-1).appendChild(document.querySelector('#icon-container'))
 
     // + - 버튼의 가시성 조절
     document.getElementById('addBtn').style.display = visibleCount === 8 ? 'none' : 'inline-block';
