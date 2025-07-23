@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DB 데이터 뷰어 & 편집기</title>
+  <link rel="stylesheet" href="dataview.css">
+</head>
+<body>
+
+<div class="bottom-bar">
+  <input type="search" id="search-box" placeholder="검색...">
+  <button onclick="loadData()">불러오기</button>
+  <button onclick="saveData()">저장</button>
+  <button onclick="addNewStatement()">항목 추가</button>
+  <button onclick="backupToJson()">JSON 백업</button>
+  <select id="theme-selector" onchange="changeTheme(this.value)">
+    <option value="light">라이트</option>
+    <option value="dark">다크</option>
+  </select>
+  <button onclick="openSettingsModal()">설정</button>
+</div>
+
+<div id="table-container"></div>
+
+<div id="settings-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeSettingsModal()">&times;</span>
+    <h2>설정</h2>
+    
+    <div class="settings-section">
+      <h3>가져올 필드</h3>
+      <div class="settings-grid" id="fields-to-fetch-grid">
+        <!-- Checkboxes will be dynamically generated here -->
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>필드 표기</h3>
+       <label for="field-aliases">별칭 (Aliases) - JSON 형식:</label>
+      <textarea id="field-aliases" rows="5" style="width: 95%; font-family: monospace;"></textarea>
+       <label for="timestamp-format">타임스탬프 형식:</label>
+        <select id="timestamp-format">
+          <option value="relative">상대 시간 (e.g., 5분 전)</option>
+          <option value="full">전체 날짜 (YYYY-MM-DD HH:mm:ss)</option>
+          <option value="date">날짜만 (YYYY-MM-DD)</option>
+        </select>
+    </div>
+
+    <button onclick="saveAndApplySettings()">저장 & 적용</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+    authDomain: "liarwords-af033.firebaseapp.com",
+    databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+    projectId: "liarwords-af033",
+    storageBucket: "liarwords-af033.appspot.com",
+    messagingSenderId: "171671976030",
+    appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+let fullData = {};
+let flatData = [];
+let sortConfig = { key: 'groupID', asc: true };
+let searchTerm = '';
+let modifiedItems = new Set(); // To track modified cells
+
+// --- Settings ---
+const ALL_POSSIBLE_HEADERS = ['groupID', 'update', 'words', 'unique', 'subject', 'opening', 'elaborate1', 'elaborate2', 'respond1', 'respond2', 'property1', 'property2', 'tags', 'author'];
+let settings = {};
+const DEFAULT_SETTINGS = {
+    selectedFields: ['groupID', 'update', 'words', 'subject', 'opening', 'tags', 'author'],
+    fieldAliases: {
+        groupID: "그룹ID",
+        update: "수정일",
+        words: "단어",
+        subject: "주제",
+        opening: "발단",
+        author: "작성자"
+    },
+    theme: 'light',
+    timestampFormat: 'relative' // 'relative', 'full', 'date'
+};
+
+function formatTimestamp(timestamp, format) {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    
+    if (format === 'full') {
+        return date.getFullYear() + '-' +
+               ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+               ('0' + date.getDate()).slice(-2) + ' ' +
+               ('0' + date.getHours()).slice(-2) + ':' +
+               ('0' + date.getMinutes()).slice(-2) + ':' +
+               ('0' + date.getSeconds()).slice(-2);
+    }
+    if (format === 'date') {
+        return date.toISOString().slice(0, 10);
+    }
+    // Relative time
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "년 전";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "달 전";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "일 전";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "시간 전";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "분 전";
+    return Math.floor(seconds) + "초 전";
+}
+
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem('dbViewerSettings');
+    settings = savedSettings ? JSON.parse(savedSettings) : JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    
+    // Populate modal fields
+    const grid = document.getElementById('fields-to-fetch-grid');
+    grid.innerHTML = '';
+    ALL_POSSIBLE_HEADERS.forEach(field => {
+        const isChecked = settings.selectedFields.includes(field);
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${field}" ${isChecked ? 'checked' : ''}> ${field}`;
+        grid.appendChild(label);
+    });
+
+    document.getElementById('field-aliases').value = JSON.stringify(settings.fieldAliases, null, 2);
+    document.getElementById('timestamp-format').value = settings.timestampFormat || 'relative';
+    document.getElementById('theme-selector').value = settings.theme;
+    document.body.dataset.theme = settings.theme;
+}
+
+function saveAndApplySettings() {
+    // Save selected fields
+    const newSelectedFields = [];
+    document.querySelectorAll('#fields-to-fetch-grid input:checked').forEach(input => {
+        newSelectedFields.push(input.value);
+    });
+    settings.selectedFields = newSelectedFields;
+
+    // Save aliases
+    try {
+        settings.fieldAliases = JSON.parse(document.getElementById('field-aliases').value);
+    } catch (e) {
+        alert("필드 표기(Aliases) 형식이 잘못된 JSON입니다. 저장되지 않았습니다.");
+        return;
+    }
+    
+    settings.theme = document.getElementById('theme-selector').value;
+    settings.timestampFormat = document.getElementById('timestamp-format').value;
+
+    localStorage.setItem('dbViewerSettings', JSON.stringify(settings));
+    alert("설정이 저장되었습니다.");
+    closeSettingsModal();
+    sortAndRender(); // Re-render with new settings
+}
+
+// --- End Settings ---
+
+function toggleModified(isModified) {
+    document.body.classList.toggle('modified', isModified);
+}
+
+function sortAndRender() {
+    // 1. Flatten data (if not already flat)
+    if (flatData.length === 0 && Object.keys(fullData).length > 0) {
+        for (const groupId in fullData) {
+            const group = fullData[groupId];
+            if (!group.statements || group.statements.length === 0) continue;
+            
+            group.statements.forEach((stmt, index) => {
+                let processedStmt = {
+                    ...stmt,
+                    groupID: groupId,
+                    update: group.timestamp || null, 
+                    words: group.words || [],
+                    _originalStmtIndex: index
+                };
+                flatData.push(processedStmt);
+            });
+        }
+    }
+
+    // 2. Filter data
+    let dataToRender = flatData;
+    if (searchTerm) {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        dataToRender = flatData.filter(row => {
+            return Object.values(row).some(value => 
+                String(value).toLowerCase().includes(lowerCaseSearchTerm)
+            );
+        });
+    }
+
+    // 3. Sort data
+    dataToRender.sort((a, b) => {
+        const key = sortConfig.key;
+        let valA = a[key] === undefined ? '' : a[key];
+        let valB = b[key] === undefined ? '' : b[key];
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+            valA = valA.toLowerCase();
+            valB = valB.toLowerCase();
+        } else if (Array.isArray(valA) && Array.isArray(valB)) {
+            valA = valA.join(',');
+            valB = valB.join(',');
+        }
+
+        let comparison = 0;
+        if (valA > valB) comparison = 1;
+        else if (valA < valB) comparison = -1;
+        return sortConfig.asc ? comparison : comparison * -1;
+    });
+
+    // 4. Render
+    renderTable(dataToRender);
+}
+
+function renderTable(dataToRender) {
+    const container = document.getElementById('table-container');
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    
+    // Header
+    const trHead = document.createElement('tr');
+    const currentHeaders = settings.selectedFields;
+    currentHeaders.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = settings.fieldAliases[key] || key;
+        th.className = 'sortable';
+        if (sortConfig.key === key) {
+            th.classList.add(sortConfig.asc ? 'sorted-asc' : 'sorted-desc');
+        }
+        th.onclick = () => {
+            if (sortConfig.key === key) {
+                sortConfig.asc = !sortConfig.asc;
+            } else {
+                sortConfig.key = key;
+                sortConfig.asc = true;
+            }
+            sortAndRender();
+        };
+        trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+
+    // Body
+    dataToRender.forEach(rowData => {
+        const tr = document.createElement('tr');
+        tr.classList.add('data-row');
+        if (parseInt(rowData.groupID, 10) % 2 !== 0) {
+            tr.classList.add('group-odd');
+        }
+
+        currentHeaders.forEach(header => {
+            const td = document.createElement('td');
+            let value = rowData[header];
+            
+            let displayValue = '';
+            if (header === 'update') {
+                displayValue = formatTimestamp(value, settings.timestampFormat);
+            } else if (value === undefined || value === null) {
+                displayValue = '';
+            } else if (Array.isArray(value)) {
+                displayValue = value.join(', ');
+            } else if (typeof value === 'object') {
+                displayValue = JSON.stringify(value);
+            } else {
+                displayValue = value;
+            }
+
+            const span = document.createElement('span');
+            span.className = 'item-text';
+            span.textContent = displayValue || '...'; // Use '...' for empty cells
+            td.appendChild(span);
+
+            td.dataset.groupId = rowData.groupID;
+            td.dataset.stmtIndex = rowData._originalStmtIndex;
+            td.dataset.field = header;
+            
+            const cellId = `${rowData.groupID}-${rowData._originalStmtIndex}-${header}`;
+            if (modifiedItems.has(cellId)) {
+                span.classList.add('modified-text');
+            }
+
+            if (header !== 'groupID' && header !== 'update') {
+                td.classList.add('editable');
+                td.onclick = makeEditable;
+            }
+            if (header === 'groupID') td.classList.add('group-id-cell');
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.innerHTML = '';
+    container.appendChild(table);
+
+    if (dataToRender.length === 0) {
+        container.innerHTML = '표시할 데이터가 없습니다. (필터링됨)';
+    }
+}
+
+function makeEditable(event) {
+    const td = event.currentTarget;
+    if (td.querySelector('textarea')) return; // Already editing
+
+    const { groupId, stmtIndex, field } = td.dataset;
+    const originalValue = flatData.find(d => d.groupID === groupId && d._originalStmtIndex == stmtIndex)[field];
+    const cellId = `${groupId}-${stmtIndex}-${field}`;
+    const originalHeight = td.offsetHeight; // Get the height of the cell
+
+    let currentValueText;
+    if (Array.isArray(originalValue)) {
+        currentValueText = originalValue.join(', ');
+    } else if (typeof originalValue === 'object' && originalValue !== null) {
+        currentValueText = JSON.stringify(originalValue, null, 2);
+    } else {
+        currentValueText = originalValue || '';
+    }
+    
+    const textarea = document.createElement('textarea');
+    textarea.value = currentValueText;
+    textarea.className = 'editable-textarea';
+    textarea.style.height = `${originalHeight}px`; // Set the height
+    
+    textarea.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+            e.target.dataset.escapePressed = 'true';
+            e.preventDefault();
+            textarea.blur();
+        }
+        if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for new lines
+            e.preventDefault();
+            textarea.blur();
+        }
+    };
+
+    textarea.onblur = () => {
+        if (textarea.dataset.escapePressed !== 'true') {
+            const newValue = textarea.value.trim();
+            let hasChanged = false;
+
+            let valueToSave;
+            if (field === 'words' || field === 'tags') {
+                valueToSave = newValue.split(',').map(s => s.trim()).filter(Boolean);
+                if (JSON.stringify(valueToSave) !== JSON.stringify(originalValue)) {
+                    hasChanged = true;
+                }
+            } else if (['unique', 'property1', 'property2'].includes(field)) {
+                valueToSave = !isNaN(newValue) && newValue.trim() !== '' ? Number(newValue) : 0;
+                if (valueToSave !== originalValue) {
+                    hasChanged = true;
+                }
+            } else {
+                valueToSave = newValue;
+                if (valueToSave !== originalValue) {
+                    hasChanged = true;
+                }
+            }
+            
+            if (hasChanged) {
+                if (field === 'words') {
+                    fullData[groupId][field] = valueToSave;
+                } else if (fullData[groupId]?.statements?.[stmtIndex]) {
+                    fullData[groupId].statements[stmtIndex][field] = valueToSave;
+                }
+                fullData[groupId].timestamp = new Date().getTime();
+                modifiedItems.add(cellId);
+                toggleModified(true);
+            } else {
+                modifiedItems.delete(cellId);
+                toggleModified(modifiedItems.size > 0);
+            }
+        }
+        
+        flatData = [];
+        sortAndRender(); 
+    };
+
+    td.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+}
+
+window.addNewStatement = function() {
+    const groupId = prompt("새로운 항목을 추가할 그룹 ID를 입력하세요:");
+    if (!groupId || !fullData[groupId]) {
+        alert("유효하지 않은 그룹 ID입니다.");
+        return;
+    }
+
+    const newStatement = { subject: "", opening: "", elaborate1: "", elaborate2: "", respond1: "", respond2: "", unique: 0, property1: 999, property2: 999, tags: [], author: "" };
+    if (!fullData[groupId].statements) {
+        fullData[groupId].statements = [];
+    }
+    fullData[groupId].statements.push(newStatement);
+    fullData[groupId].timestamp = new Date().getTime();
+    document.body.classList.add('modified');
+    flatData = []; // Invalidate flat data cache
+    sortAndRender();
+    alert(`${groupId} 그룹에 새로운 항목이 추가되었습니다. '저장' 버튼을 눌러 확정하세요.`);
+}
+
+window.loadData = async function() {
+    console.log("Loading data from Firebase...");
+    try {
+        const snapshot = await get(ref(db, 'liar_groups'));
+        if (snapshot.exists()) {
+            fullData = snapshot.val();
+            flatData = []; // Invalidate flat data cache
+            modifiedItems.clear(); // Clear modified items on load
+            sortAndRender();
+            document.body.classList.remove('modified');
+        } else {
+            console.log("No data available.");
+            document.getElementById('table-container').innerHTML = 'Firebase에 데이터가 없습니다.';
+        }
+    } catch (error) {
+        console.error("Error loading data: ", error);
+        alert("데이터 로딩 중 오류 발생: " + error.message);
+    }
+};
+
+window.saveData = async function() {
+    if (!document.body.classList.contains('modified')) {
+        alert("변경된 내용이 없습니다.");
+        return;
+    }
+    const userConfirm = confirm("정말로 현재 데이터를 Firebase에 저장하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+    if (userConfirm) {
+        try {
+            await set(ref(db, 'liar_groups'), fullData);
+            alert("성공적으로 저장되었습니다.");
+            document.body.classList.remove('modified');
+            modifiedItems.clear(); // Clear modified items on successful save
+        } catch (error) {
+            console.error("Error saving data: ", error);
+            alert("데이터 저장 중 오류 발생: " + error.message);
+        }
+    }
+};
+
+window.backupToJson = function() {
+    if (!fullData || Object.keys(fullData).length === 0) {
+        alert("백업할 데이터가 없습니다.");
+        return;
+    }
+    const jsonString = JSON.stringify(fullData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `liar_groups_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+window.changeTheme = function(theme) {
+    document.body.dataset.theme = theme;
+    settings.theme = theme;
+    localStorage.setItem('dbViewerSettings', JSON.stringify(settings));
+}
+
+// Modal functions
+window.openSettingsModal = function() { document.getElementById('settings-modal').style.display = 'block'; }
+window.closeSettingsModal = function() { document.getElementById('settings-modal').style.display = 'none'; }
+window.saveAndApplySettings = saveAndApplySettings;
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('settings-modal');
+    if (event.target == modal) {
+        closeSettingsModal();
+    }
+});
+
+
+// Make functions globally available
+window.makeEditable = makeEditable;
+window.loadData = loadData;
+window.saveData = saveData;
+window.backupToJson = backupToJson;
+
+// Initial Load
+window.onload = () => {
+    loadSettings();
+    loadData();
+    document.getElementById('search-box').addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        sortAndRender();
+    });
+};
+</script>
+</body>
+</html>

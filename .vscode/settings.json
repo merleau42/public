@@ -27,7 +27,7 @@
   "IDX.aI.modelProvider": "gemini-api",
   "IDX.aI.enableInlineCompletion": true,
   "IDX.aI.enableCodebaseIndexing": true,
-  "liveServer.settings.port": 5506,
+  "liveServer.settings.port": 5507,
   "better-comments.tags": [
     {
       "tag": "!",
