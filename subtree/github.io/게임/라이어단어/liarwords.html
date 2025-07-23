@@ -688,12 +688,11 @@ function restoreState() {
 
 function attachFocusListeners() {
   // 원하는 순서대로 input ID 배열 정의
-  const customOrder = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8", "singleInput"];
+  const customOrder = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8"];
 
   // 현재 visibleCount까지만 고려하여 필터링
   const getVisibleBoxes = () => {
     const ids = customOrder.filter(id => {
-      if (id === "singleInput") return true;
       const index = parseInt(id.replace("input", ""));
       return index <= visibleCount;
     });
@@ -706,7 +705,7 @@ function attachFocusListeners() {
       if (e.key === "Enter" || e.key === "Tab") {
         e.preventDefault();
         const nextBoxes = getVisibleBoxes();
-        const next = nextBoxes[(idx + 1) % (nextBoxes.length-1)]; // 순환 구조
+        const next = nextBoxes[(idx + 1) % (nextBoxes.length)]; // 순환 구조
         next.focus();
       }
     };
