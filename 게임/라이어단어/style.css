@@ -131,6 +131,7 @@ button:hover {
 
 /* ➕➖ 버튼 */
 #icon-container {
+  position: absolute;
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
