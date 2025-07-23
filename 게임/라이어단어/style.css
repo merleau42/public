@@ -238,7 +238,7 @@ button:hover {
 .phase-4 { background-color: var(--phase-4-color); }
 
 /* 모달 푸터 버튼 스타일 */
-.modal-footer {
+#emoji-modal .modal-footer {
   display: grid; 
   grid-template-columns: repeat(4, 1fr); 
   gap: 8px;
@@ -269,4 +269,11 @@ button:hover {
     justify-content: center;
     border: 1px solid rgba(0,0,0,0.2); 
     box-sizing: border-box;
+}
+
+#hint-modal{
+  font-size: 13px;
+  width: 70vw;
+  height: 70vh;
+  overflow-y: auto;
 }
