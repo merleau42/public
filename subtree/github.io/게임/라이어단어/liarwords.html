@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   generateInputs();
   restoreState(); // 로컬 스토리지에서 모든 상태 복원
   attachInputListeners();
-  // attachFocusListeners는 generateInputs에서 호출되므로 여기서 제거
+  attachFocusListeners();
   setupEmojiButtons();
   setupPhaseButtons();
 
@@ -130,11 +130,6 @@ function generateInputs() {
   // Add/Remove 버튼 컨테이너 생성
   const iconContainer = document.createElement('div');
   iconContainer.id = 'icon-container';
-  // CSS에서 이 스타일을 관리하도록 변경
-  // iconContainer.style.display = 'inline-flex';
-  // iconContainer.style.flexDirection = 'column';
-  // iconContainer.style.justifyContent = 'center';
-  // iconContainer.style.marginLeft = '5px';
   
   const addBtn = document.createElement('span');
   addBtn.id = 'addBtn';
@@ -191,6 +186,12 @@ function updateInputVisibility() {
             wrapper.style.display = i <= visibleCount ? 'inline-block' : 'none';
         }
     }
+
+    // + - 버튼 컨테이너의 위치 조절
+    [...document.querySelectorAll('.textarea-wrapper')]
+      .filter(wr => wr.style.display!='none').pop()
+      .appendChild(document.querySelector('#icon-container'))
+
     // + - 버튼의 가시성 조절
     document.getElementById('addBtn').style.display = visibleCount === 8 ? 'none' : 'inline-block';
     document.getElementById('removeBtn').style.display = visibleCount === 3 ? 'none' : 'inline-block';
@@ -385,8 +386,16 @@ function parseStatement(text) {
 
     let remaining = text.trim();
 
+    // 0. Author (!!)
+    let parts = remaining.split('!!');
+    if (parts.length > 1) {
+        const author = parts.pop().trim();
+        if (author) stmt.author = author;
+        remaining = parts.join('!!').trim();
+    }
+
     // 1. Respond (//)
-    let parts = remaining.split('//');
+    parts = remaining.split('//');
     if (parts.length > 1) {
         const respond = parts.pop().trim();
         if (respond) stmt.respond = respond;
@@ -687,27 +696,17 @@ function restoreState() {
 // --- 이벤트 리스너 (Event Listeners) ---
 
 function attachFocusListeners() {
-  // 원하는 순서대로 input ID 배열 정의
-  const customOrder = ["input1", "input3", "input5", "input7", "input2", "input4", "input6", "input8"];
-
-  // 현재 visibleCount까지만 고려하여 필터링
-  const getVisibleBoxes = () => {
-    const ids = customOrder.filter(id => {
-      const index = parseInt(id.replace("input", ""));
-      return index <= visibleCount;
-    });
-    return ids.map(id => document.getElementById(id)).filter(Boolean);
-  };
-
-  const boxes = getVisibleBoxes();
-  boxes.forEach((box, idx) => {
-    box.onkeydown = (e) => {
-      if (e.key === "Enter" || e.key === "Tab") {
-        e.preventDefault();
-        const nextBoxes = getVisibleBoxes();
-        const next = nextBoxes[(idx + 1) % (nextBoxes.length)]; // 순환 구조
-        next.focus();
-      }
+   [..."13572468"]
+    .map(id => document.querySelector(`#wrapper-input${id}`))
+    .filter(wr => wr.style.display!='none')
+    .map(wr => wr.querySelector("textarea"))
+    .forEach((box, idx, arr) => {
+      box.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === "Tab") {
+          e.preventDefault();
+          const next = arr[(idx + 1) % (arr.length)]; // 순환 구조
+          next.focus();
+        }
     };
   });
 }
