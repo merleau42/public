@@ -36,9 +36,6 @@
     </div>
 
     <div class="settings-section">
-      <h3>필드 표기</h3>
-       <label for="field-aliases">별칭 (Aliases) - JSON 형식:</label>
-      <textarea id="field-aliases" rows="5" style="width: 95%; font-family: monospace;"></textarea>
        <label for="timestamp-format">타임스탬프 형식:</label>
         <select id="timestamp-format">
           <option value="relative">상대 시간 (e.g., 5분 전)</option>
@@ -78,14 +75,6 @@ const ALL_POSSIBLE_HEADERS = ['groupID', 'update', 'words', 'unique', 'subject',
 let settings = {};
 const DEFAULT_SETTINGS = {
     selectedFields: ['groupID', 'update', 'words', 'subject', 'opening', 'tags', 'author'],
-    fieldAliases: {
-        groupID: "그룹ID",
-        update: "수정일",
-        words: "단어",
-        subject: "주제",
-        opening: "발단",
-        author: "작성자"
-    },
     theme: 'light',
     timestampFormat: 'relative' // 'relative', 'full', 'date'
 };
@@ -136,7 +125,6 @@ function loadSettings() {
         grid.appendChild(label);
     });
 
-    document.getElementById('field-aliases').value = JSON.stringify(settings.fieldAliases, null, 2);
     document.getElementById('timestamp-format').value = settings.timestampFormat || 'relative';
     document.getElementById('theme-selector').value = settings.theme;
     document.body.dataset.theme = settings.theme;
@@ -150,14 +138,6 @@ function saveAndApplySettings() {
     });
     settings.selectedFields = newSelectedFields;
 
-    // Save aliases
-    try {
-        settings.fieldAliases = JSON.parse(document.getElementById('field-aliases').value);
-    } catch (e) {
-        alert("필드 표기(Aliases) 형식이 잘못된 JSON입니다. 저장되지 않았습니다.");
-        return;
-    }
-    
     settings.theme = document.getElementById('theme-selector').value;
     settings.timestampFormat = document.getElementById('timestamp-format').value;
 
@@ -239,7 +219,7 @@ function renderTable(dataToRender) {
     const currentHeaders = settings.selectedFields;
     currentHeaders.forEach(key => {
         const th = document.createElement('th');
-        th.textContent = settings.fieldAliases[key] || key;
+        th.textContent = key;
         th.className = 'sortable';
         if (sortConfig.key === key) {
             th.classList.add(sortConfig.asc ? 'sorted-asc' : 'sorted-desc');

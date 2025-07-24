@@ -6,8 +6,7 @@
 
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.temurin-bin-17
-    # pkgs.zulu17
+    # pkgs.temurin-bin-17 # JAVA/JSP 실습때만 사용
     pkgs.gcc
     # pkgs.adoptopenjdk-bin
     # pkgs.go
