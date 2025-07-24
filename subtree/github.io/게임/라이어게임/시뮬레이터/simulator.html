@@ -7,15 +7,18 @@
 </head>
 <body>
 	<div class="top-bar">
-		인원수:
-		<button id="decreaseBtn">◀</button>
-		<span id="playerCount">8</span>
-		<button id="increaseBtn">▶</button>
-		<button id="refreshBtn">[새로고침]</button>
+		<span id="playerCountDisplay" class="setting-value-display"></span>
+		<span id="liarCountDisplay" class="setting-value-display"></span>
 	</div>
-
+	
 	<div class="grid-container" id="grid"></div>
-	<div class="bottom-bar">하단바</div>
+	<div class="bottom-bar">
+		<button>게임 시작</button>
+		<button>발언 시작</button>
+		<button>투표 시작</button>	
+		<button>결과 확인</button>
+		<button id="refreshBtn">새로고침</button>
+	</div>
 
 	<script>
 		const Q = sel => document.querySelector(sel);
@@ -29,14 +32,19 @@
 		const randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 		const container = Q('#grid');
+		const playerCountDisplayEl = Q('#playerCountDisplay');
+		const liarCountDisplayEl = Q('#liarCountDisplay');
+
 		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
 		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
 		const 이모지선택지 = ['🚫','⭕','❌','😈','🔴','🟠','🤔','🟡','🟣','😇','🟢','🔵'];
 		const 이모지각도 = [26, 58, 91];
 		const 이모지반지름비율 = 45;
 
-		let playerCount = 8;
-		const minCount = 4, maxCount = 12;
+		let playerCountState = 8;
+		let liarCountState = 1;
+		const minPlayerCount = 4, maxPlayerCount = 12;
+		const maxLiarCount = 2; // 라이어 최대 인원수
 		let 동물인덱스 = []; // 중복 방지용
 
 		function setupEmojiInterface(profileEl) {
@@ -146,8 +154,8 @@
 
 		function fillGrid() {
 			container.innerHTML = '';
-			동물인덱스 = randzSet(동물.length, playerCount);
-			for (let i = 0; i < playerCount; i++) {
+			동물인덱스 = randzSet(동물.length, playerCountState);
+			for (let i = 0; i < playerCountState; i++) {
 				createCard(i, 동물인덱스[i]);
 			}
 			updateLayoutBasedOnColumn();
@@ -163,49 +171,94 @@
 			return result;
 		}
 
+		// Function to close any open custom dropdown
+		function closeAllCustomDropdowns() {
+			QQ('.custom-dropdown-options').forEach(dropdown => dropdown.remove());
+		}
+
+		// Function to open custom dropdown
+		function openCustomDropdown(displayElement, type) {
+			closeAllCustomDropdowns(); // Close any other open dropdowns
+
+			const optionsDiv = Elem('div', 'custom-dropdown-options');
+			let min, max;
+
+			if (type === 'player') {
+				min = minPlayerCount;
+				max = maxPlayerCount;
+			} else if (type === 'liar') {
+				min = 1;
+				max = Math.min(Math.floor((playerCountState - 1) / 2), maxLiarCount);
+			}
+
+			for (let i = min; i <= max; i++) {
+				const optionSpan = Elem('span', 'custom-dropdown-option');
+				optionSpan.textContent = i;
+				optionSpan.dataset.value = i;
+				optionSpan.addEventListener('click', (e) => {
+					e.stopPropagation(); // Prevent document click from closing immediately
+
+					const newValue = parseInt(e.target.dataset.value, 10);
+					if (type === 'player') {
+						playerCountState = newValue;
+						populatePlayerDisplay();
+						populateLiarDisplay(); // Update liar options and display if player count changes
+						fillGrid(); // Re-render grid for new player count
+					} else if (type === 'liar') {
+						liarCountState = newValue;
+						populateLiarDisplay();
+					}
+					closeAllCustomDropdowns();
+				});
+				optionsDiv.appendChild(optionSpan);
+			}
+
+			const rect = displayElement.getBoundingClientRect();
+			optionsDiv.style.top = `${rect.top}px`;
+			optionsDiv.style.left = `${rect.left}px`;
+			optionsDiv.style.width = `${rect.width}px`; // Add this line to set the width
+			document.body.appendChild(optionsDiv);
+		}
+
+		function populatePlayerDisplay() {
+			playerCountDisplayEl.textContent = `인원수: ${playerCountState}`;
+		}
+
+		function populateLiarDisplay() {
+			const maxLiars = Math.min(Math.floor((playerCountState - 1) / 2), maxLiarCount);
+			if (liarCountState < 1 || liarCountState > maxLiars) {
+				liarCountState = 1;
+			}
+			liarCountDisplayEl.textContent = `라이어: ${liarCountState}`;
+		}
+
 		Q('#refreshBtn').addEventListener('click', fillGrid);
 
-		Q('#increaseBtn').addEventListener('click', () => {
-			if (playerCount >= maxCount) return;
-			const newIndex = playerCount++;
-			Q('#playerCount').textContent = playerCount;
-			const used = new Set(동물인덱스);
-			const remain = vector(동물.length, i => i).filter(i => !used.has(i));
-			const next = remain[randz(0, remain.length - 1)];
-			동물인덱스.push(next);
-			createCard(newIndex, next);
-			updateLayoutBasedOnColumn();
-		});
+		playerCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'player'));
+		liarCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'liar'));
 
-		Q('#decreaseBtn').addEventListener('click', () => {
-			if (playerCount <= minCount) return;
-			container.lastChild.remove();
-			playerCount--;
-			동물인덱스.pop();
-			Q('#playerCount').textContent = playerCount;
-			updateLayoutBasedOnColumn();
-		});
-
-		document.addEventListener('click', () => {
-			QQ('.emoji-picker').forEach(p => p.remove());
-			QQ('.placard.expanded').forEach(p => {
-				p.classList.remove('expanded');
-				p.removeAttribute('style');
-				p.textContent = p.dataset.selected;
-			});
+		document.addEventListener('click', (e) => {
+			if (!e.target.closest('.custom-dropdown-options') && !e.target.closest('.setting-value-display')) {
+				closeAllCustomDropdowns();
+			}
 		});
 
 		function getColumnCount() {
 			const items = QQ('.statement-container');
+			if (items.length === 0) return 0;
 			const left = items.map(x => x.offsetLeft);
 			let cols = 0;
-			while (left.indexOf(left[cols]) === cols) cols++;
+			while (left.indexOf(left[cols]) === cols) {
+                if(cols >= left.length) break;
+                cols++;
+            }
 			return cols;
 		}
 
 		function updateLayoutBasedOnColumn() {
 			QQ('.reverse').forEach(x => x.classList.remove('reverse'));
 			const count = getColumnCount();
+            if (count === 0) return;
 			QQ('.statement-container').forEach((el, i) => {
 				if (count === 2 && i % 2 === 1) el.classList.add('reverse');
 			});
@@ -230,6 +283,8 @@
 			updateLayoutBasedOnColumn();
 		});
 
+		populatePlayerDisplay();
+		populateLiarDisplay();
 		fillGrid();
 	</script>
 </body>

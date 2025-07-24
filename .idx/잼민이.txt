@@ -1,0 +1,14 @@
+[API 키]
+AIzaSyD7oVbWhEhqsOkMoh2dtKYoGkOGv_AMeBQ
+
+
+[모델명]					입력($/1000K)		출력($/1000K)
+gemini-2.5-pro				1.25				10
+gemini-2.5-flash			0.3					2.5
+gemini-2.5-flash-lite		0.1					0.4
+gemini-2.0-flash			0.1					0.4
+gemini-2.0-flash-lite		0.075				0.3
+
+
+[예상 비용]
+2.5플라 ㅡ 한시간 풀로 돌리면 천원(1$) 나오지 않을까?
