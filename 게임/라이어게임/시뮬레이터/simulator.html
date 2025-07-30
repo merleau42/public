@@ -5,6 +5,40 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>라이어게임 시뮬레이터</title>
 	<link rel="stylesheet" href="simulator.css" />
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+		import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+			authDomain: "liarwords-af033.firebaseapp.com",
+			databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+			projectId: "liarwords-af033",
+			storageBucket: "liarwords-af033.appspot.com",
+			messagingSenderId: "171671976030",
+			appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const db = getDatabase(app);
+
+		async function getFirebaseData(path) {
+			try {
+				const snapshot = await get(ref(db, path));
+				if (snapshot.exists()) {
+					return snapshot.val();
+				} else {
+					console.log("No data available at path:", path);
+					return null;
+				}
+			} catch (error) {
+				console.error("Error loading data from Firebase:", error);
+				return null;
+			}
+		}
+
+		window.getFirebaseData = getFirebaseData;
+	</script>
 </head>
 <body>
 	<div class="top-bar">
@@ -24,15 +58,15 @@
 	<div class="grid-container" id="grid"></div>
 	<div class="bottom-bar">
 		<div class="bottom-bar-section">
-			<button>게임 시작</button>
-			<button>발언 시작</button>
-		</div>
-		<div class="bottom-bar-section">
-			<button>투표 시작</button>	
+			<button id="startGameBtn">게임 시작</button>
+			<button id="refreshBtn">새로고침</button>
 		</div>
 		<div class="bottom-bar-section">
 			<button>결과 확인</button>
-			<button id="refreshBtn">새로고침</button>
+		</div>
+		<div class="bottom-bar-section">
+			<button>투표 시작</button>	
+			<button>발언 시작</button>
 		</div>
 	</div>
 
@@ -52,6 +86,7 @@
 		const liarCountDisplayEl = Q('#liarCountDisplay');
 		const gameTypeDisplayEl = Q('#gameTypeDisplay');
 		const gameModeDisplayEl = Q('#gameModeDisplay');
+		const startGameBtn = Q('#startGameBtn');
 
 		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
 		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
@@ -68,6 +103,64 @@
 		const minPlayerCount = 4, maxPlayerCount = 12;
 		const maxLiarCount = 2; // 라이어 최대 인원수
 		let 동물인덱스 = []; // 중복 방지용
+
+		async function gameStart() {
+			// 1. 라이어 부여
+			const liarIndices = randzSet(playerCountState, liarCountState).map(i => i);
+
+			// 2. 파이어베이스 DB에서 데이터 불러오기
+			const dbData = await window.getFirebaseData('liar_groups/0096');
+			if (!dbData) {
+				alert('데이터를 불러오는데 실패했습니다.');
+				return;
+			}
+
+			// 3. 주제어 2개 랜덤 선택
+			const wordIndices = randzSet(dbData.words.length, 2);
+			const citizenWord = dbData.words[wordIndices[0]];
+			const liarWord = dbData.words[wordIndices[1]];
+			
+			// 4. 주제어에 맞는 발언 필터링
+			let citizenStatements = dbData.statements.filter(s => s.subject === citizenWord);
+			let liarStatements = dbData.statements.filter(s => s.subject === liarWord);
+
+			// 5. 발언 섞기 (중복 방지)
+			citizenStatements = shuffleArray(citizenStatements);
+			liarStatements = shuffleArray(liarStatements);
+
+			const players = QQ('.statement-container');
+			players.forEach((player, i) => {
+				const bubble = player.querySelector('.bubble');
+				let assignedStatement;
+
+				if (liarIndices.includes(i)) {
+					// 라이어
+					assignedStatement = liarStatements.pop();
+					player.dataset.role = 'liar';
+					player.dataset.word = liarWord;
+				} else {
+					// 시민
+					assignedStatement = citizenStatements.pop();
+					player.dataset.role = 'citizen';
+					player.dataset.word = citizenWord;
+				}
+				
+				player.dataset.statement = assignedStatement.opening;
+				player.dataset.unique = assignedStatement.unique;
+
+				// 6. .bubble 대화창에 opening 출력
+				bubble.textContent = assignedStatement.opening;
+			});
+		}
+		
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+			return array;
+		}
+
 
 		function setupEmojiInterface(profileEl) {
 			const 상태 = { 이모지들: [] };
@@ -291,6 +384,7 @@
 		}
 
 		Q('#refreshBtn').addEventListener('click', fillGrid);
+		startGameBtn.addEventListener('click', gameStart);
 
 		gameTypeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameType'));
 		gameModeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameMode'));
