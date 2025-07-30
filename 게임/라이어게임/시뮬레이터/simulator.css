@@ -48,19 +48,34 @@ body {
 
 /* ✅ 하단바 (항상 화면 아래 고정됨) */
 .bottom-bar {
-	height: 60px;
 	background-color: #f0f0f0;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-around;
 	font-weight: bold;
-	font-size: 1.2em;
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	z-index: 999;
+	padding: 8px;
+	gap: 8px;
 }
+
+.bottom-bar button {
+	flex: 1; /* 버튼들이 동일한 너비를 가지도록 함 */
+	display: inline-block;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #f9f9f9;
+	cursor: pointer;
+	text-align: center;
+	font-weight: bold;
+	font-size: 0.9em;
+	white-space: nowrap; /* 버튼 내 텍스트 줄바꿈 방지 */
+}
+
 
 /* 상단바 버튼 */
 .top-bar button {
@@ -294,7 +309,7 @@ body {
 
 @media (max-width: 450px) {
 	body {
-		transform: scale(1.2);
+		transform: scale(1.1);
 		/* transform-origin: top left; */
 	}
 }
