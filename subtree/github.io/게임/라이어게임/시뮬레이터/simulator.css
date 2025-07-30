@@ -191,7 +191,7 @@ body {
 	transform-origin: center center;
 }
 .placard.placard-shifted-left {
-	left: -20%;
+	left: -35%;
 }
 .placard:not(.expanded) {
 	bottom: 0%;
