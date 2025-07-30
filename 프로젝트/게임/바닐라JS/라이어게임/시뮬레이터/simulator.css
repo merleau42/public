@@ -291,3 +291,13 @@ body {
 .top-bar-section:nth-child(3) {
 	align-items: flex-start; /* 왼쪽 정렬 */
 }
+
+/* 화면 너비가 600px 이하일 때 전체를 90%로 축소 */
+@media (max-width: 450px) {
+	body {
+		transform: scale(1.1);
+		transform-origin: top left; /* 축소 기준점을 좌상단으로 설정 */
+		/* 또는 비표준 속성이지만 직관적인 zoom 사용 */
+		/* zoom: 0.9; */
+	}
+}
