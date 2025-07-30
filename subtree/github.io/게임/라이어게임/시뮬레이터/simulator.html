@@ -7,11 +7,14 @@
 </head>
 <body>
 	<div class="top-bar">
-		<div class="top-bar-row">
+		<div class="top-bar-section">
 			<span id="gameTypeDisplay" class="setting-value-display"></span>
 			<span id="gameModeDisplay" class="setting-value-display"></span>
 		</div>
-		<div class="top-bar-row">
+		<div class="top-bar-section">
+			<span id="missionInfoDisplay" class="setting-value-display">나의 단어</span>
+		</div>
+		<div class="top-bar-section">
 			<span id="playerCountDisplay" class="setting-value-display"></span>
 			<span id="liarCountDisplay" class="setting-value-display"></span>
 		</div>
@@ -51,8 +54,8 @@
 		
 		const gameTypes = ['라이어게임', '어몽어스', '마피아', '기사와 건달'];
 		let currentGameType = gameTypes[0];
-		const gameModes = ['랜덤 게임', '에피소드'];
-		let currentGameMode = '랜덤 게임';
+		const gameModes = ['랜덤 모드', '에피소드'];
+		let currentGameMode = gameModes[0];
 		let playerCountState = 8;
 		let liarCountState = 1;
 		const minPlayerCount = 4, maxPlayerCount = 12;
@@ -207,6 +210,9 @@
 				options = gameModes;
 			}
 
+			if (type === 'gameType' || type === 'gameMode') {
+				optionsDiv.classList.add('full-width-options');
+			}
 
 			options.forEach(option => {
 				const optionSpan = Elem('span', 'custom-dropdown-option');
@@ -237,18 +243,18 @@
 			});
 
 			const rect = displayElement.getBoundingClientRect();
-			optionsDiv.style.top = `${rect.top}px`;
+			optionsDiv.style.top = `${rect.bottom}px`;
 			optionsDiv.style.left = `${rect.left}px`;
 			optionsDiv.style.width = `${rect.width}px`;
 			document.body.appendChild(optionsDiv);
 		}
 
 		function populateGameTypeDisplay() {
-			gameTypeDisplayEl.textContent = `게임: ${currentGameType}`;
+			gameTypeDisplayEl.textContent = `${currentGameType}`;
 		}
 		
 		function populateGameModeDisplay() {
-			gameModeDisplayEl.textContent = `모드: ${currentGameMode}`;
+			gameModeDisplayEl.textContent = `${currentGameMode}`;
 		}
 
 		function populatePlayerDisplay() {
@@ -282,16 +288,16 @@
 			const left = items.map(x => x.offsetLeft);
 			let cols = 0;
 			while (left.indexOf(left[cols]) === cols) {
-                if(cols >= left.length) break;
-                cols++;
-            }
+				if(cols >= left.length) break;
+				cols++;
+			}
 			return cols;
 		}
 
 		function updateLayoutBasedOnColumn() {
 			QQ('.reverse').forEach(x => x.classList.remove('reverse'));
 			const count = getColumnCount();
-            if (count === 0) return;
+			if (count === 0) return;
 			QQ('.statement-container').forEach((el, i) => {
 				if (count === 2 && i % 2 === 1) el.classList.add('reverse');
 			});

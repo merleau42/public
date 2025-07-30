@@ -1,268 +1,287 @@
 /* 기본 설정 */
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html {
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+	overflow: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 html::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: ghostwhite;
-  margin: 0;
-  padding: 0;
-  padding-bottom: 5vh; /* 하단바 높이만큼 여백 확보 */
+	font-family: Arial, sans-serif;
+	background-color: ghostwhite;
+	margin: 0;
+	padding: 0;
+	padding-bottom: 5vh; /* 하단바 높이만큼 여백 확보 */
 }
 
 /* ✅ 상단바 (자리를 차지함, 고정 아님) */
 .top-bar {
-  padding: 5px 0;
-  background-color: #f0f0f0;
-  display: flex;
-  flex-direction: column; /* 행을 수직으로 쌓음 */
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.2em;
-  gap: 5px; /* 행 사이의 간격 */
+	padding: 5px 0;
+	background-color: #f0f0f0;
+	display: flex;
+	justify-content: space-around; /* 섹션들을 가로로 균등하게 배치 */
+	align-items: flex-start; /* 상단 정렬 */
+	font-weight: bold;
+	font-size: 1em;
+	gap: 10px; /* 섹션 사이의 간격 */
 }
 
-.top-bar-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; /* 한 행 안의 아이템 간격 */
-  width: 100%;
+.top-bar-section {
+	display: flex;
+	flex-direction: column; /* 아이템들을 세로로 쌓음 */
+	justify-content: center;
+	align-items: center;
+	gap: 5px; /* 한 섹션 안의 아이템 간격 */
+	flex: 1; /* 모든 섹션이 동일한 너비를 가지도록 함 */
+	text-align: center;
 }
 
-
-#gameModeDisplay, #gameTypeDisplay {
-  width: 205px;
+.top-bar span {
+	width: 120px; /* 너비를 자동으로 조절 */
 }
 
 /* ✅ 하단바 (항상 화면 아래 고정됨) */
 .bottom-bar {
-  height: 60px;
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.2em;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
+	height: 60px;
+	background-color: #f0f0f0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 1.2em;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 999;
 }
 
 /* 상단바 버튼 */
 .top-bar button {
-  padding: 0;
-  font-size: 1em;
-  border: 0;
-  cursor: pointer;
-  background: none;
+	padding: 0;
+	font-size: 1em;
+	border: 0;
+	cursor: pointer;
+	background: none;
 }
 
 /* ✅ 퍼즐 카드 영역 */
 .grid-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3vh 22px;
-  justify-content: center;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2vh 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3vh 22px;
+	justify-content: center;
+	width: 100%;
+	margin: 0 auto;
+	padding: 2vh 0;
 }
 
 /* 카드 구성 요소 */
 .statement-container {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  width: max(215px, 31vw, 50vh);
-  max-width: max(215px, min(40vw, 400px));
+	display: flex;
+	align-items: center;
+	min-height: 40px;
+	width: max(215px, 31vw, 50vh);
+	max-width: max(215px, min(40vw, 400px));
 }
 .statement-container.reverse {
-  flex-direction: row-reverse;
+	flex-direction: row-reverse;
 }
 
 .profile {
-  position: relative;
-  overflow: visible;
+	position: relative;
+	overflow: visible;
 }
 
 .circle {
-  width: max(65px, min(12vh, 13vw));
-  height: max(65px, min(12vh, 13vw));
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #4a90e2;
-  background-color: white;
-  flex-shrink: 0;
-  margin: 0 min(7.5px, max(3px, 1.5vh));
-  position: relative;
+	width: max(65px, min(12vh, 13vw));
+	height: max(65px, min(12vh, 13vw));
+	border-radius: 50%;
+	overflow: hidden;
+	border: 2px solid #4a90e2;
+	background-color: white;
+	flex-shrink: 0;
+	margin: 0 min(7.5px, max(3px, 1.5vh));
+	position: relative;
 }
 .circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /* ✅ 이모지 버튼 */
 .emoji-button {
-  position: absolute;
-  font-size: max(calc(13px + 0.2vw), calc(13px + 0.5vh));
-  width: 1.8em;
-  height: 1.8em;
-  line-height: 1.8em;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  z-index: 999;
-  cursor: pointer;
-  pointer-events: auto;
+	position: absolute;
+	font-size: max(calc(13px + 0.2vw), calc(13px + 0.5vh));
+	width: 1.8em;
+	height: 1.8em;
+	line-height: 1.8em;
+	text-align: center;
+	transform: translate(-50%, -50%);
+	z-index: 999;
+	cursor: pointer;
+	pointer-events: auto;
 }
 
 /* ✅ 이모지 선택창 */
 .emoji-picker {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  background: #fff8dc;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 4px;
-  opacity: 0.85;
-  z-index: 1000;
-  width: 100px;
+	position: absolute;
+	display: flex;
+	flex-wrap: wrap;
+	background: #fff8dc;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	padding: 4px;
+	opacity: 0.85;
+	z-index: 1000;
+	width: 100px;
 }
 .emoji-picker span {
-  cursor: pointer;
-  padding: 2px 4px;
+	cursor: pointer;
+	padding: 2px 4px;
 }
 .emoji-picker span:hover {
-  background: #eee;
+	background: #eee;
 }
 
 /* ✅ 팻말 */
 .placard {
-  position: absolute;
-  top: 70%;
-  left: 75%;
-  background-color: lightyellow;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 2px 5px;
-  min-height: 24px;
-  text-align: center;
-  white-space: nowrap;
-  z-index: 2;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  transform-origin: center center;
+	position: absolute;
+	top: 70%;
+	left: 75%;
+	background-color: lightyellow;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	padding: 2px 5px;
+	min-height: 24px;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 2;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+	transform-origin: center center;
 }
 .placard:not(.expanded) {
-  font-size: max(12px, min(19px, max(1.3vw, 1.4vh)));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	font-size: max(12px, min(19px, max(1.3vw, 1.4vh)));
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .placard.expanded {
-  position: fixed;
-  white-space: normal;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  background-color: lightyellow;
-  width: 250px;
-  font-size: 14px;
-  word-break: break-word;
-  padding: 6px;
-  opacity: 0.85;
-  z-index: 1000;
+	position: fixed;
+	white-space: normal;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+	background-color: lightyellow;
+	width: 250px;
+	font-size: 14px;
+	word-break: break-word;
+	padding: 6px;
+	opacity: 0.85;
+	z-index: 1000;
 }
 .placard .choice-row {
-  display: flex;
-  gap: 3px;
-  justify-content: center;
-  flex-wrap: wrap;
+	display: flex;
+	gap: 3px;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 .placard .choice {
-  padding: 2px 6px;
-  cursor: pointer;
-  background: transparent;
-  border-radius: 3px;
-  transition: background 0.2s;
+	padding: 2px 6px;
+	cursor: pointer;
+	background: transparent;
+	border-radius: 3px;
+	transition: background 0.2s;
 }
 .placard .choice:hover {
-  background-color: #eee;
+	background-color: #eee;
 }
 
 /* ✅ 말풍선 */
 .bubble {
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: min(11px, max(3.5px, 1.5vh)) 3.5px;
-  width: 100%;
-  height: min(100px, max(50px, 12vh));
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-  word-break: keep-all;
-  display: flex;
-  font-size: max(12px, min(19px, max(1.3vw, 1.7vh)));
-  line-height: 1.3;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+	background: white;
+	border: 2px solid #ccc;
+	border-radius: 10px;
+	padding: min(11px, max(3.5px, 1.5vh)) 3.5px;
+	width: 100%;
+	height: min(100px, max(50px, 12vh));
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+	word-break: keep-all;
+	display: flex;
+	font-size: max(12px, min(19px, max(1.3vw, 1.7vh)));
+	line-height: 1.3;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 }
 
 .setting-value-display {
-  display: inline-block;
-  min-width: 30px; /* 숫자에 따라 너비 조절 */
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  text-align: center;
-  font-weight: bold;
-  margin-left: 5px; /* "인원수:" 텍스트와의 간격 */
-  margin-right: 5px; /* 다음 요소와의 간격 */
-  position: relative; /* 드롭다운 옵션 위치 지정을 위함 */
+	display: inline-block;
+	/* min-width: 30px; */
+  min-width: 110px;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #f9f9f9;
+	cursor: pointer;
+	text-align: center;
+	font-weight: bold;
+	margin-left: 5px; /* "인원수:" 텍스트와의 간격 */
+	margin-right: 5px; /* 다음 요소와의 간격 */
+	position: relative; /* 드롭다운 옵션 위치 지정을 위함 */
 }
 
 .custom-dropdown-options {
-  font-size: 14px;
-  position: absolute;
-  top: 0;
-  border: 1px solid #ccc;
-  background-color: white;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1000;
-  display: flex;
-  flex-wrap: wrap; /* Enable wrapping to create columns */
-  max-height: 200px;
-  overflow-y: auto;
-  border-radius: 4px;
-  padding: 5px;
+	font-size: 14px;
+	position: absolute;
+	top: 0;
+	border: 1px solid #ccc;
+	background-color: white;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1000;
+	display: flex;
+	flex-wrap: wrap; /* Enable wrapping to create columns */
+	max-height: 200px;
+	overflow-y: auto;
+	border-radius: 4px;
+	padding: 5px;
 }
 
 .custom-dropdown-option {
-  padding: 8px 10px;
-  cursor: pointer;
-  width: 49%; /* Each option takes up 1/3 of the width */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  text-align: center;
+	padding: 8px 10px;
+	cursor: pointer;
+	width: 49%; /* Each option takes up 1/3 of the width */
+	box-sizing: border-box; /* Include padding and border in the element's total width and height */
+	text-align: center;
 }
 
+.custom-dropdown-options.full-width-options .custom-dropdown-option {
+	width: 100%;
+}
+
+
 .custom-dropdown-options span:hover { /* This rule is already present, but included for context */
-  background-color: #f1f1f1;
+	background-color: #f1f1f1;
+}
+
+/* 상단바 섹션별 정렬 및 너비 조정 */
+.top-bar-section:nth-child(1) {
+	align-items: flex-end; /* 오른쪽 정렬 */
+}
+
+.top-bar-section:nth-child(2) {
+	flex: 0 0 25vw; /* 너비 25vw로 고정 */
+}
+
+.top-bar-section:nth-child(3) {
+	align-items: flex-start; /* 왼쪽 정렬 */
 }
