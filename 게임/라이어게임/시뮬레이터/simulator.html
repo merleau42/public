@@ -104,55 +104,6 @@
 		const maxLiarCount = 2; // 라이어 최대 인원수
 		let 동물인덱스 = []; // 중복 방지용
 
-		async function gameStart() {
-			// 1. 라이어 부여
-			const liarIndices = randzSet(playerCountState, liarCountState).map(i => i);
-
-			// 2. 파이어베이스 DB에서 데이터 불러오기
-			const dbData = await window.getFirebaseData('liar_groups/0096');
-			if (!dbData) {
-				alert('데이터를 불러오는데 실패했습니다.');
-				return;
-			}
-
-			// 3. 주제어 2개 랜덤 선택
-			const wordIndices = randzSet(dbData.words.length, 2);
-			const citizenWord = dbData.words[wordIndices[0]];
-			const liarWord = dbData.words[wordIndices[1]];
-			
-			// 4. 주제어에 맞는 발언 필터링
-			let citizenStatements = dbData.statements.filter(s => s.subject === citizenWord);
-			let liarStatements = dbData.statements.filter(s => s.subject === liarWord);
-
-			// 5. 발언 섞기 (중복 방지)
-			citizenStatements = shuffleArray(citizenStatements);
-			liarStatements = shuffleArray(liarStatements);
-
-			const players = QQ('.statement-container');
-			players.forEach((player, i) => {
-				const bubble = player.querySelector('.bubble');
-				let assignedStatement;
-
-				if (liarIndices.includes(i)) {
-					// 라이어
-					assignedStatement = liarStatements.pop();
-					player.dataset.role = 'liar';
-					player.dataset.word = liarWord;
-				} else {
-					// 시민
-					assignedStatement = citizenStatements.pop();
-					player.dataset.role = 'citizen';
-					player.dataset.word = citizenWord;
-				}
-				
-				player.dataset.statement = assignedStatement.opening;
-				player.dataset.unique = assignedStatement.unique;
-
-				// 6. .bubble 대화창에 opening 출력
-				bubble.textContent = assignedStatement.opening;
-			});
-		}
-		
 		function shuffleArray(array) {
 			for (let i = array.length - 1; i > 0; i--) {
 				const j = Math.floor(Math.random() * (i + 1));
@@ -161,7 +112,76 @@
 			return array;
 		}
 
+		async function gameStart() {
+			// 1. 라이어 부여
+			const liarIndices = randzSet(playerCountState, liarCountState);
 
+			// 2. 파이어베이스 DB에서 데이터 불러오기
+			const dbData = await window.getFirebaseData('liar_groups/0096');
+			if (!dbData) {
+				alert('데이터를 불러오는데 실패했습니다.');
+				return;
+			}
+			const allStatements = dbData.statements;
+
+			// 3. 고유한 unique ID 목록 생성 및 할당
+			let distinctUniqueIds = [...new Set(allStatements.map(s => s.unique))];
+			if (distinctUniqueIds.length < playerCountState) {
+				alert('플레이어에게 할당할 고유한 발언 ID가 부족합니다.');
+				return;
+			}
+			distinctUniqueIds = shuffleArray(distinctUniqueIds);
+			const assignedUniqueIds = distinctUniqueIds.slice(0, playerCountState);
+
+			// 4. 주제어 2개 랜덤 선택
+			const wordIndices = randzSet(dbData.words.length, 2);
+			const citizenWord = dbData.words[wordIndices[0]];
+			const liarWord = dbData.words[wordIndices[1]];
+			
+			// 5. 발언을 쉽게 찾기 위한 맵 생성
+			const statementMap = new Map();
+			allStatements.forEach(stmt => {
+				if (!statementMap.has(stmt.unique)) {
+					statementMap.set(stmt.unique, {});
+				}
+				statementMap.get(stmt.unique)[stmt.subject] = stmt;
+			});
+
+			// 6. 각 플레이어에게 발언 할당
+			const players = QQ('.statement-container');
+			players.forEach((player, i) => {
+				const bubble = player.querySelector('.bubble');
+				const uniqueId = assignedUniqueIds[i];
+				let assignedStatement;
+				let role, word;
+
+				if (liarIndices.includes(i)) {
+					role = 'liar';
+					word = liarWord;
+				} else {
+					role = 'citizen';
+					word = citizenWord;
+				}
+
+				const possibleStatements = statementMap.get(uniqueId);
+				if (possibleStatements && possibleStatements[word]) {
+					assignedStatement = possibleStatements[word];
+				} else {
+					// 해당 uniqueId와 subject에 맞는 발언이 없는 경우, 다른 발언으로 대체 (오류 방지)
+					const fallbackStatements = allStatements.filter(s => s.subject === word && !assignedUniqueIds.includes(s.unique));
+					assignedStatement = fallbackStatements[randz(0, fallbackStatements.length - 1)] || { opening: "발언 없음", unique: "N/A" };
+					console.warn(`대체 발언 할당: player ${i}, uniqueId ${uniqueId}, word ${word}`);
+				}
+				
+				player.dataset.role = role;
+				player.dataset.word = word;
+				player.dataset.statement = assignedStatement.opening;
+				player.dataset.unique = assignedStatement.unique;
+
+				bubble.textContent = assignedStatement.opening;
+			});
+		}
+		
 		function setupEmojiInterface(profileEl) {
 			const 상태 = { 이모지들: [] };
 			const 갱신 = () => {
@@ -291,7 +311,7 @@
 		}
 
 		function randzSet(max, count) {
-			const pool = vector(max, i => i);
+			const pool = Array.from({ length: max }, (_, i) => i);
 			const result = [];
 			while (result.length < count) {
 				const idx = randz(0, pool.length - 1);
