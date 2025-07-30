@@ -85,10 +85,11 @@ body {
 /* 카드 구성 요소 */
 .statement-container {
 	display: flex;
-	align-items: center;
+	/* align-items: center; */
+	align-items: flex-end;
 	min-height: 40px;
-	width: max(215px, 31vw, 50vh);
-	max-width: max(215px, min(40vw, 400px));
+	width: max(220px, 31vw, 50vh);
+	max-width: max(220px, min(40vw, 400px));
 }
 .statement-container.reverse {
 	flex-direction: row-reverse;
@@ -154,7 +155,6 @@ body {
 /* ✅ 팻말 */
 .placard {
 	position: absolute;
-	top: 70%;
 	left: 75%;
 	background-color: lightyellow;
 	border: 1px solid #ccc;
@@ -168,13 +168,19 @@ body {
 	transition: transform 0.2s ease;
 	transform-origin: center center;
 }
+.placard.placard-shifted-left {
+	left: -20%;
+}
 .placard:not(.expanded) {
-	font-size: max(12px, min(19px, max(1.3vw, 1.4vh)));
+	bottom: 0%;
+	/* font-size: max(13px, min(18px, max(1.3vw, 1.4vh))); */
+	font-size: max(13px, min(1.3vw, 16px), min(1.7vh, 21px));
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 .placard.expanded {
+  left: 75%;
 	position: fixed;
 	white-space: normal;
 	display: flex;
@@ -213,7 +219,7 @@ body {
 	border-radius: 10px;
 	padding: min(11px, max(3.5px, 1.5vh)) 3.5px;
 	width: 100%;
-	height: min(100px, max(50px, 12vh));
+	height: min(120px, max(50px, 12vh));
 	box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
 	word-break: keep-all;
 	display: flex;
@@ -279,7 +285,7 @@ body {
 }
 
 .top-bar-section:nth-child(2) {
-	flex: 0 0 25vw; /* 너비 25vw로 고정 */
+	flex: 0 0 125px; /* 너비 고정 */
 }
 
 .top-bar-section:nth-child(3) {
