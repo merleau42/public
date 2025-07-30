@@ -7,8 +7,14 @@
 </head>
 <body>
 	<div class="top-bar">
-		<span id="playerCountDisplay" class="setting-value-display"></span>
-		<span id="liarCountDisplay" class="setting-value-display"></span>
+		<div class="top-bar-row">
+			<span id="gameTypeDisplay" class="setting-value-display"></span>
+			<span id="gameModeDisplay" class="setting-value-display"></span>
+		</div>
+		<div class="top-bar-row">
+			<span id="playerCountDisplay" class="setting-value-display"></span>
+			<span id="liarCountDisplay" class="setting-value-display"></span>
+		</div>
 	</div>
 	
 	<div class="grid-container" id="grid"></div>
@@ -34,13 +40,19 @@
 		const container = Q('#grid');
 		const playerCountDisplayEl = Q('#playerCountDisplay');
 		const liarCountDisplayEl = Q('#liarCountDisplay');
+		const gameTypeDisplayEl = Q('#gameTypeDisplay');
+		const gameModeDisplayEl = Q('#gameModeDisplay');
 
 		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
 		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
 		const 이모지선택지 = ['🚫','⭕','❌','😈','🔴','🟠','🤔','🟡','🟣','😇','🟢','🔵'];
 		const 이모지각도 = [26, 58, 91];
 		const 이모지반지름비율 = 45;
-
+		
+		const gameTypes = ['라이어게임', '어몽어스', '마피아', '기사와 건달'];
+		let currentGameType = gameTypes[0];
+		const gameModes = ['랜덤 게임', '에피소드'];
+		let currentGameMode = '랜덤 게임';
 		let playerCountState = 8;
 		let liarCountState = 1;
 		const minPlayerCount = 4, maxPlayerCount = 12;
@@ -171,53 +183,72 @@
 			return result;
 		}
 
-		// Function to close any open custom dropdown
 		function closeAllCustomDropdowns() {
 			QQ('.custom-dropdown-options').forEach(dropdown => dropdown.remove());
 		}
 
-		// Function to open custom dropdown
 		function openCustomDropdown(displayElement, type) {
-			closeAllCustomDropdowns(); // Close any other open dropdowns
+			closeAllCustomDropdowns();
 
 			const optionsDiv = Elem('div', 'custom-dropdown-options');
-			let min, max;
+			let options;
 
 			if (type === 'player') {
-				min = minPlayerCount;
-				max = maxPlayerCount;
+				const min = minPlayerCount;
+				const max = maxPlayerCount;
+				options = Array.from({ length: max - min + 1 }, (_, i) => min + i);
 			} else if (type === 'liar') {
-				min = 1;
-				max = Math.min(Math.floor((playerCountState - 1) / 2), maxLiarCount);
+				const min = 1;
+				const max = Math.min(Math.floor((playerCountState - 1) / 2), maxLiarCount);
+				options = Array.from({ length: max - min + 1 }, (_, i) => min + i);
+			} else if (type === 'gameType') {
+				options = gameTypes;
+			} else if (type === 'gameMode') {
+				options = gameModes;
 			}
 
-			for (let i = min; i <= max; i++) {
-				const optionSpan = Elem('span', 'custom-dropdown-option');
-				optionSpan.textContent = i;
-				optionSpan.dataset.value = i;
-				optionSpan.addEventListener('click', (e) => {
-					e.stopPropagation(); // Prevent document click from closing immediately
 
-					const newValue = parseInt(e.target.dataset.value, 10);
+			options.forEach(option => {
+				const optionSpan = Elem('span', 'custom-dropdown-option');
+				optionSpan.textContent = option;
+				optionSpan.dataset.value = option;
+				optionSpan.addEventListener('click', (e) => {
+					e.stopPropagation();
+					const newValue = e.target.dataset.value;
+
 					if (type === 'player') {
-						playerCountState = newValue;
+						playerCountState = parseInt(newValue, 10);
 						populatePlayerDisplay();
-						populateLiarDisplay(); // Update liar options and display if player count changes
-						fillGrid(); // Re-render grid for new player count
-					} else if (type === 'liar') {
-						liarCountState = newValue;
 						populateLiarDisplay();
+						fillGrid();
+					} else if (type === 'liar') {
+						liarCountState = parseInt(newValue, 10);
+						populateLiarDisplay();
+					} else if (type === 'gameType') {
+						currentGameType = newValue;
+						populateGameTypeDisplay();
+					} else if (type === 'gameMode') {
+						currentGameMode = newValue;
+						populateGameModeDisplay();
 					}
 					closeAllCustomDropdowns();
 				});
 				optionsDiv.appendChild(optionSpan);
-			}
+			});
 
 			const rect = displayElement.getBoundingClientRect();
 			optionsDiv.style.top = `${rect.top}px`;
 			optionsDiv.style.left = `${rect.left}px`;
-			optionsDiv.style.width = `${rect.width}px`; // Add this line to set the width
+			optionsDiv.style.width = `${rect.width}px`;
 			document.body.appendChild(optionsDiv);
+		}
+
+		function populateGameTypeDisplay() {
+			gameTypeDisplayEl.textContent = `게임: ${currentGameType}`;
+		}
+		
+		function populateGameModeDisplay() {
+			gameModeDisplayEl.textContent = `모드: ${currentGameMode}`;
 		}
 
 		function populatePlayerDisplay() {
@@ -234,6 +265,8 @@
 
 		Q('#refreshBtn').addEventListener('click', fillGrid);
 
+		gameTypeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameType'));
+		gameModeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameMode'));
 		playerCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'player'));
 		liarCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'liar'));
 
@@ -282,7 +315,9 @@
 			QQ('.profile').forEach(p => p._emojiUpdater && p._emojiUpdater());
 			updateLayoutBasedOnColumn();
 		});
-
+		
+		populateGameTypeDisplay();
+		populateGameModeDisplay();
 		populatePlayerDisplay();
 		populateLiarDisplay();
 		fillGrid();

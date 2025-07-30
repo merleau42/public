@@ -39,6 +39,8 @@
       "italic": false
     }
   ],
+  "editor.insertSpaces": false,
+  "editor.tabSize": 4,
   "statusbar_command.commands": [
     {
       "id": "sbc_settings",
@@ -94,6 +96,6 @@
       "scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
       "alignment": "right",
       "priority": -1
-    },
+    }
   ]
 }

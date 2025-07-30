@@ -816,3 +816,41 @@ NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED -
 30-Jun-2025 07:55:38.032 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [] received
 30-Jun-2025 08:17:32.501 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [GET / HTTP/1.1] received
 30-Jun-2025 08:17:32.514 WARNING [main] org.apache.catalina.core.StandardServer.await Invalid shutdown command [] received
+NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+24-Jul-2025 07:00:07.019 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.106
+24-Jul-2025 07:00:07.031 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 19:02:30 UTC
+24-Jul-2025 07:00:07.031 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.106.0
+24-Jul-2025 07:00:07.034 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+24-Jul-2025 07:00:07.034 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.93+
+24-Jul-2025 07:00:07.034 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+24-Jul-2025 07:00:07.034 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /nix/store/h4acj12fbmy4668mrbcnhr4b6gypdim8-temurin-bin-17.0.9
+24-Jul-2025 07:00:07.035 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.9+9
+24-Jul-2025 07:00:07.035 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+24-Jul-2025 07:00:07.035 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /home/user/dev/프로젝트/서버/tomcat
+24-Jul-2025 07:00:07.035 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /home/user/dev/프로젝트/서버/tomcat
+24-Jul-2025 07:00:07.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+24-Jul-2025 07:00:07.059 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+24-Jul-2025 07:00:07.059 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+24-Jul-2025 07:00:07.063 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/home/user/dev/프로젝트/서버/tomcat/conf/logging.properties
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+24-Jul-2025 07:00:07.064 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+24-Jul-2025 07:00:07.070 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+24-Jul-2025 07:00:07.070 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+24-Jul-2025 07:00:07.071 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/home/user/dev/프로젝트/서버/tomcat
+24-Jul-2025 07:00:07.071 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/home/user/dev/프로젝트/서버/tomcat
+24-Jul-2025 07:00:07.071 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/home/user/dev/프로젝트/서버/tomcat/temp
+24-Jul-2025 07:00:07.081 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/nix/store/aykqqwb1xmv2hfmswv7fgmlij28my0q0-cups-2.4.8-lib/lib:/nix/store/vppn7lhz5ljvydmbdppibfjg6xrfh0vx-cairo-1.18.0/lib:/nix/store/3c275grvmby79gqgnjych830sld6bziw-glib-2.80.2/lib:/nix/store/hdn2gb5xa3amcpn4g90hscplwbnk56bz-gtk+3-3.24.43/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+24-Jul-2025 07:00:07.760 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-7777"]
+24-Jul-2025 07:00:07.811 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1148] milliseconds
+24-Jul-2025 07:00:07.905 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+24-Jul-2025 07:00:07.908 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.106]
+24-Jul-2025 07:00:07.935 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT]
+24-Jul-2025 07:00:08.482 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/home/user/dev/프로젝트/서버/tomcat/webapps/ROOT] has finished in [546] ms
+24-Jul-2025 07:00:08.500 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-7777"]
+24-Jul-2025 07:00:08.552 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [741] milliseconds
