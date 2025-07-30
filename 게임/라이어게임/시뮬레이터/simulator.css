@@ -22,14 +22,28 @@ body {
 
 /* ✅ 상단바 (자리를 차지함, 고정 아님) */
 .top-bar {
-  height: 60px;
+  padding: 5px 0;
   background-color: #f0f0f0;
   display: flex;
+  flex-direction: column; /* 행을 수직으로 쌓음 */
   align-items: center;
   justify-content: center;
   font-weight: bold;
   font-size: 1.2em;
-  gap: 15px;
+  gap: 5px; /* 행 사이의 간격 */
+}
+
+.top-bar-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* 한 행 안의 아이템 간격 */
+  width: 100%;
+}
+
+
+#gameModeDisplay, #gameTypeDisplay {
+  width: 205px;
 }
 
 /* ✅ 하단바 (항상 화면 아래 고정됨) */
@@ -226,6 +240,7 @@ body {
 }
 
 .custom-dropdown-options {
+  font-size: 14px;
   position: absolute;
   top: 0;
   border: 1px solid #ccc;

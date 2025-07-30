@@ -66,15 +66,16 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 let fullData = {};
 let flatData = [];
-let sortConfig = { key: 'groupID', asc: true };
+let sortConfig = { key: 'update', asc: false };
 let searchTerm = '';
 let modifiedItems = new Set(); // To track modified cells
+let dataToRender = []; // Global variable for the rendered data
 
 // --- Settings ---
 const ALL_POSSIBLE_HEADERS = ['groupID', 'update', 'words', 'unique', 'subject', 'opening', 'elaborate1', 'elaborate2', 'respond1', 'respond2', 'property1', 'property2', 'tags', 'author'];
 let settings = {};
 const DEFAULT_SETTINGS = {
-    selectedFields: ['groupID', 'update', 'words', 'subject', 'opening', 'tags', 'author'],
+    selectedFields: ['groupID', 'update', 'words', 'unique', 'subject', 'opening', 'elaborate1', 'elaborate2', 'respond1', 'respond2', 'tags', 'author'],
     theme: 'light',
     timestampFormat: 'relative' // 'relative', 'full', 'date'
 };
@@ -144,7 +145,8 @@ function saveAndApplySettings() {
     localStorage.setItem('dbViewerSettings', JSON.stringify(settings));
     alert("설정이 저장되었습니다.");
     closeSettingsModal();
-    sortAndRender(); // Re-render with new settings
+    processAndSortData(); // Re-render with new settings
+    renderTable();
 }
 
 // --- End Settings ---
@@ -153,9 +155,10 @@ function toggleModified(isModified) {
     document.body.classList.toggle('modified', isModified);
 }
 
-function sortAndRender() {
+function processAndSortData() {
     // 1. Flatten data (if not already flat)
-    if (flatData.length === 0 && Object.keys(fullData).length > 0) {
+    flatData = []; // 항상 최신 fullData를 기반으로 flatData를 재구성
+    if (Object.keys(fullData).length > 0) {
         for (const groupId in fullData) {
             const group = fullData[groupId];
             if (!group.statements || group.statements.length === 0) continue;
@@ -174,10 +177,10 @@ function sortAndRender() {
     }
 
     // 2. Filter data
-    let dataToRender = flatData;
+    let filteredData = flatData;
     if (searchTerm) {
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
-        dataToRender = flatData.filter(row => {
+        filteredData = flatData.filter(row => {
             return Object.values(row).some(value => 
                 String(value).toLowerCase().includes(lowerCaseSearchTerm)
             );
@@ -185,7 +188,7 @@ function sortAndRender() {
     }
 
     // 3. Sort data
-    dataToRender.sort((a, b) => {
+    filteredData.sort((a, b) => {
         const key = sortConfig.key;
         let valA = a[key] === undefined ? '' : a[key];
         let valB = b[key] === undefined ? '' : b[key];
@@ -204,11 +207,10 @@ function sortAndRender() {
         return sortConfig.asc ? comparison : comparison * -1;
     });
 
-    // 4. Render
-    renderTable(dataToRender);
+    dataToRender = filteredData;
 }
 
-function renderTable(dataToRender) {
+function renderTable() {
     const container = document.getElementById('table-container');
     const table = document.createElement('table');
     const thead = document.createElement('thead');
@@ -231,7 +233,8 @@ function renderTable(dataToRender) {
                 sortConfig.key = key;
                 sortConfig.asc = true;
             }
-            sortAndRender();
+            processAndSortData(); // Add this line
+            renderTable();
         };
         trHead.appendChild(th);
     });
@@ -298,13 +301,21 @@ function renderTable(dataToRender) {
 
 function makeEditable(event) {
     const td = event.currentTarget;
-    if (td.querySelector('textarea')) return; // Already editing
+    if (td.querySelector('textarea')) return;
 
     const { groupId, stmtIndex, field } = td.dataset;
-    const originalValue = flatData.find(d => d.groupID === groupId && d._originalStmtIndex == stmtIndex)[field];
-    const cellId = `${groupId}-${stmtIndex}-${field}`;
-    const originalHeight = td.offsetHeight; // Get the height of the cell
+    
+    let originalValue;
+    if (field === 'words') {
+        originalValue = fullData[groupId]?.[field];
+    } else if (fullData[groupId]?.statements?.[stmtIndex]) {
+        originalValue = fullData[groupId].statements[stmtIndex][field];
+    } else {
+        originalValue = undefined;
+    }
 
+    const cellId = `${groupId}-${stmtIndex}-${field}`;
+    
     let currentValueText;
     if (Array.isArray(originalValue)) {
         currentValueText = originalValue.join(', ');
@@ -317,7 +328,7 @@ function makeEditable(event) {
     const textarea = document.createElement('textarea');
     textarea.value = currentValueText;
     textarea.className = 'editable-textarea';
-    textarea.style.height = `${originalHeight}px`; // Set the height
+    textarea.style.height = `${td.offsetHeight}px`;
     
     textarea.onkeydown = (e) => {
         if (e.key === 'Escape') {
@@ -325,54 +336,64 @@ function makeEditable(event) {
             e.preventDefault();
             textarea.blur();
         }
-        if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for new lines
+        if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             textarea.blur();
         }
     };
 
     textarea.onblur = () => {
-        if (textarea.dataset.escapePressed !== 'true') {
-            const newValue = textarea.value.trim();
-            let hasChanged = false;
+        const editingSpan = td.querySelector('.editing');
 
-            let valueToSave;
-            if (field === 'words' || field === 'tags') {
-                valueToSave = newValue.split(',').map(s => s.trim()).filter(Boolean);
-                if (JSON.stringify(valueToSave) !== JSON.stringify(originalValue)) {
-                    hasChanged = true;
-                }
-            } else if (['unique', 'property1', 'property2'].includes(field)) {
-                valueToSave = !isNaN(newValue) && newValue.trim() !== '' ? Number(newValue) : 0;
-                if (valueToSave !== originalValue) {
-                    hasChanged = true;
-                }
-            } else {
-                valueToSave = newValue;
-                if (valueToSave !== originalValue) {
-                    hasChanged = true;
-                }
+        if (textarea.dataset.escapePressed === 'true') {
+            if (editingSpan) {
+                editingSpan.classList.remove('editing');
             }
-            
-            if (hasChanged) {
-                if (field === 'words') {
-                    fullData[groupId][field] = valueToSave;
-                } else if (fullData[groupId]?.statements?.[stmtIndex]) {
-                    fullData[groupId].statements[stmtIndex][field] = valueToSave;
-                }
-                fullData[groupId].timestamp = new Date().getTime();
-                modifiedItems.add(cellId);
-                toggleModified(true);
-            } else {
-                modifiedItems.delete(cellId);
-                toggleModified(modifiedItems.size > 0);
+            textarea.remove();
+            return;
+        }
+
+        const newValue = textarea.value.trim();
+        let hasChanged = false;
+
+        let valueToSave;
+        if (field === 'words' || field === 'tags') {
+            valueToSave = newValue.split(',').map(s => s.trim()).filter(Boolean);
+            if (JSON.stringify(valueToSave) !== JSON.stringify(originalValue)) {
+                hasChanged = true;
+            }
+        } else if (['unique', 'property1', 'property2'].includes(field)) {
+            valueToSave = !isNaN(newValue) && newValue.trim() !== '' ? Number(newValue) : 0;
+            if (valueToSave !== originalValue) {
+                hasChanged = true;
+            }
+        } else {
+            valueToSave = newValue;
+            if (valueToSave !== (originalValue || '')) {
+                hasChanged = true;
             }
         }
         
-        flatData = [];
-        sortAndRender(); 
+        if (hasChanged) {
+            if (field === 'words') {
+                fullData[groupId][field] = valueToSave;
+            } else if (fullData[groupId]?.statements?.[stmtIndex]) {
+                fullData[groupId].statements[stmtIndex][field] = valueToSave;
+            }
+            fullData[groupId].timestamp = new Date().getTime();
+            modifiedItems.add(cellId);
+            td.querySelector('.item-text').classList.add('modified-text');
+            toggleModified(true);
+        }
+        
+        if (editingSpan) {
+            editingSpan.textContent = textarea.value || '...';
+            editingSpan.classList.remove('editing');
+        }
+        textarea.remove();
     };
 
+    td.querySelector('span').classList.add('editing');
     td.appendChild(textarea);
     textarea.focus();
     textarea.select();
@@ -392,8 +413,9 @@ window.addNewStatement = function() {
     fullData[groupId].statements.push(newStatement);
     fullData[groupId].timestamp = new Date().getTime();
     document.body.classList.add('modified');
-    flatData = []; // Invalidate flat data cache
-    sortAndRender();
+    flatData = [];
+    processAndSortData();
+    renderTable();
     alert(`${groupId} 그룹에 새로운 항목이 추가되었습니다. '저장' 버튼을 눌러 확정하세요.`);
 }
 
@@ -403,9 +425,10 @@ window.loadData = async function() {
         const snapshot = await get(ref(db, 'liar_groups'));
         if (snapshot.exists()) {
             fullData = snapshot.val();
-            flatData = []; // Invalidate flat data cache
-            modifiedItems.clear(); // Clear modified items on load
-            sortAndRender();
+            flatData = [];
+            modifiedItems.clear();
+            processAndSortData();
+            renderTable();
             document.body.classList.remove('modified');
         } else {
             console.log("No data available.");
@@ -417,7 +440,29 @@ window.loadData = async function() {
     }
 };
 
-window.saveData = async function() {
+async function confirmPasswordAndProceed(permissionKey, callback) {
+  if (sessionStorage.getItem(permissionKey) === 'true') {
+    callback();
+    return;
+  }
+  const password = prompt("비밀번호를 입력하세요:");
+  if (password === null) return;
+  try {
+    const pwSnapshot = await get(ref(db, 'pw'));
+    const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
+    if (password === storedPassword) {
+      sessionStorage.setItem(permissionKey, 'true');
+      callback();
+    } else {
+      alert('비밀번호가 틀렸습니다.');
+    }
+  } catch (error) {
+     alert('비밀번호 확인 중 오류가 발생했습니다.');
+     console.error("비밀번호 가져오기 오류:", error);
+  }
+}
+
+async function processAndSaveData() {
     if (!document.body.classList.contains('modified')) {
         alert("변경된 내용이 없습니다.");
         return;
@@ -428,12 +473,19 @@ window.saveData = async function() {
             await set(ref(db, 'liar_groups'), fullData);
             alert("성공적으로 저장되었습니다.");
             document.body.classList.remove('modified');
-            modifiedItems.clear(); // Clear modified items on successful save
+            modifiedItems.clear();
+            // Re-render to remove 'modified-text' class from all cells
+            const allModifiedCells = document.querySelectorAll('.modified-text');
+            allModifiedCells.forEach(cell => cell.classList.remove('modified-text'));
         } catch (error) {
             console.error("Error saving data: ", error);
             alert("데이터 저장 중 오류 발생: " + error.message);
         }
     }
+}
+
+window.saveData = function() {
+  confirmPasswordAndProceed('저장', processAndSaveData);
 };
 
 window.backupToJson = function() {
@@ -481,7 +533,8 @@ window.onload = () => {
     loadData();
     document.getElementById('search-box').addEventListener('input', (e) => {
         searchTerm = e.target.value;
-        sortAndRender();
+        processAndSortData();
+        renderTable();
     });
 };
 </script>
