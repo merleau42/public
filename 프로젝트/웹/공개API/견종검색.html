@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery.min.js"></script>
+    <title>Document</title>
+	<style>
+		img {
+			max-width: 60vw;
+			max-height: 60vh;
+		}
+		body {
+			display: flex;
+			padding: 20px;
+			justify-content: center;
+			align-items: center;
+		}
+		#wrapper {
+			width: 80vw;
+			height: 80vh;
+			padding: 20px;
+			border: 2px solid black;
+			border-radius: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+		}
+	</style>
+    <script>
+		//$.get, $.post...$.load, $.getJSON, $.ajax
+
+		let state = { 견종:new Set() };
+		let Q = (x,y=document) => y.querySelector(x);
+		let Elem = (config) => {
+			const {tag='div', text='', class:className='', ...attrs} = config;
+			el = document.createElement(tag);
+			el.innerText = text;
+			el.className = className;
+			Object.keys(attrs).forEach(attr => el.setAttribute(attr, attrs[attr]));
+			return el;
+		}
+
+        $(document).ready(function(){
+            getData();
+        })
+
+        function getData() {
+            $.ajax({ method:'get', dataType:'json', url:'https://dog.ceo/api/breeds/list/all' })
+			.done(res => {
+				const breeds = res.message;
+				Object.keys( breeds ).forEach(breed => {
+					if (Object.keys(breeds[breed]).length)
+						Object.keys(breeds[breed]).forEach(x => state.견종.add(`${breed}/${breeds[breed][x]}`));
+					else
+						state.견종.add( breed );
+				})
+			})
+			.done(main);
+        }
+
+		function main() {
+			Q('body').append( Elem({id:'wrapper'}) );
+			Q('#wrapper').append( c_search() );
+			Q('#wrapper').append( c_result() );
+		}
+
+		function c_search() {
+			컨테이너 = Elem({id:'search', id:'검색창'});
+			타이틀 = Elem({tag:'h3', text:'견종 검색 프로그램'});
+			박스 = Elem({tag:'select', id:'검색어'});
+			검색 = Elem({tag:'button', id:'검색', text:'🔎'});
+
+			검색.addEventListener('click', search);
+
+			[...state.견종].forEach(이름 => 박스.append( Elem({tag:'option', text:이름}) ));
+			[타이틀, 박스, 검색].forEach(el => 컨테이너.append(el));
+			return 컨테이너;
+		}
+
+		function c_result() {
+			컨테이너 = Elem({id:'result', id:'결과창'});
+			이름 = Elem({tag:'sapn', id:'이름'});
+			이미지 = Elem({tag:'img', id:'이미지'});
+
+			[이름, 이미지].forEach(el => 컨테이너.append(el));
+			return 컨테이너;
+		}
+
+		function search() {
+			const 견종 = Q('#검색어').value;
+			const url = `https://dog.ceo/api/breed/${견종}/images/random`;
+            $.ajax({ method:'get', dataType:'json', url })
+			.done(res => Q('#이미지').src = res.message );
+		}
+    </script>
+</head>
+<body>
+</body>
+</html>
