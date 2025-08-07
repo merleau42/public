@@ -42,32 +42,22 @@
 </head>
 <body>
 	<div class="top-bar">
-		<div class="top-bar-section">
-			<span id="gameTypeDisplay" class="setting-value-display"></span>
-			<span id="gameModeDisplay" class="setting-value-display"></span>
-		</div>
-		<div class="top-bar-section">
-			<span id="missionInfoDisplay" class="setting-value-display">나의 단어</span>
-		</div>
-		<div class="top-bar-section">
-			<span id="playerCountDisplay" class="setting-value-display"></span>
-			<span id="liarCountDisplay" class="setting-value-display"></span>
-		</div>
+		<span id="missionInfoDisplay" class="setting-value-display menu">나의 단어</span>
+		<span id="gameTypeDisplay" class="setting-value-display menu"></span>
+		<span id="gameModeDisplay" class="setting-value-display menu"></span>
+		<span id="refreshBtn" class="setting-value-display menu">새로고침</span>
+		<span id="playerCountDisplay" class="setting-value-display menu"></span>
+		<span id="liarCountDisplay" class="setting-value-display menu"></span>
 	</div>
 	
 	<div class="grid-container" id="grid"></div>
+	
 	<div class="bottom-bar">
-		<div class="bottom-bar-section">
-			<button id="startGameBtn">게임 시작</button>
-			<button id="refreshBtn">새로고침</button>
-		</div>
-		<div class="bottom-bar-section">
-			<button>결과 확인</button>
-		</div>
-		<div class="bottom-bar-section">
-			<button>투표 시작</button>	
-			<button>발언 시작</button>
-		</div>
+		<span id="startGameBtn" class="setting-value-display menu">게임 시작</span>
+		<span class="menu">qwe1</span>
+		<span class="menu">qwe2</span>
+		<span class="menu">투표 시작</span>	
+		<span class="menu">발언 시작</span>
 	</div>
 
 	<script>

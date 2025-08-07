@@ -24,10 +24,14 @@ GIO=~/dev/subtree/github.io;
 
 # 알고리즘
 		cp -r "$WEB/양치기/"				"$GIO/알고리즘";
+		cp -r "$WEB/코드실행기/"			"$GIO/알고리즘";
 
 # 프론트엔드
 	EXCEL="$WEB/테이블/스프레드시트";
 		cp -r "$EXCEL/"						"$GIO/프론트엔드";
+
+	OPENAPI="$WEB/공개API";
+		cp -r "$OPENAPI/"					"$GIO/프론트엔드";
 
 	FRONT_ETC=기타;
 		cp -r "$WEB/릴레이/연속변환기/"		  "$GIO/프론트엔드";
