@@ -38,35 +38,16 @@
 			height: 95%;
 			display: flex;
 			flex-direction: column;
-			gap: 10px;
+			gap: 9px;
 			justify-content: center;
 			align-items: center;
 		}
-		.레코드 {
-			width: 80%;
-			height: 22%;
-			display: flex;
-		}
-		.섹션1 {
-			width: 25%;
-			text-align: center;
-		}
-		.섹션1, .포스터 {
-			height: 100%;
-		}
-		.섹션2 {
-			width: 65%;
-			font-size: 14px;
-		}
-		.정보 {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-			white-space: nowrap;
-		}
-		.제목 {
-			font-weight: bold;
-		}
+			.레코드 { width: 80%; height: 22%; display: flex; }
+				.섹션1 { width: 25%; height: 100%; text-align: center; }
+					.포스터 { height: 100%; }
+				.섹션2 { width: 65%; font-size: 14px; }
+					.정보 { display: flex; flex-direction: column; gap: 5px; white-space: nowrap; }
+						.제목 { font-weight: bold; }
 		.페이지 {
 			height: 5%;
 			position: relative;
@@ -75,21 +56,17 @@
 			gap: 15px;
 			justify-content: center;
 		}
-		.페이지 div {
-			text-align: center;
-			width: 25px;
-			height: 25px;
-			border: 1px solid blue;
-			border-radius: 5px;
-			background-color: aliceblue;
-			cursor: pointer;
-		}
-		.페이지 div:hover {
-			background-color: lightblue;
-		}
-		.번호.current {
-			background-color: aqua;
-		}
+			.페이지 > div {
+				text-align: center;
+				width: 25px;
+				height: 25px;
+				border: 1px solid blue;
+				border-radius: 5px;
+				background-color: aliceblue;
+				cursor: pointer;
+			}
+			.페이지 > div:hover { background-color: lightblue; }
+			.번호.current { background-color: aqua; }
 	</style>
 	<script>
 		let state = { 영화목록:[], 페이지:1 };
@@ -137,14 +114,15 @@
 					로고 = Elem({tag: 'img', src: 'YTS.svg'});
 				메인 = Elem({tag: 'main'});
 					목록 = Elem({class: '목록'});
+						// [컴포넌트: 레코드]
 					페이지 = Elem({class: '페이지'});
 						맨앞 = Elem({class: '맨앞', text: '<<'});
 						이전 = Elem({class: '이전', text: '<'});
-						일 = Elem({class: '번호', text: '1', index: 1});
-						이 = Elem({class: '번호', text: '2', index: 2});
-						삼 = Elem({class: '번호', text: '3', index: 3});
-						사 = Elem({class: '번호', text: '4', index: 4});
-						오 = Elem({class: '번호', text: '5', index: 5});
+						번호1 = Elem({class: '번호', text: '1', index: 1});
+						번호2 = Elem({class: '번호', text: '2', index: 2});
+						번호3 = Elem({class: '번호', text: '3', index: 3});
+						번호4 = Elem({class: '번호', text: '4', index: 4});
+						번호5 = Elem({class: '번호', text: '5', index: 5});
 						다음 = Elem({class: '다음', text: '>'});
 						맨뒤 = Elem({class: '맨뒤', text: '>>'});
 				푸터 = Elem({tag: 'footer'});
@@ -153,14 +131,14 @@
 			컨테이너.append(헤더, 메인, 푸터);
 				헤더.append(로고);
 				메인.append(목록, 페이지);
-					페이지.append(맨앞, 이전, 일, 이, 삼, 사, 오, 다음, 맨뒤);
+					페이지.append(맨앞, 이전, 번호1, 번호2, 번호3, 번호4, 번호5, 다음, 맨뒤);
 				푸터.append(저작권);
 
 			맨앞.addEventListener('click', _ => list_record( state.페이지=1 ) );
 			다음.addEventListener('click', _ => list_record( ++state.페이지 ) );
 			이전.addEventListener('click', _ => list_record( --state.페이지 ) );
 			맨뒤.addEventListener('click', _ => list_record( state.페이지=100 ) );
-			[일,이,삼,사,오].forEach(el => el.addEventListener('click',_ => {
+			[번호1, 번호2, 번호3, 번호4, 번호5].forEach(el => el.addEventListener('click',_ => {
 				list_record( state.페이지 = Number(el.innerText) );
 			}))
 
