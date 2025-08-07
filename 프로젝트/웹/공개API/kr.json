@@ -1,0 +1,1717 @@
+[
+  {
+    "original": "Tokusan-ri",
+    "alter": [
+      "Tokusan-ri",
+      "덕산"
+    ],
+    "id": 0
+  },
+  {
+    "original": "Heunghae",
+    "alter": [
+      "Heunghae",
+      "흥해"
+    ],
+    "id": 1
+  },
+  {
+    "original": "Reisui",
+    "alter": [
+      "Reisui",
+      "예수"
+    ],
+    "id": 2
+  },
+  {
+    "original": "Yeonil",
+    "alter": [
+      "Yeonil",
+      "연일"
+    ],
+    "id": 3
+  },
+  {
+    "original": "Neietsu",
+    "alter": [
+      "Neietsu",
+      "내이"
+    ],
+    "id": 4
+  },
+  {
+    "original": "Eisen",
+    "alter": [
+      "Eisen",
+      "예산"
+    ],
+    "id": 5
+  },
+  {
+    "original": "Yongin",
+    "alter": [
+      "Yongin",
+      "용인"
+    ],
+    "id": 6
+  },
+  {
+    "original": "Yeonggwang",
+    "alter": [
+      "Yeonggwang",
+      "영광"
+    ],
+    "id": 7
+  },
+  {
+    "original": "Yeongdong",
+    "alter": [
+      "Yeongdong",
+      "영동"
+    ],
+    "id": 8
+  },
+  {
+    "original": "Eisen",
+    "alter": [
+      "Eisen",
+      "예산"
+    ],
+    "id": 9
+  },
+  {
+    "original": "Yeongam-guncheong",
+    "alter": [
+      "Yeongam-guncheong",
+      "영암"
+    ],
+    "id": 10
+  },
+  {
+    "original": "Yeoncheon-gun",
+    "alter": [
+      "Yeoncheon-gun",
+      "연천"
+    ],
+    "id": 11
+  },
+  {
+    "original": "Yeoju",
+    "alter": [
+      "Yeoju",
+      "여주"
+    ],
+    "id": 12
+  },
+  {
+    "original": "Yesan",
+    "alter": [
+      "Yesan",
+      "예산"
+    ],
+    "id": 13
+  },
+  {
+    "original": "Yecheon",
+    "alter": [
+      "Yecheon",
+      "예천"
+    ],
+    "id": 14
+  },
+  {
+    "original": "Yangyang",
+    "alter": [
+      "Yangyang",
+      "양양"
+    ],
+    "id": 15
+  },
+  {
+    "original": "Yangsan",
+    "alter": [
+      "Yangsan",
+      "양산"
+    ],
+    "id": 16
+  },
+  {
+    "original": "Yangp'yŏng",
+    "alter": [
+      "Yangp'yŏng",
+      "양평"
+    ],
+    "id": 17
+  },
+  {
+    "original": "Yangju",
+    "alter": [
+      "Yangju",
+      "양주"
+    ],
+    "id": 18
+  },
+  {
+    "original": "Yanggu",
+    "alter": [
+      "Yanggu",
+      "양구"
+    ],
+    "id": 19
+  },
+  {
+    "original": "Yach’on",
+    "alter": [
+      "Yach’on",
+      "야촌"
+    ],
+    "id": 20
+  },
+  {
+    "original": "Wŏnju",
+    "alter": [
+      "Wŏnju",
+      "원주"
+    ],
+    "id": 21
+  },
+  {
+    "original": "Wanju",
+    "alter": [
+      "Wanju",
+      "완주"
+    ],
+    "id": 22
+  },
+  {
+    "original": "Waegwan",
+    "alter": [
+      "Waegwan",
+      "왜관"
+    ],
+    "id": 23
+  },
+  {
+    "original": "Unsal-li",
+    "alter": [
+      "Unsal-li",
+      "운산"
+    ],
+    "id": 24
+  },
+  {
+    "original": "Umulmok",
+    "alter": [
+      "Umulmok",
+      "우물목"
+    ],
+    "id": 25
+  },
+  {
+    "original": "Ulsan",
+    "alter": [
+      "Ulsan",
+      "울산"
+    ],
+    "id": 26
+  },
+  {
+    "original": "Ulchin",
+    "alter": [
+      "Ulchin",
+      "울진"
+    ],
+    "id": 28
+  },
+  {
+    "original": "Uijeongbu-si",
+    "alter": [
+      "Uijeongbu-si",
+      "의정부"
+    ],
+    "id": 29
+  },
+  {
+    "original": "Tangjin",
+    "alter": [
+      "Tangjin",
+      "당진"
+    ],
+    "id": 30
+  },
+  {
+    "original": "Taesal-li",
+    "alter": [
+      "Taesal-li",
+      "태산"
+    ],
+    "id": 31
+  },
+  {
+    "original": "Daejeon",
+    "alter": [
+      "Daejeon",
+      "대전"
+    ],
+    "id": 32
+  },
+  {
+    "original": "Daegu",
+    "alter": [
+      "Daegu",
+      "대구"
+    ],
+    "id": 34
+  },
+  {
+    "original": "Boryeong",
+    "alter": [
+      "Boryeong",
+      "보령"
+    ],
+    "id": 36
+  },
+  {
+    "original": "T’aebaek",
+    "alter": [
+      "T’aebaek",
+      "태백"
+    ],
+    "id": 37
+  },
+  {
+    "original": "Taian",
+    "alter": [
+      "Taian",
+      "태안"
+    ],
+    "id": 38
+  },
+  {
+    "original": "Suwon",
+    "alter": [
+      "Suwon",
+      "수원"
+    ],
+    "id": 39
+  },
+  {
+    "original": "Suncheon",
+    "alter": [
+      "Suncheon",
+      "순천"
+    ],
+    "id": 40
+  },
+  {
+    "original": "Sunchang-chodeunghakgyo",
+    "alter": [
+      "Sunchang-chodeunghakgyo",
+      "순창"
+    ],
+    "id": 41
+  },
+  {
+    "original": "Seoul",
+    "alter": [
+      "Seoul",
+      "서울"
+    ],
+    "id": 44
+  },
+  {
+    "original": "Seosan",
+    "alter": [
+      "Seosan",
+      "서산"
+    ],
+    "id": 45
+  },
+  {
+    "original": "Jenzan",
+    "alter": [
+      "Jenzan"
+    ],
+    "id": 46
+  },
+  {
+    "original": "Seisan-ri",
+    "alter": [
+      "Seisan-ri"
+    ],
+    "id": 47
+  },
+  {
+    "original": "Songjeong",
+    "alter": [
+      "Songjeong",
+      "송정"
+    ],
+    "id": 48
+  },
+  {
+    "original": "Seonghwan",
+    "alter": [
+      "Seonghwan",
+      "성환"
+    ],
+    "id": 49
+  },
+  {
+    "original": "Sokcho",
+    "alter": [
+      "Sokcho",
+      "속초"
+    ],
+    "id": 50
+  },
+  {
+    "original": "Yongsan",
+    "alter": [
+      "Yongsan",
+      "용산"
+    ],
+    "id": 51
+  },
+  {
+    "original": "Sinch’ŏn-dong",
+    "alter": [
+      "Sinch’ŏn-dong"
+    ],
+    "id": 52
+  },
+  {
+    "original": "Sangok",
+    "alter": [
+      "Sangok",
+      "상곡"
+    ],
+    "id": 53
+  },
+  {
+    "original": "Sang-ni",
+    "alter": [
+      "Sang-ni"
+    ],
+    "id": 54
+  },
+  {
+    "original": "Sangju",
+    "alter": [
+      "Sangju",
+      "상주"
+    ],
+    "id": 55
+  },
+  {
+    "original": "Santyoku",
+    "alter": [
+      "Santyoku"
+    ],
+    "id": 56
+  },
+  {
+    "original": "Shisen",
+    "alter": [
+      "Shisen"
+    ],
+    "id": 57
+  },
+  {
+    "original": "Pyeongtaek",
+    "alter": [
+      "Pyeongtaek",
+      "평택"
+    ],
+    "id": 58
+  },
+  {
+    "original": "Pyeong",
+    "alter": [
+      "Pyeong"
+    ],
+    "id": 59
+  },
+  {
+    "original": "Buyeo",
+    "alter": [
+      "Buyeo",
+      "부여"
+    ],
+    "id": 60
+  },
+  {
+    "original": "Busan",
+    "alter": [
+      "Busan",
+      "부산"
+    ],
+    "id": 61
+  },
+  {
+    "original": "Bucheon-si",
+    "alter": [
+      "Bucheon-si",
+      "부천"
+    ],
+    "id": 63
+  },
+  {
+    "original": "Puan",
+    "alter": [
+      "Puan"
+    ],
+    "id": 64
+  },
+  {
+    "original": "Boseong",
+    "alter": [
+      "Boseong",
+      "보성"
+    ],
+    "id": 65
+  },
+  {
+    "original": "Beolgyo",
+    "alter": [
+      "Beolgyo",
+      "벌교"
+    ],
+    "id": 66
+  },
+  {
+    "original": "Pohang",
+    "alter": [
+      "Pohang",
+      "포항"
+    ],
+    "id": 67
+  },
+  {
+    "original": "Osan",
+    "alter": [
+      "Osan",
+      "오산"
+    ],
+    "id": 68
+  },
+  {
+    "original": "Asan",
+    "alter": [
+      "Asan",
+      "아산"
+    ],
+    "id": 69
+  },
+  {
+    "original": "Okcheon",
+    "alter": [
+      "Okcheon",
+      "옥천"
+    ],
+    "id": 70
+  },
+  {
+    "original": "Kosong",
+    "alter": [
+      "Kosong"
+    ],
+    "id": 71
+  },
+  {
+    "original": "Nonsan",
+    "alter": [
+      "Nonsan",
+      "논산"
+    ],
+    "id": 72
+  },
+  {
+    "original": "Namyang",
+    "alter": [
+      "Namyang",
+      "남양"
+    ],
+    "id": 73
+  },
+  {
+    "original": "Nangen",
+    "alter": [
+      "Nangen"
+    ],
+    "id": 74
+  },
+  {
+    "original": "Namp’o-ri",
+    "alter": [
+      "Namp’o-ri",
+      "남포"
+    ],
+    "id": 75
+  },
+  {
+    "original": "Namhae",
+    "alter": [
+      "Namhae",
+      "남해"
+    ],
+    "id": 76
+  },
+  {
+    "original": "Naju",
+    "alter": [
+      "Naju",
+      "나주"
+    ],
+    "id": 77
+  },
+  {
+    "original": "Munsan",
+    "alter": [
+      "Munsan",
+      "문산"
+    ],
+    "id": 78
+  },
+  {
+    "original": "Mungyeong",
+    "alter": [
+      "Mungyeong",
+      "문경"
+    ],
+    "id": 79
+  },
+  {
+    "original": "Paju",
+    "alter": [
+      "Paju",
+      "파주"
+    ],
+    "id": 80
+  },
+  {
+    "original": "Muju",
+    "alter": [
+      "Muju",
+      "무주"
+    ],
+    "id": 81
+  },
+  {
+    "original": "Muan",
+    "alter": [
+      "Muan",
+      "무안"
+    ],
+    "id": 82
+  },
+  {
+    "original": "Mokpo",
+    "alter": [
+      "Mokpo",
+      "목포"
+    ],
+    "id": 83
+  },
+  {
+    "original": "Miryang",
+    "alter": [
+      "Miryang",
+      "밀양"
+    ],
+    "id": 84
+  },
+  {
+    "original": "Masan",
+    "alter": [
+      "Masan",
+      "마산"
+    ],
+    "id": 85
+  },
+  {
+    "original": "Gyeongsan-si",
+    "alter": [
+      "Gyeongsan-si",
+      "경산"
+    ],
+    "id": 87
+  },
+  {
+    "original": "Gyeongju",
+    "alter": [
+      "Gyeongju",
+      "경주"
+    ],
+    "id": 88
+  },
+  {
+    "original": "Gyeonggi-do",
+    "alter": [
+      "Gyeonggi-do",
+      "경기도"
+    ],
+    "id": 89
+  },
+  {
+    "original": "Kwangyang",
+    "alter": [
+      "Kwangyang",
+      "광양"
+    ],
+    "id": 90
+  },
+  {
+    "original": "Gwangju",
+    "alter": [
+      "Gwangju",
+      "광주"
+    ],
+    "id": 91
+  },
+  {
+    "original": "Gwacheon",
+    "alter": [
+      "Gwacheon",
+      "과천"
+    ],
+    "id": 94
+  },
+  {
+    "original": "Kuwaegwan",
+    "alter": [
+      "Kuwaegwan"
+    ],
+    "id": 95
+  },
+  {
+    "original": "Kurye",
+    "alter": [
+      "Kurye",
+      "구례"
+    ],
+    "id": 96
+  },
+  {
+    "original": "Guri-si",
+    "alter": [
+      "Guri-si",
+      "구리"
+    ],
+    "id": 97
+  },
+  {
+    "original": "Kunwi",
+    "alter": [
+      "Kunwi"
+    ],
+    "id": 98
+  },
+  {
+    "original": "Gunsan",
+    "alter": [
+      "Gunsan",
+      "군산"
+    ],
+    "id": 99
+  },
+  {
+    "original": "Gunpo",
+    "alter": [
+      "Gunpo",
+      "군포"
+    ],
+    "id": 100
+  },
+  {
+    "original": "Kinzan",
+    "alter": [
+      "Kinzan"
+    ],
+    "id": 101
+  },
+  {
+    "original": "Gumi",
+    "alter": [
+      "Gumi",
+      "구미"
+    ],
+    "id": 102
+  },
+  {
+    "original": "Goyang-si",
+    "alter": [
+      "Goyang-si",
+      "고양"
+    ],
+    "id": 103
+  },
+  {
+    "original": "Goseong",
+    "alter": [
+      "Goseong",
+      "고성"
+    ],
+    "id": 104
+  },
+  {
+    "original": "Koryŏng",
+    "alter": [
+      "Koryŏng",
+      "고령"
+    ],
+    "id": 105
+  },
+  {
+    "original": "Gongju",
+    "alter": [
+      "Gongju",
+      "공주"
+    ],
+    "id": 106
+  },
+  {
+    "original": "Kyosai",
+    "alter": [
+      "Kyosai"
+    ],
+    "id": 107
+  },
+  {
+    "original": "Koyo",
+    "alter": [
+      "Koyo"
+    ],
+    "id": 108
+  },
+  {
+    "original": "Koesan",
+    "alter": [
+      "Koesan",
+      "괴산"
+    ],
+    "id": 109
+  },
+  {
+    "original": "Koch'ang",
+    "alter": [
+      "Koch'ang",
+      "고창"
+    ],
+    "id": 110
+  },
+  {
+    "original": "Gimpo-si",
+    "alter": [
+      "Gimpo-si",
+      "김포"
+    ],
+    "id": 111
+  },
+  {
+    "original": "Kimje",
+    "alter": [
+      "Kimje",
+      "김제"
+    ],
+    "id": 112
+  },
+  {
+    "original": "Kimhae",
+    "alter": [
+      "Kimhae",
+      "김해"
+    ],
+    "id": 113
+  },
+  {
+    "original": "Gimcheon",
+    "alter": [
+      "Gimcheon",
+      "김천"
+    ],
+    "id": 114
+  },
+  {
+    "original": "Gijang",
+    "alter": [
+      "Gijang",
+      "기장"
+    ],
+    "id": 115
+  },
+  {
+    "original": "Gapyeong",
+    "alter": [
+      "Gapyeong",
+      "가평"
+    ],
+    "id": 116
+  },
+  {
+    "original": "Gangneung",
+    "alter": [
+      "Gangneung",
+      "강릉"
+    ],
+    "id": 118
+  },
+  {
+    "original": "Iksan",
+    "alter": [
+      "Iksan",
+      "익산"
+    ],
+    "id": 120
+  },
+  {
+    "original": "Ipyang-ni",
+    "alter": [
+      "Ipyang-ni"
+    ],
+    "id": 121
+  },
+  {
+    "original": "Ipseokdong",
+    "alter": [
+      "Ipseokdong",
+      "입석동"
+    ],
+    "id": 122
+  },
+  {
+    "original": "Inje",
+    "alter": [
+      "Inje",
+      "인제"
+    ],
+    "id": 123
+  },
+  {
+    "original": "Incheon",
+    "alter": [
+      "Incheon",
+      "인천"
+    ],
+    "id": 124
+  },
+  {
+    "original": "Imsil",
+    "alter": [
+      "Imsil",
+      "임실"
+    ],
+    "id": 126
+  },
+  {
+    "original": "Icheon-si",
+    "alter": [
+      "Icheon-si",
+      "이천"
+    ],
+    "id": 127
+  },
+  {
+    "original": "Hwasun",
+    "alter": [
+      "Hwasun"
+    ],
+    "id": 128
+  },
+  {
+    "original": "Hwaseong-si",
+    "alter": [
+      "Hwaseong-si",
+      "화성"
+    ],
+    "id": 129
+  },
+  {
+    "original": "Hwapyeongri",
+    "alter": [
+      "Hwapyeongri",
+      "화평"
+    ],
+    "id": 130
+  },
+  {
+    "original": "Hwacheon",
+    "alter": [
+      "Hwacheon",
+      "화천"
+    ],
+    "id": 131
+  },
+  {
+    "original": "Hŭngjŏn",
+    "alter": [
+      "Hŭngjŏn"
+    ],
+    "id": 132
+  },
+  {
+    "original": "Kulgwan-dong",
+    "alter": [
+      "Kulgwan-dong"
+    ],
+    "id": 133
+  },
+  {
+    "original": "Hongseong",
+    "alter": [
+      "Hongseong",
+      "홍성"
+    ],
+    "id": 134
+  },
+  {
+    "original": "Hongch’ŏn",
+    "alter": [
+      "Hongch’ŏn"
+    ],
+    "id": 135
+  },
+  {
+    "original": "Hayang",
+    "alter": [
+      "Hayang",
+      "하양"
+    ],
+    "id": 137
+  },
+  {
+    "original": "Hamyang",
+    "alter": [
+      "Hamyang",
+      "함양"
+    ],
+    "id": 138
+  },
+  {
+    "original": "Hampyeongsaengtaegongwon",
+    "alter": [
+      "Hampyeongsaengtaegongwon",
+      "함평"
+    ],
+    "id": 139
+  },
+  {
+    "original": "Haenam",
+    "alter": [
+      "Haenam",
+      "해남"
+    ],
+    "id": 140
+  },
+  {
+    "original": "Hadong-eup Samuso",
+    "alter": [
+      "Hadong-eup Samuso",
+      "하동"
+    ],
+    "id": 141
+  },
+  {
+    "original": "Jungpyong",
+    "alter": [
+      "Jungpyong"
+    ],
+    "id": 142
+  },
+  {
+    "original": "Chungju",
+    "alter": [
+      "Chungju",
+      "청주"
+    ],
+    "id": 143
+  },
+  {
+    "original": "Chuncheon",
+    "alter": [
+      "Chuncheon",
+      "춘천"
+    ],
+    "id": 146
+  },
+  {
+    "original": "Chuja-ri",
+    "alter": [
+      "Chuja-ri",
+      "추자"
+    ],
+    "id": 147
+  },
+  {
+    "original": "Jeonju",
+    "alter": [
+      "Jeonju",
+      "전주"
+    ],
+    "id": 148
+  },
+  {
+    "original": "Cheongsong gun",
+    "alter": [
+      "Cheongsong gun",
+      "청송"
+    ],
+    "id": 149
+  },
+  {
+    "original": "Ch’ŏngnim",
+    "alter": [
+      "Ch’ŏngnim"
+    ],
+    "id": 150
+  },
+  {
+    "original": "Cheongju-si",
+    "alter": [
+      "Cheongju-si",
+      "청주"
+    ],
+    "id": 151
+  },
+  {
+    "original": "Cheonan",
+    "alter": [
+      "Cheonan",
+      "천안"
+    ],
+    "id": 152
+  },
+  {
+    "original": "Chinju",
+    "alter": [
+      "Chinju",
+      "진주"
+    ],
+    "id": 155
+  },
+  {
+    "original": "Chinhae",
+    "alter": [
+      "Chinhae",
+      "진해"
+    ],
+    "id": 156
+  },
+  {
+    "original": "Chinch'ŏn",
+    "alter": [
+      "Chinch'ŏn"
+    ],
+    "id": 157
+  },
+  {
+    "original": "Jinan-gun",
+    "alter": [
+      "Jinan-gun",
+      "진안"
+    ],
+    "id": 158
+  },
+  {
+    "original": "Shitsukoku",
+    "alter": [
+      "Shitsukoku"
+    ],
+    "id": 159
+  },
+  {
+    "original": "Jeju City",
+    "alter": [
+      "Jeju City",
+      "제주시"
+    ],
+    "id": 161
+  },
+  {
+    "original": "Teisen",
+    "alter": [
+      "Teisen"
+    ],
+    "id": 162
+  },
+  {
+    "original": "Changwon",
+    "alter": [
+      "Changwon",
+      "창원"
+    ],
+    "id": 163
+  },
+  {
+    "original": "Changsu",
+    "alter": [
+      "Changsu",
+      "창수"
+    ],
+    "id": 164
+  },
+  {
+    "original": "Changp’o",
+    "alter": [
+      "Changp’o",
+      "창포"
+    ],
+    "id": 165
+  },
+  {
+    "original": "Janggol",
+    "alter": [
+      "Janggol",
+      "장골"
+    ],
+    "id": 166
+  },
+  {
+    "original": "Jamwon-dong",
+    "alter": [
+      "Jamwon-dong",
+      "잠원"
+    ],
+    "id": 167
+  },
+  {
+    "original": "Anyang-si",
+    "alter": [
+      "Anyang-si",
+      "안양"
+    ],
+    "id": 168
+  },
+  {
+    "original": "Anseong",
+    "alter": [
+      "Anseong",
+      "안성"
+    ],
+    "id": 169
+  },
+  {
+    "original": "Ansan-si",
+    "alter": [
+      "Ansan-si",
+      "안산"
+    ],
+    "id": 170
+  },
+  {
+    "original": "Andong",
+    "alter": [
+      "Andong",
+      "안동"
+    ],
+    "id": 171
+  },
+  {
+    "original": "Gaigeturi",
+    "alter": [
+      "Gaigeturi"
+    ],
+    "id": 172
+  },
+  {
+    "original": "Sinhyeon",
+    "alter": [
+      "Sinhyeon",
+      "신현"
+    ],
+    "id": 173
+  },
+  {
+    "original": "Buyeondong",
+    "alter": [
+      "Buyeondong",
+      "부연"
+    ],
+    "id": 174
+  },
+  {
+    "original": "Kangp’o-ri",
+    "alter": [
+      "Kangp’o-ri",
+      "강포"
+    ],
+    "id": 175
+  },
+  {
+    "original": "Songch’ŏni-dong",
+    "alter": [
+      "Songch’ŏni-dong"
+    ],
+    "id": 176
+  },
+  {
+    "original": "Sŏnyŏl-li",
+    "alter": [
+      "Sŏnyŏl-li"
+    ],
+    "id": 177
+  },
+  {
+    "original": "Yŏnmu",
+    "alter": [
+      "Yŏnmu"
+    ],
+    "id": 178
+  },
+  {
+    "original": "Unam-ni",
+    "alter": [
+      "Unam-ni",
+      "운암"
+    ],
+    "id": 179
+  },
+  {
+    "original": "Tangp’yŏng",
+    "alter": [
+      "Tangp’yŏng"
+    ],
+    "id": 180
+  },
+  {
+    "original": "Tonghae",
+    "alter": [
+      "Tonghae",
+      "동해"
+    ],
+    "id": 181
+  },
+  {
+    "original": "Imsil",
+    "alter": [
+      "Imsil",
+      "임실"
+    ],
+    "id": 182
+  },
+  {
+    "original": "Sŏnbawi",
+    "alter": [
+      "Sŏnbawi"
+    ],
+    "id": 183
+  },
+  {
+    "original": "Pubal",
+    "alter": [
+      "Pubal"
+    ],
+    "id": 184
+  },
+  {
+    "original": "Seongnam-si",
+    "alter": [
+      "Seongnam-si",
+      "성남"
+    ],
+    "id": 185
+  },
+  {
+    "original": "Hanam",
+    "alter": [
+      "Hanam",
+      "한암"
+    ],
+    "id": 186
+  },
+  {
+    "original": "Hwado",
+    "alter": [
+      "Hwado",
+      "화도"
+    ],
+    "id": 187
+  },
+  {
+    "original": "Namyangju",
+    "alter": [
+      "Namyangju",
+      "남양주"
+    ],
+    "id": 188
+  },
+  {
+    "original": "Ungsang",
+    "alter": [
+      "Ungsang"
+    ],
+    "id": 190
+  },
+  {
+    "original": "Wabu",
+    "alter": [
+      "Wabu"
+    ],
+    "id": 191
+  },
+  {
+    "original": "Naesŏ",
+    "alter": [
+      "Naesŏ"
+    ],
+    "id": 192
+  },
+  {
+    "original": "Hwawŏn",
+    "alter": [
+      "Hwawŏn"
+    ],
+    "id": 193
+  },
+  {
+    "original": "T’aep’ong-dong",
+    "alter": [
+      "T’aep’ong-dong"
+    ],
+    "id": 194
+  },
+  {
+    "original": "Kwangmyŏng",
+    "alter": [
+      "Kwangmyŏng",
+      "광명"
+    ],
+    "id": 195
+  },
+  {
+    "original": "Kŏje",
+    "alter": [
+      "Kŏje"
+    ],
+    "id": 196
+  },
+  {
+    "original": "Seolman",
+    "alter": [
+      "Seolman"
+    ],
+    "id": 197
+  },
+  {
+    "original": "Myŏngwŏli-ri",
+    "alter": [
+      "Myŏngwŏli-ri",
+      "명월"
+    ],
+    "id": 198
+  },
+  {
+    "original": "Paemŏri",
+    "alter": [
+      "Paemŏri"
+    ],
+    "id": 199
+  },
+  {
+    "original": "Ot’ani-ri",
+    "alter": [
+      "Ot’ani-ri"
+    ],
+    "id": 200
+  },
+  {
+    "original": "Sinan",
+    "alter": [
+      "Sinan",
+      "신안"
+    ],
+    "id": 201
+  },
+  {
+    "original": "Anbaeteo",
+    "alter": [
+      "Anbaeteo"
+    ],
+    "id": 202
+  },
+  {
+    "original": "Samjeon-dong",
+    "alter": [
+      "Samjeon-dong",
+      "삼정"
+    ],
+    "id": 203
+  },
+  {
+    "original": "Namhyang-dong",
+    "alter": [
+      "Namhyang-dong",
+      "남향"
+    ],
+    "id": 204
+  },
+  {
+    "original": "Wonteo",
+    "alter": [
+      "Wonteo"
+    ],
+    "id": 205
+  },
+  {
+    "original": "Dongjinwon",
+    "alter": [
+      "Dongjinwon",
+      "동진원"
+    ],
+    "id": 206
+  },
+  {
+    "original": "Haejeong",
+    "alter": [
+      "Haejeong",
+      "해정"
+    ],
+    "id": 207
+  },
+  {
+    "original": "Sangdeok",
+    "alter": [
+      "Sangdeok",
+      "상덕"
+    ],
+    "id": 208
+  },
+  {
+    "original": "Samga-dong",
+    "alter": [
+      "Samga-dong",
+      "삼가"
+    ],
+    "id": 209
+  },
+  {
+    "original": "Seryui-dong",
+    "alter": [
+      "Seryui-dong"
+    ],
+    "id": 210
+  },
+  {
+    "original": "Yeongtongi-dong",
+    "alter": [
+      "Yeongtongi-dong"
+    ],
+    "id": 211
+  },
+  {
+    "original": "Subu-mal",
+    "alter": [
+      "Subu-mal"
+    ],
+    "id": 212
+  },
+  {
+    "original": "Hup’yŏng",
+    "alter": [
+      "Hup’yŏng"
+    ],
+    "id": 213
+  },
+  {
+    "original": "Oegeomusil",
+    "alter": [
+      "Oegeomusil"
+    ],
+    "id": 214
+  },
+  {
+    "original": "Panghak-tong",
+    "alter": [
+      "Panghak-tong"
+    ],
+    "id": 215
+  },
+  {
+    "original": "Pŏdŭlbat",
+    "alter": [
+      "Pŏdŭlbat"
+    ],
+    "id": 216
+  },
+  {
+    "original": "Hwangmae",
+    "alter": [
+      "Hwangmae"
+    ],
+    "id": 217
+  },
+  {
+    "original": "Banpobondong",
+    "alter": [
+      "Banpobondong"
+    ],
+    "id": 218
+  },
+  {
+    "original": "P’ungnap-tong",
+    "alter": [
+      "P’ungnap-tong"
+    ],
+    "id": 219
+  },
+  {
+    "original": "Kŭmhosamga-dong",
+    "alter": [
+      "Kŭmhosamga-dong"
+    ],
+    "id": 220
+  },
+  {
+    "original": "Kwanghŭi-dong",
+    "alter": [
+      "Kwanghŭi-dong",
+      "광휘"
+    ],
+    "id": 221
+  },
+  {
+    "original": "Sup’yŏng-dong",
+    "alter": [
+      "Sup’yŏng-dong"
+    ],
+    "id": 222
+  },
+  {
+    "original": "Ganeung i dong",
+    "alter": [
+      "Ganeung i dong"
+    ],
+    "id": 223
+  },
+  {
+    "original": "Goenae",
+    "alter": [
+      "Goenae"
+    ],
+    "id": 224
+  },
+  {
+    "original": "Misa-ch’on",
+    "alter": [
+      "Misa-ch’on",
+      "미사촌"
+    ],
+    "id": 225
+  },
+  {
+    "original": "Chaen-mal",
+    "alter": [
+      "Chaen-mal"
+    ],
+    "id": 226
+  },
+  {
+    "original": "Wŏnsŏngil-tong",
+    "alter": [
+      "Wŏnsŏngil-tong"
+    ],
+    "id": 227
+  },
+  {
+    "original": "Angol",
+    "alter": [
+      "Angol"
+    ],
+    "id": 228
+  },
+  {
+    "original": "Anteo",
+    "alter": [
+      "Anteo"
+    ],
+    "id": 229
+  },
+  {
+    "original": "Beodang",
+    "alter": [
+      "Beodang"
+    ],
+    "id": 230
+  },
+  {
+    "original": "Yonghŭng",
+    "alter": [
+      "Yonghŭng"
+    ],
+    "id": 231
+  },
+  {
+    "original": "Gueongmal",
+    "alter": [
+      "Gueongmal"
+    ],
+    "id": 232
+  },
+  {
+    "original": "Chogok",
+    "alter": [
+      "Chogok"
+    ],
+    "id": 233
+  },
+  {
+    "original": "P’yŏngsŏng",
+    "alter": [
+      "P’yŏngsŏng"
+    ],
+    "id": 234
+  },
+  {
+    "original": "Utt’ŏ-gol",
+    "alter": [
+      "Utt’ŏ-gol"
+    ],
+    "id": 235
+  },
+  {
+    "original": "Chungang-dong",
+    "alter": [
+      "Chungang-dong",
+      "청강"
+    ],
+    "id": 236
+  },
+  {
+    "original": "Chidong-gol",
+    "alter": [
+      "Chidong-gol"
+    ],
+    "id": 237
+  },
+  {
+    "original": "Ugok",
+    "alter": [
+      "Ugok",
+      "우곡"
+    ],
+    "id": 238
+  },
+  {
+    "original": "Changnyeong",
+    "alter": [
+      "Changnyeong",
+      "창녕"
+    ],
+    "id": 239
+  },
+  {
+    "original": "Changsal-li",
+    "alter": [
+      "Changsal-li",
+      "창살"
+    ],
+    "id": 240
+  },
+  {
+    "original": "Jangjolli",
+    "alter": [
+      "Jangjolli"
+    ],
+    "id": 241
+  }
+]
