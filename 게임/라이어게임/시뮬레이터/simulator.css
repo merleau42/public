@@ -1,6 +1,7 @@
-/* 기본 설정 */
 * {
 	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 html {
@@ -15,85 +16,36 @@ html::-webkit-scrollbar {
 body {
 	font-family: Arial, sans-serif;
 	background-color: ghostwhite;
-	margin: 0;
-	padding: 0;
-	padding-bottom: 5vh; /* 하단바 높이만큼 여백 확보 */
+	padding-top: 100px; /* Added padding-top to prevent content from being hidden by the fixed top-bar */
 }
 
-/* ✅ 상단바 & 하단바 공통 섹션 스타일 */
-.top-bar-section, .bottom-bar-section {
-	display: flex;
-	flex-direction: row; /* 아이템들을 가로로 배치 */
-	justify-content: center;
-	align-items: center;
-	gap: 5px; /* 한 섹션 안의 아이템 간격 */
-	text-align: center;
-}
-
-/* ✅ 상단바 */
 .top-bar {
-	padding: 5px 0;
-	background-color: #f0f0f0;
 	display: flex;
-	justify-content: space-around;
-	align-items: flex-start;
+	flex-wrap: wrap;
+	background-color: #f0f0f0;
 	font-weight: bold;
-	font-size: 1em;
-	gap: 10px;
-}
-
-.top-bar .top-bar-section {
-	flex-direction: column; /* 상단바 섹션만 세로 정렬 */
-}
-
-.top-bar span {
-	width: min(150px, 15vw);
-}
-
-#missionInfoDisplay {
+	padding: 5px 10px;
+	position: fixed;
+	top: 0;
 	width: 100%;
-	height: 100%;
+	z-index: 100;
 }
 
-/* ✅ 하단바 (항상 화면 아래 고정됨) */
 .bottom-bar {
-	background-color: #f0f0f0;
 	display: flex;
-	align-items: center;
-	justify-content: space-around;
+	background-color: #f0f0f0;
 	font-weight: bold;
 	position: fixed;
 	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 999;
-	padding: 8px;
-	gap: 10px;
+	width: 100%;
+	z-index: 100;
+	justify-content: center;
 }
-
-.bottom-bar button {
-	flex: 1;
-	display: inline-block;
-	padding: 8px 10px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	background-color: #f9f9f9;
-	cursor: pointer;
-	text-align: center;
-	font-weight: bold;
-	font-size: 0.9em;
-	white-space: nowrap;
-	max-width: 120px; /* 버튼 최대 너비 제한 */
-}
-
 
 /* 상단바 버튼 */
 .top-bar button {
-	padding: 0;
-	font-size: 1em;
 	border: 0;
 	cursor: pointer;
-	background: none;
 }
 
 /* ✅ 퍼즐 카드 영역 */
@@ -256,20 +208,23 @@ body {
 	text-align: center;
 }
 
-.setting-value-display {
-	display: inline-block;
-	/* min-width: 30px; */
-	min-width: 100px;
+.menu {
 	padding: 5px 10px;
+	width: 125px;
+	height: 30px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	background-color: #f9f9f9;
 	cursor: pointer;
 	text-align: center;
 	font-weight: bold;
-	margin-left: 5px; /* "인원수:" 텍스트와의 간격 */
-	margin-right: 5px; /* 다음 요소와의 간격 */
-	position: relative; /* 드롭다운 옵션 위치 지정을 위함 */
+	font-size: 14px;
+	margin-bottom: 5px;
+}
+
+.setting-value-display {
+	flex: 1 0 auto;
+	width: auto;
 }
 
 .custom-dropdown-options {
@@ -281,7 +236,7 @@ body {
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1000;
 	display: flex;
-	flex-wrap: wrap; /* Enable wrapping to create columns */
+	flex-wrap: wrap;
 	max-height: 200px;
 	overflow-y: auto;
 	border-radius: 4px;
@@ -291,8 +246,8 @@ body {
 .custom-dropdown-option {
 	padding: 8px 10px;
 	cursor: pointer;
-	width: 49%; /* Each option takes up 1/3 of the width */
-	box-sizing: border-box; /* Include padding and border in the element's total width and height */
+	width: 49%;
+	box-sizing: border-box;
 	text-align: center;
 }
 
@@ -301,36 +256,6 @@ body {
 }
 
 
-.custom-dropdown-options span:hover { /* This rule is already present, but included for context */
+.custom-dropdown-options span:hover {
 	background-color: #f1f1f1;
-}
-
-/* 상단바 섹션별 정렬 및 너비 조정 */
-.top-bar-section:nth-child(1) {
-	width: 40vw;
-	align-items: flex-end; /* 오른쪽 정렬 */
-}
-
-.top-bar-section:nth-child(2) {
-	width: 20vw;
-}
-
-.top-bar-section:nth-child(3) {
-	width: 40vw;
-	align-items: flex-start; /* 왼쪽 정렬 */
-}
-
-/* 하단바 섹션별 정렬 및 너비 조정 */
-.bottom-bar-section:nth-child(1) {
-	width: 43vw;
-	justify-content: flex-end; /* 오른쪽 정렬 */
-}
-
-.bottom-bar-section:nth-child(2) {
-	width: 14vw;
-}
-
-.bottom-bar-section:nth-child(3) {
-	width: 43vw;
-	justify-content: flex-start; /* 왼쪽 정렬 */
 }
