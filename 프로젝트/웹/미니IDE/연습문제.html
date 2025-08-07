@@ -88,7 +88,7 @@
 			background: #ccc;
 			gap: 5px;
 		}
-		.저장하기, .불러오기 {
+		.저장하기, .불러오기, .기본문제 {
 			font-size: 19px;
 			cursor: pointer;
 		}
@@ -169,6 +169,7 @@
 			상단바 = Elem({tag: 'nav', class: '상단바'});
 				저장하기 = Elem({class: '저장하기', text: '💾'});
 				불러오기 = Elem({class: '불러오기', text: '📂'});
+				기본문제 = Elem({class: '기본문제', text: '📄'});
 				
 			저장하기.addEventListener('click', ()=>{
 				const blob = new Blob([JSON.stringify(quest, null, 2)], { type: 'application/json' });
@@ -177,6 +178,7 @@
 				Elem({tag: 'a', href: url, download: 'exercise.json'}).click();
 				URL.revokeObjectURL(url);
 			});
+
 			불러오기.addEventListener('click', () => {
 				const load = Elem({ tag: 'input', type: 'file', accept: 'application/json' });
 
@@ -192,7 +194,14 @@
 				load.click();
 			});
 
-			[저장하기, 불러오기].forEach(el => 상단바.appendChild(el));
+			기본문제.addEventListener('click', () => {
+				fetch('문제.json')
+				.then(res => res.json() )
+				.then(res => quest = res )
+				.then(_ => refresh());
+			});
+
+			[저장하기, 불러오기, 기본문제].forEach(el => 상단바.appendChild(el));
 			return 상단바;
 		}
 
