@@ -16,9 +16,15 @@
 		}
 		body {
 			padding: 35px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
-		header {
+		header, footer {
 			height: 10vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 		main {
 			height: 70vh;
@@ -81,8 +87,8 @@
 		.페이지 div:hover {
 			background-color: lightblue;
 		}
-		footer {
-			height: 10vh;
+		.번호.current {
+			background-color: aqua;
 		}
 	</style>
 	<script>
@@ -109,10 +115,20 @@
 			await yts20( Math.floor( (page-1)/5 ) + 1 );
 
 			QQ('.레코드').forEach(el => el.remove());
+			Q('.번호.current')?.classList.remove('current');
+
 			Q('.목록').append( c_record(state.영화목록[ ((page-1)%5 + 1) * 4 - 4]) );
 			Q('.목록').append( c_record(state.영화목록[ ((page-1)%5 + 1) * 4 - 3]) );
 			Q('.목록').append( c_record(state.영화목록[ ((page-1)%5 + 1) * 4 - 2]) );
 			Q('.목록').append( c_record(state.영화목록[ ((page-1)%5 + 1) * 4 - 1]) );
+
+			Q('.번호[index="1"]').innerText = ( Math.floor((page-1)/5) + 1) * 5 - 4;
+			Q('.번호[index="2"]').innerText = ( Math.floor((page-1)/5) + 1) * 5 - 3;
+			Q('.번호[index="3"]').innerText = ( Math.floor((page-1)/5) + 1) * 5 - 2;
+			Q('.번호[index="4"]').innerText = ( Math.floor((page-1)/5) + 1) * 5 - 1;
+			Q('.번호[index="5"]').innerText = ( Math.floor((page-1)/5) + 1) * 5;
+
+			QQ('.번호').filter(el => el.innerText == page)[0].classList.add('current');
 		}
 
 		function c_layout() {
@@ -144,6 +160,9 @@
 			다음.addEventListener('click', _ => list_record( ++state.페이지 ) );
 			이전.addEventListener('click', _ => list_record( --state.페이지 ) );
 			맨뒤.addEventListener('click', _ => list_record( state.페이지=100 ) );
+			[일,이,삼,사,오].forEach(el => el.addEventListener('click',_ => {
+				list_record( state.페이지 = Number(el.innerText) );
+			}))
 
 			return 컨테이너;
 		}
