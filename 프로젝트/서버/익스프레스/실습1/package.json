@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "scripts": {
+    "launch1": "node server.js",
+    "launch2": "nodemon server.js",
+    "주석": "터미널 명령어의 별칭을 등록해서, [npm 별칭] 으로 실행"
+  }
+}
