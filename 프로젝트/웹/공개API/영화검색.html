@@ -25,6 +25,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-direction: column;
 		}
 		main {
 			height: 70vh;
@@ -69,7 +70,6 @@
 			.번호.current { background-color: aqua; }
 	</style>
 	<script>
-		let state = { 영화목록:[], 페이지:1 };
 		let Q = (x,y=document) => y.querySelector(x);
 		let QQ = (x,y=document) => [...y.querySelectorAll(x)];
 		let Elem = (config) => {
@@ -80,6 +80,10 @@
 			Object.keys(attrs).forEach(attr => el.setAttribute(attr, attrs[attr]));
 			return el;
 		}
+		
+		let state = { 영화목록: [], 페이지: 1,
+					  옵션: {장르:'all', 화질:'all', 평점:'0', 연도:'all', 국가:'all'} };
+
 
 		document.addEventListener('DOMContentLoaded', main);
 
@@ -89,7 +93,7 @@
 		}
 
 		async function list_record(page) {
-			await yts20( Math.floor( (page-1)/5 ) + 1 );
+			await yts20( Math.floor( (page-1)/5 ) + 1);
 
 			QQ('.레코드').forEach(el => el.remove());
 			Q('.번호.current')?.classList.remove('current');
@@ -111,19 +115,18 @@
 		function c_layout() {
 			const 컨테이너 = Elem({id: '레이아웃'});
 				헤더 = Elem({tag: 'header'});
-					로고 = Elem({tag: 'img', src: 'YTS.svg'});
 				메인 = Elem({tag: 'main'});
-					목록 = Elem({class: '목록'});
-						// [컴포넌트: 레코드]
-						// [컴포넌트: 레코드]
-					페이지 = c_page(); // [컴포넌트: 페이지]
+				목록 = Elem({class: '목록'});
+					// [컴포넌트: 레코드] * N
+				페이지 = c_page(); // [컴포넌트: 페이지]
 				푸터 = Elem({tag: 'footer'});
+					로고 = Elem({tag: 'img', src: 'YTS.svg'});
 					저작권 = Elem({tag: 'span', class:'저작권', text:'yts.mx/api'});
 
 			컨테이너.append(헤더, 메인, 푸터);
-				헤더.append(로고);
+				헤더.append(213);
 				메인.append(목록, 페이지);
-				푸터.append(저작권);
+				푸터.append(로고, 저작권);
 
 			return 컨테이너;
 		}
@@ -176,8 +179,17 @@
 			return 컨테이너;
 		}
 
+		function c_filter(){
+			const 컨테이너 = Elem({id:'필터창'});
+
+
+			return 컨테이너;
+		}
+
 		function yts20(num){
-			return fetch(`https://yts.mx/api/v2/list_movies.json?page=${num}`)
+			const {장르, 화질, 평점, 연도, 국가} = state.옵션;
+			const query = `page=${num}&genre=${장르}&quality=${화질}&minimum_rating=${평점}`;
+			return fetch(`https://yts.mx/api/v2/list_movies.json?${query}`)
 				.then(res => res.json())
 				.then(obj => obj.data.movies.map((mv, i) => ({
 					url: mv.url,
