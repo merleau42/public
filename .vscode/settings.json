@@ -31,13 +31,22 @@
   "better-comments.tags": [
     {
       "tag": "!",
+      "color": "red",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": ":",
       "color": "yellow",
       "strikethrough": false,
       "underline": false,
       "backgroundColor": "transparent",
       "bold": false,
       "italic": false
-    }
+    }  
   ],
   "editor.insertSpaces": false,
   "editor.tabSize": 4,
