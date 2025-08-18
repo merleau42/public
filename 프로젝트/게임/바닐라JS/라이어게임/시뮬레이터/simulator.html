@@ -42,18 +42,18 @@
 </head>
 <body>
 	<div class="top-bar">
-		<span id="missionInfoDisplay" class="setting-value-display menu">나의 단어</span>
 		<span id="gameTypeDisplay" class="setting-value-display menu"></span>
 		<span id="gameModeDisplay" class="setting-value-display menu"></span>
 		<span id="refreshBtn" class="setting-value-display menu">새로고침</span>
+		<span id="startGameBtn" class="setting-value-display menu">게임 시작</span>
 		<span id="playerCountDisplay" class="setting-value-display menu"></span>
 		<span id="liarCountDisplay" class="setting-value-display menu"></span>
+		<span id="missionInfoDisplay" class="setting-value-display menu">나의 단어</span>
 	</div>
 	
 	<div class="grid-container" id="grid"></div>
 	
 	<div class="bottom-bar">
-		<span id="startGameBtn" class="setting-value-display menu">게임 시작</span>
 		<span class="menu">qwe1</span>
 		<span class="menu">qwe2</span>
 		<span class="menu">투표 시작</span>	
@@ -72,11 +72,6 @@
 		const randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 		const container = Q('#grid');
-		const playerCountDisplayEl = Q('#playerCountDisplay');
-		const liarCountDisplayEl = Q('#liarCountDisplay');
-		const gameTypeDisplayEl = Q('#gameTypeDisplay');
-		const gameModeDisplayEl = Q('#gameModeDisplay');
-		const startGameBtn = Q('#startGameBtn');
 
 		const 동물 = ['원숭이','여우','부엉이','곰','토끼','돼지','강아지','고양이','햄스터','펭귄','사자','호랑이','판다','너구리','다람쥐','얼룩말','고슴도치','코끼리','악어','캥거루'];
 		const 팻말 = ['노말', '소신좌', '라결자', '양발', '꺾기', '혼란좌', '포괄', '답읽기', '빌런', '???'];
@@ -165,10 +160,10 @@
 				
 				player.dataset.role = role;
 				player.dataset.word = word;
-				player.dataset.statement = assignedStatement.opening;
+				player.dataset.statements = JSON.stringify([assignedStatement.opening, assignedStatement.elaborate1, assignedStatement.elaborate2].filter(Boolean));
 				player.dataset.unique = assignedStatement.unique;
 
-				bubble.textContent = assignedStatement.opening;
+				bubble.textContent = JSON.parse(player.dataset.statements)[0];
 			});
 		}
 		
@@ -374,32 +369,31 @@
 		}
 
 		function populateGameTypeDisplay() {
-			gameTypeDisplayEl.textContent = `${currentGameType}`;
+			Q('#gameTypeDisplay').textContent = `${currentGameType}`;
 		}
 		
 		function populateGameModeDisplay() {
-			gameModeDisplayEl.textContent = `${currentGameMode}`;
+			Q('#gameModeDisplay').textContent = `${currentGameMode}`;
 		}
 
 		function populatePlayerDisplay() {
-			playerCountDisplayEl.textContent = `인원수: ${playerCountState}`;
+			Q('#playerCountDisplay').textContent = `인원수: ${playerCountState}`;
 		}
 
 		function populateLiarDisplay() {
 			const maxLiars = Math.min(Math.floor((playerCountState - 1) / 2), maxLiarCount);
 			if (liarCountState < 1 || liarCountState > maxLiars) {
 				liarCountState = 1;
-			}
-			liarCountDisplayEl.textContent = `라이어: ${liarCountState}`;
+			}	
+			Q('#liarCountDisplay').textContent = `라이어: ${liarCountState}`;
 		}
 
-		Q('#refreshBtn').addEventListener('click', fillGrid);
-		startGameBtn.addEventListener('click', gameStart);
-
-		gameTypeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameType'));
-		gameModeDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'gameMode'));
-		playerCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'player'));
-		liarCountDisplayEl.addEventListener('click', (e) => openCustomDropdown(e.target, 'liar'));
+		Q('#refreshBtn').addEventListener('click', fillGrid);	
+		Q('#startGameBtn').addEventListener('click', gameStart);
+		Q('#gameTypeDisplay').addEventListener('click', (e) => openCustomDropdown(e.target, 'gameType'));
+		Q('#gameModeDisplay').addEventListener('click', (e) => openCustomDropdown(e.target, 'gameMode'));
+		Q('#playerCountDisplay').addEventListener('click', (e) => openCustomDropdown(e.target, 'player'));
+		Q('#liarCountDisplay').addEventListener('click', (e) => openCustomDropdown(e.target, 'liar'));
 
 		document.addEventListener('click', (e) => {
 			if (!e.target.closest('.custom-dropdown-options') && !e.target.closest('.setting-value-display')) {

@@ -31,6 +31,10 @@ body {
 	z-index: 100;
 }
 
+.top-bar > * {
+	min-width: 100px;
+}
+
 .bottom-bar {
 	display: flex;
 	background-color: #f0f0f0;
@@ -228,7 +232,7 @@ body {
 }
 
 .custom-dropdown-options {
-	font-size: 14px;
+	font-size: 13px;
 	position: absolute;
 	top: 0;
 	border: 1px solid #ccc;
