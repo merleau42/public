@@ -69,7 +69,7 @@ body {
 	/* align-items: center; */
 	align-items: flex-end;
 	min-height: 40px;
-	width: max(165px, min(400px, 43vw, 50vh));
+	width: max(200px, min(400px, 43vw, 60vh));
 	/* width: max(190px, 31vw, 50vh); */
 	/* max-width: max(190px, min(40vw, 400px)); */
 }
@@ -203,7 +203,7 @@ body {
 	width: 100%;
 	height: min(120px, max(100px, 12vh));
 	box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-	word-break: keep-all;
+	/* word-break: keep-all; */
 	display: flex;
 	font-size: max(12px, min(15px, max(1.3vw, 1.7vh)));
 	line-height: 1.3;
