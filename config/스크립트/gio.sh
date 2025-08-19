@@ -2,7 +2,7 @@
 clear;
 
 time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d_%H:%M:%S');
-echo "▲github.io 실행 $time_kst" >> ~/dev/config/스크립트/.log;
+echo "[실행] ▲github.io\t$time_kst" >> ~/dev/config/스크립트/.log;
 
 WEB=~/dev/프로젝트/웹;
 GAME=~/dev/프로젝트/게임;
