@@ -20,6 +20,7 @@ GIO=~/dev/subtree/github.io;
 
 	GAME_ETC=기타;
 		cp -r "$GAME/바닐라JS/빼빼로줍기/"	  "$GIO/게임";
+		cp -r "$GAME/바닐라JS/비즈니스/"	  "$GIO/게임";
 		cp -r "$WEB/끝말잇기/"				 "$GIO/게임";
 
 # 알고리즘
