@@ -90,8 +90,23 @@
     .nav-button{ background:none; border:none; font-size: 1.4em; cursor:pointer; color:var(--ink-2); user-select:none; padding: 2px 6px; border-radius: 8px; }
     .nav-button:hover{ background:#f1f3f5; color:#111; }
 
-    #randomStageButton{ background:#e53935; color:#fff; border:none; border-radius:10px; padding:8px 12px; font-size: 0.95rem; font-weight:700; cursor:pointer; }
-    #randomStageButton:hover{ filter: brightness(.95); }
+    #randomStageButton, #stageOneButton{
+      background:#e53935;
+      color:#fff;
+      border:none;
+      border-radius:10px;
+      padding:8px 12px;
+      font-size: 0.95rem;
+      font-weight:700;
+      cursor:pointer;
+    }
+    #randomStageButton:hover, #stageOneButton:hover{ filter: brightness(.95); }
+
+    /* Style for button group */
+    .stage-buttons {
+      display: flex;
+      gap: 5px; /* Added gap here */
+    }
 
     .seed-display{ font-size: 1rem; color:var(--ink); min-height: 1.6em; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
     .seed-span{ color: var(--ink-3); font-size:.95em; cursor:pointer; text-decoration: underline; }
@@ -151,7 +166,7 @@
     /* Small screens adjustments */
     @media (max-width: 480px){
       .seed-display{ gap:4px; font-size: .98rem; }
-      #randomStageButton{ padding:6px 10px; }
+      #randomStageButton, #stageOneButton{ padding:6px 10px; }
       .creator-controls{ grid-template-columns: 1fr; }
     }
 
@@ -177,7 +192,10 @@
             <h1 id="stageTitle">스테이지 000</h1>
             <button id="nextStageButton" class="nav-button" title="다음 스테이지" aria-label="다음 스테이지">▶</button>
           </div>
-          <button id="randomStageButton" title="무작위 스테이지" aria-label="무작위 스테이지">R</button>
+          <div class="stage-buttons">
+            <button id="stageOneButton" title="1번 스테이지" aria-label="1번 스테이지">1</button>
+            <button id="randomStageButton" title="무작위 스테이지" aria-label="무작위 스테이지">R</button>
+          </div>
         </div>
         <div class="seed-display" id="seedDisplay"></div>
         <div class="game-status-display" id="gameStatusDisplay"></div>
@@ -197,9 +215,8 @@
         <div class="grid-zone">
           <div class="grid-wrap"><div class="grid-container" id="makerGrid"></div></div>
         </div>
-        <div class="row">
+        <div class="row" id="makerSeedContainer">
           <div class="grow"><strong>현재 시드(HEX):</strong> <span id="makerSeed">-</span></div>
-          <button id="copySeedBtn">시드 복사</button>
         </div>
         <div class="creator-controls">
           <button id="clearMaker">초기화</button>
@@ -251,12 +268,14 @@
     const NUM_MAPS_PER_STAGE = 3;
 
     const RANDOM_TIPS = [
-      "숨겨진 보석을 찾아보세요!",
-      "스테이지마다 세 가지 맵이 무작위 순서로 출제돼요~",
+      "[팁] 숨겨진 보석을 찾아보세요!",
+      "[팁] 스테이지마다 세 가지 맵이 무작위 순서로 출제돼요~",
+	    "[팁] 나만의 전략을 탐구해보세요!"
     ];
 
     // ---------- State ----------
     let allStagesData = [];
+    let hexmapData = []; // hexmap.csv 데이터를 저장할 변수
     let currentStage = 0;
     let currentMapIndex = 0;           // 위치(0,1,2)
     let currentMapOrder = [];          // 예: [2,0,1]
@@ -318,19 +337,37 @@
       }
       return data;
     }
+    
+    // hexmap.csv 파싱 함수 추가
+    function parseHexmapCSV(csvText) {
+      return csvText.trim().split(/\r?\n/).filter(line => line.length > 0);
+    }
 
     // ---------- Game (Play) ----------
     async function initGame(){
       setupTabs();
       try{
-        const res = await fetch('stages.csv');
-        if(res.ok){
-          const csvText = await res.text();
+        const resStages = await fetch('stages.csv');
+        if(resStages.ok){
+          const csvText = await resStages.text();
           allStagesData = parseCSV(csvText);
         } else {
           allStagesData = [];
         }
-      }catch(e){ allStagesData = []; }
+
+        // hexmap.csv 로드
+        const resHexmap = await fetch('hexmap.csv');
+        if(resHexmap.ok){
+          const hexmapText = await resHexmap.text();
+          hexmapData = parseHexmapCSV(hexmapText);
+        } else {
+          hexmapData = [];
+        }
+
+      }catch(e){ 
+        allStagesData = []; 
+        hexmapData = [];
+      }
 
       if(allStagesData.length===0){
         allStagesData = [{ index:0, seed:["0","1","2"] }];
@@ -339,6 +376,7 @@
       loadStage(0, false);
 
       Q('#randomStageButton').addEventListener('click', ()=> loadRandomStage(true));
+      Q('#stageOneButton').addEventListener('click', ()=> loadStage(0, true)); // 1번 스테이지로 이동
       Q('#prevStageButton').addEventListener('click', ()=> changeStage(-1));
       Q('#nextStageButton').addEventListener('click', ()=> changeStage(1));
 
@@ -490,11 +528,41 @@
       updateMakerUI();
 
       Q('#clearMaker').addEventListener('click', ()=>{ makerGrid = makerGrid.map(row=>row.map(()=>"0")); updateMakerUI(); });
-      Q('#randomizeMaker').addEventListener('click', ()=>{ makerGrid = makerGrid.map(row=>row.map(()=> String(Math.floor(Math.random()*3)) )); updateMakerUI(); });
-      Q('#copySeedBtn').addEventListener('click', async ()=>{
-        const seed = Q('#makerSeed').textContent.trim();
+      
+      Q('#randomizeMaker').addEventListener('click', ()=>{
+        if (hexmapData.length > 0) {
+          const randomIndices = [];
+          while(randomIndices.length < GRID_SIZE) { // Get 3 unique random indices
+            const randomIndex = Math.floor(Math.random() * hexmapData.length);
+            if (!randomIndices.includes(randomIndex)) {
+              randomIndices.push(randomIndex);
+            }
+          }
+          // Choose one of the 3 random seeds to set as makerGrid
+          const selectedHexSeed = hexmapData[randomIndices[0]]; 
+          makerGrid = hexToTernaryGrid(selectedHexSeed);
+        } else {
+          // Fallback to current random logic if hexmapData is empty
+          makerGrid = makerGrid.map(row=>row.map(()=> String(Math.floor(Math.random()*3)) )); 
+        }
+        updateMakerUI();
+      });
+      
+      const makerSeedContainer = Q('#makerSeedContainer');
+      makerSeedContainer.style.cursor = 'pointer'; // Make it visually clickable
+      makerSeedContainer.style.textDecoration = 'underline'; // Add underline for emphasis
+      makerSeedContainer.addEventListener('click', async ()=>{
+        const seedSpan = Q('#makerSeed');
+        const seed = seedSpan.textContent.trim();
         if(!seed || seed==='-') return;
-        try{ await navigator.clipboard.writeText(seed); Q('#copySeedBtn').textContent='복사됨 ✅'; setTimeout(()=>Q('#copySeedBtn').textContent='시드 복사', 1200); }catch(e){ alert('클립보드 복사 실패'); }
+        try{ 
+          await navigator.clipboard.writeText(seed); 
+          const originalText = seedSpan.textContent;
+          seedSpan.textContent='복사됨'; 
+          setTimeout(()=>seedSpan.textContent=originalText, 1200); 
+        }catch(e){ 
+          alert('클립보드 복사 실패'); 
+        }
       });
     }
 
@@ -521,5 +589,6 @@
     // ---------- boot ----------
     window.addEventListener('load', initGame);
   </script>
+  <div align="center">250820_ 버전0.7</div>
 </body>
 </html>
