@@ -114,7 +114,7 @@
     .seed-span.active{ color:#111; font-weight:700; text-decoration: underline; }
     .seed-sep{ color:#999; user-select:none; }
 
-    .game-status-display{ font-size:.98em; color:var(--ink-2); min-height:1.6em; }
+    .game-status-display{ font-size:1.1em; color:var(--ink-2); min-height:1.6em; }
 
     /* Grid sizing — responsive without fixed heights */
     .grid-zone{ display:grid; place-items:center; }
@@ -138,7 +138,7 @@
       border: 2px solid var(--accent-dark);
       border-radius: 10px;
       display:flex; align-items:center; justify-content:center;
-      --base-fs: clamp(1.2rem, 7vmin, 2.2rem);
+      --base-fs: clamp(1.2rem, 12vmin, 2.2rem);
       font-size: var(--base-fs);
       font-weight: 800;
       color:#fff; text-align:center; user-select:none;
@@ -148,7 +148,7 @@
     }
     .grid-cell:not(.revealed):hover{ background:#66bb6a; transform: translateY(-1px); }
     .grid-cell.revealed{ background: var(--muted); color: var(--ink); cursor: default; }
-    .grid-cell.winner{ font-size: calc(var(--base-fs) * 1.9); }
+    .grid-cell.winner{ font-size: calc(var(--base-fs) * 1.8); background:aquamarine; }
 
     /* Creator */
     .creator-controls{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; }
@@ -165,7 +165,7 @@
 
     /* Small screens adjustments */
     @media (max-width: 480px){
-      .seed-display{ gap:4px; font-size: .98rem; }
+      .seed-display{ gap:4px; font-size: 0.98rem; }
       #randomStageButton, #stageOneButton{ padding:6px 10px; }
       .creator-controls{ grid-template-columns: 1fr; }
     }
@@ -173,6 +173,41 @@
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce){
       .tab-btn, .grid-cell{ transition: none; }
+    }
+
+    /* Confetti styles */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f00; /* Default color, will be randomized */
+      opacity: 0;
+      animation: confetti-fall 2s forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) rotate(0deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+      }
     }
   </style>
 </head>
@@ -226,6 +261,9 @@
     </section>
   </div>
 
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confettiContainer"></div>
+
   <script>
     // ---------- Viewport-safe height CSS var ----------
     const setSVH = () => {
@@ -269,7 +307,7 @@
 
     const RANDOM_TIPS = [
       "[팁] 숨겨진 보석을 찾아보세요!",
-      "[팁] 스테이지마다 세 가지 맵이 무작위 순서로 출제돼요~",
+      "[팁] 세 가지 맵이 랜덤한 순서로 출제돼요~",
 	    "[팁] 나만의 전략을 탐구해보세요!"
     ];
 
@@ -459,7 +497,11 @@
     }
 
     function handleCellClick(row,col){
-      if(isGameOver || revealedCells[row][col]) return;
+      if(isGameOver){ // If game is over, reset the map
+        loadCurrentMap();
+        return;
+      }
+      if(revealedCells[row][col]) return; // If cell is already revealed, do nothing
       revealedCells[row][col] = true;
       const gemType = currentMapGrid[row][col];
       const gemIndex = GEM_TYPES.indexOf(gemType);
@@ -469,9 +511,9 @@
 
       if(gemCounts[gemIndex] === NUM_GEMS_PER_TYPE){
         isGameOver = true; winningGemType = gemType; highlightWinningCells(gemType);
-        if(gemType==="0") updateGameStatusDisplay('꽝! 아쉬워요...😢');
-        if(gemType==="1") updateGameStatusDisplay('좋아요~ 🙂');
-        if(gemType==="2") updateGameStatusDisplay('대박! 🥰');
+        if(gemType==="0") {updateGameStatusDisplay('꽝! 아쉬워요...😢'); };
+        if(gemType==="1") {updateGameStatusDisplay('좋아요~ 🙂'); triggerConfetti(55)};
+        if(gemType==="2") {updateGameStatusDisplay('대박! 🥰'); triggerConfetti(80)};
         return;
       }
       updateGameStatusDisplay(getRandomTip());
@@ -491,7 +533,7 @@
             if(winningGemType!==null && v===winningGemType) cell.classList.add('winner'); else cell.classList.remove('winner');
           } else {
             cell.classList.remove('revealed','winner');
-            cell.textContent = '';
+            cell.textContent = '?';
           }
         }
       }
@@ -511,6 +553,26 @@
     function updateGameStatusDisplay(message){ Q('#gameStatusDisplay').textContent = message; }
     function getRandomTip(){ return RANDOM_TIPS[Math.floor(Math.random()*RANDOM_TIPS.length)]; }
     function checkLossCondition(){ /* 확장 여지 */ }
+
+    // ---------- Confetti animation ----------
+    function triggerConfetti(numConfetti) {
+      const confettiContainer = Q('#confettiContainer');
+      const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+
+      for (let i = 0; i < numConfetti; i++) {
+        const confetti = Elem({ tag: 'div', class: 'confetti' });
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 1 + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        confettiContainer.appendChild(confetti);
+
+        // Remove confetti after animation to prevent DOM bloat
+        confetti.addEventListener('animationend', () => {
+          confetti.remove();
+        });
+      }
+    }
 
     // ---------- Creator ----------
     let makerGrid = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill("0"));
@@ -589,6 +651,6 @@
     // ---------- boot ----------
     window.addEventListener('load', initGame);
   </script>
-  <div align="center">250820_ 버전0.7</div>
+  <div align="center">[버전 0.7] 25.08.20</div>
 </body>
 </html>
