@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>비즈니스 배틀 시뮬레이터</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			background-color: #f0f0f0;
+			margin: 0;
+		}
+		.game-container {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			text-align: center;
+			width: clamp(300px, 90vmin, 500px);
+			height: clamp(350px, 95vmin, 600px);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			box-sizing: border-box;
+		}
+		.grid-container {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(3, 1fr);
+			gap: 5px;
+			margin-top: 20px;
+			width: 100%;
+			height: 100%;
+		}
+		/* 기본 폰트 크기를 변수로 두고, 우승 셀에서 2배로 키움 */
+		.grid-cell {
+			width: 100%;
+			height: 100%;
+			background-color: #4caf50;
+			border: 2px solid #388e3c;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			--base-fs: clamp(1em, 5vmin, 2.5em);
+			font-size: var(--base-fs);
+			font-weight: bold;
+			cursor: pointer;
+			transition: background-color 0.3s, transform 0.1s, font-size 0.2s ease;
+			color: white;
+			user-select: none;
+			text-align: center;
+		}
+		.grid-cell.revealed {
+			background-color: #f4f4f4;
+			cursor: default;
+			color: #333;
+		}
+		.grid-cell:not(.revealed):hover {
+			background-color: #66bb6a;
+			transform: scale(1.02);
+		}
+		/* 우승(당첨) 셀: 폰트 2배 */
+		.grid-cell.winner {
+			font-size: calc(var(--base-fs) * 2);
+		}
+		.stage-header {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+		}
+		.stage-header h1 {
+			margin: 0;
+		}
+		.stage-title-nav {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+		.nav-button {
+			background: none;
+			border: none;
+			font-size: 1.5em;
+			cursor: pointer;
+			color: #555;
+			user-select: none;
+			padding: 0 5px;
+		}
+		.nav-button:hover {
+			color: #222;
+		}
+		#randomStageButton {
+			background-color: #e74c3c;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 5px 10px;
+			font-size: 1em;
+			cursor: pointer;
+			transition: background-color 0.2s ease;
+		}
+		#randomStageButton:hover {
+			background-color: #c0392b;
+		}
+		.seed-display {
+			margin-top: 20px;
+			font-size: 1.2em;
+			color: #333;
+		}
+		.seed-span {
+			color: #888;
+			font-size: 0.9em;
+			margin: 0 4px;
+			cursor: pointer;
+			text-decoration: underline;
+		}
+		.seed-span:hover {
+			color: #555;
+		}
+		.seed-span.active {
+			color: #222;
+			font-weight: 700;
+			text-decoration: underline;
+		}
+		.seed-sep {
+			margin: 0 6px;
+			color: #999;
+			user-select: none;
+		}
+		.game-status-display {
+			margin-top: 10px;
+			font-size: 1em;
+			color: #555;
+			min-height: 2em;
+		}
+	</style>
+</head>
+<body>
+	<div class="game-container">
+		<div class="stage-header">
+			<div class="stage-title-nav">
+				<span id="prevStageButton" class="nav-button">◀</span>
+				<h1 id="stageTitle">스테이지 000</h1>
+				<span id="nextStageButton" class="nav-button">▶</span>
+			</div>
+			<button id="randomStageButton">R</button>
+		</div>
+		<div class="seed-display" id="seedDisplay"></div>
+		<div class="game-status-display" id="gameStatusDisplay"></div>
+		<div class="grid-container" id="gameGrid"></div>
+	</div>
+
+	<script>
+		let Q = (x, y = document) => y.querySelector(x);
+		let QQ = (x, y = document) => [...y.querySelectorAll(x)];
+		let Elem = (config) => {
+			const { tag = "div", text = "", class: className = "", ...attrs } = config;
+			const el = document.createElement(tag);
+			el.innerText = text;
+			el.className = className;
+			Object.keys(attrs).forEach((attr) => el.setAttribute(attr, attrs[attr]));
+			return el;
+		};
+
+		// --- 게임 상수 ---
+		const GRID_SIZE = 3;
+		const NUM_GEMS_PER_TYPE = 3;
+		const GEM_TYPES = ["0", "1", "2"];
+		const NUM_MAPS_PER_STAGE = 3;
+
+		const RANDOM_TIPS = [
+			"숨겨진 보석을 찾아보세요!",
+			"세 개의 맵이 무작위 순서로 출제되어요",
+		];
+
+		// --- 상태 ---
+		let allStagesData = [];
+		let currentStage = 0;
+		let currentMapIndex = 0; // 무작위 순서 중 '위치' (0,1,2)
+		let currentMapOrder = []; // 예: [2,0,1] => 표시/로딩 순서
+		let revealedCells = [];
+		let gemCounts = [0, 0, 0];
+		let isGameOver = false;
+		let currentMapGrid = [];
+		let winningGemType = null; // ★ 우승 타입 저장
+
+		// 16진수 시드를 3진수 3x3 격자로
+		function hexToTernaryGrid(hexSeed) {
+			const decimalValue = parseInt(hexSeed, 16);
+			let ternaryString = "";
+			let tempValue = decimalValue;
+
+			for (let i = 0; i < 9; i++) {
+				ternaryString = (tempValue % 3) + ternaryString;
+				tempValue = Math.floor(tempValue / 3);
+			}
+
+			const grid = [];
+			for (let r = 0; r < GRID_SIZE; r++) {
+				const row = [];
+				for (let c = 0; c < GRID_SIZE; c++) {
+					const value = parseInt(ternaryString[r * GRID_SIZE + c], 10);
+					row.push(GEM_TYPES[value]);
+				}
+				grid.push(row);
+			}
+			return grid;
+		}
+
+		// CSV 파싱
+		function parseCSV(csvText) {
+			const lines = csvText.trim().split("\n");
+			const headers = lines[0].split(",").map((h) => h.trim());
+			const data = [];
+
+			for (let i = 1; i < lines.length; i++) {
+				const values = lines[i].split(",").map((v) => v.trim());
+				const stage = {};
+				stage.seed = [];
+
+				headers.forEach((header, index) => {
+					if (header.startsWith("seed")) {
+						stage.seed.push(values[index]);
+					} else if (header === "index") {
+						stage[header] = parseInt(values[index], 10);
+					} else {
+						stage[header] = values[index];
+					}
+				});
+				data.push(stage);
+			}
+			return data;
+		}
+
+		async function initGame() {
+			try {
+				const response = await fetch("stages.csv");
+				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+				const csvText = await response.text();
+				allStagesData = parseCSV(csvText);
+
+				loadStage(0, false); // Initial load
+
+				Q("#randomStageButton").addEventListener("click", () => loadRandomStage(true));
+				Q("#prevStageButton").addEventListener("click", () => changeStage(-1));
+				Q("#nextStageButton").addEventListener("click", () => changeStage(1));
+
+				updateGameStatusDisplay(getRandomTip());
+				loadRandomStage();
+			} catch (e) {
+				console.error("Error loading stages data:", e);
+				updateGameStatusDisplay("게임 데이터를 불러오는 데 실패했습니다.");
+			}
+		}
+
+		function loadRandomStage(updateStatus = true) {
+			if (allStagesData.length === 0) {
+				console.warn("No stage data available to load a random stage.");
+				if (updateStatus) updateGameStatusDisplay("랜덤 스테이지를 불러올 수 없습니다: 데이터 없음.");
+				return;
+			}
+			const randomIndex = Math.floor(Math.random() * allStagesData.length);
+			loadStage(randomIndex, updateStatus);
+		}
+
+		function changeStage(direction) {
+			if (allStagesData.length === 0) {
+				updateGameStatusDisplay("스테이지 데이터를 불러올 수 없습니다.");
+				return;
+			}
+
+			let newStage = currentStage + direction;
+			if (newStage < 0) {
+				newStage = allStagesData.length - 1;
+			} else if (newStage >= allStagesData.length) {
+				newStage = 0;
+			}
+			loadStage(newStage, true);
+		}
+
+		function loadStage(stageIndex, updateStatus = true) {
+			if (stageIndex < 0 || stageIndex >= allStagesData.length) {
+				console.error("Attempted to load an invalid stage index:", stageIndex);
+				if (updateStatus) updateGameStatusDisplay("유효하지 않은 스테이지 인덱스입니다.");
+				return;
+			}
+			currentStage = stageIndex;
+			currentMapIndex = 0;
+			isGameOver = false;
+			gemCounts = [0, 0, 0];
+			winningGemType = null;
+
+			currentMapOrder = Array.from({ length: NUM_MAPS_PER_STAGE }, (_, i) => i).sort(
+				() => Math.random() - 0.5
+			);
+
+			updateStageUI();
+			loadCurrentMap();
+			if (updateStatus) updateGameStatusDisplay(getRandomTip());
+		}
+
+		// 무작위 순서대로 시드 표시 + → 구분자 + 현재맵 강조
+		function updateStageUI() {
+			const stageData = allStagesData[currentStage];
+			if (!stageData) {
+				Q("#stageTitle").textContent = "게임 종료";
+				Q("#seedDisplay").innerHTML = "";
+				return;
+			}
+			Q("#stageTitle").textContent = `스테이지 ${String(currentStage + 1).padStart(3, "0")}`;
+
+			const seedDisplayDiv = Q("#seedDisplay");
+			seedDisplayDiv.innerHTML = "";
+
+			currentMapOrder.forEach((actualIdx, orderPos) => {
+				const seedHex = stageData.seed[actualIdx];
+				const span = Elem({
+					tag: "span",
+					text: seedHex,
+					class: "seed-span" + (orderPos === currentMapIndex ? " active" : ""),
+					"data-order-pos": orderPos,
+				});
+				span.addEventListener("click", () => loadMapByOrderPos(orderPos));
+				seedDisplayDiv.appendChild(span);
+
+				if (orderPos < currentMapOrder.length - 1) {
+					const sep = Elem({ tag: "span", text: "→", class: "seed-sep" });
+					seedDisplayDiv.appendChild(sep);
+				}
+			});
+		}
+
+		function loadMapByOrderPos(orderPos) {
+			currentMapIndex = orderPos;
+			loadCurrentMap();
+		}
+
+		function loadCurrentMap() {
+			const stageData = allStagesData[currentStage];
+			if (!stageData || !stageData.seed) {
+				console.error("Invalid stage data or seeds not found.", stageData);
+				updateGameStatusDisplay("맵 데이터를 불러올 수 없습니다.");
+				return;
+			}
+			const actualMapIndex = currentMapOrder[currentMapIndex];
+			const currentSeed = stageData.seed[actualMapIndex];
+
+			currentMapGrid = hexToTernaryGrid(currentSeed);
+
+			revealedCells = Array(GRID_SIZE)
+				.fill(0)
+				.map(() => Array(GRID_SIZE).fill(false));
+			gemCounts = [0, 0, 0];
+			isGameOver = false;
+			winningGemType = null;
+
+			createGridUI();
+			updateStageUI();
+			updateGameStatusDisplay(getRandomTip());
+		}
+
+		function createGridUI() {
+			Q("#gameGrid").innerHTML = "";
+			for (let r = 0; r < GRID_SIZE; r++) {
+				for (let c = 0; c < GRID_SIZE; c++) {
+					const cell = Elem({
+						tag: "div",
+						class: "grid-cell",
+						"data-row": r,
+						"data-col": c,
+					});
+					cell.addEventListener("click", () => handleCellClick(r, c));
+					Q("#gameGrid").appendChild(cell);
+				}
+			}
+		}
+
+		function handleCellClick(row, col) {
+			if (isGameOver || revealedCells[row][col]) return;
+
+			revealedCells[row][col] = true;
+			const gemType = currentMapGrid[row][col];
+			const gemIndex = GEM_TYPES.indexOf(gemType);
+			if (gemIndex !== -1) gemCounts[gemIndex]++;
+
+			updateUI();
+
+			// 승리 조건: 특정 타입이 3개에 도달
+			if (gemCounts[gemIndex] === NUM_GEMS_PER_TYPE) {
+				isGameOver = true;
+				winningGemType = gemType; // ★ 우승 타입 저장
+				highlightWinningCells(gemType); // ★ 우승 셀 강조
+
+				if (gemType == "0") updateGameStatusDisplay(`꽝! 아쉬워요...😢`);
+				if (gemType == "1") updateGameStatusDisplay(`좋아요~ 🙂`);
+				if (gemType == "2") updateGameStatusDisplay(`대박! 🥰`);
+				return;
+			}
+
+			updateGameStatusDisplay(getRandomTip());
+			checkLossCondition();
+		}
+
+		function updateUI() {
+			const cells = QQ(".grid-cell", Q("#gameGrid"));
+			for (let r = 0; r < GRID_SIZE; r++) {
+				for (let c = 0; c < GRID_SIZE; c++) {
+					const cellIndex = r * GRID_SIZE + c;
+					const cell = cells[cellIndex];
+					if (revealedCells[r][c]) {
+						cell.classList.add("revealed");
+						cell.textContent = ["💩", "🙂", "💎"][currentMapGrid[r][c]];
+						// 우승 상태 유지
+						if (winningGemType !== null && currentMapGrid[r][c] === winningGemType) {
+							cell.classList.add("winner");
+						} else {
+							cell.classList.remove("winner");
+						}
+					} else {
+						cell.classList.remove("revealed", "winner");
+						cell.textContent = "";
+					}
+				}
+			}
+		}
+
+		// 우승 셀에 .winner 클래스 부여
+		function highlightWinningCells(targetGemType) {
+			const cells = QQ(".grid-cell", Q("#gameGrid"));
+			for (let r = 0; r < GRID_SIZE; r++) {
+				for (let c = 0; c < GRID_SIZE; c++) {
+					if (revealedCells[r][c] && currentMapGrid[r][c] === targetGemType) {
+						const idx = r * GRID_SIZE + c;
+						cells[idx].classList.add("winner");
+					}
+				}
+			}
+		}
+
+		function updateGameStatusDisplay(message) {
+			Q("#gameStatusDisplay").textContent = message;
+		}
+
+		function getRandomTip() {
+			return RANDOM_TIPS[Math.floor(Math.random() * RANDOM_TIPS.length)];
+		}
+
+		// 모든 셀을 연 뒤에도 승리 조건이 없으면 패배 처리
+		function checkLossCondition() {
+			if (isGameOver) return;
+
+			let allCellsRevealed = true;
+			for (let r = 0; r < GRID_SIZE; r++) {
+				for (let c = 0; c < GRID_SIZE; c++) {
+					if (!revealedCells[r][c]) {
+						allCellsRevealed = false;
+						break;
+					}
+				}
+				if (!allCellsRevealed) break;
+			}
+
+			if (allCellsRevealed) {
+				isGameOver = true;
+				updateGameStatusDisplay(
+					"모든 셀을 뒤집었지만 어떤 보석도 3개에 도달하지 못했습니다. 게임 오버!"
+				);
+			}
+		}
+
+		window.onload = initGame;
+	</script>
+</body>
+</html>
