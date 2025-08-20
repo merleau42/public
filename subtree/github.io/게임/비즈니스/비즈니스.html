@@ -1,480 +1,525 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>비즈니스 배틀 시뮬레이터</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			min-height: 100vh;
-			background-color: #f0f0f0;
-			margin: 0;
-		}
-		.game-container {
-			background-color: #fff;
-			padding: 20px;
-			border-radius: 8px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			text-align: center;
-			width: clamp(300px, 90vmin, 500px);
-			height: clamp(350px, 95vmin, 600px);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			box-sizing: border-box;
-		}
-		.grid-container {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			grid-template-rows: repeat(3, 1fr);
-			gap: 5px;
-			margin-top: 20px;
-			width: 100%;
-			height: 100%;
-		}
-		/* 기본 폰트 크기를 변수로 두고, 우승 셀에서 2배로 키움 */
-		.grid-cell {
-			width: 100%;
-			height: 100%;
-			background-color: #4caf50;
-			border: 2px solid #388e3c;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			--base-fs: clamp(1em, 5vmin, 2.5em);
-			font-size: var(--base-fs);
-			font-weight: bold;
-			cursor: pointer;
-			transition: background-color 0.3s, transform 0.1s, font-size 0.2s ease;
-			color: white;
-			user-select: none;
-			text-align: center;
-		}
-		.grid-cell.revealed {
-			background-color: #f4f4f4;
-			cursor: default;
-			color: #333;
-		}
-		.grid-cell:not(.revealed):hover {
-			background-color: #66bb6a;
-			transform: scale(1.02);
-		}
-		/* 우승(당첨) 셀: 폰트 2배 */
-		.grid-cell.winner {
-			font-size: calc(var(--base-fs) * 2);
-		}
-		.stage-header {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 10px;
-		}
-		.stage-header h1 {
-			margin: 0;
-		}
-		.stage-title-nav {
-			display: flex;
-			align-items: center;
-			gap: 5px;
-		}
-		.nav-button {
-			background: none;
-			border: none;
-			font-size: 1.5em;
-			cursor: pointer;
-			color: #555;
-			user-select: none;
-			padding: 0 5px;
-		}
-		.nav-button:hover {
-			color: #222;
-		}
-		#randomStageButton {
-			background-color: #e74c3c;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			padding: 5px 10px;
-			font-size: 1em;
-			cursor: pointer;
-			transition: background-color 0.2s ease;
-		}
-		#randomStageButton:hover {
-			background-color: #c0392b;
-		}
-		.seed-display {
-			margin-top: 20px;
-			font-size: 1.2em;
-			color: #333;
-		}
-		.seed-span {
-			color: #888;
-			font-size: 0.9em;
-			margin: 0 4px;
-			cursor: pointer;
-			text-decoration: underline;
-		}
-		.seed-span:hover {
-			color: #555;
-		}
-		.seed-span.active {
-			color: #222;
-			font-weight: 700;
-			text-decoration: underline;
-		}
-		.seed-sep {
-			margin: 0 6px;
-			color: #999;
-			user-select: none;
-		}
-		.game-status-display {
-			margin-top: 10px;
-			font-size: 1em;
-			color: #555;
-			min-height: 2em;
-		}
-	</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>비즈니스 배틀 시뮬레이터 — Responsive Refactor</title>
+  <style>
+    :root{
+      --accent:#4caf50;
+      --accent-dark:#2e7d32;
+      --muted:#f7f7f7;
+      --ink:#222;
+      --ink-2:#555;
+      --ink-3:#888;
+      --bg:#f3f4f6;
+      --tab:#e9ecef;
+      --tab-active:#ffffff;
+      /* mobile viewport fix (set via JS) */
+      --svh: 100vh;
+      --space: clamp(10px, 2.2vmin, 16px);
+      --radius: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", Arial, sans-serif;
+      margin:0; padding:var(--space);
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+
+    /* App shell */
+    .app{ 
+      max-width: min(960px, 100%);
+      margin-inline: auto;
+      display: grid;
+      gap: var(--space);
+    }
+
+    /* Tabs */
+    .tabs{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+    }
+    .tab-btn{
+      background: var(--tab);
+      border:1px solid #d0d0d0;
+      color: var(--ink-2);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight:700;
+      line-height: 1.2;
+      transition: transform .08s ease, background .2s ease, color .2s ease;
+      min-height: 42px; /* touch target */
+    }
+    .tab-btn:hover{ transform: translateY(-1px); }
+    .tab-btn.active{
+      background: var(--tab-active);
+      color:#111;
+      border-color:#cfcfcf;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    /* Panels */
+    .panel{
+      background: #fff;
+      padding: clamp(12px, 2.2vmin, 18px);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+      display:none;
+    }
+    .panel.active{ display:block; }
+
+    /* Layout inside a panel */
+    .game-container-inner{
+      display:grid;
+      gap: clamp(8px, 2vmin, 14px);
+    }
+
+    .stage-header{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      flex-wrap: wrap;
+    }
+    .stage-title-nav{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .stage-title-nav h1{ margin:0; font-size: clamp(18px, 3.2vmin, 24px); }
+
+    .nav-button{ background:none; border:none; font-size: 1.4em; cursor:pointer; color:var(--ink-2); user-select:none; padding: 2px 6px; border-radius: 8px; }
+    .nav-button:hover{ background:#f1f3f5; color:#111; }
+
+    #randomStageButton{ background:#e53935; color:#fff; border:none; border-radius:10px; padding:8px 12px; font-size: 0.95rem; font-weight:700; cursor:pointer; }
+    #randomStageButton:hover{ filter: brightness(.95); }
+
+    .seed-display{ font-size: 1rem; color:var(--ink); min-height: 1.6em; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+    .seed-span{ color: var(--ink-3); font-size:.95em; cursor:pointer; text-decoration: underline; }
+    .seed-span:hover{ color:#444; }
+    .seed-span.active{ color:#111; font-weight:700; text-decoration: underline; }
+    .seed-sep{ color:#999; user-select:none; }
+
+    .game-status-display{ font-size:.98em; color:var(--ink-2); min-height:1.6em; }
+
+    /* Grid sizing — responsive without fixed heights */
+    .grid-zone{ display:grid; place-items:center; }
+    .grid-wrap{
+      width: min(92vw, 560px);
+      /* keep it inside available vertical space on short screens */
+      max-height: calc(var(--svh) - 280px);
+      aspect-ratio: 1 / 1;
+    }
+
+    .grid-container{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: clamp(4px, 1.2vmin, 8px);
+      width:100%; height:100%;
+    }
+
+    .grid-cell{
+      background: var(--accent);
+      border: 2px solid var(--accent-dark);
+      border-radius: 10px;
+      display:flex; align-items:center; justify-content:center;
+      --base-fs: clamp(1.2rem, 7vmin, 2.2rem);
+      font-size: var(--base-fs);
+      font-weight: 800;
+      color:#fff; text-align:center; user-select:none;
+      cursor: pointer;
+      transition: background-color .2s, transform .08s, font-size .15s ease;
+      min-height: 0; /* fix flex/grid min-content on Safari */
+    }
+    .grid-cell:not(.revealed):hover{ background:#66bb6a; transform: translateY(-1px); }
+    .grid-cell.revealed{ background: var(--muted); color: var(--ink); cursor: default; }
+    .grid-cell.winner{ font-size: calc(var(--base-fs) * 1.9); }
+
+    /* Creator */
+    .creator-controls{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; }
+    .creator-controls button, .creator-controls input{
+      padding:10px; border-radius:10px; border:1px solid #d0d0d0; font-weight:700; background:#fff; cursor:pointer; color:#222; min-height: 42px;
+    }
+    .creator-controls button:hover{ background:#fafafa; }
+    .note{ font-size:.92em; color:#666; }
+    .legend{ display:flex; gap:8px; align-items:center; margin:4px 0 8px; }
+    .legend span{ display:inline-flex; align-items:center; gap:4px; font-size:.95em; }
+    .pill{ display:inline-block; min-width:22px; text-align:center; padding:2px 8px; border-radius:999px; background:#eef1f4; border:1px solid #dfe3e7; font-weight:700; }
+    .row{ width:100%; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .grow{ flex:1; min-width: 200px; }
+
+    /* Small screens adjustments */
+    @media (max-width: 480px){
+      .seed-display{ gap:4px; font-size: .98rem; }
+      #randomStageButton{ padding:6px 10px; }
+      .creator-controls{ grid-template-columns: 1fr; }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .tab-btn, .grid-cell{ transition: none; }
+    }
+  </style>
 </head>
 <body>
-	<div class="game-container">
-		<div class="stage-header">
-			<div class="stage-title-nav">
-				<span id="prevStageButton" class="nav-button">◀</span>
-				<h1 id="stageTitle">스테이지 000</h1>
-				<span id="nextStageButton" class="nav-button">▶</span>
-			</div>
-			<button id="randomStageButton">R</button>
-		</div>
-		<div class="seed-display" id="seedDisplay"></div>
-		<div class="game-status-display" id="gameStatusDisplay"></div>
-		<div class="grid-container" id="gameGrid"></div>
-	</div>
+  <div class="app">
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="play" role="tab" aria-controls="panel-play" aria-selected="true">▶ 플레이</button>
+      <button class="tab-btn" data-tab="make" role="tab" aria-controls="panel-make" aria-selected="false">🛠 만들기</button>
+    </div>
 
-	<script>
-		let Q = (x, y = document) => y.querySelector(x);
-		let QQ = (x, y = document) => [...y.querySelectorAll(x)];
-		let Elem = (config) => {
-			const { tag = "div", text = "", class: className = "", ...attrs } = config;
-			const el = document.createElement(tag);
-			el.innerText = text;
-			el.className = className;
-			Object.keys(attrs).forEach((attr) => el.setAttribute(attr, attrs[attr]));
-			return el;
-		};
+    <!-- 플레이 패널 -->
+    <section id="panel-play" class="panel active" role="tabpanel" aria-labelledby="tab-play">
+      <div class="game-container-inner">
+        <div class="stage-header">
+          <div class="stage-title-nav">
+            <button id="prevStageButton" class="nav-button" title="이전 스테이지" aria-label="이전 스테이지">◀</button>
+            <h1 id="stageTitle">스테이지 000</h1>
+            <button id="nextStageButton" class="nav-button" title="다음 스테이지" aria-label="다음 스테이지">▶</button>
+          </div>
+          <button id="randomStageButton" title="무작위 스테이지" aria-label="무작위 스테이지">R</button>
+        </div>
+        <div class="seed-display" id="seedDisplay"></div>
+        <div class="game-status-display" id="gameStatusDisplay"></div>
+        <div class="grid-zone">
+          <div class="grid-wrap"><div class="grid-container" id="gameGrid"></div></div>
+        </div>
+      </div>
+    </section>
 
-		// --- 게임 상수 ---
-		const GRID_SIZE = 3;
-		const NUM_GEMS_PER_TYPE = 3;
-		const GEM_TYPES = ["0", "1", "2"];
-		const NUM_MAPS_PER_STAGE = 3;
+    <!-- 만들기 패널 -->
+    <section id="panel-make" class="panel" role="tabpanel" aria-labelledby="tab-make">
+      <div class="game-container-inner" id="creator">
+        <div class="row" style="justify-content:space-between">
+          <h2 style="margin:0">맵 만들기</h2>
+        </div>
+        <div class="note">셀을 클릭하여 💩→🙂→💎 순서로 바꿉니다.</div>
+        <div class="grid-zone">
+          <div class="grid-wrap"><div class="grid-container" id="makerGrid"></div></div>
+        </div>
+        <div class="row">
+          <div class="grow"><strong>현재 시드(HEX):</strong> <span id="makerSeed">-</span></div>
+          <button id="copySeedBtn">시드 복사</button>
+        </div>
+        <div class="creator-controls">
+          <button id="clearMaker">초기화</button>
+          <button id="randomizeMaker">무작위</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
-		const RANDOM_TIPS = [
-			"숨겨진 보석을 찾아보세요!",
-			"세 개의 맵이 무작위 순서로 출제되어요",
-		];
+  <script>
+    // ---------- Viewport-safe height CSS var ----------
+    const setSVH = () => {
+      // Use innerHeight to avoid mobile URL bar issues
+      document.documentElement.style.setProperty('--svh', window.innerHeight + 'px');
+    };
+    setSVH();
+    window.addEventListener('resize', setSVH, { passive: true });
 
-		// --- 상태 ---
-		let allStagesData = [];
-		let currentStage = 0;
-		let currentMapIndex = 0; // 무작위 순서 중 '위치' (0,1,2)
-		let currentMapOrder = []; // 예: [2,0,1] => 표시/로딩 순서
-		let revealedCells = [];
-		let gemCounts = [0, 0, 0];
-		let isGameOver = false;
-		let currentMapGrid = [];
-		let winningGemType = null; // ★ 우승 타입 저장
+    // ---------- DOM helpers ----------
+    const Q = (x, y = document) => y.querySelector(x);
+    const QQ = (x, y = document) => [...y.querySelectorAll(x)];
+    const Elem = (config) => {
+      const { tag = "div", text = "", class: className = "", ...attrs } = config;
+      const el = document.createElement(tag);
+      el.innerText = text;
+      el.className = className;
+      Object.keys(attrs).forEach((attr) => el.setAttribute(attr, attrs[attr]));
+      return el;
+    };
 
-		// 16진수 시드를 3진수 3x3 격자로
-		function hexToTernaryGrid(hexSeed) {
-			const decimalValue = parseInt(hexSeed, 16);
-			let ternaryString = "";
-			let tempValue = decimalValue;
+    // ---------- Tabs ----------
+    function setupTabs(){
+      QQ('.tab-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          QQ('.tab-btn').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+          QQ('.panel').forEach(p=>p.classList.remove('active'));
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected','true');
+          const key = btn.dataset.tab;
+          Q('#panel-'+key).classList.add('active');
+        })
+      })
+    }
 
-			for (let i = 0; i < 9; i++) {
-				ternaryString = (tempValue % 3) + ternaryString;
-				tempValue = Math.floor(tempValue / 3);
-			}
+    // ---------- Game constants ----------
+    const GRID_SIZE = 3;
+    const NUM_GEMS_PER_TYPE = 3;
+    const GEM_TYPES = ["0", "1", "2"]; // semantic order
+    const NUM_MAPS_PER_STAGE = 3;
 
-			const grid = [];
-			for (let r = 0; r < GRID_SIZE; r++) {
-				const row = [];
-				for (let c = 0; c < GRID_SIZE; c++) {
-					const value = parseInt(ternaryString[r * GRID_SIZE + c], 10);
-					row.push(GEM_TYPES[value]);
-				}
-				grid.push(row);
-			}
-			return grid;
-		}
+    const RANDOM_TIPS = [
+      "숨겨진 보석을 찾아보세요!",
+      "스테이지마다 세 가지 맵이 무작위 순서로 출제돼요~",
+    ];
 
-		// CSV 파싱
-		function parseCSV(csvText) {
-			const lines = csvText.trim().split("\n");
-			const headers = lines[0].split(",").map((h) => h.trim());
-			const data = [];
+    // ---------- State ----------
+    let allStagesData = [];
+    let currentStage = 0;
+    let currentMapIndex = 0;           // 위치(0,1,2)
+    let currentMapOrder = [];          // 예: [2,0,1]
+    let revealedCells = [];
+    let gemCounts = [0,0,0];
+    let isGameOver = false;
+    let currentMapGrid = [];
+    let winningGemType = null;
 
-			for (let i = 1; i < lines.length; i++) {
-				const values = lines[i].split(",").map((v) => v.trim());
-				const stage = {};
-				stage.seed = [];
+    // ---------- Seed enc/dec ----------
+    function hexToTernaryGrid(hexSeed){
+      const decimalValue = parseInt(hexSeed, 16);
+      let ternaryString = "";
+      let tempValue = decimalValue;
+      for(let i=0;i<9;i++){
+        ternaryString = (tempValue % 3) + ternaryString;
+        tempValue = Math.floor(tempValue / 3);
+      }
+      const grid = [];
+      for(let r=0;r<GRID_SIZE;r++){
+        const row=[];
+        for(let c=0;c<GRID_SIZE;c++){
+          const value = parseInt(ternaryString[r*GRID_SIZE + c], 10);
+          row.push(GEM_TYPES[value]);
+        }
+        grid.push(row);
+      }
+      return grid;
+    }
 
-				headers.forEach((header, index) => {
-					if (header.startsWith("seed")) {
-						stage.seed.push(values[index]);
-					} else if (header === "index") {
-						stage[header] = parseInt(values[index], 10);
-					} else {
-						stage[header] = values[index];
-					}
-				});
-				data.push(stage);
-			}
-			return data;
-		}
+    function ternaryGridToHex(grid){
+      let ternaryString = "";
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          ternaryString += grid[r][c];
+        }
+      }
+      let dec = 0;
+      for(let i=0;i<ternaryString.length;i++){
+        dec = dec*3 + parseInt(ternaryString[i],10);
+      }
+      return dec.toString(16);
+    }
 
-		async function initGame() {
-			try {
-				const response = await fetch("stages.csv");
-				if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-				const csvText = await response.text();
-				allStagesData = parseCSV(csvText);
+    // ---------- CSV parsing ----------
+    function parseCSV(csvText){
+      const lines = csvText.trim().split(/\r?\n/);
+      const headers = lines[0].split(",").map(h=>h.trim());
+      const data=[];
+      for(let i=1;i<lines.length;i++){
+        const values = lines[i].split(",").map(v=>v.trim());
+        const stage = { seed: [] };
+        headers.forEach((header, idx)=>{
+          if(header.startsWith("seed")) stage.seed.push(values[idx]);
+          else if(header === "index") stage.index = parseInt(values[idx],10);
+          else stage[header] = values[idx];
+        })
+        data.push(stage);
+      }
+      return data;
+    }
 
-				loadStage(0, false); // Initial load
+    // ---------- Game (Play) ----------
+    async function initGame(){
+      setupTabs();
+      try{
+        const res = await fetch('stages.csv');
+        if(res.ok){
+          const csvText = await res.text();
+          allStagesData = parseCSV(csvText);
+        } else {
+          allStagesData = [];
+        }
+      }catch(e){ allStagesData = []; }
 
-				Q("#randomStageButton").addEventListener("click", () => loadRandomStage(true));
-				Q("#prevStageButton").addEventListener("click", () => changeStage(-1));
-				Q("#nextStageButton").addEventListener("click", () => changeStage(1));
+      if(allStagesData.length===0){
+        allStagesData = [{ index:0, seed:["0","1","2"] }];
+      }
 
-				updateGameStatusDisplay(getRandomTip());
-				loadRandomStage();
-			} catch (e) {
-				console.error("Error loading stages data:", e);
-				updateGameStatusDisplay("게임 데이터를 불러오는 데 실패했습니다.");
-			}
-		}
+      loadStage(0, false);
 
-		function loadRandomStage(updateStatus = true) {
-			if (allStagesData.length === 0) {
-				console.warn("No stage data available to load a random stage.");
-				if (updateStatus) updateGameStatusDisplay("랜덤 스테이지를 불러올 수 없습니다: 데이터 없음.");
-				return;
-			}
-			const randomIndex = Math.floor(Math.random() * allStagesData.length);
-			loadStage(randomIndex, updateStatus);
-		}
+      Q('#randomStageButton').addEventListener('click', ()=> loadRandomStage(true));
+      Q('#prevStageButton').addEventListener('click', ()=> changeStage(-1));
+      Q('#nextStageButton').addEventListener('click', ()=> changeStage(1));
 
-		function changeStage(direction) {
-			if (allStagesData.length === 0) {
-				updateGameStatusDisplay("스테이지 데이터를 불러올 수 없습니다.");
-				return;
-			}
+      updateGameStatusDisplay(getRandomTip());
 
-			let newStage = currentStage + direction;
-			if (newStage < 0) {
-				newStage = allStagesData.length - 1;
-			} else if (newStage >= allStagesData.length) {
-				newStage = 0;
-			}
-			loadStage(newStage, true);
-		}
+      // Creator 초기화
+      initCreator();
+    }
 
-		function loadStage(stageIndex, updateStatus = true) {
-			if (stageIndex < 0 || stageIndex >= allStagesData.length) {
-				console.error("Attempted to load an invalid stage index:", stageIndex);
-				if (updateStatus) updateGameStatusDisplay("유효하지 않은 스테이지 인덱스입니다.");
-				return;
-			}
-			currentStage = stageIndex;
-			currentMapIndex = 0;
-			isGameOver = false;
-			gemCounts = [0, 0, 0];
-			winningGemType = null;
+    function loadRandomStage(updateStatus=true){
+      const randomIndex = Math.floor(Math.random()*allStagesData.length);
+      loadStage(randomIndex, updateStatus);
+    }
 
-			currentMapOrder = Array.from({ length: NUM_MAPS_PER_STAGE }, (_, i) => i).sort(
-				() => Math.random() - 0.5
-			);
+    function changeStage(direction){
+      let newStage = currentStage + direction;
+      if(newStage < 0) newStage = allStagesData.length-1;
+      else if(newStage >= allStagesData.length) newStage = 0;
+      loadStage(newStage, true);
+    }
 
-			updateStageUI();
-			loadCurrentMap();
-			if (updateStatus) updateGameStatusDisplay(getRandomTip());
-		}
+    function loadStage(stageIndex, updateStatus=true){
+      currentStage = stageIndex;
+      currentMapIndex = 0;
+      isGameOver = false;
+      gemCounts=[0,0,0];
+      winningGemType = null;
 
-		// 무작위 순서대로 시드 표시 + → 구분자 + 현재맵 강조
-		function updateStageUI() {
-			const stageData = allStagesData[currentStage];
-			if (!stageData) {
-				Q("#stageTitle").textContent = "게임 종료";
-				Q("#seedDisplay").innerHTML = "";
-				return;
-			}
-			Q("#stageTitle").textContent = `스테이지 ${String(currentStage + 1).padStart(3, "0")}`;
+      currentMapOrder = Array.from({length: NUM_MAPS_PER_STAGE}, (_,i)=>i).sort(()=>Math.random()-0.5);
 
-			const seedDisplayDiv = Q("#seedDisplay");
-			seedDisplayDiv.innerHTML = "";
+      updateStageUI();
+      loadCurrentMap();
+      if(updateStatus) updateGameStatusDisplay(getRandomTip());
+    }
 
-			currentMapOrder.forEach((actualIdx, orderPos) => {
-				const seedHex = stageData.seed[actualIdx];
-				const span = Elem({
-					tag: "span",
-					text: seedHex,
-					class: "seed-span" + (orderPos === currentMapIndex ? " active" : ""),
-					"data-order-pos": orderPos,
-				});
-				span.addEventListener("click", () => loadMapByOrderPos(orderPos));
-				seedDisplayDiv.appendChild(span);
+    function updateStageUI(){
+      const stageData = allStagesData[currentStage];
+      Q('#stageTitle').textContent = `스테이지 ${String(currentStage+1).padStart(3,'0')}`;
+      const seedDisplayDiv = Q('#seedDisplay');
+      seedDisplayDiv.innerHTML = '';
 
-				if (orderPos < currentMapOrder.length - 1) {
-					const sep = Elem({ tag: "span", text: "→", class: "seed-sep" });
-					seedDisplayDiv.appendChild(sep);
-				}
-			});
-		}
+      currentMapOrder.forEach((actualIdx, orderPos)=>{
+        const seedHex = stageData.seed[actualIdx];
+        const span = Elem({ tag:'span', text: seedHex, class: 'seed-span' + (orderPos===currentMapIndex? ' active':''), 'data-order-pos': orderPos });
+        span.addEventListener('click', ()=> loadMapByOrderPos(orderPos));
+        seedDisplayDiv.appendChild(span);
+        if(orderPos < currentMapOrder.length-1){ seedDisplayDiv.appendChild(Elem({tag:'span', text:'→', class:'seed-sep'})); }
+      })
+    }
 
-		function loadMapByOrderPos(orderPos) {
-			currentMapIndex = orderPos;
-			loadCurrentMap();
-		}
+    function loadMapByOrderPos(orderPos){ currentMapIndex = orderPos; loadCurrentMap(); }
 
-		function loadCurrentMap() {
-			const stageData = allStagesData[currentStage];
-			if (!stageData || !stageData.seed) {
-				console.error("Invalid stage data or seeds not found.", stageData);
-				updateGameStatusDisplay("맵 데이터를 불러올 수 없습니다.");
-				return;
-			}
-			const actualMapIndex = currentMapOrder[currentMapIndex];
-			const currentSeed = stageData.seed[actualMapIndex];
+    function loadCurrentMap(){
+      const stageData = allStagesData[currentStage];
+      const actualMapIndex = currentMapOrder[currentMapIndex];
+      const currentSeed = stageData.seed[actualMapIndex];
 
-			currentMapGrid = hexToTernaryGrid(currentSeed);
+      currentMapGrid = hexToTernaryGrid(currentSeed);
 
-			revealedCells = Array(GRID_SIZE)
-				.fill(0)
-				.map(() => Array(GRID_SIZE).fill(false));
-			gemCounts = [0, 0, 0];
-			isGameOver = false;
-			winningGemType = null;
+      revealedCells = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill(false));
+      gemCounts = [0,0,0];
+      isGameOver = false; winningGemType = null;
 
-			createGridUI();
-			updateStageUI();
-			updateGameStatusDisplay(getRandomTip());
-		}
+      createGridUI();
+      updateStageUI();
+      updateGameStatusDisplay(getRandomTip());
+    }
 
-		function createGridUI() {
-			Q("#gameGrid").innerHTML = "";
-			for (let r = 0; r < GRID_SIZE; r++) {
-				for (let c = 0; c < GRID_SIZE; c++) {
-					const cell = Elem({
-						tag: "div",
-						class: "grid-cell",
-						"data-row": r,
-						"data-col": c,
-					});
-					cell.addEventListener("click", () => handleCellClick(r, c));
-					Q("#gameGrid").appendChild(cell);
-				}
-			}
-		}
+    function createGridUI(){
+      const gridEl = Q('#gameGrid');
+      gridEl.innerHTML = '';
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          const cell = Elem({ tag:'div', class:'grid-cell', 'data-row':r, 'data-col':c });
+          cell.addEventListener('click', ()=> handleCellClick(r,c));
+          gridEl.appendChild(cell);
+        }
+      }
+      updateUI();
+    }
 
-		function handleCellClick(row, col) {
-			if (isGameOver || revealedCells[row][col]) return;
+    function handleCellClick(row,col){
+      if(isGameOver || revealedCells[row][col]) return;
+      revealedCells[row][col] = true;
+      const gemType = currentMapGrid[row][col];
+      const gemIndex = GEM_TYPES.indexOf(gemType);
+      if(gemIndex!==-1) gemCounts[gemIndex]++;
 
-			revealedCells[row][col] = true;
-			const gemType = currentMapGrid[row][col];
-			const gemIndex = GEM_TYPES.indexOf(gemType);
-			if (gemIndex !== -1) gemCounts[gemIndex]++;
+      updateUI();
 
-			updateUI();
+      if(gemCounts[gemIndex] === NUM_GEMS_PER_TYPE){
+        isGameOver = true; winningGemType = gemType; highlightWinningCells(gemType);
+        if(gemType==="0") updateGameStatusDisplay('꽝! 아쉬워요...😢');
+        if(gemType==="1") updateGameStatusDisplay('좋아요~ 🙂');
+        if(gemType==="2") updateGameStatusDisplay('대박! 🥰');
+        return;
+      }
+      updateGameStatusDisplay(getRandomTip());
+      checkLossCondition();
+    }
 
-			// 승리 조건: 특정 타입이 3개에 도달
-			if (gemCounts[gemIndex] === NUM_GEMS_PER_TYPE) {
-				isGameOver = true;
-				winningGemType = gemType; // ★ 우승 타입 저장
-				highlightWinningCells(gemType); // ★ 우승 셀 강조
+    function updateUI(){
+      const cells = QQ('.grid-cell', Q('#gameGrid'));
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          const idx = r*GRID_SIZE + c;
+          const cell = cells[idx];
+          if(revealedCells[r][c]){
+            cell.classList.add('revealed');
+            const v = currentMapGrid[r][c];
+            cell.textContent = ["💩","🙂","💎"][v];
+            if(winningGemType!==null && v===winningGemType) cell.classList.add('winner'); else cell.classList.remove('winner');
+          } else {
+            cell.classList.remove('revealed','winner');
+            cell.textContent = '';
+          }
+        }
+      }
+    }
 
-				if (gemType == "0") updateGameStatusDisplay(`꽝! 아쉬워요...😢`);
-				if (gemType == "1") updateGameStatusDisplay(`좋아요~ 🙂`);
-				if (gemType == "2") updateGameStatusDisplay(`대박! 🥰`);
-				return;
-			}
+    function highlightWinningCells(targetGemType){
+      const cells = QQ('.grid-cell', Q('#gameGrid'));
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          if(revealedCells[r][c] && currentMapGrid[r][c]===targetGemType){
+            cells[r*GRID_SIZE+c].classList.add('winner');
+          }
+        }
+      }
+    }
 
-			updateGameStatusDisplay(getRandomTip());
-			checkLossCondition();
-		}
+    function updateGameStatusDisplay(message){ Q('#gameStatusDisplay').textContent = message; }
+    function getRandomTip(){ return RANDOM_TIPS[Math.floor(Math.random()*RANDOM_TIPS.length)]; }
+    function checkLossCondition(){ /* 확장 여지 */ }
 
-		function updateUI() {
-			const cells = QQ(".grid-cell", Q("#gameGrid"));
-			for (let r = 0; r < GRID_SIZE; r++) {
-				for (let c = 0; c < GRID_SIZE; c++) {
-					const cellIndex = r * GRID_SIZE + c;
-					const cell = cells[cellIndex];
-					if (revealedCells[r][c]) {
-						cell.classList.add("revealed");
-						cell.textContent = ["💩", "🙂", "💎"][currentMapGrid[r][c]];
-						// 우승 상태 유지
-						if (winningGemType !== null && currentMapGrid[r][c] === winningGemType) {
-							cell.classList.add("winner");
-						} else {
-							cell.classList.remove("winner");
-						}
-					} else {
-						cell.classList.remove("revealed", "winner");
-						cell.textContent = "";
-					}
-				}
-			}
-		}
+    // ---------- Creator ----------
+    let makerGrid = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill("0"));
 
-		// 우승 셀에 .winner 클래스 부여
-		function highlightWinningCells(targetGemType) {
-			const cells = QQ(".grid-cell", Q("#gameGrid"));
-			for (let r = 0; r < GRID_SIZE; r++) {
-				for (let c = 0; c < GRID_SIZE; c++) {
-					if (revealedCells[r][c] && currentMapGrid[r][c] === targetGemType) {
-						const idx = r * GRID_SIZE + c;
-						cells[idx].classList.add("winner");
-					}
-				}
-			}
-		}
+    function initCreator(){
+      const host = Q('#makerGrid');
+      host.innerHTML = '';
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          const cell = Elem({ tag:'div', class:'grid-cell revealed', 'data-r':r, 'data-c':c });
+          cell.addEventListener('click', ()=> toggleMakerCell(r,c));
+          host.appendChild(cell);
+        }
+      }
+      updateMakerUI();
 
-		function updateGameStatusDisplay(message) {
-			Q("#gameStatusDisplay").textContent = message;
-		}
+      Q('#clearMaker').addEventListener('click', ()=>{ makerGrid = makerGrid.map(row=>row.map(()=>"0")); updateMakerUI(); });
+      Q('#randomizeMaker').addEventListener('click', ()=>{ makerGrid = makerGrid.map(row=>row.map(()=> String(Math.floor(Math.random()*3)) )); updateMakerUI(); });
+      Q('#copySeedBtn').addEventListener('click', async ()=>{
+        const seed = Q('#makerSeed').textContent.trim();
+        if(!seed || seed==='-') return;
+        try{ await navigator.clipboard.writeText(seed); Q('#copySeedBtn').textContent='복사됨 ✅'; setTimeout(()=>Q('#copySeedBtn').textContent='시드 복사', 1200); }catch(e){ alert('클립보드 복사 실패'); }
+      });
+    }
 
-		function getRandomTip() {
-			return RANDOM_TIPS[Math.floor(Math.random() * RANDOM_TIPS.length)];
-		}
+    function toggleMakerCell(r,c){
+      const cur = makerGrid[r][c];
+      const next = cur==='0'? '1' : cur==='1'? '2' : '0';
+      makerGrid[r][c] = next;
+      updateMakerUI();
+    }
 
-		// 모든 셀을 연 뒤에도 승리 조건이 없으면 패배 처리
-		function checkLossCondition() {
-			if (isGameOver) return;
+    function updateMakerUI(){
+      const cells = QQ('#makerGrid .grid-cell');
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          const idx = r*GRID_SIZE + c;
+          const v = makerGrid[r][c];
+          cells[idx].textContent = ["💩","🙂","💎"][v];
+        }
+      }
+      const seed = ternaryGridToHex(makerGrid);
+      Q('#makerSeed').textContent = seed;
+    }
 
-			let allCellsRevealed = true;
-			for (let r = 0; r < GRID_SIZE; r++) {
-				for (let c = 0; c < GRID_SIZE; c++) {
-					if (!revealedCells[r][c]) {
-						allCellsRevealed = false;
-						break;
-					}
-				}
-				if (!allCellsRevealed) break;
-			}
-
-			if (allCellsRevealed) {
-				isGameOver = true;
-				updateGameStatusDisplay(
-					"모든 셀을 뒤집었지만 어떤 보석도 3개에 도달하지 못했습니다. 게임 오버!"
-				);
-			}
-		}
-
-		window.onload = initGame;
-	</script>
+    // ---------- boot ----------
+    window.addEventListener('load', initGame);
+  </script>
 </body>
 </html>
