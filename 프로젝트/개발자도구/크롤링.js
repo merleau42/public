@@ -15,3 +15,6 @@ n++; D;} catch {n=1; D=new Object; E=document.createElement("EMPTY"); } //참조
 
 "디시 크롤링 ㅡ 로컬 스토리지 복사"
 copy(Array.from(Object.values(localStorage)).sort().map(x=>x.replace(/\n/g,'')).join('\t').replace(/ㅩ\t/g,'\n'));
+
+
+n = window.n = ~~window.n + 1;
