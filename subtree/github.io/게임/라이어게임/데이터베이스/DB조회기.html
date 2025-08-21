@@ -33,13 +33,13 @@
   </select>
   <button onclick="openSettingsModal()">설정</button>
 
-  <!-- ▶ 구글 로그인 UI -->
+  <!-- ▶ 관리자 로그인 UI -->
   <div class="auth-area">
     <span id="auth-status" class="user-chip hidden">
       <img id="auth-photo" alt="프로필">
       <span id="auth-name"></span>
     </span>
-    <button id="signin-btn">구글 로그인</button>
+    <button id="signin-btn">관리자</button>
     <button id="signout-btn" class="hidden">로그아웃</button>
   </div>
 </div>
@@ -74,7 +74,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-/* ▶ Firebase Auth 모듈 추가 */
+/* ▶ Firebase Auth 모듈 */
 import { 
   getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut 
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -139,7 +139,6 @@ onAuthStateChanged(auth, (user) => {
       authPhoto.src = '';
       authPhoto.classList.add('hidden');
     }
-    // 원하면 이메일 화이트리스트 체크 등을 여기서 수행
   } else {
     // 로그아웃됨
     authStatus.classList.add('hidden');
@@ -241,8 +240,8 @@ function toggleModified(isModified) {
 }
 
 function processAndSortData() {
-    // 1. Flatten data (if not already flat)
-    flatData = []; // 항상 최신 fullData를 기반으로 flatData를 재구성
+    // 1. Flatten data
+    flatData = [];
     if (Object.keys(fullData).length > 0) {
         for (const groupId in fullData) {
             const group = fullData[groupId];
@@ -318,7 +317,7 @@ function renderTable() {
                 sortConfig.key = key;
                 sortConfig.asc = true;
             }
-            processAndSortData(); // Add this line
+            processAndSortData();
             renderTable();
         };
         trHead.appendChild(th);
@@ -352,7 +351,7 @@ function renderTable() {
 
             const span = document.createElement('span');
             span.className = 'item-text';
-            span.textContent = displayValue || '...'; // Use '...' for empty cells
+            span.textContent = displayValue || '...';
             td.appendChild(span);
 
             td.dataset.groupId = rowData.groupID;
@@ -525,13 +524,10 @@ window.loadData = async function() {
     }
 };
 
-/* ▶ 비밀번호 + 로그인 동시 확인 로직
-   - 저장 등 민감 작업 전에: (1) 로그인 여부 체크 → (2) 비번 확인
-   - 필요 시 비밀번호를 제거하고 이메일 화이트리스트만 쓰도록 교체해도 됩니다.
-*/
+/* ▶ 로그인 확인(비밀번호 제거 버전) */
 async function requireSignedIn() {
   if (auth.currentUser) return true;
-  const doLogin = confirm("이 작업은 로그인한 사용자만 가능합니다. 지금 구글로 로그인하시겠습니까?");
+  const doLogin = confirm("이 작업은 로그인한 사용자만 가능합니다. 지금 관리자 계정으로 로그인하시겠습니까?");
   if (!doLogin) return false;
   try {
     await signInWithPopup(auth, provider);
@@ -539,33 +535,6 @@ async function requireSignedIn() {
   } catch (e) {
     alert('로그인에 실패했습니다: ' + (e?.message || e));
     return false;
-  }
-}
-
-async function confirmPasswordAndProceed(permissionKey, callback) {
-  // 1) 로그인 요구
-  const ok = await requireSignedIn();
-  if (!ok) return;
-
-  // 2) 기존 비밀번호 체크(유지)
-  if (sessionStorage.getItem(permissionKey) === 'true') {
-    callback();
-    return;
-  }
-  const password = prompt("비밀번호를 입력하세요:");
-  if (password === null) return;
-  try {
-    const pwSnapshot = await get(ref(db, 'pw'));
-    const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
-    if (password === storedPassword) {
-      sessionStorage.setItem(permissionKey, 'true');
-      callback();
-    } else {
-      alert('비밀번호가 틀렸습니다.');
-    }
-  } catch (error) {
-     alert('비밀번호 확인 중 오류가 발생했습니다.');
-     console.error("비밀번호 가져오기 오류:", error);
   }
 }
 
@@ -591,8 +560,11 @@ async function processAndSaveData() {
     }
 }
 
-window.saveData = function() {
-  confirmPasswordAndProceed('저장', processAndSaveData);
+/* ▶ 저장: 로그인만 확인 후 실행 (비번/세션 스토리지 사용 안 함) */
+window.saveData = async function() {
+  const ok = await requireSignedIn();
+  if (!ok) return;
+  await processAndSaveData();
 };
 
 window.backupToJson = function() {
@@ -626,7 +598,6 @@ window.addEventListener('click', (event) => {
         closeSettingsModal();
     }
 });
-
 
 // Make functions globally available
 window.makeEditable = makeEditable;
