@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DB 조회기</title>
+  <link rel="stylesheet" href="DB조회기.css">
+  <style>
+    /* 간단한 로그인 UI 보완 */
+    .auth-area {
+      display:flex; align-items:center; gap:8px;
+    }
+    .user-chip{
+      display:flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid var(--chip, #ddd);
+      font-size:12px;
+    }
+    .user-chip img{ width:20px; height:20px; border-radius:50%; }
+    .hidden{ display:none !important; }
+    .bottom-bar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+
+<div class="bottom-bar">
+  <input type="search" id="search-box" placeholder="검색...">
+  <button onclick="loadData()">불러오기</button>
+  <button onclick="saveData()">저장</button>
+  <button onclick="addNewStatement()">항목 추가</button>
+  <button onclick="backupToJson()">JSON 백업</button>
+  <select id="theme-selector" onchange="changeTheme(this.value)">
+    <option value="light">라이트</option>
+    <option value="dark">다크</option>
+  </select>
+  <button onclick="openSettingsModal()">설정</button>
+
+  <!-- ▶ 구글 로그인 UI -->
+  <div class="auth-area">
+    <span id="auth-status" class="user-chip hidden">
+      <img id="auth-photo" alt="프로필">
+      <span id="auth-name"></span>
+    </span>
+    <button id="signin-btn">구글 로그인</button>
+    <button id="signout-btn" class="hidden">로그아웃</button>
+  </div>
+</div>
+
+<div id="table-container"></div>
+
+<div id="settings-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeSettingsModal()">&times;</span>
+    <h2>설정</h2>
+    
+    <div class="settings-section">
+      <h3>가져올 필드</h3>
+      <div class="settings-grid" id="fields-to-fetch-grid">
+        <!-- Checkboxes will be dynamically generated here -->
+      </div>
+    </div>
+
+    <div class="settings-section">
+       <label for="timestamp-format">타임스탬프 형식:</label>
+        <select id="timestamp-format">
+          <option value="relative">상대 시간 (e.g., 5분 전)</option>
+          <option value="full">전체 날짜 (YYYY-MM-DD HH:mm:ss)</option>
+          <option value="date">날짜만 (YYYY-MM-DD)</option>
+        </select>
+    </div>
+
+    <button onclick="saveAndApplySettings()">저장 & 적용</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+/* ▶ Firebase Auth 모듈 추가 */
+import { 
+  getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut 
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
+    authDomain: "liarwords-af033.firebaseapp.com",
+    databaseURL: "https://liarwords-af033-default-rtdb.firebaseio.com",
+    projectId: "liarwords-af033",
+    storageBucket: "liarwords-af033.appspot.com",
+    messagingSenderId: "171671976030",
+    appId: "1:171671976030:web:59371970ec6b2a70035ccf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* ▶ Auth 초기화 */
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+/* ▶ 로그인 UI 참조 */
+const signinBtn = document.getElementById('signin-btn');
+const signoutBtn = document.getElementById('signout-btn');
+const authStatus = document.getElementById('auth-status');
+const authName = document.getElementById('auth-name');
+const authPhoto = document.getElementById('auth-photo');
+
+/* ▶ 로그인/로그아웃 버튼 핸들러 */
+signinBtn.onclick = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    // redirect 방식 선호 시: signInWithRedirect(auth, provider);
+  } catch (e) {
+    alert('로그인 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+
+signoutBtn.onclick = async () => {
+  try {
+    await signOut(auth);
+  } catch (e) {
+    alert('로그아웃 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+
+/* ▶ 로그인 상태 변화에 따라 UI 갱신 */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 로그인됨
+    authStatus.classList.remove('hidden');
+    signoutBtn.classList.remove('hidden');
+    signinBtn.classList.add('hidden');
+
+    authName.textContent = user.displayName || user.email || '로그인됨';
+    if (user.photoURL) {
+      authPhoto.src = user.photoURL;
+      authPhoto.classList.remove('hidden');
+    } else {
+      authPhoto.src = '';
+      authPhoto.classList.add('hidden');
+    }
+    // 원하면 이메일 화이트리스트 체크 등을 여기서 수행
+  } else {
+    // 로그아웃됨
+    authStatus.classList.add('hidden');
+    signoutBtn.classList.add('hidden');
+    signinBtn.classList.remove('hidden');
+    authName.textContent = '';
+    authPhoto.src = '';
+  }
+});
+
+let fullData = {};
+let flatData = [];
+let sortConfig = { key: 'update', asc: false };
+let searchTerm = '';
+let modifiedItems = new Set(); // To track modified cells
+let dataToRender = []; // Global variable for the rendered data
+
+// --- Settings ---
+const ALL_POSSIBLE_HEADERS = ['groupID', 'update', 'words', 'unique', 'subject', 'opening', 'elaborate1', 'elaborate2', 'respond1', 'respond2', 'property1', 'property2', 'tags', 'author'];
+let settings = {};
+const DEFAULT_SETTINGS = {
+    selectedFields: ['groupID', 'update', 'words', 'unique', 'subject', 'opening', 'elaborate1', 'elaborate2', 'respond1', 'respond2', 'tags', 'author'],
+    theme: 'light',
+    timestampFormat: 'relative' // 'relative', 'full', 'date'
+};
+
+function formatTimestamp(timestamp, format) {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    
+    if (format === 'full') {
+        return date.getFullYear() + '-' +
+               ('0' + (date.getMonth() + 1)).slice(-2) + '-' +
+               ('0' + date.getDate()).slice(-2) + ' ' +
+               ('0' + date.getHours()).slice(-2) + ':' +
+               ('0' + date.getMinutes()).slice(-2) + ':' +
+               ('0' + date.getSeconds()).slice(-2);
+    }
+    if (format === 'date') {
+        return date.toISOString().slice(0, 10);
+    }
+    // Relative time
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "년 전";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "달 전";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "일 전";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "시간 전";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "분 전";
+    return Math.floor(seconds) + "초 전";
+}
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem('dbViewerSettings');
+    settings = savedSettings ? JSON.parse(savedSettings) : JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    
+    // Populate modal fields
+    const grid = document.getElementById('fields-to-fetch-grid');
+    grid.innerHTML = '';
+    ALL_POSSIBLE_HEADERS.forEach(field => {
+        const isChecked = settings.selectedFields.includes(field);
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${field}" ${isChecked ? 'checked' : ''}> ${field}`;
+        grid.appendChild(label);
+    });
+
+    document.getElementById('timestamp-format').value = settings.timestampFormat || 'relative';
+    document.getElementById('theme-selector').value = settings.theme;
+    document.body.dataset.theme = settings.theme;
+}
+
+function saveAndApplySettings() {
+    // Save selected fields
+    const newSelectedFields = [];
+    document.querySelectorAll('#fields-to-fetch-grid input:checked').forEach(input => {
+        newSelectedFields.push(input.value);
+    });
+    settings.selectedFields = newSelectedFields;
+
+    settings.theme = document.getElementById('theme-selector').value;
+    settings.timestampFormat = document.getElementById('timestamp-format').value;
+
+    localStorage.setItem('dbViewerSettings', JSON.stringify(settings));
+    alert("설정이 저장되었습니다.");
+    closeSettingsModal();
+    processAndSortData(); // Re-render with new settings
+    renderTable();
+}
+
+// --- End Settings ---
+
+function toggleModified(isModified) {
+    document.body.classList.toggle('modified', isModified);
+}
+
+function processAndSortData() {
+    // 1. Flatten data (if not already flat)
+    flatData = []; // 항상 최신 fullData를 기반으로 flatData를 재구성
+    if (Object.keys(fullData).length > 0) {
+        for (const groupId in fullData) {
+            const group = fullData[groupId];
+            if (!group.statements || group.statements.length === 0) continue;
+            
+            group.statements.forEach((stmt, index) => {
+                let processedStmt = {
+                    ...stmt,
+                    groupID: groupId,
+                    update: group.timestamp || null, 
+                    words: group.words || [],
+                    _originalStmtIndex: index
+                };
+                flatData.push(processedStmt);
+            });
+        }
+    }
+
+    // 2. Filter data
+    let filteredData = flatData;
+    if (searchTerm) {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        filteredData = flatData.filter(row => {
+            return Object.values(row).some(value => 
+                String(value).toLowerCase().includes(lowerCaseSearchTerm)
+            );
+        });
+    }
+
+    // 3. Sort data
+    filteredData.sort((a, b) => {
+        const key = sortConfig.key;
+        let valA = a[key] === undefined ? '' : a[key];
+        let valB = b[key] === undefined ? '' : b[key];
+
+        if (typeof valA === 'string' && typeof valB === 'string') {
+            valA = valA.toLowerCase();
+            valB = valB.toLowerCase();
+        } else if (Array.isArray(valA) && Array.isArray(valB)) {
+            valA = valA.join(',');
+            valB = valB.join(',');
+        }
+
+        let comparison = 0;
+        if (valA > valB) comparison = 1;
+        else if (valA < valB) comparison = -1;
+        return sortConfig.asc ? comparison : comparison * -1;
+    });
+
+    dataToRender = filteredData;
+}
+
+function renderTable() {
+    const container = document.getElementById('table-container');
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    
+    // Header
+    const trHead = document.createElement('tr');
+    const currentHeaders = settings.selectedFields;
+    currentHeaders.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        th.className = 'sortable';
+        if (sortConfig.key === key) {
+            th.classList.add(sortConfig.asc ? 'sorted-asc' : 'sorted-desc');
+        }
+        th.onclick = () => {
+            if (sortConfig.key === key) {
+                sortConfig.asc = !sortConfig.asc;
+            } else {
+                sortConfig.key = key;
+                sortConfig.asc = true;
+            }
+            processAndSortData(); // Add this line
+            renderTable();
+        };
+        trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+
+    // Body
+    dataToRender.forEach(rowData => {
+        const tr = document.createElement('tr');
+        tr.classList.add('data-row');
+        if (parseInt(rowData.groupID, 10) % 2 !== 0) {
+            tr.classList.add('group-odd');
+        }
+
+        currentHeaders.forEach(header => {
+            const td = document.createElement('td');
+            let value = rowData[header];
+            
+            let displayValue = '';
+            if (header === 'update') {
+                displayValue = formatTimestamp(value, settings.timestampFormat);
+            } else if (value === undefined || value === null) {
+                displayValue = '';
+            } else if (Array.isArray(value)) {
+                displayValue = value.join(', ');
+            } else if (typeof value === 'object') {
+                displayValue = JSON.stringify(value);
+            } else {
+                displayValue = value;
+            }
+
+            const span = document.createElement('span');
+            span.className = 'item-text';
+            span.textContent = displayValue || '...'; // Use '...' for empty cells
+            td.appendChild(span);
+
+            td.dataset.groupId = rowData.groupID;
+            td.dataset.stmtIndex = rowData._originalStmtIndex;
+            td.dataset.field = header;
+            
+            const cellId = `${rowData.groupID}-${rowData._originalStmtIndex}-${header}`;
+            if (modifiedItems.has(cellId)) {
+                span.classList.add('modified-text');
+            }
+
+            if (header !== 'groupID' && header !== 'update') {
+                td.classList.add('editable');
+                td.onclick = makeEditable;
+            }
+            if (header === 'groupID') td.classList.add('group-id-cell');
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.innerHTML = '';
+    container.appendChild(table);
+
+    if (dataToRender.length === 0) {
+        container.innerHTML = '표시할 데이터가 없습니다. (필터링됨)';
+    }
+}
+
+function makeEditable(event) {
+    const td = event.currentTarget;
+    if (td.querySelector('textarea')) return;
+
+    const { groupId, stmtIndex, field } = td.dataset;
+    
+    let originalValue;
+    if (field === 'words') {
+        originalValue = fullData[groupId]?.[field];
+    } else if (fullData[groupId]?.statements?.[stmtIndex]) {
+        originalValue = fullData[groupId].statements[stmtIndex][field];
+    } else {
+        originalValue = undefined;
+    }
+
+    const cellId = `${groupId}-${stmtIndex}-${field}`;
+    
+    let currentValueText;
+    if (Array.isArray(originalValue)) {
+        currentValueText = originalValue.join(', ');
+    } else if (typeof originalValue === 'object' && originalValue !== null) {
+        currentValueText = JSON.stringify(originalValue, null, 2);
+    } else {
+        currentValueText = originalValue || '';
+    }
+    
+    const textarea = document.createElement('textarea');
+    textarea.value = currentValueText;
+    textarea.className = 'editable-textarea';
+    textarea.style.height = `${td.offsetHeight}px`;
+    
+    textarea.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+            e.target.dataset.escapePressed = 'true';
+            e.preventDefault();
+            textarea.blur();
+        }
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            textarea.blur();
+        }
+    };
+
+    textarea.onblur = () => {
+        const editingSpan = td.querySelector('.editing');
+
+        if (textarea.dataset.escapePressed === 'true') {
+            if (editingSpan) {
+                editingSpan.classList.remove('editing');
+            }
+            textarea.remove();
+            return;
+        }
+
+        const newValue = textarea.value.trim();
+        let hasChanged = false;
+
+        let valueToSave;
+        if (field === 'words' || field === 'tags') {
+            valueToSave = newValue.split(',').map(s => s.trim()).filter(Boolean);
+            if (JSON.stringify(valueToSave) !== JSON.stringify(originalValue)) {
+                hasChanged = true;
+            }
+        } else if (['unique', 'property1', 'property2'].includes(field)) {
+            valueToSave = !isNaN(newValue) && newValue.trim() !== '' ? Number(newValue) : 0;
+            if (valueToSave !== originalValue) {
+                hasChanged = true;
+            }
+        } else {
+            valueToSave = newValue;
+            if (valueToSave !== (originalValue || '')) {
+                hasChanged = true;
+            }
+        }
+        
+        if (hasChanged) {
+            if (field === 'words') {
+                fullData[groupId][field] = valueToSave;
+            } else if (fullData[groupId]?.statements?.[stmtIndex]) {
+                fullData[groupId].statements[stmtIndex][field] = valueToSave;
+            }
+            fullData[groupId].timestamp = new Date().getTime();
+            modifiedItems.add(cellId);
+            td.querySelector('.item-text').classList.add('modified-text');
+            toggleModified(true);
+        }
+        
+        if (editingSpan) {
+            editingSpan.textContent = textarea.value || '...';
+            editingSpan.classList.remove('editing');
+        }
+        textarea.remove();
+    };
+
+    td.querySelector('span').classList.add('editing');
+    td.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+}
+
+window.addNewStatement = function() {
+    const groupId = prompt("새로운 항목을 추가할 그룹 ID를 입력하세요:");
+    if (!groupId || !fullData[groupId]) {
+        alert("유효하지 않은 그룹 ID입니다.");
+        return;
+    }
+
+    const newStatement = { subject: "", opening: "", elaborate1: "", elaborate2: "", respond1: "", respond2: "", unique: 0, property1: 999, property2: 999, tags: [], author: "" };
+    if (!fullData[groupId].statements) {
+        fullData[groupId].statements = [];
+    }
+    fullData[groupId].statements.push(newStatement);
+    fullData[groupId].timestamp = new Date().getTime();
+    document.body.classList.add('modified');
+    flatData = [];
+    processAndSortData();
+    renderTable();
+    alert(`${groupId} 그룹에 새로운 항목이 추가되었습니다. '저장' 버튼을 눌러 확정하세요.`);
+}
+
+window.loadData = async function() {
+    console.log("Loading data from Firebase...");
+    try {
+        const snapshot = await get(ref(db, 'liar_groups'));
+        if (snapshot.exists()) {
+            fullData = snapshot.val();
+            flatData = [];
+            modifiedItems.clear();
+            processAndSortData();
+            renderTable();
+            document.body.classList.remove('modified');
+        } else {
+            console.log("No data available.");
+            document.getElementById('table-container').innerHTML = 'Firebase에 데이터가 없습니다.';
+        }
+    } catch (error) {
+        console.error("Error loading data: ", error);
+        alert("데이터 로딩 중 오류 발생: " + error.message);
+    }
+};
+
+/* ▶ 비밀번호 + 로그인 동시 확인 로직
+   - 저장 등 민감 작업 전에: (1) 로그인 여부 체크 → (2) 비번 확인
+   - 필요 시 비밀번호를 제거하고 이메일 화이트리스트만 쓰도록 교체해도 됩니다.
+*/
+async function requireSignedIn() {
+  if (auth.currentUser) return true;
+  const doLogin = confirm("이 작업은 로그인한 사용자만 가능합니다. 지금 구글로 로그인하시겠습니까?");
+  if (!doLogin) return false;
+  try {
+    await signInWithPopup(auth, provider);
+    return !!auth.currentUser;
+  } catch (e) {
+    alert('로그인에 실패했습니다: ' + (e?.message || e));
+    return false;
+  }
+}
+
+async function confirmPasswordAndProceed(permissionKey, callback) {
+  // 1) 로그인 요구
+  const ok = await requireSignedIn();
+  if (!ok) return;
+
+  // 2) 기존 비밀번호 체크(유지)
+  if (sessionStorage.getItem(permissionKey) === 'true') {
+    callback();
+    return;
+  }
+  const password = prompt("비밀번호를 입력하세요:");
+  if (password === null) return;
+  try {
+    const pwSnapshot = await get(ref(db, 'pw'));
+    const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
+    if (password === storedPassword) {
+      sessionStorage.setItem(permissionKey, 'true');
+      callback();
+    } else {
+      alert('비밀번호가 틀렸습니다.');
+    }
+  } catch (error) {
+     alert('비밀번호 확인 중 오류가 발생했습니다.');
+     console.error("비밀번호 가져오기 오류:", error);
+  }
+}
+
+async function processAndSaveData() {
+    if (!document.body.classList.contains('modified')) {
+        alert("변경된 내용이 없습니다.");
+        return;
+    }
+    const userConfirm = confirm("정말로 현재 데이터를 Firebase에 저장하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
+    if (userConfirm) {
+        try {
+            await set(ref(db, 'liar_groups'), fullData);
+            alert("성공적으로 저장되었습니다.");
+            document.body.classList.remove('modified');
+            modifiedItems.clear();
+            // Re-render to remove 'modified-text' class from all cells
+            const allModifiedCells = document.querySelectorAll('.modified-text');
+            allModifiedCells.forEach(cell => cell.classList.remove('modified-text'));
+        } catch (error) {
+            console.error("Error saving data: ", error);
+            alert("데이터 저장 중 오류 발생: " + error.message);
+        }
+    }
+}
+
+window.saveData = function() {
+  confirmPasswordAndProceed('저장', processAndSaveData);
+};
+
+window.backupToJson = function() {
+    if (!fullData || Object.keys(fullData).length === 0) {
+        alert("백업할 데이터가 없습니다.");
+        return;
+    }
+    const jsonString = JSON.stringify(fullData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `liar_groups_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+window.changeTheme = function(theme) {
+    document.body.dataset.theme = theme;
+    settings.theme = theme;
+    localStorage.setItem('dbViewerSettings', JSON.stringify(settings));
+}
+
+// Modal functions
+window.openSettingsModal = function() { document.getElementById('settings-modal').style.display = 'block'; }
+window.closeSettingsModal = function() { document.getElementById('settings-modal').style.display = 'none'; }
+window.saveAndApplySettings = saveAndApplySettings;
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('settings-modal');
+    if (event.target == modal) {
+        closeSettingsModal();
+    }
+});
+
+
+// Make functions globally available
+window.makeEditable = makeEditable;
+window.loadData = loadData;
+window.saveData = saveData;
+window.backupToJson = backupToJson;
+
+// Initial Load
+window.onload = () => {
+    loadSettings();
+    loadData();
+    document.getElementById('search-box').addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        processAndSortData();
+        renderTable();
+    });
+};
+</script>
+</body>
+</html>

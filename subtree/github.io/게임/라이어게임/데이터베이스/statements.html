@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>단어 그룹 관리자</title>
   <link rel="stylesheet" href="statements.css">
+  <style>
+    .auth-area { display:flex; align-items:center; gap:8px; margin-left:8px; }
+    .user-chip{
+      display:flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid var(--chip, #ddd);
+      font-size:12px;
+    }
+    .user-chip img{ width:20px; height:20px; border-radius:50%; }
+    .hidden{ display:none !important; }
+    .bottom-bar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
 
@@ -24,6 +34,16 @@
     <option value="length_desc">분량 많은 순</option>
     <option value="length_asc">분량 적은 순</option>
   </select>
+
+  <!-- ▶ 관리자 로그인 UI -->
+  <div class="auth-area">
+    <span id="auth-status" class="user-chip hidden">
+      <img id="auth-photo" alt="프로필">
+      <span id="auth-name"></span>
+    </span>
+    <button id="signin-btn">관리자</button>
+    <button id="signout-btn" class="hidden">로그아웃</button>
+  </div>
 </div>
 
 <div id="group-container"></div>
@@ -31,6 +51,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 const app = initializeApp({
   apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
@@ -43,85 +64,130 @@ const app = initializeApp({
 });
 const db = getDatabase(app);
 
+/* ▶ Auth 초기화 */
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+/* ▶ 로그인 UI 참조 */
+const signinBtn = document.getElementById('signin-btn');
+const signoutBtn = document.getElementById('signout-btn');
+const authStatus = document.getElementById('auth-status');
+const authName = document.getElementById('auth-name');
+const authPhoto = document.getElementById('auth-photo');
+
+/* ▶ 로그인/로그아웃 버튼 핸들러 */
+signinBtn.onclick = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    alert('로그인 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+signoutBtn.onclick = async () => {
+  try {
+    await signOut(auth);
+  } catch (e) {
+    alert('로그아웃 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+
+/* ▶ 로그인 상태 변화에 따라 UI 갱신 */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authStatus.classList.remove('hidden');
+    signoutBtn.classList.remove('hidden');
+    signinBtn.classList.add('hidden');
+
+    authName.textContent = user.displayName || user.email || '로그인됨';
+    if (user.photoURL) {
+      authPhoto.src = user.photoURL;
+      authPhoto.classList.remove('hidden');
+    } else {
+      authPhoto.src = '';
+      authPhoto.classList.add('hidden');
+    }
+  } else {
+    authStatus.classList.add('hidden');
+    signoutBtn.classList.add('hidden');
+    signinBtn.classList.remove('hidden');
+    authName.textContent = '';
+    authPhoto.src = '';
+  }
+});
+
 let groupData = {};
 let modifiedItems = new Set();
 let currentSortMethod = 'timestamp';
 
 function formatStatement(stmt) {
-    if (!stmt) return '';
-    if (typeof stmt === 'string') return stmt; // 이전 버전 호환
+  if (!stmt) return '';
+  if (typeof stmt === 'string') return stmt;
 
-    let text = '';
-    
-    // Part 1: Subject and Opening
-    if (stmt.subject) {
-        text += stmt.subject;
-        if (stmt.opening) {
-            text += ': ';
-        }
-    }
-    if (stmt.opening) {
-        text += stmt.opening;
-    }
-
-    // Part 2: Elaborate1
-    if (stmt.elaborate1) {
-        // Add separator only if there is preceding text
-        if (text) {
-            text += ' ㅡ ';
-        }
-        text += stmt.elaborate1;
-    }
-    
-    // Part 3: Elaborate2
-    if (stmt.elaborate2) {
-        // Add separator only if there is preceding text
-        if (text) {
-            text += ' >> ';
-        }
-        text += stmt.elaborate2;
-    }
-
-    return text.trim();
+  let text = '';
+  if (stmt.subject) {
+    text += stmt.subject;
+    if (stmt.opening) text += ': ';
+  }
+  if (stmt.opening) text += stmt.opening;
+  if (stmt.elaborate1) {
+    if (text) text += ' ㅡ ';
+    text += stmt.elaborate1;
+  }
+  if (stmt.elaborate2) {
+    if (text) text += ' >> ';
+    text += stmt.elaborate2;
+  }
+  return text.trim();
 }
 
 function parseStatement(text) {
-    const stmt = {};
-    if (!text) return stmt;
+  const stmt = {};
+  if (!text) return stmt;
+  let remaining = text.trim();
 
-    let remaining = text.trim();
-
-    let parts = remaining.split(' >> ');
-    if (parts.length > 1) {
-        const elaborate2 = parts.pop().trim();
-        if (elaborate2) stmt.elaborate2 = elaborate2;
-        remaining = parts.join(' >> ').trim();
-    }
-
-    parts = remaining.split(' ㅡ ');
-    if (parts.length > 1) {
-        const elaborate1 = parts.pop().trim();
-        if (elaborate1) stmt.elaborate1 = elaborate1;
-        remaining = parts.join(' ㅡ ').trim();
-    }
-
-    parts = remaining.split(': ');
-    if (parts.length > 1) {
-        const subject = parts.shift().trim();
-        if (subject) stmt.subject = subject;
-        const opening = parts.join(': ').trim();
-        if (opening) stmt.opening = opening;
-    } else {
-        const opening = remaining.trim();
-        if (opening) stmt.opening = opening;
-    }
-
-    return stmt;
+  let parts = remaining.split(' >> ');
+  if (parts.length > 1) {
+    const elaborate2 = parts.pop().trim();
+    if (elaborate2) stmt.elaborate2 = elaborate2;
+    remaining = parts.join(' >> ').trim();
+  }
+  parts = remaining.split(' ㅡ ');
+  if (parts.length > 1) {
+    const elaborate1 = parts.pop().trim();
+    if (elaborate1) stmt.elaborate1 = elaborate1;
+    remaining = parts.join(' ㅡ ').trim();
+  }
+  parts = remaining.split(': ');
+  if (parts.length > 1) {
+    const subject = parts.shift().trim();
+    if (subject) stmt.subject = subject;
+    const opening = parts.join(': ').trim();
+    if (opening) stmt.opening = opening;
+  } else {
+    const opening = remaining.trim();
+    if (opening) stmt.opening = opening;
+  }
+  return stmt;
 }
-
 
 function toggleModified(isModified) {
   document.body.classList.toggle('modified', isModified);
+}
+
+/* ▶ 로그인 확인(비밀번호/세션 스토리지 없이) */
+async function requireSignedIn() {
+  if (auth.currentUser) return true;
+  const doLogin = confirm("이 작업은 로그인한 사용자만 가능합니다. 지금 관리자 계정으로 로그인하시겠습니까?");
+  if (!doLogin) return false;
+  try {
+    await signInWithPopup(auth, provider);
+    return !!auth.currentUser;
+  } catch (e) {
+    alert('로그인에 실패했습니다: ' + (e?.message || e));
+    return false;
+  }
 }
 
 window.loadGroups = async function(restoreScrollY = null) {
@@ -149,57 +215,38 @@ window.loadGroups = async function(restoreScrollY = null) {
   window.scrollTo(0, restoreScrollY !== null ? restoreScrollY : currentScrollY);
 };
 
-async function confirmPasswordAndProceed(permissionKey, callback) {
-  if (sessionStorage.getItem(permissionKey) === 'true') {
-    callback();
-    return;
-  }
-  const password = prompt("비밀번호를 입력하세요:");
-  if (password === null) return;
-  try {
-    const pwSnapshot = await get(ref(db, 'pw'));
-    const storedPassword = pwSnapshot.exists() ? pwSnapshot.val() : null;
-    if (password === storedPassword) {
-      sessionStorage.setItem(permissionKey, 'true');
-      callback();
-    } else {
-      alert('비밀번호가 틀렸습니다.');
-    }
-  } catch (error) {
-     alert('비밀번호 확인 중 오류가 발생했습니다.');
-     console.error("비밀번호 가져오기 오류:", error);
-  }
-}
-
 async function processAndSaveGroups() {
-	const groupsToDelete = Object.entries(groupData)
-		.filter(([groupId, data]) => !data.words || (Array.isArray(data.words) && data.words.filter(word => String(word).trim() !== '').length === 0));
+  const groupsToDelete = Object.entries(groupData)
+    .filter(([groupId, data]) => !data.words || (Array.isArray(data.words) && data.words.filter(word => String(word).trim() !== '').length === 0));
 
-	for (const [groupId] of groupsToDelete) {
-		const groupRef = ref(db, `liar_groups/${groupId}`);
-		try {
-			await remove(groupRef);
-			delete groupData[groupId];
-		} catch (error) {
-			console.error(`그룹 "${groupId}" 삭제 실패:`, error);
-			alert(`그룹 "${groupId}" 삭제에 실패했습니다. 권한 문제일 수 있습니다.`);
-		}
-	}
+  for (const [groupId] of groupsToDelete) {
+    const groupRef = ref(db, `liar_groups/${groupId}`);
+    try {
+      await remove(groupRef);
+      delete groupData[groupId];
+    } catch (error) {
+      console.error(`그룹 "${groupId}" 삭제 실패:`, error);
+      alert(`그룹 "${groupId}" 삭제에 실패했습니다. 권한 문제일 수 있습니다.`);
+    }
+  }
 
-	try {
-		await set(ref(db, 'liar_groups'), groupData);
-		alert('저장 완료');
-		toggleModified(false);
-		modifiedItems.clear();
-		renderGroups();
-	} catch (error) {
-		console.error("데이터 저장 실패:", error);
-		alert("데이터 저장에 실패했습니다. 권한 문제일 수 있습니다.");
-	}
+  try {
+    await set(ref(db, 'liar_groups'), groupData);
+    alert('저장 완료');
+    toggleModified(false);
+    modifiedItems.clear();
+    renderGroups();
+  } catch (error) {
+    console.error("데이터 저장 실패:", error);
+    alert("데이터 저장에 실패했습니다. 권한 문제일 수 있습니다.");
+  }
 }
 
-window.saveGroups = function() {
-  confirmPasswordAndProceed('저장', processAndSaveGroups);
+/* ▶ 저장: 로그인 확인 후 진행 */
+window.saveGroups = async function() {
+  const ok = await requireSignedIn();
+  if (!ok) return;
+  await processAndSaveGroups();
 };
 
 window.backupToJson = async function() {
@@ -238,11 +285,9 @@ function renderGroups() {
   container.innerHTML = '';
 
   let sorted = Object.entries(groupData || {});
-  
   sorted.sort((a, b) => {
     const [idA, dataA] = a;
     const [idB, dataB] = b;
-
     switch (currentSortMethod) {
       case 'length_desc': {
         const lengthA = (dataA.words || []).join('').length + (dataA.statements || []).map(s => JSON.stringify(s)).join('').length;
@@ -299,30 +344,24 @@ function createItemElement(groupId, items, idx, key, isTitle = false) {
   span.className = 'item-text';
   span.textContent = displayText || '...';
 
-  // Add title attribute for author tooltip
-  if (isStatement && item && item.author) {
-    span.title = `작성자: ${item.author}`;
-  }
+  if (isStatement && item && item.author) span.title = `작성자: ${item.author}`;
   
   const itemId = `${groupId}-${key}-${idx}`;
-  if (modifiedItems.has(itemId)) {
-    span.classList.add('modified-text');
-  }
+  if (modifiedItems.has(itemId)) span.classList.add('modified-text');
   
   const del = document.createElement('span');
   del.className = 'delete-btn';
   del.textContent = '✖';
-  del.onclick = (e) => {
+  del.onclick = async (e) => {
     e.stopPropagation();
-    if (item) {
-      confirmPasswordAndProceed('삭제', () => {
-        items.splice(idx, 1);
-        groupData[groupId][key] = [...items];
-        modifiedItems.delete(itemId);
-        toggleModified(modifiedItems.size > 0);
-        renderGroups();
-      });
-    }
+    if (!item) return;
+    const ok = await requireSignedIn();
+    if (!ok) return;
+    items.splice(idx, 1);
+    groupData[groupId][key] = [...items];
+    modifiedItems.delete(itemId);
+    toggleModified(true);
+    renderGroups();
   };
   del.style.display = 'none';
 
@@ -370,10 +409,7 @@ function createItemElement(groupId, items, idx, key, isTitle = false) {
             modifiedItems.delete(itemId);
           }
         }
-        
-        if (hasChanged) {
-          groupData[groupId][key] = [...items];
-        }
+        if (hasChanged) groupData[groupId][key] = [...items];
       }
       toggleModified(modifiedItems.size > 0);
       renderGroups();
@@ -419,7 +455,6 @@ window.addEventListener('load', () => {
 window.addEventListener('beforeunload', () => {
   sessionStorage.setItem('scrollPosition', window.scrollY);
 });
-
 </script>
 
 </body>
