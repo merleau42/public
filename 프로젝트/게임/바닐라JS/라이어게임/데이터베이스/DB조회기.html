@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DB 조회기</title>
   <link rel="stylesheet" href="DB조회기.css">
+  <style>
+    /* 간단한 로그인 UI 보완 */
+    .auth-area {
+      display:flex; align-items:center; gap:8px;
+    }
+    .user-chip{
+      display:flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; border:1px solid var(--chip, #ddd);
+      font-size:12px;
+    }
+    .user-chip img{ width:20px; height:20px; border-radius:50%; }
+    .hidden{ display:none !important; }
+    .bottom-bar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
 
@@ -19,6 +32,16 @@
     <option value="dark">다크</option>
   </select>
   <button onclick="openSettingsModal()">설정</button>
+
+  <!-- ▶ 구글 로그인 UI -->
+  <div class="auth-area">
+    <span id="auth-status" class="user-chip hidden">
+      <img id="auth-photo" alt="프로필">
+      <span id="auth-name"></span>
+    </span>
+    <button id="signin-btn">구글 로그인</button>
+    <button id="signout-btn" class="hidden">로그아웃</button>
+  </div>
 </div>
 
 <div id="table-container"></div>
@@ -51,6 +74,10 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+/* ▶ Firebase Auth 모듈 추가 */
+import { 
+  getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut 
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDVVAx9XRziu8IZ9CLczaG20QEOwyY4uLs",
@@ -64,6 +91,65 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+/* ▶ Auth 초기화 */
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+/* ▶ 로그인 UI 참조 */
+const signinBtn = document.getElementById('signin-btn');
+const signoutBtn = document.getElementById('signout-btn');
+const authStatus = document.getElementById('auth-status');
+const authName = document.getElementById('auth-name');
+const authPhoto = document.getElementById('auth-photo');
+
+/* ▶ 로그인/로그아웃 버튼 핸들러 */
+signinBtn.onclick = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    // redirect 방식 선호 시: signInWithRedirect(auth, provider);
+  } catch (e) {
+    alert('로그인 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+
+signoutBtn.onclick = async () => {
+  try {
+    await signOut(auth);
+  } catch (e) {
+    alert('로그아웃 중 오류가 발생했습니다: ' + (e?.message || e));
+    console.error(e);
+  }
+};
+
+/* ▶ 로그인 상태 변화에 따라 UI 갱신 */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 로그인됨
+    authStatus.classList.remove('hidden');
+    signoutBtn.classList.remove('hidden');
+    signinBtn.classList.add('hidden');
+
+    authName.textContent = user.displayName || user.email || '로그인됨';
+    if (user.photoURL) {
+      authPhoto.src = user.photoURL;
+      authPhoto.classList.remove('hidden');
+    } else {
+      authPhoto.src = '';
+      authPhoto.classList.add('hidden');
+    }
+    // 원하면 이메일 화이트리스트 체크 등을 여기서 수행
+  } else {
+    // 로그아웃됨
+    authStatus.classList.add('hidden');
+    signoutBtn.classList.add('hidden');
+    signinBtn.classList.remove('hidden');
+    authName.textContent = '';
+    authPhoto.src = '';
+  }
+});
+
 let fullData = {};
 let flatData = [];
 let sortConfig = { key: 'update', asc: false };
@@ -110,7 +196,6 @@ function formatTimestamp(timestamp, format) {
     if (interval > 1) return Math.floor(interval) + "분 전";
     return Math.floor(seconds) + "초 전";
 }
-
 
 function loadSettings() {
     const savedSettings = localStorage.getItem('dbViewerSettings');
@@ -440,7 +525,29 @@ window.loadData = async function() {
     }
 };
 
+/* ▶ 비밀번호 + 로그인 동시 확인 로직
+   - 저장 등 민감 작업 전에: (1) 로그인 여부 체크 → (2) 비번 확인
+   - 필요 시 비밀번호를 제거하고 이메일 화이트리스트만 쓰도록 교체해도 됩니다.
+*/
+async function requireSignedIn() {
+  if (auth.currentUser) return true;
+  const doLogin = confirm("이 작업은 로그인한 사용자만 가능합니다. 지금 구글로 로그인하시겠습니까?");
+  if (!doLogin) return false;
+  try {
+    await signInWithPopup(auth, provider);
+    return !!auth.currentUser;
+  } catch (e) {
+    alert('로그인에 실패했습니다: ' + (e?.message || e));
+    return false;
+  }
+}
+
 async function confirmPasswordAndProceed(permissionKey, callback) {
+  // 1) 로그인 요구
+  const ok = await requireSignedIn();
+  if (!ok) return;
+
+  // 2) 기존 비밀번호 체크(유지)
   if (sessionStorage.getItem(permissionKey) === 'true') {
     callback();
     return;

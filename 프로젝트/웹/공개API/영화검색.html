@@ -105,7 +105,7 @@
 		}
 
 		async function list_record(page) {
-			await yts20( Math.floor( (page-1)/5 ) + 1);
+			await query20( Math.floor( (page-1)/5 ) + 1);
 
 			QQ('.레코드').forEach(el => el.remove());
 			Q('.번호.current')?.classList.remove('current');
@@ -218,7 +218,7 @@
 			return 컨테이너;
 		}
 
-		function yts20(num){
+		function query20(num){
 			const {장르, 화질, 평점, 연도, 국가} = state.옵션;
 			const query = `page=${num}&genre=${장르}&quality=${화질}&minimum_rating=${평점}`;
 			return fetch(`https://yts.mx/api/v2/list_movies.json?${query}`)

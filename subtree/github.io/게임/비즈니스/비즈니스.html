@@ -102,6 +102,9 @@
     }
     #randomStageButton:hover, #stageOneButton:hover{ filter: brightness(.95); }
 
+    #randomStageButton { background:#e53935; }
+    #stageOneButton { background:gray; }
+
     /* Style for button group */
     .stage-buttons {
       display: flex;
@@ -111,10 +114,10 @@
     .seed-display{ font-size: 1rem; color:var(--ink); min-height: 1.6em; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
     .seed-span{ color: var(--ink-3); font-size:.95em; cursor:pointer; text-decoration: underline; }
     .seed-span:hover{ color:#444; }
-    .seed-span.active{ color:#111; font-weight:700; text-decoration: underline; }
+    .seed-span.active{ color:hotpink; font-size:1.1em; font-weight:1000; text-decoration: none; }
     .seed-sep{ color:#999; user-select:none; }
 
-    .game-status-display{ font-size:.98em; color:var(--ink-2); min-height:1.6em; }
+    .game-status-display{ font-size:1.1em; color:var(--ink-2); min-height:1.6em; }
 
     /* Grid sizing — responsive without fixed heights */
     .grid-zone{ display:grid; place-items:center; }
@@ -134,11 +137,13 @@
     }
 
     .grid-cell{
+      padding: 0;
+      position: relative;
       background: var(--accent);
       border: 2px solid var(--accent-dark);
       border-radius: 10px;
       display:flex; align-items:center; justify-content:center;
-      --base-fs: clamp(1.2rem, 7vmin, 2.2rem);
+      --base-fs: clamp(1.2rem, 12vmin, 2.2rem);
       font-size: var(--base-fs);
       font-weight: 800;
       color:#fff; text-align:center; user-select:none;
@@ -148,7 +153,7 @@
     }
     .grid-cell:not(.revealed):hover{ background:#66bb6a; transform: translateY(-1px); }
     .grid-cell.revealed{ background: var(--muted); color: var(--ink); cursor: default; }
-    .grid-cell.winner{ font-size: calc(var(--base-fs) * 1.9); }
+    .grid-cell.winner{ font-size: calc(var(--base-fs) * 1.5); background:aquamarine; }
 
     /* Creator */
     .creator-controls{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; }
@@ -165,7 +170,7 @@
 
     /* Small screens adjustments */
     @media (max-width: 480px){
-      .seed-display{ gap:4px; font-size: .98rem; }
+      .seed-display{ gap:4px; font-size: 0.98rem; }
       #randomStageButton, #stageOneButton{ padding:6px 10px; }
       .creator-controls{ grid-template-columns: 1fr; }
     }
@@ -173,6 +178,41 @@
     /* Respect reduced motion */
     @media (prefers-reduced-motion: reduce){
       .tab-btn, .grid-cell{ transition: none; }
+    }
+
+    /* Confetti styles */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f00; /* Default color, will be randomized */
+      opacity: 0;
+      animation: confetti-fall 2s forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) rotate(0deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+      }
     }
   </style>
 </head>
@@ -216,7 +256,7 @@
           <div class="grid-wrap"><div class="grid-container" id="makerGrid"></div></div>
         </div>
         <div class="row" id="makerSeedContainer">
-          <div class="grow"><strong>현재 시드(HEX):</strong> <span id="makerSeed">-</span></div>
+          <div class="grow"><strong>시드:</strong> <span id="makerSeed">-</span></div>
         </div>
         <div class="creator-controls">
           <button id="clearMaker">초기화</button>
@@ -225,6 +265,9 @@
       </div>
     </section>
   </div>
+
+  <!-- Confetti container -->
+  <div class="confetti-container" id="confettiContainer"></div>
 
   <script>
     // ---------- Viewport-safe height CSS var ----------
@@ -264,18 +307,18 @@
     // ---------- Game constants ----------
     const GRID_SIZE = 3;
     const NUM_GEMS_PER_TYPE = 3;
-    const GEM_TYPES = ["0", "1", "2"]; // semantic order
+    const GEM_TYPES = [0, 1, 2]; // 숫자형으로 통일
     const NUM_MAPS_PER_STAGE = 3;
 
     const RANDOM_TIPS = [
       "[팁] 숨겨진 보석을 찾아보세요!",
-      "[팁] 스테이지마다 세 가지 맵이 무작위 순서로 출제돼요~",
-	    "[팁] 나만의 전략을 탐구해보세요!"
+      "[팁] 세 가지 맵이 랜덤하게 순서대로 출제돼요~",
+      "[팁] 나만의 전략을 탐구해보세요!"
     ];
 
     // ---------- State ----------
     let allStagesData = [];
-    let hexmapData = []; // hexmap.csv 데이터를 저장할 변수
+    let mapData = []; // map.csv: 각 줄이 9자리(0/1/2)
     let currentStage = 0;
     let currentMapIndex = 0;           // 위치(0,1,2)
     let currentMapOrder = [];          // 예: [2,0,1]
@@ -285,47 +328,44 @@
     let currentMapGrid = [];
     let winningGemType = null;
 
-    // ---------- Seed enc/dec ----------
-    function hexToTernaryGrid(hexSeed){
-      const decimalValue = parseInt(hexSeed, 16);
-      let ternaryString = "";
-      let tempValue = decimalValue;
-      for(let i=0;i<9;i++){
-        ternaryString = (tempValue % 3) + ternaryString;
-        tempValue = Math.floor(tempValue / 3);
+    // ---------- Seed enc/dec (직접표현) ----------
+    function ternaryStringToGrid(str){
+      // 입력 예: "000111222" (길이 9)
+      const clean = (str||"").replace(/[^012]/g, "");
+      if(clean.length !== GRID_SIZE*GRID_SIZE){
+        // fallback: 0으로 채움
+        return Array.from({length: GRID_SIZE}, (_,r)=> Array.from({length: GRID_SIZE}, (_,c)=>0));
       }
-      const grid = [];
+      const grid=[];
       for(let r=0;r<GRID_SIZE;r++){
         const row=[];
         for(let c=0;c<GRID_SIZE;c++){
-          const value = parseInt(ternaryString[r*GRID_SIZE + c], 10);
-          row.push(GEM_TYPES[value]);
+          row.push(parseInt(clean[r*GRID_SIZE+c],10));
         }
         grid.push(row);
       }
       return grid;
     }
 
-    function ternaryGridToHex(grid){
-      let ternaryString = "";
+    function gridToTernaryString(grid){
+      let s="";
       for(let r=0;r<GRID_SIZE;r++){
         for(let c=0;c<GRID_SIZE;c++){
-          ternaryString += grid[r][c];
+          s += (grid[r][c]||0).toString();
         }
       }
-      let dec = 0;
-      for(let i=0;i<ternaryString.length;i++){
-        dec = dec*3 + parseInt(ternaryString[i],10);
-      }
-      return dec.toString(16);
+      return s;
     }
 
     // ---------- CSV parsing ----------
     function parseCSV(csvText){
+      // stages.csv: header + seed0, seed1, seed2 등이 각 칸에 9자리 직접표현 문자열
       const lines = csvText.trim().split(/\r?\n/);
+      if(lines.length === 0) return [];
       const headers = lines[0].split(",").map(h=>h.trim());
       const data=[];
       for(let i=1;i<lines.length;i++){
+        if(!lines[i].trim()) continue;
         const values = lines[i].split(",").map(v=>v.trim());
         const stage = { seed: [] };
         headers.forEach((header, idx)=>{
@@ -337,16 +377,17 @@
       }
       return data;
     }
-    
-    // hexmap.csv 파싱 함수 추가
-    function parseHexmapCSV(csvText) {
-      return csvText.trim().split(/\r?\n/).filter(line => line.length > 0);
+
+    function parseMapCSV(csvText){
+      // map.csv: 각 줄이 9자리 직접표현 문자열
+      return csvText.trim().split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
     }
 
     // ---------- Game (Play) ----------
     async function initGame(){
       setupTabs();
       try{
+        // stages.csv 로드 (직접표현)
         const resStages = await fetch('stages.csv');
         if(resStages.ok){
           const csvText = await resStages.text();
@@ -355,22 +396,23 @@
           allStagesData = [];
         }
 
-        // hexmap.csv 로드
-        const resHexmap = await fetch('hexmap.csv');
-        if(resHexmap.ok){
-          const hexmapText = await resHexmap.text();
-          hexmapData = parseHexmapCSV(hexmapText);
+        // map.csv 로드 (직접표현)
+        const resMap = await fetch('map.csv');
+        if(resMap.ok){
+          const mapText = await resMap.text();
+          mapData = parseMapCSV(mapText);
         } else {
-          hexmapData = [];
+          mapData = [];
         }
 
       }catch(e){ 
         allStagesData = []; 
-        hexmapData = [];
+        mapData = [];
       }
 
       if(allStagesData.length===0){
-        allStagesData = [{ index:0, seed:["0","1","2"] }];
+        // fallback
+        allStagesData = [{ index:0, seed:["000111222","012012012","210210210"] }];
       }
 
       loadStage(0, false);
@@ -419,8 +461,8 @@
       seedDisplayDiv.innerHTML = '';
 
       currentMapOrder.forEach((actualIdx, orderPos)=>{
-        const seedHex = stageData.seed[actualIdx];
-        const span = Elem({ tag:'span', text: seedHex, class: 'seed-span' + (orderPos===currentMapIndex? ' active':''), 'data-order-pos': orderPos });
+        const seedStr = stageData.seed[actualIdx];
+        const span = Elem({ tag:'span', text: `라운드 ${orderPos+1}`, class: 'seed-span' + (orderPos===currentMapIndex? ' active':''), 'data-order-pos': orderPos });
         span.addEventListener('click', ()=> loadMapByOrderPos(orderPos));
         seedDisplayDiv.appendChild(span);
         if(orderPos < currentMapOrder.length-1){ seedDisplayDiv.appendChild(Elem({tag:'span', text:'→', class:'seed-sep'})); }
@@ -432,9 +474,9 @@
     function loadCurrentMap(){
       const stageData = allStagesData[currentStage];
       const actualMapIndex = currentMapOrder[currentMapIndex];
-      const currentSeed = stageData.seed[actualMapIndex];
+      const currentSeed = stageData.seed[actualMapIndex]; // 이미 직접표현 문자열
 
-      currentMapGrid = hexToTernaryGrid(currentSeed);
+      currentMapGrid = ternaryStringToGrid(currentSeed);
 
       revealedCells = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill(false));
       gemCounts = [0,0,0];
@@ -459,21 +501,33 @@
     }
 
     function handleCellClick(row,col){
-      if(isGameOver || revealedCells[row][col]) return;
+      if(isGameOver){
+        // 클리어 후 다시 클릭하면 다음 맵으로 이동 (랜덤 순서 내에서 1→2→3→1 순환)
+        currentMapIndex = (currentMapIndex + 1) % NUM_MAPS_PER_STAGE;
+        loadCurrentMap();
+        return;
+      }
+
+      if(revealedCells[row][col]) return; // 이미 열린 칸이면 무시
       revealedCells[row][col] = true;
-      const gemType = currentMapGrid[row][col];
-      const gemIndex = GEM_TYPES.indexOf(gemType);
-      if(gemIndex!==-1) gemCounts[gemIndex]++;
+
+      const gemType = currentMapGrid[row][col]; // 숫자 0,1,2
+      gemCounts[gemType]++;
 
       updateUI();
 
-      if(gemCounts[gemIndex] === NUM_GEMS_PER_TYPE){
-        isGameOver = true; winningGemType = gemType; highlightWinningCells(gemType);
-        if(gemType==="0") updateGameStatusDisplay('꽝! 아쉬워요...😢');
-        if(gemType==="1") updateGameStatusDisplay('좋아요~ 🙂');
-        if(gemType==="2") updateGameStatusDisplay('대박! 🥰');
+      if(gemCounts[gemType] === NUM_GEMS_PER_TYPE){
+        isGameOver = true; 
+        winningGemType = gemType; 
+        highlightWinningCells(gemType);
+
+        if(gemType===0) { updateGameStatusDisplay('꽝! 아쉬워요...😢'); }
+        if(gemType===1) { updateGameStatusDisplay('좋아요~ 🙂'); triggerConfetti(55); }
+        if(gemType===2) { updateGameStatusDisplay('대박! 🥰'); triggerConfetti(80); }
+
         return;
       }
+
       updateGameStatusDisplay(getRandomTip());
       checkLossCondition();
     }
@@ -486,12 +540,12 @@
           const cell = cells[idx];
           if(revealedCells[r][c]){
             cell.classList.add('revealed');
-            const v = currentMapGrid[r][c];
+            const v = currentMapGrid[r][c]; // 숫자 0/1/2
             cell.textContent = ["💩","🙂","💎"][v];
             if(winningGemType!==null && v===winningGemType) cell.classList.add('winner'); else cell.classList.remove('winner');
           } else {
             cell.classList.remove('revealed','winner');
-            cell.textContent = '';
+            cell.textContent = '?';
           }
         }
       }
@@ -503,6 +557,7 @@
         for(let c=0;c<GRID_SIZE;c++){
           if(revealedCells[r][c] && currentMapGrid[r][c]===targetGemType){
             cells[r*GRID_SIZE+c].classList.add('winner');
+            cells[r*GRID_SIZE+c].textContent = ["💩","😀","👑"][targetGemType];
           }
         }
       }
@@ -512,8 +567,28 @@
     function getRandomTip(){ return RANDOM_TIPS[Math.floor(Math.random()*RANDOM_TIPS.length)]; }
     function checkLossCondition(){ /* 확장 여지 */ }
 
+    // ---------- Confetti animation ----------
+    function triggerConfetti(numConfetti) {
+      const confettiContainer = Q('#confettiContainer');
+      const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+
+      for (let i = 0; i < numConfetti; i++) {
+        const confetti = Elem({ tag: 'div', class: 'confetti' });
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDelay = Math.random() * 1 + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        confettiContainer.appendChild(confetti);
+
+        // Remove confetti after animation to prevent DOM bloat
+        confetti.addEventListener('animationend', () => {
+          confetti.remove();
+        });
+      }
+    }
+
     // ---------- Creator ----------
-    let makerGrid = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill("0"));
+    let makerGrid = Array(GRID_SIZE).fill(0).map(()=>Array(GRID_SIZE).fill(0)); // 숫자형 0으로 초기화
 
     function initCreator(){
       const host = Q('#makerGrid');
@@ -527,23 +602,19 @@
       }
       updateMakerUI();
 
-      Q('#clearMaker').addEventListener('click', ()=>{ makerGrid = makerGrid.map(row=>row.map(()=>"0")); updateMakerUI(); });
+      Q('#clearMaker').addEventListener('click', ()=>{
+        makerGrid = makerGrid.map(row=>row.map(()=>0));
+        updateMakerUI();
+      });
       
       Q('#randomizeMaker').addEventListener('click', ()=>{
-        if (hexmapData.length > 0) {
-          const randomIndices = [];
-          while(randomIndices.length < GRID_SIZE) { // Get 3 unique random indices
-            const randomIndex = Math.floor(Math.random() * hexmapData.length);
-            if (!randomIndices.includes(randomIndex)) {
-              randomIndices.push(randomIndex);
-            }
-          }
-          // Choose one of the 3 random seeds to set as makerGrid
-          const selectedHexSeed = hexmapData[randomIndices[0]]; 
-          makerGrid = hexToTernaryGrid(selectedHexSeed);
+        if (mapData.length > 0) {
+          // map.csv 라인 중 무작위 선택 1개
+          const selected = mapData[Math.floor(Math.random() * mapData.length)];
+          makerGrid = ternaryStringToGrid(selected); // 숫자 그리드
         } else {
-          // Fallback to current random logic if hexmapData is empty
-          makerGrid = makerGrid.map(row=>row.map(()=> String(Math.floor(Math.random()*3)) )); 
+          // Fallback: 무작위 숫자 0~2
+          makerGrid = makerGrid.map(row=>row.map(()=> Math.floor(Math.random()*3) )); 
         }
         updateMakerUI();
       });
@@ -568,7 +639,7 @@
 
     function toggleMakerCell(r,c){
       const cur = makerGrid[r][c];
-      const next = cur==='0'? '1' : cur==='1'? '2' : '0';
+      const next = (cur + 1) % 3; // 0 → 1 → 2 → 0
       makerGrid[r][c] = next;
       updateMakerUI();
     }
@@ -582,13 +653,13 @@
           cells[idx].textContent = ["💩","🙂","💎"][v];
         }
       }
-      const seed = ternaryGridToHex(makerGrid);
+      const seed = gridToTernaryString(makerGrid);
       Q('#makerSeed').textContent = seed;
     }
 
     // ---------- boot ----------
     window.addEventListener('load', initGame);
   </script>
-  <div align="center">250820_ 버전0.7</div>
+  <div align="center">[버전 0.8] 25.08.21</div>
 </body>
 </html>
