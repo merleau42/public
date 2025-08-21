@@ -14,7 +14,8 @@
 <!-- 단일 입력 + 버튼 -->
 <div id="div2" class="flex-container">
   <textarea id="singleInput" maxlength="50" tabindex="9"></textarea>
-  <button onclick="addSingle()">추가</button>
+  <!-- ▶ 버튼: 초기 텍스트 '로그인' -->
+  <button id="add-button">로그인</button>
   <button onclick="clearInputs()">비우기</button>
   <button onclick="showHintModal()">힌트</button>
 </div>
@@ -52,6 +53,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 // Firebase 초기화
 const app = initializeApp({
@@ -64,6 +66,10 @@ const app = initializeApp({
   appId: "1:171671976030:web:59371970ec6b2a70035ccf"
 });
 const db = getDatabase(app);
+
+// ▶ Auth
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 // --- 상태 변수 (State Variables) ---
 let groupList = [];
@@ -81,16 +87,17 @@ let phaseEmojiMaps = {
 };
 let currentActivePhase = 'phase1';
 const phaseConfig = {
-    'phase1': { name: '페이즈1', colorClass: 'phase-1', emojiColorClass: 'phase-1-color' },
-    'phase2': { name: '페이즈2', colorClass: 'phase-2', emojiColorClass: 'phase-2-color' },
-    'phase3': { name: '페이즈3', colorClass: 'phase-3', emojiColorClass: 'phase-3-color' },
-    'phase4': { name: '페이즈4', colorClass: 'phase-4', emojiColorClass: 'phase-4-color' }
+  'phase1': { name: '페이즈1', colorClass: 'phase-1', emojiColorClass: 'phase-1-color' },
+  'phase2': { name: '페이즈2', colorClass: 'phase-2', emojiColorClass: 'phase-2-color' },
+  'phase3': { name: '페이즈3', colorClass: 'phase-3', emojiColorClass: 'phase-3-color' },
+  'phase4': { name: '페이즈4', colorClass: 'phase-4', emojiColorClass: 'phase-4-color' }
 };
 
+// ▶ 추가 버튼 참조
+const addButton = document.getElementById('add-button');
 
 // --- 초기화 (Initialization) ---
 document.addEventListener('DOMContentLoaded', () => {
-  localStorage.setItem('승인', 'false');
   generateInputs();
   restoreState(); // 로컬 스토리지에서 모든 상태 복원
   attachInputListeners();
@@ -105,6 +112,27 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('confirm-button').addEventListener('click', confirmEmojiSelection);
   document.getElementById('cancel-button').addEventListener('click', cancelEmojiSelection);
   document.getElementById('modal-backdrop').addEventListener('click', cancelEmojiSelection);
+});
+
+// ▶ 로그인 상태에 따라 '로그인'↔'추가' 텍스트/동작 전환
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 로그인 상태: 버튼은 '추가' 동작
+    addButton.textContent = '추가';
+    addButton.onclick = addSingle;
+  } else {
+    // 비로그인 상태: 버튼은 로그인 유도
+    addButton.textContent = '로그인';
+    addButton.onclick = async () => {
+      try {
+        await signInWithPopup(auth, provider);
+        // Rules가 쓰기 권한을 통제하므로, 여기선 UI 전환만 처리
+      } catch (e) {
+        alert('로그인 중 오류가 발생했습니다: ' + (e?.message || e));
+        console.error(e);
+      }
+    };
+  }
 });
 
 // --- 입력창 및 버튼 생성 (Input & Button Generation) ---
@@ -138,7 +166,7 @@ function generateInputs() {
     div1.appendChild(wrapper);
   }
 
-  // Add/Remove 버튼 컨테이너 생성
+  // + - 버튼 컨테이너
   const iconContainer = document.createElement('div');
   iconContainer.id = 'icon-container';
   
@@ -159,58 +187,49 @@ function generateInputs() {
   div1.appendChild(iconContainer);
   
   updateInputVisibility(); // 초기 가시성 설정
-  attachFocusListeners(); // 입력창 생성 후 포커스 리스너 연결
+  attachFocusListeners();
 }
 
-// ➕➖ 버튼 로직 (Add/Remove Button Logic)
+// ➕➖ 버튼 로직
 function addInput() {
-    if (visibleCount < 8) {
-        visibleCount++;
-        saveState(); 
-        updateInputVisibility();
-        attachFocusListeners(); 
-    }
+  if (visibleCount < 8) {
+    visibleCount++;
+    saveState(); 
+    updateInputVisibility();
+    attachFocusListeners(); 
+  }
 }
-
 function removeInput() {
-    if (visibleCount > 3) {
-        // 사라지는 input의 투표 내역을 모든 페이즈에서 초기화
-        const inputToRemoveId = `input${visibleCount}`;
-        Object.keys(phaseEmojiMaps).forEach(phaseId => {
-            if (phaseEmojiMaps[phaseId][inputToRemoveId]) {
-                delete phaseEmojiMaps[phaseId][inputToRemoveId];
-            }
-        });
-
-        visibleCount--;
-        saveState(); 
-        updateInputVisibility();
-        updateDiv1Visuals(); // 비주얼 업데이트 (사라진 input의 투표 표시도 지워지도록)
-        attachFocusListeners(); 
-    }
+  if (visibleCount > 3) {
+    const inputToRemoveId = `input${visibleCount}`;
+    Object.keys(phaseEmojiMaps).forEach(phaseId => {
+      if (phaseEmojiMaps[phaseId][inputToRemoveId]) {
+        delete phaseEmojiMaps[phaseId][inputToRemoveId];
+      }
+    });
+    visibleCount--;
+    saveState(); 
+    updateInputVisibility();
+    updateDiv1Visuals();
+    attachFocusListeners(); 
+  }
 }
-
 function updateInputVisibility() {
-    for (let i = 1; i <= 8; i++) {
-        const wrapper = document.getElementById(`wrapper-input${i}`);
-        if (wrapper) {
-            wrapper.style.display = i <= visibleCount ? 'inline-block' : 'none';
-        }
+  for (let i = 1; i <= 8; i++) {
+    const wrapper = document.getElementById(`wrapper-input${i}`);
+    if (wrapper) {
+      wrapper.style.display = i <= visibleCount ? 'inline-block' : 'none';
     }
+  }
+  [...document.querySelectorAll('.textarea-wrapper')]
+    .filter(wr => wr.style.display!='none')
+    .at(-1).appendChild(document.querySelector('#icon-container'))
 
-    // + - 버튼 컨테이너의 위치 조절
-    [...document.querySelectorAll('.textarea-wrapper')]
-      .filter(wr => wr.style.display!='none')
-      .at(-1).appendChild(document.querySelector('#icon-container'))
-
-    // + - 버튼의 가시성 조절
-    document.getElementById('addBtn').style.display = visibleCount === 8 ? 'none' : 'inline-block';
-    document.getElementById('removeBtn').style.display = visibleCount === 3 ? 'none' : 'inline-block';
+  document.getElementById('addBtn').style.display = visibleCount === 8 ? 'none' : 'inline-block';
+  document.getElementById('removeBtn').style.display = visibleCount === 3 ? 'none' : 'inline-block';
 }
 
-
-// --- 이모지 및 페이즈 모달 (Emoji & Phase Modal) ---
-
+// --- 이모지 및 페이즈 모달 ---
 function setupEmojiButtons() {
   const container = document.getElementById('emoji-buttons');
   container.innerHTML = '';
@@ -221,163 +240,111 @@ function setupEmojiButtons() {
     container.appendChild(btn);
   });
 }
-
 function setupPhaseButtons() {
-    const container = document.getElementById('phase-buttons');
-    container.innerHTML = '';
-    Object.keys(phaseConfig).forEach(phaseId => {
-        const config = phaseConfig[phaseId];
-        const btn = document.createElement('div'); // div로 생성하여 CSS 규격에 맞춤
-        btn.className = `phase-button ${config.colorClass}`;
-        btn.dataset.phaseId = phaseId;
-        btn.innerText = config.name;
-        btn.onclick = () => switchPhase(phaseId);
-        container.appendChild(btn);
-    });
-    updatePhaseButtonStates(); // 초기 활성화 페이즈 표시
+  const container = document.getElementById('phase-buttons');
+  container.innerHTML = '';
+  Object.keys(phaseConfig).forEach(phaseId => {
+    const config = phaseConfig[phaseId];
+    const btn = document.createElement('div');
+    btn.className = `phase-button ${config.colorClass}`;
+    btn.dataset.phaseId = phaseId;
+    btn.innerText = config.name;
+    btn.onclick = () => switchPhase(phaseId);
+    container.appendChild(btn);
+  });
+  updatePhaseButtonStates();
 }
-
 function openEmojiModal(targetId) {
   currentEmojiTarget = targetId;
   const currentPhaseVotes = phaseEmojiMaps[currentActivePhase];
   tempEmojiSelection = [...(currentPhaseVotes[currentEmojiTarget] || [])];
-  
   updateModalButtonStates();
   document.getElementById('emoji-modal').style.display = 'block';
   document.getElementById('modal-backdrop').style.display = 'block';
 }
-
 function switchPhase(phaseId) {
-    currentActivePhase = phaseId;
-    updatePhaseButtonStates();
-    updateDiv1Visuals(); // 페이즈 전환 시 div1 비주얼 업데이트
-
-    // 모달이 열려있을 때 페이즈를 바꾸면, 임시 선택 상태를 새 페이즈 기준으로 업데이트
-    if (document.getElementById('emoji-modal').style.display === 'block') {
-        const currentPhaseVotes = phaseEmojiMaps[currentActivePhase];
-        tempEmojiSelection = [...(currentPhaseVotes[currentEmojiTarget] || [])];
-        updateModalButtonStates(); // 숫자 버튼 색상 업데이트를 위해 다시 호출
-    }
-    saveState(); 
+  currentActivePhase = phaseId;
+  updatePhaseButtonStates();
+  updateDiv1Visuals();
+  if (document.getElementById('emoji-modal').style.display === 'block') {
+    const currentPhaseVotes = phaseEmojiMaps[currentActivePhase];
+    tempEmojiSelection = [...(currentPhaseVotes[currentEmojiTarget] || [])];
+    updateModalButtonStates();
+  }
+  saveState(); 
 }
-
 function toggleTempEmoji(emoji) {
   const index = tempEmojiSelection.indexOf(emoji);
-  if (index > -1) {
-    tempEmojiSelection.splice(index, 1);
-  } else {
-    tempEmojiSelection.push(emoji);
-  }
+  if (index > -1) tempEmojiSelection.splice(index, 1);
+  else tempEmojiSelection.push(emoji);
   updateModalButtonStates();
 }
-
 function updateModalButtonStates() {
   const buttons = document.querySelectorAll('#emoji-buttons button');
   const activePhaseColorClass = phaseConfig[currentActivePhase].emojiColorClass;
 
   buttons.forEach(btn => {
-    // 이전 페이즈 색상 클래스 제거
     Object.values(phaseConfig).forEach(config => {
-        btn.classList.remove(config.emojiColorClass);
+      btn.classList.remove(config.emojiColorClass);
     });
-
     if (tempEmojiSelection.includes(btn.innerText)) {
       btn.classList.add('active');
-      btn.classList.add(activePhaseColorClass); // 현재 페이즈 색상 클래스 추가
+      btn.classList.add(activePhaseColorClass);
     } else {
       btn.classList.remove('active');
     }
   });
 }
-
 function updatePhaseButtonStates() {
-    const buttons = document.querySelectorAll('.phase-button');
-    buttons.forEach(btn => {
-        if (btn.dataset.phaseId === currentActivePhase) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
+  const buttons = document.querySelectorAll('.phase-button');
+  buttons.forEach(btn => {
+    if (btn.dataset.phaseId === currentActivePhase) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
 }
-
 function confirmEmojiSelection() {
   if (currentEmojiTarget) {
-    // 현재 활성화된 페이즈의 투표 내역에 반영
     phaseEmojiMaps[currentActivePhase][currentEmojiTarget] = [...tempEmojiSelection];
     updateDiv1Visuals();
     saveState(); 
   }
   closeEmojiModal();
 }
-
-function cancelEmojiSelection() {
-  closeEmojiModal();
-}
-
-// '초기화' 대신 '비우기' 버튼이 이 역할을 대신함
-function resetEmojiSelection() {
-    // 이 함수는 더 이상 '초기화' 버튼에 직접 연결되지 않음.
-    // '비우기' 또는 '초기화' 함수 내부에서 필요 시 호출될 수 있음.
-    tempEmojiSelection = [];
-    updateModalButtonStates();
-}
-
+function cancelEmojiSelection() { closeEmojiModal(); }
 function closeEmojiModal() {
   document.getElementById('emoji-modal').style.display = 'none';
   document.getElementById('modal-backdrop').style.display = 'none';
   currentEmojiTarget = null;
 }
-
-// 새로운 함수: 현재 페이즈 투표 내역 비우기 (모달의 '비우기' 버튼과 연결)
 function handleClearCurrentVote() {
-    if (currentEmojiTarget) { // 특정 input에 대한 모달이 열려있을 때만 동작
-        phaseEmojiMaps[currentActivePhase][currentEmojiTarget] = []; // 현재 페이즈의 해당 input 투표 초기화
-        updateDiv1Visuals(); // UI 업데이트
-        saveState(); // 상태 저장
-        tempEmojiSelection = []; // 모달 내부 임시 선택도 초기화
-        updateModalButtonStates();
-    }
-    // 모달이 닫혀있을 때 '비우기' 버튼을 누르면 전체 currentActivePhase의 투표를 비울 수도 있지만,
-    // 현재 요청사항은 모달 내부 버튼이므로 특정 input에 대한 동작으로 제한
+  if (currentEmojiTarget) {
+    phaseEmojiMaps[currentActivePhase][currentEmojiTarget] = [];
+    updateDiv1Visuals();
+    saveState();
+    tempEmojiSelection = [];
+    updateModalButtonStates();
+  }
 }
-
-// 새로운 함수: 모든 페이즈 투표 내역 초기화 (모달의 '초기화' 버튼과 연결)
 function handleResetAllVotes() {
-    // 모든 페이즈의 모든 투표 내역 초기화
-    phaseEmojiMaps = { 
-        phase1: {}, 
-        phase2: {}, 
-        phase3: {}, 
-        phase4: {} 
-    }; 
-    currentActivePhase = 'phase1'; // 초기 페이즈로 되돌리기
-
-    updateDiv1Visuals(); // UI 업데이트
-    updatePhaseButtonStates(); // 페이즈 버튼 UI 업데이트
-    saveState(); // 상태 저장
-    
-    // 모달이 열려있으면 임시 선택 상태 초기화
-    if (document.getElementById('emoji-modal').style.display === 'block') {
-        tempEmojiSelection = [];
-        updateModalButtonStates();
-    }
+  phaseEmojiMaps = { phase1: {}, phase2: {}, phase3: {}, phase4: {} }; 
+  currentActivePhase = 'phase1';
+  updateDiv1Visuals();
+  updatePhaseButtonStates();
+  saveState();
+  if (document.getElementById('emoji-modal').style.display === 'block') {
+    tempEmojiSelection = [];
+    updateModalButtonStates();
+  }
 }
 
 async function showHintModal() {
   const query = document.getElementById("singleInput").value.trim();
-  if (!query) {
-    alert("단어를 입력하세요.");
-    return;
-  }
+  if (!query) { alert("단어를 입력하세요."); return; }
   const keywords = query.split(',').map(w => w.trim()).filter(Boolean);
   if (!keywords.length) return;
 
   const snapshot = await get(ref(db, "liar_groups"));
-  if (!snapshot.exists()) {
-    alert("DB에 그룹이 없습니다.");
-    return;
-  }
+  if (!snapshot.exists()) { alert("DB에 그룹이 없습니다."); return; }
 
   const data = snapshot.val();
   const matchingGroups = Object.values(data).filter(group =>
@@ -401,141 +368,98 @@ async function showHintModal() {
       hintContent.innerText += `${wordsLine}\n\n${summaryLines.join('\n')}\n\n`;
     });
   }
-
   document.getElementById("hint-modal").style.display = 'block';
   document.getElementById("hint-backdrop").style.display = 'block';
 }
-
 function closeHintModal() {
   document.getElementById("hint-modal").style.display = 'none';
   document.getElementById("hint-backdrop").style.display = 'none';
 }
 
-
-// --- UI 업데이트 (UI Updates) ---
-
+// --- UI 업데이트 ---
 function updateDiv1Visuals() {
-    for (let i = 1; i <= 8; i++) {
-        const inputId = `input${i}`;
-        const overlay = document.getElementById(`emoji-overlay-${inputId}`);
-        if (!overlay) continue;
-        
-        overlay.innerHTML = ''; // 기존 투표 아이콘 초기화
-        
-        Object.keys(phaseConfig).forEach(phaseId => {
-            const votesInPhase = phaseEmojiMaps[phaseId];
-            if (votesInPhase[inputId] && votesInPhase[inputId].length > 0) {
-                votesInPhase[inputId].forEach(voter => {
-                    const indicator = document.createElement('div');
-                    indicator.className = `vote-indicator ${phaseConfig[phaseId].colorClass}`;
-                    indicator.textContent = voter;
-                    overlay.appendChild(indicator);
-                });
-            }
+  for (let i = 1; i <= 8; i++) {
+    const inputId = `input${i}`;
+    const overlay = document.getElementById(`emoji-overlay-${inputId}`);
+    if (!overlay) continue;
+    overlay.innerHTML = '';
+    Object.keys(phaseConfig).forEach(phaseId => {
+      const votesInPhase = phaseEmojiMaps[phaseId];
+      if (votesInPhase[inputId] && votesInPhase[inputId].length > 0) {
+        votesInPhase[inputId].forEach(voter => {
+          const indicator = document.createElement('div');
+          indicator.className = `vote-indicator ${phaseConfig[phaseId].colorClass}`;
+          indicator.textContent = voter;
+          overlay.appendChild(indicator);
         });
-    }
+      }
+    });
+  }
 }
 
-
-// --- 데이터 처리 (Data Handling) ---
-
+// --- 데이터 처리 ---
 function parseStatement(text) {
-    const stmt = {};
-    if (!text) return stmt;
+  const stmt = {};
+  if (!text) return stmt;
+  let remaining = text.trim();
 
-    let remaining = text.trim();
-
-    // 0. Author (!!)
-    let parts = remaining.split('!!');
-    if (parts.length > 1) {
-        const author = parts.pop().trim();
-        if (author) stmt.author = author;
-        remaining = parts.join('!!').trim();
-    }
-
-    // 1. Respond (//)
-    parts = remaining.split('//');
-    if (parts.length > 1) {
-        const respond = parts.pop().trim();
-        if (respond) stmt.respond = respond;
-        remaining = parts.join('//').trim();
-    }
-
-    // 2. Elaborate2 (>>)
-    parts = remaining.split('>>');
-    if (parts.length > 1) {
-        const elaborate2 = parts.pop().trim();
-        if (elaborate2) stmt.elaborate2 = elaborate2;
-        remaining = parts.join('>>').trim();
-    }
-
-    // 3. Elaborate1 (ㅡ)
-    parts = remaining.split('ㅡ');
-    if (parts.length > 1) {
-        const elaborate1 = parts.pop().trim();
-        if (elaborate1) stmt.elaborate1 = elaborate1;
-        remaining = parts.join('ㅡ').trim();
-    }
-
-    // 4. Subject and Opening (:)
-    parts = remaining.split(':');
-    if (parts.length > 1) {
-        const subject = parts.shift().trim();
-        if (subject) stmt.subject = subject;
-        const opening = parts.join(':').trim();
-        if (opening) stmt.opening = opening;
-    } else {
-        const opening = remaining.trim();
-        if (opening) stmt.opening = opening;
-    }
-
-    return stmt;
-}
-
-function getStmtSignature(stmt) {
-    if (!stmt) return '';
-    const parts = [
-        stmt.subject,
-        stmt.opening,
-        stmt.elaborate1,
-        stmt.elaborate2
-    ];
-    return parts.join('').replace(/\s+/g, '');
-}
-
-async function checkPassword() {
-  const pwRef = ref(db, "pw");
-  const snapshot = await get(pwRef);
-  if (!snapshot.exists()) {
-    alert("서버에 비밀번호가 존재하지 않습니다.");
-    return false;
+  let parts = remaining.split('!!');
+  if (parts.length > 1) {
+    const author = parts.pop().trim();
+    if (author) stmt.author = author;
+    remaining = parts.join('!!').trim();
   }
-  const correctPw = snapshot.val();
-  const inputPw = prompt("비밀번호를 입력하세요");
-  if (inputPw === null) return false;
-  if (inputPw === correctPw) {
-    localStorage.setItem('승인', 'true');
-    alert("인증되었습니다.");
-    return true;
+  parts = remaining.split('//');
+  if (parts.length > 1) {
+    const respond = parts.pop().trim();
+    if (respond) stmt.respond = respond;
+    remaining = parts.join('//').trim();
+  }
+  parts = remaining.split('>>');
+  if (parts.length > 1) {
+    const elaborate2 = parts.pop().trim();
+    if (elaborate2) stmt.elaborate2 = elaborate2;
+    remaining = parts.join('>>').trim();
+  }
+  parts = remaining.split('ㅡ');
+  if (parts.length > 1) {
+    const elaborate1 = parts.pop().trim();
+    if (elaborate1) stmt.elaborate1 = elaborate1;
+    remaining = parts.join('ㅡ').trim();
+  }
+  parts = remaining.split(':');
+  if (parts.length > 1) {
+    const subject = parts.shift().trim();
+    if (subject) stmt.subject = subject;
+    const opening = parts.join(':').trim();
+    if (opening) stmt.opening = opening;
   } else {
-    alert("비밀번호가 일치하지 않습니다.");
-    return false;
+    const opening = remaining.trim();
+    if (opening) stmt.opening = opening;
   }
+  return stmt;
+}
+function getStmtSignature(stmt) {
+  if (!stmt) return '';
+  const parts = [stmt.subject, stmt.opening, stmt.elaborate1, stmt.elaborate2];
+  return parts.join('').replace(/\s+/g, '');
 }
 
-window.addSingle = async function () {
-  const isApproved = localStorage.getItem('승인') === 'true';
-  if (!isApproved) {
-    const success = await checkPassword();
-    if (!success) return;
+// ▶ 추가(쓰기) 로직: 로그인 필요. 로그인은 onAuthStateChanged에 따라 버튼이 처리.
+async function addSingle () {
+  if (!auth.currentUser) {
+    // 일반적으로 여기까지 오지 않지만, 상태 경합 대비
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      alert('로그인이 필요합니다: ' + (e?.message || e));
+      return;
+    }
   }
 
   const singleVal = document.getElementById("singleInput").value.trim();
   const words = singleVal.split(',').map(w => w.trim().replace(/\s+/g, '')).filter(Boolean);
-  if (!words.length) {
-    alert("단어를 입력하세요.");
-    return;
-  }
+  if (!words.length) { alert("단어를 입력하세요."); return; }
 
   const newStatements = [];
   for (let i = 1; i <= visibleCount; i++) {
@@ -556,7 +480,7 @@ window.addSingle = async function () {
 
   Object.entries(groupsData).forEach(([groupId, group]) => {
     groupMap[groupId] = group;
-    group.words.forEach(word => {
+    (group.words || []).forEach(word => {
       wordToGroup[word] = groupId;
     });
   });
@@ -570,16 +494,9 @@ window.addSingle = async function () {
     let newGroupId = null;
     for (let i = 0; i <= 9999; i++) {
       const candidate = i.toString().padStart(4, '0');
-      if (!allIds.has(candidate)) {
-        newGroupId = candidate;
-        break;
-      }
+      if (!allIds.has(candidate)) { newGroupId = candidate; break; }
     }
-
-    if (!newGroupId) {
-      alert("더 이상 생성 가능한 그룹이 없습니다.");
-      return;
-    }
+    if (!newGroupId) { alert("더 이상 생성 가능한 그룹이 없습니다."); return; }
 
     const latestTimestamp = Date.now();
     const newGroupData = {
@@ -593,12 +510,11 @@ window.addSingle = async function () {
     return;
   }
 
-
   let mergedWords = [];
   let mergedStatements = [];
   matchedGroupIds.forEach(groupId => {
     const group = groupMap[groupId];
-    mergedWords.push(...group.words);
+    mergedWords.push(...(group.words || []));
     mergedStatements.push(...(group.statements || []));
   });
 
@@ -607,10 +523,9 @@ window.addSingle = async function () {
 
   const existingSignatures = new Set(mergedStatements.map(getStmtSignature));
   const uniqueNewStatements = newStatements.filter(stmt => {
-      const signature = getStmtSignature(stmt);
-      return signature && !existingSignatures.has(signature);
+    const signature = getStmtSignature(stmt);
+    return signature && !existingSignatures.has(signature);
   });
-  
   mergedStatements.push(...uniqueNewStatements);
 
   const latestTimestamp = Date.now();
@@ -622,35 +537,25 @@ window.addSingle = async function () {
     statements: mergedStatements,
     timestamp: latestTimestamp
   };
-
-  matchedGroupIds.slice(1).forEach(groupId => {
-    updates[`liar_groups/${groupId}`] = null;
-  });
+  matchedGroupIds.slice(1).forEach(groupId => { updates[`liar_groups/${groupId}`] = null; });
 
   await update(ref(db), updates);
   loadFromDB();
 };
 
-// 이 함수는 이제 사용하지 않습니다. 모달 내의 '비우기'와 '초기화' 버튼이 이 역할을 대체합니다.
-// 메인 화면의 '비우기' 버튼은 그대로 clearInputs 함수를 호출합니다.
+// 메인 화면 '비우기'
 window.clearInputs = function () {
-  // 모든 입력창 비우기
   for (let i = 1; i <= 8; i++) {
     const input = document.getElementById(`input${i}`);
     if (input) input.value = '';
   }
   document.getElementById("singleInput").value = '';
 
-  // 모든 페이즈 데이터 초기화 (모든 투표 초기화와 동일한 기능)
   phaseEmojiMaps = { phase1: {}, phase2: {}, phase3: {}, phase4: {} };
   currentActivePhase = 'phase1';
-  
-  // UI 업데이트
   updateDiv1Visuals();
   updatePhaseButtonStates();
   updateHighlights();
-  
-  // 로컬 스토리지 클리어
   localStorage.removeItem('상태백업');
 };
 
@@ -663,8 +568,8 @@ window.loadFromDB = async function () {
     if (snapshot.exists()) {
       const rawData = snapshot.val();
       const entries = Object.entries(rawData)
-        .sort((a, b) => b[1].timestamp - a[1].timestamp);
-      groupList = entries.map(entry => entry[1].words);
+        .sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+      groupList = entries.map(entry => (entry[1].words || []));
       updateHighlights();
     } else {
       output.innerHTML = "🔥 데이터 없음";
@@ -679,7 +584,6 @@ function updateHighlights() {
   const keywords = value.split(',').map(v => v.trim()).filter(Boolean);
   renderGroups(keywords);
 }
-
 function renderGroups(highlightWords = []) {
   const output = document.getElementById("output");
   output.innerHTML = "";
@@ -696,22 +600,18 @@ function renderGroups(highlightWords = []) {
     if (highlightWords.length > 0 && highlightWords.some(w => group.includes(w))) {
       div.classList.add("highlight");
       highlighted.push(div);
-    } else {
-      rest.push(div);
-    }
+    } else rest.push(div);
   }
   [...highlighted, ...rest].forEach(div => output.appendChild(div));
 }
 
-
 // --- 로컬 스토리지 (Local Storage) ---
-
 function saveState() {
   const data = {
-      inputs: {},
-      phaseMaps: phaseEmojiMaps,
-      activePhase: currentActivePhase,
-      visible: visibleCount
+    inputs: {},
+    phaseMaps: phaseEmojiMaps,
+    activePhase: currentActivePhase,
+    visible: visibleCount
   };
   for (let i = 1; i <= 8; i++) {
     const input = document.getElementById(`input${i}`);
@@ -720,40 +620,32 @@ function saveState() {
   data.inputs['singleInput'] = document.getElementById('singleInput').value;
   localStorage.setItem('상태백업', JSON.stringify(data));
 }
-
 function restoreState() {
   const saved = localStorage.getItem('상태백업');
   if (!saved) return;
   try {
     const data = JSON.parse(saved);
-    
-    // 입력값 복원
     if (data.inputs) {
       for (let key in data.inputs) {
         const el = document.getElementById(key);
         if (el) el.value = data.inputs[key];
       }
     }
-    
-    // 페이즈 데이터 복원
     if (data.phaseMaps) phaseEmojiMaps = data.phaseMaps;
     if (data.activePhase) currentActivePhase = data.activePhase;
     if (data.visible) visibleCount = data.visible;
 
-    // UI 복원
     updateInputVisibility();
     updateDiv1Visuals();
     updatePhaseButtonStates();
     updateHighlights();
   } catch (e) {
     console.error("상태 복원 실패:", e);
-    // 복원 실패 시 로컬 스토리지 초기화
     localStorage.removeItem('상태백업');
   }
 }
 
 // --- 이벤트 리스너 (Event Listeners) ---
-
 function attachFocusListeners() {
   [..."13572468"]
     .map(id => document.querySelector(`#wrapper-input${id}`))
@@ -763,37 +655,30 @@ function attachFocusListeners() {
       box.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === "Tab") {
           e.preventDefault();
-          if (e.target.id.startsWith("input")) { // input1~8에만 적용
+          if (e.target.id.startsWith("input")) {
             const currentValue = e.target.value.trim();
             if (currentValue !== '' && !currentValue.includes('ㅡ')) {
               e.target.value = e.target.value.trim() + ' ㅡ ';
             }
           }
-          const next = arr[(idx + 1) % (arr.length)]; // 순환 구조
+          const next = arr[(idx + 1) % (arr.length)];
           next.focus();
         }
       };
     });
 }
-
-
-
 function attachInputListeners() {
-  // 모든 input 엘리먼트에 대한 이벤트 리스너 (input1-8, singleInput)
   const ids = ["input1", "input2", "input3", "input4", "input5", "input6", "input7", "input8", "singleInput"];
   ids.forEach(id => {
     const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('input', saveState); // 값 변경 시 상태 저장
-    }
+    if (el) el.addEventListener('input', saveState);
   });
-  // singleInput의 경우, 하이라이트 업데이트도 연결
   document.getElementById("singleInput").addEventListener("input", updateHighlights);
 }
 
-// 전역 스코프에 함수 노출 (HTML에서 직접 호출 가능하도록)
+// 전역 노출
 window.addSingle = addSingle;
-window.clearInputs = clearInputs; // 이 함수는 더 이상 메인 '비우기' 버튼에 연결되지 않음. 필요 시 수동 호출.
+window.clearInputs = clearInputs;
 window.loadFromDB = loadFromDB;
 window.openEmojiModal = openEmojiModal;
 window.addInput = addInput; 
