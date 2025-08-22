@@ -18,7 +18,6 @@
   "workbench.layoutControl.enabled": true,
   "inlineChat.mode": "preview",
   "workbench.activityBar.location": "top",
-  "window.menuBarVisibility": "classic",
   "editor.minimap.enabled": false,
   "redhat.telemetry.enabled": false,
   "liveServer.settings.donotShowInfoMsg": true,
@@ -28,6 +27,8 @@
   "IDX.aI.enableInlineCompletion": true,
   "IDX.aI.enableCodebaseIndexing": true,
   "liveServer.settings.port": 5510,
+  "editor.insertSpaces": false,
+  "editor.tabSize": 4,
   "better-comments.tags": [
     {
       "tag": "!",
@@ -48,8 +49,6 @@
       "italic": false
     }  
   ],
-  "editor.insertSpaces": false,
-  "editor.tabSize": 4,
   "statusbar_command.commands": [
     {
       "id": "sbc_settings",
@@ -101,8 +100,8 @@
     {
       "id": "dynamic_status",
       "text": "1",
-      "script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
       "scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
+      "script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
       "alignment": "right",
       "priority": -1
     }
