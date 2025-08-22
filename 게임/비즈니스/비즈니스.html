@@ -45,12 +45,12 @@
             </div>
             <div class="stage-buttons">
               <button id="stageOneButton" title="1번 스테이지" aria-label="1번 스테이지">1</button>
-              <button id="stageLastButton" title="마지막 스테이지" aria-label="마지막 스테이지">⏭</button>
+              <button id="stageLastButton" title="마지막 스테이지" aria-label="마지막 스테이지">99</button>
               <button id="randomStageButton" title="랜덤 스테이지" aria-label="랜덤 스테이지">R</button>
             </div>
           </div>
           <div class="seed-display" id="seedDisplay"></div>
-          <div class="game-status-display" id="gameStatusDisplay"></div>
+          <div class="game-status-display"id="gameStatusDisplay"></div>
           <div class="grid-zone">
             <div class="grid-wrap">
               <div class="grid-container" id="gameGrid"></div>
@@ -76,7 +76,6 @@
             <div class="stage-buttons">
               <button id="loadCsvButton" title="CSV 불러오기" aria-label="CSV 불러오기">📂</button>
               <button id="saveCsvButton" title="CSV 저장하기" aria-label="CSV 저장하기">💾</button>
-              <!-- 관리자 업로드 버튼 (상세 구현은 추후) -->
               <button id="uploadCsvButton" title="업로드 (관리자)" aria-label="업로드 (관리자)">📤</button>
             </div>
           </div>
@@ -171,7 +170,6 @@
 
       // ---------- State (공유) ----------
       let allStagesData = [];
-      let mapData = [];
       let currentStage = 0;
       let currentMapIndex = 0; // 플레이 탭 라운드 위치(랜덤 순서)
       let currentMapOrder = [];
@@ -235,13 +233,6 @@
         }
         return data;
       }
-      function parseMapCSV(csvText) {
-        return csvText
-          .trim()
-          .split(/\r?\n/)
-          .map((l) => l.trim())
-          .filter(Boolean);
-      }
 
       // ---------- Game (Play) ----------
       async function initGame() {
@@ -253,15 +244,8 @@
           } else {
             allStagesData = [];
           }
-          const resMap = await fetch("map.txt");
-          if (resMap.ok) {
-            mapData = parseMapCSV(await resMap.text());
-          } else {
-            mapData = [];
-          }
         } catch (e) {
           allStagesData = [];
-          mapData = [];
         }
         if (allStagesData.length === 0) {
           allStagesData = [
