@@ -81,7 +81,7 @@
             </div>
           </div>
           <!-- 숨김 파일 입력 -->
-          <input id="csvFileInput" type="file" accept=".sav,text/csv" />
+          <input id="csvFileInput" type="file" accept=".sav,.csv,.txt" />
           <!-- 지도1/2/3 고정 순서 -->
           <div class="seed-display" id="makerSeedDisplay"></div>
           <div class="game-status-display" id="makerStatusDisplay">
@@ -247,13 +247,13 @@
       async function initGame() {
         setupTabs();
         try {
-          const resStages = await fetch("stages.sav");
+          const resStages = await fetch("stages.txt");
           if (resStages.ok) {
             allStagesData = parseCSV(await resStages.text());
           } else {
             allStagesData = [];
           }
-          const resMap = await fetch("map.sav");
+          const resMap = await fetch("map.txt");
           if (resMap.ok) {
             mapData = parseMapCSV(await resMap.text());
           } else {
@@ -587,7 +587,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "stages.sav";
+        a.download = "stages.txt";
         document.body.appendChild(a);
         a.click();
         a.remove();
