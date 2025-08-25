@@ -19,6 +19,7 @@ app.get('/person', (req, res) => {
       console.error(err);
       return res.status(500).json({ error: 'DB_ERROR' });
     }
+    console.log(rows);
     res.json(rows);
   });
 });
