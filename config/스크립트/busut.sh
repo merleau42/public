@@ -4,8 +4,10 @@ clear;
 time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d_%H:%M:%S');
 echo "[실행] ▲busut.cafe24app.com\t$time_kst" >> ~/dev/config/스크립트/.log;
 
+BUSUT=~/dev/subtree/busut;
+
 ## [ busut.cafe24app.com ]에 업로드할 내용을, 서브 폴더에 복사하기
-	cp -r ~/dev/프로젝트/웹/게시판/busut/backend		~/dev/subtree/busut;
+	cp -r "~/dev/프로젝트/웹/게시판/busut"		"$BUSUT/";
 
 
 ## 로컬 디렉토리의 전부를, 메인 저장소에 먼저 add/commit/push 시킴.
@@ -14,7 +16,7 @@ clear; cd ~/dev; git add .; git commit -m "▲busut.cafe24app.com_$time_kst"; gi
 
 ## 서브 폴더를 [ busut.cafe24app.com ]에 push 함.
 ## 로컬 파일의 삭제 여부가 저장소에는 반영되지 않는 경우 --force 플래그를 사용.
-# REV=$(git subtree split --prefix=subtree/busut)
-# git push "busut777@busut.cafe24app.com:busut777_busut" $REV:main --force
+REV=$(git subtree split --prefix=subtree/busut)
+git push "busut777@busut.cafe24app.com:busut777_busut" $REV:main --force
 
 exit 0;
