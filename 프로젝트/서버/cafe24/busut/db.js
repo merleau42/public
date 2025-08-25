@@ -7,6 +7,3 @@ module.exports = mysql.createPool({
 	database:'busut777',
 	port:3306
 });
-
-// smallbut
-// https://freedb.tech/dashboard/
