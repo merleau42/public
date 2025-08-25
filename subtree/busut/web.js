@@ -9,8 +9,12 @@ app.use(express.json());
 
 const db = require('./db.js');
 
-app.get('/', (req, res) => {
-  res.send("cafe24 호스팅 성공");
+// 정적 파일 서비스 (index.html 포함)
+app.use(express.static(path.join(__dirname)));
+
+// 루트 라우트 → index.html 자동 응답
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.get('/person', (req, res) => {
