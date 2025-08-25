@@ -34,6 +34,17 @@
         "panel": "new",
         "focus": false
       }
+    },
+    {
+      "label": "busut_cafe24",
+      "type": "shell",
+      "command": "~/dev/config/스크립트/busut.sh",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "panel": "new",
+        "focus": false
+      }
     }
   ]
 }

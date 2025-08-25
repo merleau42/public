@@ -26,7 +26,7 @@
   "IDX.aI.modelProvider": "gemini-api",
   "IDX.aI.enableInlineCompletion": true,
   "IDX.aI.enableCodebaseIndexing": true,
-  "liveServer.settings.port": 5510,
+  "liveServer.settings.port": 5511,
   "editor.insertSpaces": false,
   "editor.tabSize": 4,
   "better-comments.tags": [
@@ -96,6 +96,14 @@
       "command": "workbench.action.tasks.runTask",
       "arguments": ["github_io"],
       "priority": 7,
+    },
+    {
+      "id": "busut",
+      "name": "github.io",
+      "text": "▲busut",
+      "command": "workbench.action.tasks.runTask",
+      "arguments": ["busut_cafe24"],
+      "priority": 6,
     },
     {
       "id": "dynamic_status",
