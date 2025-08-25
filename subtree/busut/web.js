@@ -9,7 +9,6 @@ app.use(express.json());
 
 const db = require('./db.js');
 
-// --- API 라우트는 /api 아래로 ---
 app.get('/', (req, res) => {
   res.send("cafe24 호스팅 성공");
 });
