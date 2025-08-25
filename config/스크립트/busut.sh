@@ -5,6 +5,7 @@ time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d_%H:%M:%S');
 echo "[실행] ▲busut.cafe24app.com\t$time_kst" >> ~/dev/config/스크립트/.log;
 
 ## [ busut.cafe24app.com ]에 업로드할 내용을, 서브 폴더에 복사하기
+## node_modules만 제외
 	rsync -av --exclude='node_modules' ~/dev/프로젝트/웹/게시판/busut/ ~/dev/subtree/busut/
 
 
