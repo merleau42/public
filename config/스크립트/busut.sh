@@ -7,7 +7,7 @@ echo "[실행] ▲busut.cafe24app.com\t$time_kst" >> ~/dev/config/스크립트/.
 BUSUT=~/dev/subtree/busut;
 
 ## [ busut.cafe24app.com ]에 업로드할 내용을, 서브 폴더에 복사하기
-	cp -r "~/dev/프로젝트/웹/게시판/busut/backend"		"$BUSUT/"
+	cp -r ~/dev/프로젝트/웹/게시판/busut/backend		"$BUSUT/"
 
 
 ## 로컬 디렉토리의 전부를, 메인 저장소에 먼저 add/commit/push 시킴.
