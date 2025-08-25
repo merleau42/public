@@ -16,7 +16,7 @@ clear; cd ~/dev; git add .; git commit -m "▲busut.cafe24app.com_$time_kst"; gi
 
 ## 서브 폴더를 [ busut.cafe24app.com ]에 push 함.
 ## 로컬 파일의 삭제 여부가 저장소에는 반영되지 않는 경우 --force 플래그를 사용.
-REV=$(git subtree split --prefix=subtree/busut)
-git push "busut777@busut.cafe24app.com:busut777_busut" $REV:main --force
+# REV=$(git subtree split --prefix=subtree/busut)
+# git push "busut777@busut.cafe24app.com:busut777_busut" $REV:main --force
 
 exit 0;
