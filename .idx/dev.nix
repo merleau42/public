@@ -5,6 +5,7 @@
     # pkgs.temurin-bin-17 # JAVA/JSP 실습때만 사용
     pkgs.gcc
     pkgs.rsync  # 파일 복붙 라이브러리
+    pkgs.openssh
     # pkgs.adoptopenjdk-bin
     # pkgs.go
     pkgs.python311
