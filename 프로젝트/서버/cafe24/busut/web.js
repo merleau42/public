@@ -1,33 +1,33 @@
+// web.js
 const express = require('express');
 const path = require('path');
 const app = express();
 
-const PORT = process.env.PORT || 8001; // Cafe24
+const PORT = process.env.PORT;
 const HOST = '0.0.0.0';
 
 app.use(express.json());
 
-const db = require('./db.js');
-
-// 정적 파일 서비스 (index.html 포함)
 app.use(express.static(path.join(__dirname)));
 
-// 루트 라우트 → index.html 자동 응답
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// ★ DB는 라우트 안에서 지연 로드 (부팅 실패 방지)
 app.get('/person', (req, res) => {
-  db.query('select * from person', (err, rows) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'DB_ERROR' });
-    }
-    console.log(rows);
+  const db = require('./db.js');
+  db.query('SELECT * FROM person', (err, rows) => {
+    if (err) return res.status(500).json({ error: 'DB_ERROR' });
     res.json(rows);
   });
 });
 
-app.listen(PORT, () => {
+// (선택) 헬스체크
+app.get('/__health', (req, res) => {
+  res.json({ up: true, port: PORT });
+});
+
+app.listen(PORT, HOST, () => {
   console.log(`🚀 Server running on http://${HOST}:${PORT}`);
 });

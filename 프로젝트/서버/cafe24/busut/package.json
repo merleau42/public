@@ -2,6 +2,7 @@
   "name": "busut",
   "version": "1.0.0",
   "private": true,
+  "main": "web.js",
   "scripts": {
     "start": "node ./web.js"
   },
