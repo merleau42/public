@@ -1,36 +1,35 @@
-// web.js (루트)
-const express = require('express');
-const path = require('path');
-const app = express();
+// web.js — 진단용 (Express 제거, 포트/호스트 고정)
+const http = require('http');
+const os = require('os');
 
-// 카페24가 넣어주는 PORT만 사용 (fallback 제거)
-const PORT = process.env.PORT;
-const HOST = '0.0.0.0';
+const PORT = 8001;               // ★ 당신 계정의 고정 포트(메일에 8001)
+const HOST = '0.0.0.0';          // ★ 외부에서 붙게끔
 
-app.use(express.json());
+const handler = (req, res) => {
+  if (req.url === '/__health') {
+    const payload = JSON.stringify({
+      up: true,
+      ts: new Date().toISOString(),
+      host: HOST,
+      port: PORT,
+      node: process.version,
+      pid: process.pid
+    });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(payload);
+  }
 
-// 필요하면 public만 노출: app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname)));
+  // 최소 응답 (index.html 없이도 동작 확인)
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('OK: raw http server\n');
+};
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+const server = http.createServer(handler);
+
+server.listen(PORT, HOST, () => {
+  console.log(`[RAW] listening on http://${HOST}:${PORT}`);
 });
 
-// DB는 라우트 안에서 지연 로드 (부팅 실패 방지)
-app.get('/person', (req, res) => {
-  const db = require('./db.js');
-  db.query('SELECT * FROM person', (err, rows) => {
-    if (err) return res.status(500).json({ error: 'DB_ERROR' });
-    res.json(rows);
-  });
-});
-
-// 헬스체크
-app.get('/__health', (req, res) => {
-  res.json({ up: true, port: PORT });
-});
-
-// 호스트까지 명시
-app.listen(PORT, HOST, () => {
-  console.log(`✅ Listening on http://${HOST}:${PORT}`);
-});
+// 크래시 방지용 로그
+process.on('uncaughtException', (e) => console.error('[uncaughtException]', e));
+process.on('unhandledRejection', (e) => console.error('[unhandledRejection]', e));
