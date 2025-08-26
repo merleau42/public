@@ -6,9 +6,9 @@ const app = express();
 const PORT = process.env.PORT;
 const HOST = '0.0.0.0';
 
-app.use(express.json());
+const db = require('./db.js');
 
-// 필요하면 public만 노출: app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', (req, res) => {
@@ -17,16 +17,10 @@ app.get('/', (req, res) => {
 
 // DB는 라우트 안에서 지연 로드 (부팅 실패 방지)
 app.get('/person', (req, res) => {
-  const db = require('./db.js');
   db.query('SELECT * FROM person', (err, rows) => {
     if (err) return res.status(500).json({ error: 'DB_ERROR' });
     res.json(rows);
   });
-});
-
-// 헬스체크
-app.get('/__health', (req, res) => {
-  res.json({ up: true, port: PORT });
 });
 
 // 호스트까지 명시
