@@ -100,11 +100,19 @@
     },
     {
       "id": "busut",
-      "name": "github.io",
+      "name": "busut",
       "text": "▲busut",
       "command": "workbench.action.tasks.runTask",
       "arguments": ["busut_cafe24"],
       "priority": 6,
+    },
+    {
+      "id": "split_servers",
+      "name": "split_servers",
+      "text": "▲Servs",
+      "command": "workbench.action.tasks.runTask",
+      "arguments": ["split_servers"],
+      "priority": 5,
     },
     {
       "id": "dynamic_status",
