@@ -3,7 +3,7 @@
 	if (window.__TAB_METAVERSE_ACTIVE__) return;
 	window.__TAB_METAVERSE_ACTIVE__ = true;
 
-	console.log("Tab Metaverse: Content script running.");
+	console.log("metaberse: Content script running.");
 
 	let socket;
 	let state = {
@@ -23,17 +23,17 @@
 	// =================================================================================
 
 	function initialize() {
-		console.log("Tab Metaverse: Initializing...");
+		console.log("metaberse: Initializing...");
 		chrome.runtime.sendMessage({ type: "REQUEST_TAB_STATE" }, (response) => {
 			if (response && response.mode) {
 				console.log(
-					"Tab Metaverse: Found existing state, re-initializing.",
+					"metaberse: Found existing state, re-initializing.",
 					response,
 				);
 				setup(response);
 			} else {
 				console.log(
-					"Tab Metaverse: No existing state. Waiting for popup message.",
+					"metaberse: No existing state. Waiting for popup message.",
 				);
 				chrome.runtime.onMessage.addListener(handlePopupMessage);
 			}
@@ -46,7 +46,7 @@
 			message.type === "JOIN_ROOM_AS_VIEWER"
 		) {
 			console.log(
-				"Tab Metaverse: Received initialization message from popup.",
+				"metaberse: Received initialization message from popup.",
 				message,
 			);
 			const initialState = {
@@ -67,7 +67,7 @@
 	function setup(initialState) {
 		state = { ...state, ...initialState };
 		if (!state.serverUrl || !state.mode) {
-			console.error("Tab Metaverse: Missing server URL or mode.", state);
+			console.error("metaberse: Missing server URL or mode.", state);
 			return;
 		}
 		createUI();
@@ -80,7 +80,7 @@
 
 	function createUI() {
 		const host = document.createElement("div");
-		host.id = "__tab_metaverse_root__";
+		host.id = "__metaberse_root__";
 		host.style.cssText = `
 			position: fixed; top: 0; left: 0; width: 100%; height: 100%;
 			z-index: 2147483647; pointer-events: none;
@@ -153,11 +153,11 @@
 
 		socket.on("connect", () => {
 			state.myId = socket.id;
-			console.log(`Tab Metaverse: Connected with ID: ${socket.id}`);
+			console.log(`metaberse: Connected with ID: ${socket.id}`);
 			if (state.mode === "host") {
 				socket.emit("createRoom", (response) => {
 					state.roomId = response.roomId;
-					console.log(`Tab Metaverse: Room created: ${state.roomId}`);
+					console.log(`metaberse: Room created: ${state.roomId}`);
 					displayHostPanel(); // Display the panel with the new Room ID
 					storeStateInBackground();
 					startHosting();
@@ -169,10 +169,10 @@
 					(response) => {
 						if (response.success) {
 							state.mascots = response.roomState.mascots;
-							console.log(`Tab Metaverse: Joined room ${state.roomId}`);
+							console.log(`metaberse: Joined room ${state.roomId}`);
 							storeStateInBackground();
 						} else {
-							console.error("Tab Metaverse: Failed to join room.", response.message);
+							console.error("metaberse: Failed to join room.", response.message);
 							alert(`Error: ${response.message}`);
 							teardown();
 						}
@@ -208,10 +208,11 @@
 	async function captureAndBroadcastFrame() {
 		try {
 			const frame = await captureVisibleTab();
+			// *** THIS IS THE FIX: Added 'await' here ***
 			const lowQualityFrame = await downscaleImage(frame, 0.5, "image/jpeg", 0.7);
 			socket.emit("broadcastFrame", { roomId: state.roomId, frame: lowQualityFrame });
 		} catch (error) {
-			console.error("Tab Metaverse: Error capturing frame:", error);
+			console.error("metaberse: Error capturing frame:", error);
 			if (error.message.includes("permission")) clearInterval(captureInterval);
 		}
 	}
@@ -265,10 +266,10 @@
 	}
 
 	function teardown() {
-		console.log("Tab Metaverse: Tearing down.");
+		console.log("metaberse: Tearing down.");
 		if (socket) socket.disconnect();
 		if (captureInterval) clearInterval(captureInterval);
-		const root = document.getElementById("__tab_metaverse_root__");
+		const root = document.getElementById("__metaberse_root__");
 		if (root) root.remove();
 		chrome.runtime.sendMessage({ type: "CLEAR_TAB_STATE" });
 		window.__TAB_METAVERSE_ACTIVE__ = false;

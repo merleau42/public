@@ -9,7 +9,6 @@ DIR=~/dev/subtree/servers;
 
 ## [ servers ]에 업로드할 내용을, 서브 폴더에 복사하기
 rsync -av --exclude='node_modules' "$WEB/확장프로그램/metaberse/server/" "$DIR/metaberse/server/";
-#  cp -r "$WEB/확장프로그램/metaberse/server/"		"$DIR/metaberse";
 
 ## 로컬 디렉토리의 전부를, 메인 저장소에 먼저 add/commit/push 시킴.
 ## 로컬 디렉토리의 일부만 add/commit 해도 되지만, 하나하나 지정하기 번거로움.
