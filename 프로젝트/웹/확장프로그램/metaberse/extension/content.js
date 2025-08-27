@@ -22,36 +22,24 @@
 	// Main Initialization Logic
 	// =================================================================================
 
-	/**
-	 * Primary entry point. Checks for a pre-existing state in the background script.
-	 * If found, re-initializes the metaverse. Otherwise, waits for a message from the popup.
-	 */
 	function initialize() {
 		console.log("Tab Metaverse: Initializing...");
-		// Ask the background script if we already have a state for this tab
 		chrome.runtime.sendMessage({ type: "REQUEST_TAB_STATE" }, (response) => {
 			if (response && response.mode) {
 				console.log(
 					"Tab Metaverse: Found existing state, re-initializing.",
 					response,
 				);
-				// Re-initialize using the state from the background script
 				setup(response);
 			} else {
 				console.log(
 					"Tab Metaverse: No existing state. Waiting for popup message.",
 				);
-				// Listen for the initial setup message from the popup
-				chrome.runtime.onMessage.addListener(
-					handlePopupMessage,
-				);
+				chrome.runtime.onMessage.addListener(handlePopupMessage);
 			}
 		});
 	}
 
-	/**
-	 * Handles the one-time initialization message from the popup.
-	 */
 	function handlePopupMessage(message, sender, sendResponse) {
 		if (
 			message.type === "CREATE_ROOM_AND_HOST" ||
@@ -67,28 +55,21 @@
 						? "host"
 						: "viewer",
 				serverUrl: message.serverUrl,
-				roomId: message.roomId, // Will be null for hosts initially
+				roomId: message.roomId,
 				name: message.name,
 			};
 			setup(initialState);
-			// Important: Remove the listener after first use to avoid re-initialization
 			chrome.runtime.onMessage.removeListener(handlePopupMessage);
 		}
 		return true;
 	}
 
-	/**
-	 * Sets up the UI, connects to the socket server, and starts the appropriate mode.
-	 * @param {object} initialState - The initial state for the tab.
-	 */
 	function setup(initialState) {
 		state = { ...state, ...initialState };
 		if (!state.serverUrl || !state.mode) {
 			console.error("Tab Metaverse: Missing server URL or mode.", state);
 			return;
 		}
-
-		// The 'io' function is now available directly because popup.js injected it.
 		createUI();
 		connectToServer();
 	}
@@ -100,38 +81,30 @@
 	function createUI() {
 		const host = document.createElement("div");
 		host.id = "__tab_metaverse_root__";
-		host.style.position = "fixed";
-		host.style.top = "0";
-		host.style.left = "0";
-		host.style.width = "100%";
-		host.style.height = "100%";
-		host.style.zIndex = "2147483647";
-		host.style.pointerEvents = "none";
-
+		host.style.cssText = `
+			position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+			z-index: 2147483647; pointer-events: none;
+		`;
 		const shadow = host.attachShadow({ mode: "open" });
 		document.documentElement.appendChild(host);
 
 		const style = document.createElement("style");
 		style.textContent = `
-            :host { all: initial; }
+            :host { all: initial; font-family: ui-sans-serif, system-ui; }
             #metaverse-ui {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100vw;
-                height: 100vh;
+                position: absolute; left: 0; top: 0; width: 100vw; height: 100vh;
                 pointer-events: auto;
             }
             #broadcast-image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                opacity: 0.9;
-                pointer-events: none;
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                object-fit: contain; opacity: 0.9; pointer-events: none;
             }
+            #host-panel {
+                position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7);
+                color: white; padding: 8px 12px; border-radius: 8px; font-size: 14px;
+                pointer-events: auto;
+            }
+            #host-panel span { font-weight: bold; color: #4ade80; }
         `;
 		shadow.appendChild(style);
 
@@ -155,6 +128,17 @@
 		requestAnimationFrame(tick);
 	}
 
+	function displayHostPanel() {
+		if (state.mode !== "host" || !ui) return;
+		let panel = ui.querySelector("#host-panel");
+		if (!panel) {
+			panel = document.createElement("div");
+			panel.id = "host-panel";
+			ui.appendChild(panel);
+		}
+		panel.innerHTML = `Hosting Room: <span>${state.roomId}</span>`;
+	}
+
 	function fitCanvas() {
 		canvas.width = document.documentElement.clientWidth;
 		canvas.height = document.documentElement.clientHeight;
@@ -169,13 +153,12 @@
 
 		socket.on("connect", () => {
 			state.myId = socket.id;
-			console.log(`Tab Metaverse: Connected to server with ID: ${socket.id}`);
+			console.log(`Tab Metaverse: Connected with ID: ${socket.id}`);
 			if (state.mode === "host") {
 				socket.emit("createRoom", (response) => {
 					state.roomId = response.roomId;
-					console.log(
-						`Tab Metaverse: Room created with ID: ${state.roomId}`,
-					);
+					console.log(`Tab Metaverse: Room created: ${state.roomId}`);
+					displayHostPanel(); // Display the panel with the new Room ID
 					storeStateInBackground();
 					startHosting();
 				});
@@ -186,16 +169,11 @@
 					(response) => {
 						if (response.success) {
 							state.mascots = response.roomState.mascots;
-							console.log(
-								`Tab Metaverse: Joined room ${state.roomId}`,
-								state.mascots,
-							);
+							console.log(`Tab Metaverse: Joined room ${state.roomId}`);
 							storeStateInBackground();
 						} else {
-							console.error(
-								"Tab Metaverse: Failed to join room.",
-								response.message,
-							);
+							console.error("Tab Metaverse: Failed to join room.", response.message);
+							alert(`Error: ${response.message}`);
 							teardown();
 						}
 					},
@@ -203,31 +181,18 @@
 			}
 		});
 
-		// Common event listeners
-		socket.on("userJoined", ({ id, mascot }) => {
-			state.mascots[id] = mascot;
-			console.log("User joined:", id, mascot);
-		});
-		socket.on("userLeft", ({ id }) => {
-			delete state.mascots[id];
-			console.log("User left:", id);
-		});
+		socket.on("userJoined", ({ id, mascot }) => (state.mascots[id] = mascot));
+		socket.on("userLeft", ({ id }) => delete state.mascots[id]);
 		socket.on("mascotUpdated", ({ id, mascotData }) => {
-			if (state.mascots[id]) {
-				Object.assign(state.mascots[id], mascotData);
-			}
+			if (state.mascots[id]) Object.assign(state.mascots[id], mascotData);
 		});
 		socket.on("roomClosed", () => {
-			console.log("Tab Metaverse: Room closed by host.");
 			alert("The host has closed the room.");
 			teardown();
 		});
 
-		// Viewer-specific event
 		if (state.mode === "viewer") {
-			socket.on("receiveFrame", (frame) => {
-				broadcastImage.src = frame;
-			});
+			socket.on("receiveFrame", (frame) => (broadcastImage.src = frame));
 		}
 	}
 
@@ -242,32 +207,20 @@
 
 	async function captureAndBroadcastFrame() {
 		try {
-			// Note: This uses a theoretical chrome.tabs.captureVisibleTab API.
-			// In a real extension, this would be more complex and require background script communication.
 			const frame = await captureVisibleTab();
 			const lowQualityFrame = await downscaleImage(frame, 0.5, "image/jpeg", 0.7);
-			socket.emit("broadcastFrame", {
-				roomId: state.roomId,
-				frame: lowQualityFrame,
-			});
+			socket.emit("broadcastFrame", { roomId: state.roomId, frame: lowQualityFrame });
 		} catch (error) {
 			console.error("Tab Metaverse: Error capturing frame:", error);
-			// Stop broadcasting if permission is denied
-			if (error.message.includes("permission")) {
-				clearInterval(captureInterval);
-			}
+			if (error.message.includes("permission")) clearInterval(captureInterval);
 		}
 	}
 
-	// Helper to capture the visible tab content. Requires permissions.
 	function captureVisibleTab() {
 		return new Promise((resolve, reject) => {
 			chrome.runtime.sendMessage({ type: "CAPTURE_TAB" }, (response) => {
-				if (response.success) {
-					resolve(response.dataUrl);
-				} else {
-					reject(new Error(response.error));
-				}
+				if (response && response.success) resolve(response.dataUrl);
+				else reject(new Error((response && response.error) || "Capture failed"));
 			});
 		});
 	}
@@ -277,8 +230,6 @@
 	// =================================================================================
 
 	function tick() {
-		// (For brevity, mascot physics and movement logic is simplified)
-		// A full implementation would handle local input and broadcast updates.
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		for (const id in state.mascots) {
 			const m = state.mascots[id];
@@ -304,31 +255,21 @@
 		ctx.strokeText(name, x, y);
 		ctx.fillText(name, x, y);
 	}
+
 	// =================================================================================
 	// State Management & Cleanup
 	// =================================================================================
 
-	/**
-	 * Stores the current state in the background script for persistence.
-	 */
 	function storeStateInBackground() {
-		chrome.runtime.sendMessage({
-			type: "STORE_TAB_STATE",
-			...state,
-		});
+		chrome.runtime.sendMessage({ type: "STORE_TAB_STATE", ...state });
 	}
 
-	/**
-	 * Cleans up all resources, intervals, and UI elements.
-	 */
 	function teardown() {
 		console.log("Tab Metaverse: Tearing down.");
 		if (socket) socket.disconnect();
 		if (captureInterval) clearInterval(captureInterval);
-
 		const root = document.getElementById("__tab_metaverse_root__");
 		if (root) root.remove();
-
 		chrome.runtime.sendMessage({ type: "CLEAR_TAB_STATE" });
 		window.__TAB_METAVERSE_ACTIVE__ = false;
 	}
