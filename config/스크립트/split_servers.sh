@@ -17,6 +17,6 @@ clear; cd ~/dev; git add .; git commit -m "▲Servs_$time_kst"; git push;
 ## 서브 폴더를 [ Servers ]에 push 함.
 ## 로컬 파일의 삭제 여부가 저장소에는 반영되지 않는 경우 --force 플래그를 사용.
 REV=$(git subtree split --prefix=subtree/servers)
-git push https://github.com/merleau42/servers.git $REV:main --force
+git push https://github.com/merleau42/servers.git $REV:refs/heads/main --force
 
 exit 0;
