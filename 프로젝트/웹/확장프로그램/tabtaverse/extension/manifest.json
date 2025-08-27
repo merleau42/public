@@ -1,0 +1,24 @@
+{
+	"manifest_version": 3,
+	"name": "Tab Metaverse",
+	"version": "0.1.0",
+	"description": "Turn any tab into a shared space with a screen-shared background and synced mascots.",
+	"action": {
+		"default_title": "Tab Metaverse",
+		"default_popup": "popup.html"
+	},
+	"permissions": ["activeTab", "scripting", "storage"],
+	"host_permissions": ["<all_urls>"],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"icons": {
+		"128": "icons/icon128.png"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["socket.io.min.js"],
+			"matches": ["<all_urls>"]
+		}
+	]
+}

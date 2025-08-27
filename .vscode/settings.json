@@ -29,6 +29,7 @@
   "liveServer.settings.port": 5511,
   "editor.insertSpaces": false,
   "editor.tabSize": 4,
+  "explorer.compactFolders": false,
   "better-comments.tags": [
     {
       "tag": "!",

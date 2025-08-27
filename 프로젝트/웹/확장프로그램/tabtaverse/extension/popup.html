@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Tab Metaverse</title>
+	<style>
+		body {
+			background: #111827;
+			color: #fff;
+			font-family: ui-sans-serif, system-ui;
+			width: 320px;
+			padding: 8px;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+		.section {
+			border: 1px solid #334155;
+			border-radius: 8px;
+			padding: 12px;
+		}
+		h3 {
+			margin: 0 0 10px 0;
+			font-size: 16px;
+		}
+		.row {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			margin: 8px 0;
+		}
+		label {
+			font-size: 13px;
+			opacity: 0.8;
+			width: 60px;
+		}
+		input,
+		button {
+			background: #1f2937;
+			color: #fff;
+			border: 1px solid #334155;
+			border-radius: 8px;
+			padding: 8px;
+			flex-grow: 1;
+		}
+		button {
+			cursor: pointer;
+			font-weight: bold;
+		}
+		.status {
+			margin-top: 10px;
+			font-size: 12px;
+			text-align: center;
+			min-height: 16px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="section">
+			<h3>Create a New Room</h3>
+			<button id="createBtn">Create & Start Hosting</button>
+		</div>
+		<div class="section">
+			<h3>Join an Existing Room</h3>
+			<div class="row">
+				<label>Room ID</label><input id="roomIdInput" placeholder="Enter ID" />
+			</div>
+			<div class="row">
+				<label>Your Name</label
+				><input id="nameInput" placeholder="Enter Name" />
+			</div>
+			<button id="joinBtn">Join as Viewer</button>
+		</div>
+		<div id="status" class="status"></div>
+	</div>
+	<script src="popup.js"></script>
+</body>
+</html>
