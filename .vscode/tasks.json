@@ -5,25 +5,25 @@
     {
       "label": "pull_all",
       "type": "shell",
-      // "command": "~/dev/config/스크립트/pull.sh",
+      // "command": "~/dev/터미널/pull.sh",
       "command": "bash",
-      "args": ["-lc", "~/dev/config/스크립트/pull.sh"],
+      "args": ["-lc", "~/dev/터미널/pull.sh"],
       "problemMatcher": [],
       "presentation": { "reveal": "never", "panel": "new", "focus": false }
     },
     {
       "label": "push_all",
       "type": "shell",
-      // "command": "~/dev/config/스크립트/push.sh",
+      // "command": "~/dev/터미널/push.sh",
       "command": "bash",
-      "args": ["-lc", "~/dev/config/스크립트/push.sh"],
+      "args": ["-lc", "~/dev/터미널/push.sh"],
       "problemMatcher": [],
       "presentation": { "reveal": "never", "panel": "new", "focus": false }
     },
     {
       "label": "github_io",
       "type": "shell",
-      "command": "~/dev/config/스크립트/gio.sh",
+      "command": "~/dev/터미널/gio.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
@@ -34,7 +34,7 @@
     {
       "label": "busut_cafe24",
       "type": "shell",
-      "command": "~/dev/config/스크립트/busut.sh",
+      "command": "~/dev/터미널/busut.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
@@ -45,7 +45,7 @@
     {
       "label": "split_servers",
       "type": "shell",
-      "command": "~/dev/config/스크립트/split_servers.sh",
+      "command": "~/dev/터미널/split_servers.sh",
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
