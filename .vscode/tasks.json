@@ -5,24 +5,20 @@
     {
       "label": "pull_all",
       "type": "shell",
-      "command": "~/dev/config/스크립트/pull.sh",
+      // "command": "~/dev/config/스크립트/pull.sh",
+      "command": "bash",
+      "args": ["-lc", "~/dev/config/스크립트/pull.sh"],
       "problemMatcher": [],
-      "presentation": {
-        "reveal": "never",
-        "panel": "new",
-        "focus": false
-      }
+      "presentation": { "reveal": "never", "panel": "new", "focus": false }
     },
     {
       "label": "push_all",
       "type": "shell",
-      "command": "~/dev/config/스크립트/push.sh",
+      // "command": "~/dev/config/스크립트/push.sh",
+      "command": "bash",
+      "args": ["-lc", "~/dev/config/스크립트/push.sh"],
       "problemMatcher": [],
-      "presentation": {
-        "reveal": "never",
-        "panel": "new",
-        "focus": false
-      }
+      "presentation": { "reveal": "never", "panel": "new", "focus": false }
     },
     {
       "label": "github_io",
