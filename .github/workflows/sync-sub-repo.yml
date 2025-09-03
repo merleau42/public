@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '프로젝트/웹/확장프로그램/**'
+      - '프로젝트/웹/확장프로그램/**'   # 이 경로에 변경이 있을 때만 실행
 
 jobs:
   sync:
@@ -12,22 +12,25 @@ jobs:
     strategy:
       matrix:
         target:
-          - prefix: '프로젝트/웹/확장프로그램'
-            repo: 'github.com/merleau42/extension' # 'github.com' 추가
-            branch: 'main'
+          - prefix: '프로젝트/웹/확장프로그램'  # 메인 리포에서 분리할 폴더
+            repo: 'merleau42/extension'        # owner/repo (도메인/ .git 넣지 않음)
+            branch: 'main'                      # 타겟 리포 브랜치
             paths_glob: '프로젝트/웹/확장프로그램/**'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # subtree split에는 전체 히스토리가 필요
 
-      - id: changed
+      - name: Detect changes for this target
+        id: changed
         run: |
           BEFORE="${{ github.event.before }}"
           if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
             BEFORE="$(git rev-parse HEAD^ || true)"
           fi
+
           CNT=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- "${{ matrix.target.paths_glob }}" | wc -l | tr -d ' ')
           if [ "${CNT:-0}" -gt 0 ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -35,29 +38,32 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.changed.outputs.changed == 'true'
+      - name: Subtree split & push
+        if: steps.changed.outputs.changed == 'true'   # 항상 실행하려면 이 줄을 지우세요
         env:
           LANG: C.UTF-8
           LC_ALL: C.UTF-8
         run: |
           set -euo pipefail
+
+          # Git이 비-ASCII 경로를 이스케이프하지 않도록 설정
           git config --global core.quotepath false
           git config --global i18n.logOutputEncoding utf-8
           git config --global i18n.commitEncoding utf-8
 
-          TARGET_URL="https://${{ secrets.AUTO_TREE }}@${{ matrix.target.repo }}.git"
+          # 대상 URL (x-access-token 접두사 사용 / .git 뒤 슬래시 금지)
+          TARGET_REPO="${{ matrix.target.repo }}"   # 예: merleau42/extension
+          TARGET_URL="https://x-access-token:${{ secrets.AUTO_TREE }}@github.com/${TARGET_REPO}.git"
 
-          echo "Probing remote with ls-remote..."
-          git ls-remote "$TARGET_URL" || {
-            echo "🚨 ERROR: Token is invalid or lacks access to the remote repository. Please check your token and repository name."
-            exit 1
-          }
+          echo "::group::Probe remote"
+          git ls-remote "$TARGET_URL"
+          echo "::endgroup::"
 
-          # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
+          # 기존 ACTION 브랜치를 정리 후 split
           git branch -D ACTION 2>/dev/null || true
-
           SHA=$(git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION)
           echo "subtree split commit: $SHA"
+          git log -1 --oneline ACTION || true
 
-          echo "Pushing..."
+          echo "Pushing to ${TARGET_REPO} -> ${{ matrix.target.branch }}"
           git push "$TARGET_URL" ACTION:${{ matrix.target.branch }} --force
