@@ -13,7 +13,7 @@ jobs:
       matrix:
         target: # DEV 에서 분리할 폴더(prefix), 서브(repo), 리포브랜치(branch), 감지패턴(glob)
           - prefix: '프로젝트/웹/확장프로그램'  # 메인 리포에서 분리할 폴더
-            repo: 'merleau42/extension.git'    # 타겟 리포 주소 (owner/repo.git)
+            repo: 'merleau42/extension'    # 타겟 리포 주소 (owner/repo.git)
             branch: 'main'                     # 타겟 리포 브랜치
             paths_glob: '프로젝트/웹/확장프로그램/**'  # 변경 감지용 패턴
 
@@ -55,7 +55,7 @@ jobs:
           SHA=$(git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION)
           echo "subtree split commit: $SHA"
 
-          TARGET_URL="https://github-actions:${{ secrets.AUTO_TREE }}@github.com/merleau42/extension.git"
+          TARGET_URL="https://github-actions:${{ secrets.AUTO_TREE }}@${{ matrix.target.repo }}.git"
 
           echo "Probing remote with ls-remote..."
           git ls-remote "$TARGET_URL"
