@@ -55,7 +55,7 @@ jobs:
           SHA=$(git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION)
           echo "subtree split commit: $SHA"
 
-          TARGET_URL="https://github-actions:${{ secrets.AUTO_TREE }}@${{ matrix.target.repo }}.git"
+          TARGET_URL="https://github-actions:${{ secrets.AUTO_TREE }}@github.com/${{ matrix.target.repo }}.git"
 
           echo "Probing remote with ls-remote..."
           git ls-remote "$TARGET_URL"
