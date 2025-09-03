@@ -39,6 +39,9 @@ jobs:
           fi
 
       - if: steps.changed.outputs.changed == 'true' # 변경이 있는 경우만 subtree split 하고 push
+        env:
+          LANG: C.UTF-8
+          LC_ALL: C.UTF-8
         run: |
           set -euo pipefail
           # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
