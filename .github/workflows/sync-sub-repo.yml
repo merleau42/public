@@ -54,5 +54,7 @@ jobs:
           # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
           git branch -D ACTION 2>/dev/null || true
           git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION
-          # 로컬 ACTION → 타겟 리포 브랜치로 강제 푸시
+          echo "Probing remote with ls-remote..."
+          git ls-remote "https://x-access-token:${{ secrets.AUTO_TREE }}@github.com/merleau42/extension.git"
+          echo "Pushing..."
           git push "https://x-access-token:${{ secrets.AUTO_TREE }}@github.com/${{ matrix.target.repo }}" ACTION:${{ matrix.target.branch }} --force
