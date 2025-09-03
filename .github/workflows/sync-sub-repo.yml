@@ -40,12 +40,17 @@ jobs:
 
       - if: steps.changed.outputs.changed == 'true' # 변경이 있는 경우만 subtree split 하고 push
         env:
-          LANG: ko_KR.UTF-8
-          LC_ALL: ko_KR.UTF-8
-          LC_CTYPE: ko_KR.UTF-8
-
+          # LANG: ko_KR.UTF-8
+          # LC_ALL: ko_KR.UTF-8
+          # LC_CTYPE: ko_KR.UTF-8
+          LANG: C.UTF-8
+          LC_ALL: C.UTF-8
         run: |
           set -euo pipefail
+          # Git이 비ASCII 경로를 이스케이프하지 않게
+          git config --global core.quotepath false
+          git config --global i18n.logOutputEncoding utf-8
+          git config --global i18n.commitEncoding utf-8
           # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
           git branch -D ACTION 2>/dev/null || true
           git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION
