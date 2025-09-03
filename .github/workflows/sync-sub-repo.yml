@@ -42,6 +42,7 @@ jobs:
         env:
           LANG: ko_KR.UTF-8
           LC_ALL: ko_KR.UTF-8
+          LC_CTYPE: ko_KR.UTF-8
 
         run: |
           set -euo pipefail
