@@ -14,7 +14,7 @@
 	"window.autoDetectColorScheme": true,
 	"workbench.layoutControl.enabled": true,
 	"inlineChat.mode": "preview",
-	"workbench.activityBar.location": "default",
+	"workbench.activityBar.location": "top",
 	"editor.minimap.enabled": false,
 	"redhat.telemetry.enabled": false,
 	"liveServer.settings.donotShowInfoMsg": true,

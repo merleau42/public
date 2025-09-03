@@ -1,0 +1,48 @@
+name: Sync Sub Repo
+
+on:
+  push:
+    branches: [ master ]   # master 브랜치에 push 발생 시 실행
+    paths:  # 아래 경로 중 하나라도 변경되면 실행됨
+      - '프로젝트/웹/확장프로그램/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: # DEV 에서 분리할 폴더(prefix), 서브(repo), 리포브랜치(branch), 감지패턴(glob)
+          - prefix: '프로젝트/웹/확장프로그램'  # 메인 리포에서 분리할 폴더
+            repo: 'merleau42/extension.git'    # 타겟 리포 주소 (owner/repo.git)
+            branch: 'main'                     # 타겟 리포 브랜치
+            paths_glob: '프로젝트/웹/확장프로그램/**'  # 변경 감지용 패턴
+
+    steps:
+      - uses: actions/checkout@v4   # 메인 리포 체크아웃
+        with:
+          fetch-depth: 0   # subtree split 에는 전체 히스토리가 필요
+
+      - id: changed # matrix 경로에 변경이 있는지 검사
+        run: |
+          BEFORE="${{ github.event.before }}"   # 이전 커밋 SHA
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            # 새 브랜치 생성 등 특수 상황일 경우 직전 커밋 사용
+            BEFORE="$(git rev-parse HEAD^ || true)"
+          fi
+
+          # diff 결과에서 대상 폴더 변경된 파일 개수 확인
+          CNT=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- "${{ matrix.target.paths_glob }}" | wc -l | tr -d ' ')
+          if [ "${CNT:-0}" -gt 0 ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"   # 변경 있음
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"  # 변경 없음
+          fi
+
+      - if: steps.changed.outputs.changed == 'true' # 변경이 있는 경우만 subtree split 하고 push
+        run: |
+          set -euo pipefail
+          # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
+          git branch -D ACTION 2>/dev/null || true
+          git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION
+          # 로컬 ACTION → 타겟 리포 브랜치로 강제 푸시
+          git push "https://${{ secrets.AUTO_TREE }}@github.com/${{ matrix.target.repo }}" ACTION:${{ matrix.target.branch }} --force

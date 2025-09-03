@@ -1,0 +1,26 @@
+name: Sync target repo
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '프로젝트/웹/확장프로그램/**'     # 변경사항이 있을 때만 실행됨
+  workflow_dispatch:  # 필요 시 수동 트리거
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with: fetch-depth: 0   # subtree split에 전체 히스토리가 필요
+
+      - name: Split subtree
+        run: |
+          # 기존에 브랜치 있으면 삭제 후 생성
+          git branch -D ACTION 2>/dev/null || true
+          git subtree split --prefix=프로젝트/웹/확장프로그램 -b ACTION
+
+      - name: Push to target repo
+        run: |
+          git push https://${{ secrets.AUTO_TREE }}@github.com/merleau42/extension.git ACTION:main --force
