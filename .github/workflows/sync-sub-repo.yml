@@ -2,8 +2,8 @@ name: Sync Sub Repo
 
 on:
   push:
-    branches: [ master ]   # master 브랜치에 push 발생 시 실행
-    paths:  # 아래 경로 중 하나라도 변경되면 실행됨
+    branches: [ master ]
+    paths:
       - '프로젝트/웹/확장프로그램/**'
 
 jobs:
@@ -11,54 +11,53 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: # DEV 에서 분리할 폴더(prefix), 서브(repo), 리포브랜치(branch), 감지패턴(glob)
-          - prefix: '프로젝트/웹/확장프로그램'  # 메인 리포에서 분리할 폴더
-            repo: 'merleau42/extension'    # 타겟 리포 주소 (owner/repo.git)
-            branch: 'main'                     # 타겟 리포 브랜치
-            paths_glob: '프로젝트/웹/확장프로그램/**'  # 변경 감지용 패턴
+        target:
+          - prefix: '프로젝트/웹/확장프로그램'
+            repo: 'github.com/merleau42/extension' # 'github.com' 추가
+            branch: 'main'
+            paths_glob: '프로젝트/웹/확장프로그램/**'
 
     steps:
-      - uses: actions/checkout@v4   # 메인 리포 체크아웃
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # subtree split 에는 전체 히스토리가 필요
+          fetch-depth: 0
 
-      - id: changed # matrix 경로에 변경이 있는지 검사
+      - id: changed
         run: |
-          BEFORE="${{ github.event.before }}"   # 이전 커밋 SHA
+          BEFORE="${{ github.event.before }}"
           if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            # 새 브랜치 생성 등 특수 상황일 경우 직전 커밋 사용
             BEFORE="$(git rev-parse HEAD^ || true)"
           fi
-
-          # diff 결과에서 대상 폴더 변경된 파일 개수 확인
           CNT=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- "${{ matrix.target.paths_glob }}" | wc -l | tr -d ' ')
           if [ "${CNT:-0}" -gt 0 ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"   # 변경 있음
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=false" >> "$GITHUB_OUTPUT"  # 변경 없음
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - if: steps.changed.outputs.changed == 'true' # 변경이 있는 경우만 subtree split 하고 push
+      - if: steps.changed.outputs.changed == 'true'
         env:
           LANG: C.UTF-8
           LC_ALL: C.UTF-8
         run: |
           set -euo pipefail
-          # Git이 비ASCII 경로를 이스케이프하지 않게
           git config --global core.quotepath false
           git config --global i18n.logOutputEncoding utf-8
           git config --global i18n.commitEncoding utf-8
+
+          TARGET_URL="https://${{ secrets.AUTO_TREE }}@${{ matrix.target.repo }}.git"
+
+          echo "Probing remote with ls-remote..."
+          git ls-remote "$TARGET_URL" || {
+            echo "🚨 ERROR: Token is invalid or lacks access to the remote repository. Please check your token and repository name."
+            exit 1
+          }
 
           # 기존 ACTION 브랜치가 있으면 삭제 후 다시 생성 (idempotent)
           git branch -D ACTION 2>/dev/null || true
 
           SHA=$(git subtree split --prefix="${{ matrix.target.prefix }}" -b ACTION)
           echo "subtree split commit: $SHA"
-
-          TARGET_URL="https://github-actions:${{ secrets.AUTO_TREE }}@github.com/${{ matrix.target.repo }}.git"
-
-          echo "Probing remote with ls-remote..."
-          git ls-remote "$TARGET_URL"
 
           echo "Pushing..."
           git push "$TARGET_URL" ACTION:${{ matrix.target.branch }} --force
