@@ -24,12 +24,16 @@ jobs:
             branch: 'main'
             paths_glob: '프로젝트/확장프로그램/**'
             deploy_key_secret: 'AUTO_TREE_EXTENSION'
+
           - name: github_io
             prefix: '프로젝트/홈페이지/github.io'
-            ssh_repo: 'git@github.com:merleau42/extension.git'
+            ssh_repo: 'git@github.com:merleau42/public.git'
             branch: 'main'
             paths_glob: '프로젝트/홈페이지/github.io/**'
             deploy_key_secret: 'AUTO_TREE_GIO'
+
+
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
