@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery.min.js"></script>
+    <title>날씨 검색</title>
+	<style>
+		img {
+			max-width: 60vw;
+			max-height: 60vh;
+		}
+		body {
+			display: flex;
+			padding: 20px;
+			justify-content: center;
+			align-items: center;
+		}
+		h3 {
+			text-align: center;
+		}
+		#wrapper {
+			width: 80vw;
+			height: 80vh;
+			padding: 20px;
+			border: 2px solid black;
+			border-radius: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+		}
+		#결과창 {
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			gap: 5px;
+		}
+		.섹션1 {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+		.섹션2 {
+			display: flex;
+			gap: 10px;
+		}
+		.섹션2 span {
+			background-color: greenyellow;
+			width: 80px;
+			height: 25px;
+			line-height: 25px;
+			border-radius: 20px;
+			font-size: 12px;
+			text-align: center;
+		}
+	</style>
+    <script>
+		//$.get, $.post...$.load, $.getJSON, $.ajax
+
+		let state = { 도시:new Array(), 임시:new Object() };
+		let Q = (x,y=document) => y.querySelector(x);
+		let Elem = (config) => {
+			const {tag='div', text='', class:className='', ...attrs} = config;
+			el = document.createElement(tag);
+			el.innerText = text;
+			el.className = className;
+			Object.keys(attrs).forEach(attr => el.setAttribute(attr, attrs[attr]));
+			return el;
+		}
+
+        $(document).ready(function(){
+            getData();
+        })
+
+        function getData() {
+			$.getJSON('kr.json')
+			.done(res => state.도시 = res)
+			.done(main);
+        }
+
+		function main() {
+			Q('body').append( Elem({id:'wrapper'}) );
+			Q('#wrapper').append( c_search() );
+			Q('#wrapper').append( c_result() );
+		}
+
+		function c_search() {
+			컨테이너 = Elem({id:'search', id:'검색창'});
+				타이틀 = Elem({tag:'h3', text:'오늘의 날씨'});
+				박스 = Elem({tag:'input', id:'검색어', placeholder:'지역을 입력해주세요'});
+				검색 = Elem({tag:'button', id:'검색', text:'🔎'});
+
+			검색.addEventListener('click', search);
+
+			[타이틀, 박스, 검색].forEach(el => 컨테이너.append(el));
+			return 컨테이너;
+		}
+
+		function c_result() {
+			컨테이너 = Elem({id:'result', id:'결과창'});
+				이름 = Elem({tag:'sapn', id:'이름'});
+				섹션1 = Elem({class:'섹션1'});
+					이미지 = Elem({tag:'img', id:'이미지'});
+					온도 = Elem({tag:'span', id:'온도'});
+				섹션2 = Elem({class:'섹션2'});
+					체감 = Elem({tag:'span', id:'체감'});
+					습도 = Elem({tag:'span', id:'습도'});
+					바람 = Elem({tag:'span', id:'바람'});
+
+			[이미지, 온도].forEach(el => 섹션1.append(el));
+			[체감, 습도, 바람].forEach(el => 섹션2.append(el));
+			[이름, 섹션1, 섹션2].forEach(el => 컨테이너.append(el));
+
+			return 컨테이너;
+		}
+
+		function search() {
+			const 지명 = Q('#검색어').value || '서울';
+			const 도시 =  state.도시[
+					Object.keys(state.도시).filter(key => state.도시[key].alter.includes(지명))[0]
+				].original
+			
+			Q('#이름').innerText = 도시;
+			$.ajax({
+				url: `https://api.openweathermap.org/data/2.5/weather?q=${도시}&APPID=a0cd335023e5654308fd81198ce68f9c`,
+				type: 'GET',
+			})
+			.done(res => {
+				Q('#이미지').src = `https://openweathermap.org/img/wn/${res.weather[0].icon}@2x.png`;
+				Q('#온도').innerText = `${Math.round((res.main.temp - 273.15)*10)/10}ºc`;
+				Q('#체감').innerText = `체감: ${Math.round((res.main.feels_like - 273.15)*10)/10}ºc`;
+				Q('#습도').innerText = `습도: ${res.main.humidity}%`;
+				Q('#바람').innerText = `풍속: ${res.wind.speed}`;
+				Q('#결과창').style.display = 'flex';
+				console.log(res);
+			})
+		}
+    </script>
+</head>
+<body>
+</body>
+</html>
