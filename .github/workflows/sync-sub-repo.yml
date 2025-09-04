@@ -32,7 +32,12 @@ jobs:
             paths_glob: '프로젝트/홈페이지/github.io/**'
             deploy_key_secret: 'AUTO_TREE_GIO'
 
-
+          - name: busut
+            prefix: '프로젝트/미분류/busut'
+            ssh_repo: 'busut777@busut.cafe24app.com:busut777_busut'
+            branch: 'master'
+            paths_glob: '프로젝트/미분류/busut/**'
+            deploy_key_secret: 'AUTO_TREE_BUSUT'
 
     steps:
       - name: Checkout
