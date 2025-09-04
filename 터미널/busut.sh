@@ -6,8 +6,7 @@ echo "[실행] ▲busut.cafe24app.com\t$time_kst" >> ~/dev/터미널/.log;
 
 ## [ busut.cafe24app.com ]에 업로드할 내용을, 서브 폴더에 복사하기
 ## node_modules만 제외
-# rsync -av --exclude='node_modules' ~/dev/프로젝트/서버/cafe24/busut/ ~/dev/subtree/busut/;
-cp -r ~/dev/프로젝트/서버/cafe24/busut/ ~/dev/subtree;
+cp -r ~/dev/미분류/cafe24/busut/ ~/dev/subtree;
 
 ## 로컬 디렉토리의 전부를, 메인 저장소에 먼저 add/commit/push 시킴.
 ## 로컬 디렉토리의 일부만 add/commit 해도 되지만, 하나하나 지정하기 번거로움.

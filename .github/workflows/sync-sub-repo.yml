@@ -5,6 +5,7 @@ on:
     branches: [ master ]
     paths:
       - '프로젝트/확장프로그램/**'
+      - '프로젝트/홈페이지/github.io/**'
 
 jobs:
   sync:
@@ -13,14 +14,22 @@ jobs:
       fail-fast: false
       matrix:
         target:
-        #키 생성: ssh-keygen -t ed25519 -C "AUTO_TREE" -f ~/.ssh/auto_tree_별명
+        # 키생성: ssh-keygen -t ed25519 -C "AUTO_TREE" -f ~/.ssh/auto_tree_별명
+        # 키확인: cat ~/.ssh/auto_tree_gio*
+        # 개인키: 메인 저장소 ㅡ 설정 ㅡ Security ㅡ Actions secrets and variables
+        # 공개키: 서브 저장소 ㅡ 설정 ㅡ Security ㅡ Deploy Keys
           - name: extension
             prefix: '프로젝트/확장프로그램'
-            ssh_repo: 'git@github.com:merleau42/extension.git'   # SSH URL
+            ssh_repo: 'git@github.com:merleau42/extension.git'
             branch: 'main'
             paths_glob: '프로젝트/확장프로그램/**'
             deploy_key_secret: 'AUTO_TREE_EXTENSION'
-
+          - name: github_io
+            prefix: '프로젝트/홈페이지/github.io'
+            ssh_repo: 'git@github.com:merleau42/extension.git'
+            branch: 'main'
+            paths_glob: '프로젝트/홈페이지/github.io/**'
+            deploy_key_secret: 'AUTO_TREE_GIO'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
