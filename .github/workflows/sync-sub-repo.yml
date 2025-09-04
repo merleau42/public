@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '프로젝트/웹/확장프로그램/**'
+      - '프로젝트/확장프로그램/**'
 
 jobs:
   sync:
@@ -15,10 +15,10 @@ jobs:
         target:
         #키 생성: ssh-keygen -t ed25519 -C "AUTO_TREE" -f ~/.ssh/auto_tree_별명
           - name: extension
-            prefix: '프로젝트/웹/확장프로그램'
+            prefix: '프로젝트/확장프로그램'
             ssh_repo: 'git@github.com:merleau42/extension.git'   # SSH URL
             branch: 'main'
-            paths_glob: '프로젝트/웹/확장프로그램/**'
+            paths_glob: '프로젝트/확장프로그램/**'
             deploy_key_secret: 'AUTO_TREE_EXTENSION'
 
     steps:
