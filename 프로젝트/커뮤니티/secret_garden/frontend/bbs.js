@@ -50,7 +50,7 @@ async function loadPosts() {
 			<h3 class="post-title">${escapeHtml(p.title)}</h3>
 			<div class="post-meta">
 				<span>${new Date(p.created_at).toLocaleString()}</span>
-				<button data-del-id="${p.id}" style="margin-left: 8px;">삭제</button>
+				<button class="delete-btn" data-del-id="${p.id}">삭제</button>
 			</div>
 		`;
 		
@@ -88,14 +88,16 @@ function closeModal() {
 	// Reset form fields
 	$("#title").value = "";
 	$("#body").value = "";
+	$("#password").value = ""; // Reset password field
 	$("#file").value = "";
 	$("#uploadInfo").textContent = "";
 }
 
 async function createPost() {
 	const title = $("#title").value.trim();
+	const password = $("#password").value.trim(); // Get password
 	const body = $("#body").value.trim();
-	if (!title || !body) return alert("제목과 내용을 모두 입력해주세요.");
+	if (!title || !body || !password) return alert("제목, 내용, 비밀번호를 모두 입력해주세요.");
 
 	let pendingFileId = null;
 	const file = $("#file").files[0];
@@ -118,7 +120,7 @@ async function createPost() {
 		pendingFileId = data.id;
 	}
 
-	const postPayload = { title, body };
+	const postPayload = { title, body, password }; // Include password in payload
 	if(pendingFileId) {
 		postPayload.file_id = pendingFileId;
 	}
@@ -153,9 +155,13 @@ $("#modal").addEventListener("click", (e) => {
 $("#posts").addEventListener('click', async (e) => {
 	if (e.target.matches('button[data-del-id]')) {
 		const id = e.target.getAttribute('data-del-id');
-		if (!confirm('정말 삭제하시겠습니까?')) return;
-		
-		const res = await authedFetch(`/api/posts/${id}`, { method: 'DELETE' });
+		const password = prompt('게시물 삭제를 위해 비밀번호를 입력하세요:');
+		if (password === null) return; // User cancelled the prompt
+
+		const res = await authedFetch(`/api/posts/${id}`, {
+			method: 'DELETE',
+			body: JSON.stringify({ password })
+		});
 		if (res.ok) {
 			loadPosts();
 		} else {

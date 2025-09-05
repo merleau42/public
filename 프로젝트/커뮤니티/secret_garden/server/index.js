@@ -106,17 +106,83 @@ app.get("/api/posts", auth, async (req, res) => {
 });
 
 app.post("/api/posts", auth, async (req, res) => {
-	const { title, body } = req.body || {};
-	if (!title || !body)
-		return res.status(400).json({ error: "title/body required" });
+	const { title, body, password } = req.body || {};
+	if (!title || !body || !password)
+		return res.status(400).json({ error: "title, body, and password required" });
+
+	const passwordHash = await bcrypt.hash(password, 10); // Hash the password
+
 	const { data, error } = await supabase
 		.from("posts")
-		.insert({ title, body })
+		.insert({ title, body, password: passwordHash }) // Store the hashed password
 		.select("*")
 		.single();
 	if (error) return res.status(500).json({ error: error.message });
 	res.json(data);
 });
+
+// New DELETE API for posts
+app.delete("/api/posts/:id", auth, async (req, res) => {
+	const { id } = req.params;
+	const { password } = req.body || {};
+
+	if (!password) {
+		return res.status(400).json({ error: "password required for deletion" });
+	}
+
+	// 1. Fetch the post to get the stored password hash
+	const { data: post, error: fetchError } = await supabase
+		.from("posts")
+		.select("password")
+		.eq("id", id)
+		.single();
+
+	if (fetchError || !post) {
+		return res.status(404).json({ error: "Post not found" });
+	}
+
+	// 2. Compare the provided password with the stored hash
+	const passwordMatch = await bcrypt.compare(password, post.password);
+	if (!passwordMatch) {
+		return res.status(401).json({ error: "Incorrect password" });
+	}
+
+	// 3. If password matches, delete associated files from storage first
+	const { data: filesToDelete, error: filesError } = await supabase
+		.from("files")
+		.select("path")
+		.eq("post_id", id);
+
+	if (filesError) {
+		console.error("Error fetching files for deletion:", filesError.message);
+		// Proceed with post deletion even if file fetch fails, or return error
+		// For now, let's just log and proceed
+	} else if (filesToDelete && filesToDelete.length > 0) {
+		const filePaths = filesToDelete.map(f => f.path);
+		const { error: storageDeleteError } = await supabase.storage
+			.from(BUCKET)
+			.remove(filePaths);
+
+		if (storageDeleteError) {
+			console.error("Error deleting files from storage:", storageDeleteError.message);
+			// Decide whether to block post deletion or just log
+			// For now, let's just log and proceed with database deletion
+		}
+	}
+
+	// 4. Delete the post and associated comments/files from the database
+	const { error: deleteError } = await supabase
+		.from("posts")
+		.delete()
+		.eq("id", id);
+
+	if (deleteError) {
+		return res.status(500).json({ error: deleteError.message });
+	}
+
+	res.status(204).send(); // No content for successful deletion
+});
+
 
 app.post("/api/posts/:id/comments", auth, async (req, res) => {
 	const { id } = req.params;
@@ -195,8 +261,6 @@ app.get("/api/files/:id/url", auth, async (req, res) => {
 app.get("/api/hello", (req, res) => {
 	res.send("Hello, world!");
 });
-
-// 삭제(선택): 게시글/댓글/파일 제거 API도 같은 패턴으로 추가 가능
 
 app.listen(PORT, () => {
 	console.log("server on :", PORT);
