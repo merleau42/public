@@ -1,4 +1,4 @@
-const API_BASE = 'https://secret-garden.onrender.com';
+const API_BASE = 'https://api.mingming.store';
 let token = sessionStorage.getItem("vaultToken") || "";
 let pendingFileId = null;
 
