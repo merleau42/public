@@ -50,7 +50,7 @@ async function loadPosts() {
 			<h3 class="post-title">${escapeHtml(p.title)}</h3>
 			<div class="post-meta">
 				<span>${new Date(p.created_at).toLocaleString()}</span>
-				<button class="delete-btn" data-del-id="${p.id}">삭제</button>
+				<button class="delete-text-button" data-del-id="${p.id}">삭제</button>
 			</div>
 		`;
 		

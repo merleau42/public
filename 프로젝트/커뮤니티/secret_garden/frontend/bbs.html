@@ -16,11 +16,12 @@
 		padding: 0 16px;
 	}
 
+	/* 게시물 요소 높이 줄이기 */
 	.card {
 		border: 1px solid #ddd;
 		border-radius: 12px;
 		padding: 16px;
-		margin-bottom: 16px;
+		margin-bottom: 8px; /* 16px에서 8px로 줄임 */
 		background-color: rgba(255, 255, 255, 0.9);
 		box-sizing: border-box;
 	}
@@ -69,9 +70,24 @@
 	}
 	
 	.post-content {
-		margin-top: 12px;
-		padding-top: 12px;
+		margin-top: 8px; /* 12px에서 8px로 줄임 */
+		padding-top: 8px; /* 12px에서 8px로 줄임 */
 		border-top: 1px solid #eee;
+	}
+
+	/* 삭제 버튼 스타일 */
+	.delete-text-button {
+		color: red;
+		background: none;
+		border: none;
+		padding: 0;
+		font-size: inherit;
+		cursor: pointer;
+		text-decoration: none; /* 기본 밑줄 제거 */
+	}
+
+	.delete-text-button:hover {
+		text-decoration: underline;
 	}
 	
 	.top-right-buttons {
