@@ -28,13 +28,6 @@
 		background-color: rgba(255, 255, 255, 0.9);
 	}
 
-	.bezel {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 16px;
-	}
-
 	.row {
 		display: flex;
 		gap: 8px;
@@ -85,6 +78,23 @@
 		margin: 12px 0;
 		box-sizing: border-box;
 	}
+	
+	.top-right-buttons {
+		position: fixed;
+		top: 16px;
+		right: 16px;
+		display: flex;
+		gap: 8px;
+	}
+	
+	.top-right-buttons button {
+		font-size: 24px;
+		padding: 8px 12px;
+		border-radius: 50%;
+		border: 1px solid #ccc;
+		background-color: white;
+		cursor: pointer;
+	}
 
 	.hidden {
 		display: none;
@@ -100,9 +110,9 @@
 	</div>
 
 	<div id="main" class="hidden">
-		<div class="bezel">
-			<h1>🔐 비밀 자료실</h1>
-			<button id="newPostBtn">글쓰기</button>
+		<div class="top-right-buttons">
+			<button id="newPostBtn" title="글쓰기">📝</button>
+			<button id="logoutBtn" title="로그아웃">🚪</button>
 		</div>
 
 		<div id="writerCard" class="card hidden">

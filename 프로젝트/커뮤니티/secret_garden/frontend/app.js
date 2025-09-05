@@ -41,6 +41,14 @@ async function login() {
 	}
 }
 
+function logout() {
+	sessionStorage.removeItem("vaultToken");
+	token = "";
+	$("#main").classList.add("hidden");
+	$("#login").classList.remove("hidden");
+	$("#pw").value = "";
+}
+
 async function loadPosts() {
 	const res = await authedFetch("/api/posts");
 	const data = await res.json();
@@ -94,6 +102,7 @@ $("#pw").addEventListener("keydown", (e) => {
 		login();
 	}
 });
+$("#logoutBtn").addEventListener("click", logout);
 
 $("#newPostBtn").addEventListener("click", () => {
 	$("#writerCard").classList.toggle("hidden");
