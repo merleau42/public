@@ -56,14 +56,30 @@ async function loadPosts() {
 		
 		const postContent = document.createElement('div');
 		postContent.className = 'post-content hidden';
+		
+		const fileAttachmentsHtml = await Promise.all((p.files || []).map(async f => {
+			const urlRes = await authedFetch(`/api/files/${f.id}/url`);
+			const urlData = await urlRes.json();
+			if (!urlRes.ok) {
+				console.error("Failed to get file URL:", urlData.error);
+				return `<span>파일 URL을 가져올 수 없습니다: ${escapeHtml(f.original_name || f.path)}</span>`;
+			}
+			const fileUrl = urlData.url;
+			const fileName = escapeHtml(f.original_name || f.path);
+			const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(fileName);
+			
+			let fileHtml = '';
+			if (isImage) {
+				fileHtml += `<img src="${fileUrl}" alt="${fileName}" style="max-width: 100%; height: auto; display: block; margin-top: 10px;">`;
+			}
+			fileHtml += `<p><a href="${fileUrl}" target="_blank">${fileName}</a></p>`;
+			return fileHtml;
+		}));
+
 		postContent.innerHTML = `
 			<p>${nl2br(escapeHtml(p.body))}</p>
 			<div>
-				${(p.files || []).map(f => 
-					`<button data-file='${f.id}'>
-						파일 보기: ${escapeHtml(f.original_name || f.path)}
-					</button>`
-				).join(" ")}
+				${fileAttachmentsHtml.join("")}
 			</div>
 		`;
 		
@@ -168,14 +184,6 @@ $("#posts").addEventListener('click', async (e) => {
 			const data = await res.json();
 			alert(data.error || '삭제 실패');
 		}
-	}
-	
-	if (e.target.matches('button[data-file]')) {
-		const id = e.target.getAttribute("data-file");
-		const res = await authedFetch(`/api/files/${id}/url`);
-		const data = await res.json();
-		if (!res.ok) return alert(data.error || "URL 생성 실패");
-		window.open(data.url, "_blank");
 	}
 });
 
