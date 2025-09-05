@@ -16,13 +16,31 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
 
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(
-	cors({
-		origin: FRONTEND_ORIGIN,
-		credentials: false, // 토큰을 헤더로 쓰므로 쿠키 불필요
-		methods: ["GET", "POST", "DELETE"],
-	})
-);
+// 🔧 CORS: punycode/유니코드 동시 허용 + 프리플라이트(OPTIONS) 명시 처리
+const allowedOrigins = [
+	'https://xn--2g3ba.store', // punycode(브라우저가 실제로 찍는 Origin)
+	'https://밍밍.store',      // 가독성 위해 함께 허용(선택)
+	process.env.FRONTEND_ORIGIN // 환경변수로도 주입 가능
+  ].filter(Boolean);
+  
+  // 프리플라이트: 반드시 200으로 바로 응답 (리다이렉트 금지)
+  app.options('*', cors({
+	origin: (origin, cb) => {
+	  if (!origin) return cb(null, true);           // curl 등 Origin 없는 요청 허용
+	  cb(null, allowedOrigins.includes(origin));
+	},
+	credentials: false
+  }));
+  
+  // 실제 요청에 대한 CORS
+  app.use(cors({
+	origin: (origin, cb) => {
+	  if (!origin) return cb(null, true);
+	  cb(null, allowedOrigins.includes(origin));
+	},
+	credentials: false
+  }));
+  
 
 // 로그인 시도 제한 (브루트포스 방지)
 const loginLimiter = rateLimit({
@@ -169,6 +187,14 @@ app.get("/api/files/:id/url", auth, async (req, res) => {
 	if (error) return res.status(500).json({ error: error.message });
 	res.json({ url: urlData.signedUrl });
 });
+
+// === Test Route ===
+app.get("/api/hello", (req, res) => {
+	res.send("Hello, world!");
+  });
+  
+
+
 
 // 삭제(선택): 게시글/댓글/파일 제거 API도 같은 패턴으로 추가 가능
 
