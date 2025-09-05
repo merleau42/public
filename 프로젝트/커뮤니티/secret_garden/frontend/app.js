@@ -1,4 +1,4 @@
-const API_BASE = window.API_BASE || "http://localhost:8080";
+const API_BASE = 'https://secret-garden.onrender.com';
 let token = sessionStorage.getItem("vaultToken") || "";
 let pendingFileId = null;
 
