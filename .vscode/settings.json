@@ -27,6 +27,7 @@
 	"editor.insertSpaces": false,
 	"editor.tabSize": 4,
 	"explorer.compactFolders": false,
+	"IDX.aI.showChatInEditorTab": true,
 	"better-comments.tags": [
 		{
 			"tag": "!",

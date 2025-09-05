@@ -21,87 +21,80 @@ function authedFetch(url, opts = {}) {
 }
 
 async function login() {
-	const pw = $("#pw").value;
-	const res = await fetch(API_BASE + "/api/auth/login", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ password: pw }),
-	});
-	const data = await res.json();
-	if (!res.ok) return alert(data.error || "로그인 실패");
-	setAuth(data.token);
-	$("#login").classList.add("hidden");
-	$("#main").classList.remove("hidden");
-	loadPosts();
+	while (true) {
+		const pw = prompt("비밀번호를 입력하세요.");
+		if (!pw) continue;
+		
+		const res = await fetch(API_BASE + "/api/auth/login", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ password: pw }),
+		});
+		
+		if (res.ok) {
+			const data = await res.json();
+			setAuth(data.token);
+			$("#login").classList.add("hidden");
+			$("#main").classList.remove("hidden");
+			loadPosts();
+			break;
+		} else {
+			alert("비밀번호가 틀렸습니다.");
+		}
+	}
 }
 
 async function loadPosts() {
 	const res = await authedFetch("/api/posts");
 	const data = await res.json();
 	if (!res.ok) return alert(data.error || "불러오기 실패");
+
 	const wrap = $("#posts");
 	wrap.innerHTML = "";
+	
 	for (const p of data.items) {
 		const el = document.createElement("div");
 		el.className = "card";
-		el.innerHTML = `<h3>${escapeHtml(p.title)}</h3>
-						<p>${nl2br(escapeHtml(p.body))}</p>
-						<div class="muted">${new Date(p.created_at).toLocaleString()}</div>
-						<div>${(p.files || [])
-									.map(
-										(f) =>
-											`<button data-file='${f.id}'>파일 보기: ${escapeHtml(
-												f.original_name || f.path
-											)}</button>`
-									)
-									.join(" ")}</div>
-						<div style="margin-top:8px;" class="row">
-						<input data-cid='${p.id}' placeholder="댓글" />
-						<button data-cbtn='${p.id}'>등록</button>
-						</div>
-						<ul>${(p.comments || [])
-									.map(
-										(c) =>
-											`<li>${escapeHtml(c.body)} <span class='muted'>${new Date(
-												c.created_at
-											).toLocaleString()}</span></li>`
-									)
-									.join("")}</ul>`;
+		
+		const postHeader = document.createElement('div');
+		postHeader.className = 'post-header';
+		postHeader.innerHTML = `
+			<h3 class="post-title">${escapeHtml(p.title)}</h3>
+			<div class="post-meta">
+				<span>${new Date(p.created_at).toLocaleString()}</span>
+				<button data-del-id="${p.id}" style="margin-left: 8px;">삭제</button>
+			</div>
+		`;
+		
+		const postContent = document.createElement('div');
+		postContent.className = 'post-content hidden';
+		postContent.innerHTML = `
+			<p>${nl2br(escapeHtml(p.body))}</p>
+			<div>
+				${(p.files || []).map(f => 
+					`<button data-file='${f.id}'>
+						파일 보기: ${escapeHtml(f.original_name || f.path)}
+					</button>`
+				).join(" ")}
+			</div>
+		`;
+		
+		postHeader.addEventListener('click', (e) => {
+			if (e.target.tagName !== 'BUTTON') {
+				postContent.classList.toggle('hidden');
+			}
+		});
+
+		el.appendChild(postHeader);
+		el.appendChild(postContent);
 		wrap.appendChild(el);
 	}
-	// 파일 버튼 핸들러
-	wrap.querySelectorAll("button[data-file]").forEach((btn) => {
-		btn.addEventListener("click", async () => {
-			const id = btn.getAttribute("data-file");
-			const res = await authedFetch(`/api/files/${id}/url`);
-			const data = await res.json();
-			if (!res.ok) return alert(data.error || "URL 생성 실패");
-			window.open(data.url, "_blank");
-		});
-	});
-
-	// 댓글 등록 핸들러
-	wrap.querySelectorAll("button[data-cbtn]").forEach((btn) => {
-		btn.addEventListener("click", async () => {
-			const postId = btn.getAttribute("data-cbtn");
-			const input = wrap.querySelector(`input[data-cid='${postId}']`);
-			const body = input.value.trim();
-			if (!body) return;
-			const res = await authedFetch(`/api/posts/${postId}/comments`, {
-				method: "POST",
-				body: JSON.stringify({ body }),
-			});
-			const data = await res.json();
-			if (!res.ok) return alert(data.error || "댓글 실패");
-			input.value = "";
-			loadPosts();
-		});
-	});
 }
 
 $("#loginBtn").addEventListener("click", login);
-$("#pw").addEventListener("keydown", (e) => {
-	if (e.key === "Enter") login();
+
+$("#newPostBtn").addEventListener("click", () => {
+	$("#writerCard").classList.toggle("hidden");
 });
 
 $("#uploadBtn").addEventListener("click", async () => {
@@ -146,9 +139,38 @@ $("#postBtn").addEventListener("click", async () => {
 
 	$("#title").value = "";
 	$("#body").value = "";
+	$("#writerCard").classList.add("hidden");
 	loadPosts();
 });
+
+$("#posts").addEventListener('click', async (e) => {
+	if (e.target.matches('button[data-del-id]')) {
+		const id = e.target.getAttribute('data-del-id');
+		if (!confirm('정말 삭제하시겠습니까?')) return;
+		
+		const res = await authedFetch(`/api/posts/${id}`, { method: 'DELETE' });
+		if (res.ok) {
+			loadPosts();
+		} else {
+			const data = await res.json();
+			alert(data.error || '삭제 실패');
+		}
+	}
+	
+	if (e.target.matches('button[data-file]')) {
+		const id = e.target.getAttribute("data-file");
+		const res = await authedFetch(`/api/files/${id}/url`);
+		const data = await res.json();
+		if (!res.ok) return alert(data.error || "URL 생성 실패");
+		window.open(data.url, "_blank");
+	}
+});
+
+
 function escapeHtml(s) {
+	if (s === null || s === undefined) {
+		return '';
+	}
 	return s.replace(
 		/[&<>"]/g,
 		(c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])

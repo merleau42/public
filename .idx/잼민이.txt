@@ -2,6 +2,8 @@
 AIzaSyD7oVbWhEhqsOkMoh2dtKYoGkOGv_AMeBQ
 
 
+--- 25.08.01 기준
+
 [토큰 소모량]
 ㅡ1회 입력:  30K
 ㅡ1회 출력:  15K
