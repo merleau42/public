@@ -1,4 +1,4 @@
-const API_BASE = 'https://api.밍밍.store';
+const API_BASE = 'https://api.xn--2g3ba.store';
 let token = sessionStorage.getItem("vaultToken") || "";
 let pendingFileId = null;
 
