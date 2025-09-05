@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="favicon.png" type="image/png">
+		<title>양치기</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body class="NORMAL showTier showMainTag showSubTag showToc ">
+		<header>
+			<div class="controls">
+				<label>검색:</label><input id="searchInput" type="text" placeholder="...">
+				<label>티어:</label><input id="toggleTier" type="checkbox" checked />
+				<input id="tierMin" type="number" min="1" max="30" placeholder="최소" /> ~
+				<input id="tierMax" type="number" min="1" max="30" placeholder="최대" />
+				<div id="tierReset">↩</div>
+				<button id="getRandom">랜덤</button>
+				<label>태그:</label>
+				<button id="toggleToc">목차</button>
+				<button id="toggleMainTag">메인</button>
+				<button id="toggleSubTag">서브</button>
+				<label>보기:</label>
+				<button id="toggleSolution">해답</button>
+				<button id="toggleDuple">중복</button>
+				<button id="toggleSolved">해결</button>
+			</div>
+			<div id="toc"></div>
+		</header>
+		<main>
+			<div id="deck"></div>		
+		</main>
+
+		<script>
+			let Q = s => document.querySelector(s);
+			let QQ = s => [...document.querySelectorAll(s)];
+			let randz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+			Element.prototype.Q = function(s, ele=this) { return ele.querySelector(s) };
+			Element.prototype.QQ = function(s, ele=this) { return ele.querySelectorAll(s) };
+			Set.prototype.toggle = function(e, set=this) { set.has(e) ? set.delete(e) : set.add(e) };
+
+			const DB = { problems: [], categories: [] };
+			const state = { renderMax: 20, showDuple: false, includeTags: new Set(), excludeTags: new Set(), tierMin: 0, tierMax: 31 };
+
+			function createElement(tag, className, content) {
+				const el = document.createElement(tag);
+				if (className) el.className = className;
+				if (content) el.textContent = content;
+				return el;
+			}
+
+			function createCategoryElements() {
+				container = createElement('div');
+				container.id = "toc";
+
+				DB.categories.forEach(({ group, tags }) => {
+					[group, ...tags].forEach(tag => {
+						const btn = createElement('button', `tag-button`, tag);
+						if (tag == group) btn.classList.add('group-button');
+						btn.setAttribute('name', tag);
+						btn.addEventListener('click', e => {
+							e.preventDefault();
+							state.includeTags.toggle(tag); 
+							state.excludeTags.delete(tag);
+							e.target.classList.toggle('include');
+							e.target.classList.remove('exclude');
+							state.renderMax = 20;
+							renderProblems();
+						});
+						btn.addEventListener('contextmenu', e => {
+							e.preventDefault();
+							state.excludeTags.toggle(tag);
+							state.includeTags.delete(tag);
+							e.target.classList.toggle('exclude');
+							e.target.classList.remove('include');
+							state.renderMax = 20;
+							renderProblems();
+						});
+						container.appendChild(btn);
+					});
+				});
+
+				return container;
+			}
+
+			function createProblemElements() {
+				container = createElement('div');
+				container.id = "deck";
+				state.problemElements = [];
+
+				DB.problems.forEach(problem => {
+					const card = createElement('div', 'card');
+					card.dataset.id = problem.id;
+
+					const 본문1 = createElement('div', 'content');
+					const 급간 = ['', '브론즈', '실버', '골드', '플래', '다이아', '루비'][Math.ceil(problem.tier / 5)];
+					const 티어 = createElement('span', `tier ${급간}`, `${급간}${5 - (problem.tier - 1) % 5}`);
+					const 요약 = createElement('a', 'summary', `${problem.summary ? problem.summary : `${problem.id}번`}`);
+					const 수정1 = createElement('textarea', 'editContent');
+					요약.href = `https://www.acmicpc.net/problem/${problem.id}`;
+					요약.target = "_blank";
+					요약.rel = "noopener noreferrer";
+					본문1.append(티어);
+					본문1.append(요약);
+					본문1.append(수정1);
+					card.append(본문1);
+					
+					const 본문2 = createElement('div', 'solution');
+					const 구분선 = createElement('hr');
+					const 해답 = createElement('p', 'code', problem.solution1 || '');
+					const 수정2 = createElement('textarea', 'editSolution');
+					본문2.append(구분선);
+					본문2.append(해답);
+					본문2.append(수정2);
+					card.append(본문2);
+					
+					const 태그박스 = createElement('div', 'tagbox');
+					const 저장 = createElement('span', 'editSave', '💾');
+					const 취소 = createElement('span', 'editCancel', '❌');
+					const 편집 = createElement('span', 'editCard', '📝');
+					const 답보기 = createElement('span', 'viewSolved', '👀');
+					const 주태그 = problem.tags.filter(t =>  t.endsWith('!')).map(t => t.slice(0, -1));
+					const 부태그 = problem.tags.filter(t => !t.endsWith('!'));
+					태그박스.append(저장);
+					태그박스.append(취소);
+					태그박스.append(편집);
+					태그박스.append(답보기);
+					태그박스.append( ...주태그.map(tag => createElement('span', 'tag main-tag', `#${tag}`)) );
+					태그박스.append( ...부태그.map(tag => createElement('span', 'tag sub-tag', `#${tag}`)) );
+
+					if (!problem.tags[0]) 태그박스.append(createElement('span', 'tag sub-tag', '#미분류'));
+					card.append(태그박스);
+
+					if (problem.dup) card.classList.add('dup');
+
+					container.appendChild(card);
+					state.problemElements.push({ element: card, problem });
+				});
+				container.appendChild( createElement('div', 'card create', '추가') );
+				container.appendChild( createElement('div', 'card more', '더 보기') );
+
+				return container;
+			}
+
+			function renderProblems() {
+				QQ('.card.draw').forEach(prev => prev.classList.remove('draw'));
+
+				const 검색어 = Q('#searchInput').value.toLowerCase();
+				const 최대티어 = Q('#tierMax').value*1||30;
+				const 최소티어 = Q('#tierMin').value*1||1;
+				state.randomAble = [];
+
+				state.valid = 0;
+				rendered = 0;
+				state.problemElements.forEach(({ element: 카드, problem: 문제 }) => {
+					const 태그원본 = 문제.tags.map(t => t.replace('!', ''));
+					const 문제태그 = 태그원본.length ? 태그원본 : ['미분류'];
+
+					const 중복확인 = (!문제.dup || state.showDuple);
+					const 티어일치 = 최소티어 <= 문제.tier && 문제.tier <= 최대티어;
+					const 태그포함 = [...state.includeTags].every(tag => 문제태그.includes(tag));
+					const 태그제외 = [...state.excludeTags].some(tag => 문제태그.includes(tag));
+					const 검색일치 = 문제.summary.includes(검색어) || 문제태그.some(tag => tag.includes(검색어));
+
+					const 조건만족 = 중복확인 && 티어일치 && 태그포함 && !태그제외 && 검색일치;
+					const 랜덤조건 = 중복확인 && 티어일치;
+
+					if (조건만족) state.valid++;
+					if (조건만족 && rendered < state.renderMax) { 카드.classList.add('draw'); rendered++; }
+					if (랜덤조건) state.randomAble.push(카드);
+				});
+				
+				state.remain = rendered < state.valid;
+				if (state.remain) Q('.card.more').innerText = `더 보기 (${rendered}/${state.valid})`;
+				else {Q('.card.more').innerText = `총 ${rendered}문제`;}
+			}
+
+			function randomDefence() {
+				QQ('.random').forEach(prev => prev.classList.remove('random'));
+				renderProblems();
+				
+				const 랜덤후보 = state.randomAble;
+				[...Array(2)].map(_ => {
+					카드 = 랜덤후보[randz(0, 랜덤후보.length - 1)];
+					카드.classList.add('random');
+				});
+			}
+			
+			function editCard(card) {
+				const 수정카드 = card;
+				const 문제정보 = DB.problems.find(p => p.id == 수정카드.dataset.id);
+				수정카드.classList.add('edit');
+
+				수정카드.Q('.editContent').value = 문제정보.summary;
+				수정카드.Q('.editSolution').value = 문제정보.solution1;
+			}
+	
+			function editSave(card) {
+				const 수정카드 = card;
+				const 문제정보 = DB.problems.find(p => p.id == 수정카드.dataset.id);
+
+				수정카드.Q('.summary').innerText = 수정카드.Q('.editContent').value;
+				수정카드.Q('.code').innerText = 수정카드.Q('.editSolution').value;
+				수정카드.classList.remove('edit');
+			}
+
+			document.addEventListener('DOMContentLoaded', async () => {
+				const problems = await fetch('./problems.json').then(r => r.json());
+				const categories = await fetch('./categories.json').then(r => r.json());
+				DB.problems = problems;
+				DB.categories = categories;
+				Q('#toc').replaceWith( createCategoryElements() );
+				Q('#deck').replaceWith( createProblemElements() );
+				randomDefence();
+
+				Q('#searchInput').addEventListener('input', renderProblems);
+
+				Q('#tierMin').addEventListener('input', renderProblems);
+				Q('#tierMax').addEventListener('input', renderProblems);
+				Q('#tierReset').addEventListener('click', _ => {Q('#tierMin').value = Q('#tierMax').value = ''; renderProblems()} );
+
+				Q('#getRandom').addEventListener('click', randomDefence);
+
+				Q('#toggleTier').addEventListener('change', e => Q('body').classList.toggle('showTier'));
+				Q('#toggleMainTag').addEventListener('click', e => Q('body').classList.toggle('showMainTag'));
+				Q('#toggleSubTag').addEventListener('click', e => Q('body').classList.toggle('showSubTag'));
+				Q('#toggleToc').addEventListener('click', e => Q('body').classList.toggle('showToc'));
+				Q('#toggleSolution').addEventListener('click', e => Q('body').classList.toggle('showSolution'));
+				Q('#toggleDuple').addEventListener('click', e => { Q('body').classList.toggle('showDuple'); state.showDuple = !state.showDuple; renderProblems(); });
+
+				Q('.more').addEventListener('click', e => { if(state.remain) {state.renderMax += 20; renderProblems();} });
+
+				QQ('.tag').forEach(tag => tag.onclick = e=>Q(`[name=${tag.innerText.slice(1)}]`).click() );
+				QQ('.viewSolved').forEach(eye => eye.onclick = e=>e.target.closest('.card').classList.toggle('showSolution') );
+
+				QQ('.editCard').forEach(edit => edit.onclick = e=> editCard(e.target.closest('.card')) );
+				QQ('.editSave').forEach(disc => disc.onclick = e=> editSave(e.target.closest('.card')) );
+				QQ('.editCancel').forEach(X => X.onclick = e=>e.target.closest('.card').classList.remove('edit') );
+			});
+
+		</script>
+	</body>
+</html>

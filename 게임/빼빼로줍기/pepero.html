@@ -1,0 +1,170 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>빼빼로 줍기</title>
+<style>
+	* {
+		text-align: center;
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		background:gold;
+	}
+	table {
+		margin: auto;
+		width: 70%;
+		height: 70%;
+		border: 1 solid black;
+	}
+	img {
+		position: relative;
+		width: 70%;
+		height: 70%;
+		object-fit: contain;
+	}
+	.bar {
+		height: 5%;
+		background: aliceblue;
+		opacity: 50%;
+	}
+	input, .freq, .OK, .KO {
+		display: inline;
+		height: 100%;
+		width: 10%;
+		font-weight: bold;
+	}
+	.OK {
+		color: blue;
+	}
+	.KO {
+		color: red;
+	}
+</style>
+<script>
+	let Q = (x, y=document) => y.querySelector(x);
+	let QQ = (x, y=document) => y.querySelectorAll(x);
+	let ranz = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+	let iid = 0;
+	let interval = 16;
+	state = [[ [0,0], [0,0], [0,0], [0,0] ],
+			 [ [0,0], [0,0], [0,0], [0,0] ],
+			 [ [0,0], [0,0], [0,0], [0,0] ],
+			 [ [0,0], [0,0], [0,0], [0,0] ],
+			 [ [0,0], [0,0], [0,0], [0,0] ]] // [아이템, 생명주기]
+	window.addEventListener('DOMContentLoaded',	main);
+	function main()
+	{
+		Q('body').appendChild( grid(state) );
+		newInterval( 0 );
+		Q('[value=빠르게]').addEventListener("click", ()=>{newInterval( -1 )});
+		Q('[value=느리게]').addEventListener("click", ()=>{newInterval( +1 )});
+		Q('body').addEventListener("click", anyClick);
+	}
+	function newInterval(ms)
+	{
+		if(iid)
+			clearInterval(iid);
+		interval += ms;
+		interval = (interval < 1)?1 : (interval > 30)?30 : interval;
+		iid = setInterval(next, interval);
+		Q('.freq').innerText = 31 - interval;
+	}
+	function grid(arr)
+	{
+		table = document.createElement('table');
+		arr.forEach((row, i) => {
+			tr = document.createElement('tr');
+			row.forEach((col, j) => {
+				td = document.createElement('td');
+
+				img = document.createElement('img');
+				img.setAttribute("row", i);
+				img.setAttribute("col", j);
+
+				td.appendChild(img);
+				tr.appendChild(td);
+			})
+			table.appendChild(tr);
+		})
+		return table;
+	}
+	function render(arr)
+	{
+		arr.forEach((row, i) => {
+			row.forEach((col, j) => {
+				item = arr[i][j][0];
+				life = arr[i][j][1];
+				
+				img = Q(`img[row="${i}"][col="${j}"]`);
+				img.src = `pp${item}.png`;
+				img.setAttribute("item", item);
+
+				if (life <= 20)
+					opacity = 0;
+				else if (life <= 40)
+					opacity = (life - 20) / 20;
+				else
+					opacity = 1;
+
+				if (item == 102)
+					opacity = 1;
+				
+				img.style.opacity =	opacity;
+
+				if (item == 102)
+					topp = 20;
+				else if (item == 101)
+					topp = (life >= 80) ? (life - 80) : 0;
+				else
+					topp = (life >= 90) ? (100 - life) : 10;
+
+				img.style.top = topp;
+			})
+		})
+	}
+	function next()
+	{
+		state = state.map((row,i) =>
+			row.map((col,j) =>
+				state[i][j][1] > 0
+					? [state[i][j][0], state[i][j][1] - 1]
+					: [ranz(1,5), ranz(0,1) ? 100 : ranz(5,20)]
+			)
+		);
+		render(state);
+	}
+	function anyClick(event)
+	{
+		target = event.target;
+
+	    if (target.tagName === 'IMG' && target.style.opacity > 0) {
+			item = target.getAttribute("item");
+
+			good = (item == 1) & (item < 101);
+			bad = (item != 1) & (item < 101);
+			Q('.OK').innerText = Q('.OK').innerText*1 + good;
+			Q('.KO').innerText = Q('.KO').innerText*1 + bad;
+
+			i = target.getAttribute("row")*1;
+			j = target.getAttribute("col")*1;
+
+			if (good)
+				state[i][j] = [101, 90];
+			else if (bad)
+				state[i][j] = [102, 90];
+			render(state);
+		}
+	}
+</script>
+</head>
+<body>
+	<div class="bar">
+		<input type="button" value="느리게"></input>
+		<input type="button" value="빠르게"></input>
+		<div class="freq"></div>
+		<div class="OK">0</div>
+		<div class="KO">0</div>
+	</div>
+</body>
+</html>
