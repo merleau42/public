@@ -1,6 +1,5 @@
 const API_BASE = 'https://api.xn--2g3ba.store';
 let token = sessionStorage.getItem("vaultToken") || "";
-let pendingFileId = null;
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -33,7 +32,7 @@ async function login() {
 	if (res.ok) {
 		const data = await res.json();
 		setAuth(data.token);
-		$("#login").classList.add("hidden");
+		$("#login-card").parentElement.classList.add("hidden");
 		$("#main").classList.remove("hidden");
 		loadPosts();
 	} else {
@@ -45,7 +44,7 @@ function logout() {
 	sessionStorage.removeItem("vaultToken");
 	token = "";
 	$("#main").classList.add("hidden");
-	$("#login").classList.remove("hidden");
+	$("#login-card").parentElement.classList.remove("hidden");
 	$("#pw").value = "";
 }
 
@@ -96,105 +95,94 @@ async function loadPosts() {
 	}
 }
 
-$("#loginBtn").addEventListener("click", login);
-$("#pw").addEventListener("keydown", (e) => {
-	if (e.key === 'Enter') {
-		login();
-	}
-});
-$("#logoutBtn").addEventListener("click", logout);
+function openModal() {
+	$("#modal").classList.remove("hidden");
+}
 
-$("#newPostBtn").addEventListener("click", () => {
-	$("#writerCard").classList.toggle("hidden");
-});
+function closeModal() {
+	$("#modal").classList.add("hidden");
+	// Reset form fields
+	$("#title").value = "";
+	$("#body").value = "";
+	$("#file").value = "";
+	$("#uploadInfo").textContent = "";
+}
 
-$("#uploadBtn").addEventListener("click", async () => {
-	const file = $("#file").files[0];
-	if (!file) return alert("파일을 선택하세요");
-	const fd = new FormData();
-	fd.append("file", file);
-	const res = await fetch(API_BASE + "/api/upload", {
-		method: "POST",
-		headers: token ? { Authorization: `Bearer ${token}` } : {},
-		body: fd,
-	});
-	const data = await res.json();
-	if (!res.ok) return alert(data.error || "업로드 실패");
-	pendingFileId = data.id;
-	$("#uploadInfo").textContent = `업로드됨: ${
-		data.original_name || data.path
-	}`;
-});
-
-$("#postBtn").addEventListener("click", async () => {
+async function createPost() {
 	const title = $("#title").value.trim();
 	const body = $("#body").value.trim();
-	if (!title || !body) return alert("제목/내용 필요");
+	if (!title || !body) return alert("제목과 내용을 모두 입력해주세요.");
+
+	let pendingFileId = null;
+	const file = $("#file").files[0];
+
+	if (file) {
+		$("#uploadInfo").textContent = "파일 업로드 중...";
+		const fd = new FormData();
+		fd.append("file", file);
+		const res = await fetch(API_BASE + "/api/upload", {
+			method: "POST",
+			headers: token ? { Authorization: `Bearer ${token}` } : {},
+			body: fd,
+		});
+		
+		const data = await res.json();
+		if (!res.ok) {
+			$("#uploadInfo").textContent = "";
+			return alert(data.error || "파일 업로드 실패");
+		}
+		pendingFileId = data.id;
+	}
+
+	const postPayload = { title, body };
+	if(pendingFileId) {
+		postPayload.file_id = pendingFileId;
+	}
 
 	const res = await authedFetch("/api/posts", {
 		method: "POST",
-		body: JSON.stringify({ title, body }),
+		body: JSON.stringify(postPayload),
 	});
-	const post = await res.json();
-	if (!res.ok) return alert(post.error || "등록 실패");
 
-	if (pendingFileId) {
-		await authedFetch(`/api/files/${pendingFileId}/attach`, {
-			method: "POST",
-			body: JSON.stringify({ post_id: post.id }),
-		});
-		pendingFileId = null;
-		$("#uploadInfo").textContent = "";
-		$("#file").value = "";
-	}
-
-	$("#title").value = "";
-	$("#body").value = "";
-	$("#writerCard").classList.add("hidden");
-	loadPosts();
-});
-
-$("#posts").addEventListener('click', async (e) => {
-	if (e.target.matches('button[data-del-id]')) {
-		const id = e.target.getAttribute('data-del-id');
-		if (!confirm('정말 삭제하시겠습니까?')) return;
-		
-		const res = await authedFetch(`/api/posts/${id}`, { method: 'DELETE' });
-		if (res.ok) {
-			loadPosts();
-		} else {
-			const data = await res.json();
-			alert(data.error || '삭제 실패');
-		}
+	if (!res.ok) {
+		const post = await res.json();
+		return alert(post.error || "게시물 등록 실패");
 	}
 	
-	if (e.target.matches('button[data-file]')) {
-		const id = e.target.getAttribute("data-file");
-		const res = await authedFetch(`/api/files/${id}/url`);
-		const data = await res.json();
-		if (!res.ok) return alert(data.error || "URL 생성 실패");
-		window.open(data.url, "_blank");
+	closeModal();
+	loadPosts();
+}
+
+
+// Event Listeners
+$("#loginBtn").addEventListener("click", login);
+$("#pw").addEventListener("keydown", (e) => {
+	if (e.key === 'Enter') login();
+});
+$("#logoutBtn").addEventListener("click", logout);
+$("#newPostBtn").addEventListener("click", openModal);
+$("#postBtn").addEventListener("click", createPost);
+
+// Close modal when clicking on the overlay
+$("#modal").addEventListener("click", (e) => {
+	if (e.target === $("#modal")) {
+		closeModal();
 	}
 });
 
-
 function escapeHtml(s) {
-	if (s === null || s === undefined) {
-		return '';
-	}
-	return s.replace(
-		/[&<>"]/g,
-		(c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
-	);
+	if (s === null || s === undefined) return '';
+	return s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 function nl2br(s) {
 	return s.replace(/\n/g, "<br/>");
 }
 
+// Initial check
 if (token) {
 	authedFetch('/api/posts').then(res => {
 		if (res.ok) {
-			$("#login").classList.add("hidden");
+			$("#login-card").parentElement.classList.add("hidden");
 			$("#main").classList.remove("hidden");
 			loadPosts();
 		} else {
