@@ -136,7 +136,10 @@
 	<div id="modal" class="modal-overlay hidden">
 		<div id="writerCard" class="card">
 			<h3>새 글 쓰기</h3>
-			<input id="title" type="text" placeholder="제목" style="width: 100%;" />
+			<div class="row">
+				<input id="title" type="text" placeholder="제목" style="flex-grow: 2;" />
+				<input id="password" type="password" placeholder="비밀번호" style="flex-grow: 1;" />
+			</div>
 			<textarea id="body" placeholder="내용"></textarea>
 			<div class="row">
 				<input id="file" type="file" style="flex-grow: 1;" />
