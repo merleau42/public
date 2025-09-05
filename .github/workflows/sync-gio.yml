@@ -4,9 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '프로젝트/커뮤니티/**'
       - '프로젝트/github.io/**'
-     # - '프로젝트/미분류/busut/**'
 
 jobs:
   sync:
@@ -20,27 +18,12 @@ jobs:
         # 키확인: cat ~/.ssh/auto_tree_별명*
         # 개인키: 메인 저장소 ㅡ 설정 ㅡ Security ㅡ Actions secrets and variables
         # 공개키: 서브 저장소 ㅡ 설정 ㅡ Security ㅡ Deploy Keys
-          - name: sites
-            ssh_repo: 'git@github.com:merleau42/sites.git'
-            branch: 'main'
-            prefix: '프로젝트/커뮤니티'
-            paths_glob: '프로젝트/커뮤니티/**'
-            deploy_key_secret: 'AUTO_TREE_SITES'
-
           - name: github_io
             ssh_repo: 'git@github.com:merleau42/public.git'
             branch: 'main'
             prefix: '프로젝트/github.io'
             paths_glob: '프로젝트/github.io/**'
             deploy_key_secret: 'AUTO_TREE_GIO'
-
-          #   cafe24 기존 키 삭제하고, RSA 키로 변경해볼 것.
-          # - name: busut
-          #   ssh_repo: 'busut777@busut.cafe24app.com:busut777_busut'
-          #   branch: 'master'
-          #   prefix: '프로젝트/미분류/busut'
-          #   paths_glob: '프로젝트/미분류/busut/**'
-          #   deploy_key_secret: 'AUTO_TREE_BUSUT'
 
     steps:
       - name: Checkout

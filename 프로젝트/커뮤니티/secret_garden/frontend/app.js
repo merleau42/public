@@ -21,26 +21,23 @@ function authedFetch(url, opts = {}) {
 }
 
 async function login() {
-	while (true) {
-		const pw = prompt("비밀번호를 입력하세요.");
-		if (!pw) continue;
-		
-		const res = await fetch(API_BASE + "/api/auth/login", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ password: pw }),
-		});
-		
-		if (res.ok) {
-			const data = await res.json();
-			setAuth(data.token);
-			$("#login").classList.add("hidden");
-			$("#main").classList.remove("hidden");
-			loadPosts();
-			break;
-		} else {
-			alert("비밀번호가 틀렸습니다.");
-		}
+	const pw = $("#pw").value;
+	if (!pw) return alert("비밀번호를 입력하세요.");
+	
+	const res = await fetch(API_BASE + "/api/auth/login", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ password: pw }),
+	});
+	
+	if (res.ok) {
+		const data = await res.json();
+		setAuth(data.token);
+		$("#login").classList.add("hidden");
+		$("#main").classList.remove("hidden");
+		loadPosts();
+	} else {
+		alert("비밀번호가 틀렸습니다.");
 	}
 }
 
@@ -92,6 +89,11 @@ async function loadPosts() {
 }
 
 $("#loginBtn").addEventListener("click", login);
+$("#pw").addEventListener("keydown", (e) => {
+	if (e.key === 'Enter') {
+		login();
+	}
+});
 
 $("#newPostBtn").addEventListener("click", () => {
 	$("#writerCard").classList.toggle("hidden");
@@ -181,7 +183,14 @@ function nl2br(s) {
 }
 
 if (token) {
-	$("#login").classList.add("hidden");
-	$("#main").classList.remove("hidden");
-	loadPosts();
+	authedFetch('/api/posts').then(res => {
+		if (res.ok) {
+			$("#login").classList.add("hidden");
+			$("#main").classList.remove("hidden");
+			loadPosts();
+		} else {
+			sessionStorage.removeItem("vaultToken");
+			token = "";
+		}
+	});
 }
