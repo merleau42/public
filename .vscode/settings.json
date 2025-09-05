@@ -104,14 +104,6 @@
 			"priority": 6,
 		},
 		{
-			"id": "split_servers",
-			"name": "split_servers",
-			"text": "▲Servs",
-			"command": "workbench.action.tasks.runTask",
-			"arguments": ["split_servers"],
-			"priority": 5,
-		},
-		{
 			"id": "dynamic_status",
 			"text": "1",
 			"scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],

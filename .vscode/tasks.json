@@ -41,17 +41,6 @@
         "panel": "new",
         "focus": false
       }
-    },
-    {
-      "label": "split_servers",
-      "type": "shell",
-      "command": "~/dev/터미널/split_servers.sh",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "never",
-        "panel": "new",
-        "focus": false
-      }
     }
   ]
 }

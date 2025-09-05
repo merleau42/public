@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '프로젝트/웹사이트/**'
+      - '프로젝트/커뮤니티/**'
       - '프로젝트/github.io/**'
      # - '프로젝트/미분류/busut/**'
 
@@ -23,8 +23,8 @@ jobs:
           - name: sites
             ssh_repo: 'git@github.com:merleau42/sites.git'
             branch: 'main'
-            prefix: '프로젝트/웹사이트'
-            paths_glob: '프로젝트/웹사이트/**'
+            prefix: '프로젝트/커뮤니티'
+            paths_glob: '프로젝트/커뮤니티/**'
             deploy_key_secret: 'AUTO_TREE_SITES'
 
           - name: github_io
@@ -34,7 +34,7 @@ jobs:
             paths_glob: '프로젝트/github.io/**'
             deploy_key_secret: 'AUTO_TREE_GIO'
 
-          #   기존 키 삭제하고, RSA 키로 변경해볼 것.
+          #   cafe24 기존 키 삭제하고, RSA 키로 변경해볼 것.
           # - name: busut
           #   ssh_repo: 'busut777@busut.cafe24app.com:busut777_busut'
           #   branch: 'master'
