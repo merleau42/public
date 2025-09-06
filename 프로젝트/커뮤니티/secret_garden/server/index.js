@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import { supabase } from "./supabase.js";
 import rateLimit from "express-rate-limit";
+import path from "path";
 
 const app = express();
 app.set('trust proxy', 1);
@@ -249,11 +250,10 @@ app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 	
 	console.log("Server: Original filename from multer:", req.file.originalname);
 
-	// Encode the original filename for safe use in URL/path and to ensure UTF-8 compatibility
-	const encodedOriginalname = encodeURIComponent(req.file.originalname);
-	const filename = `${Date.now()}-${encodedOriginalname}`;
+	const fileExtension = path.extname(req.file.originalname);
+	const filename = `${Date.now()}${fileExtension}`;
 	
-	console.log("Server: Generated filename (with encoded originalname):", filename);
+	console.log("Server: Generated storage filename:", filename);
 
 	const { error: upErr } = await supabase.storage
 		.from(BUCKET)
