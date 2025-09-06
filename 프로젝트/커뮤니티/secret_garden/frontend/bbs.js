@@ -26,6 +26,7 @@ function logout() {
 }
 
 async function loadPosts() {
+	console.log("Loading posts...");
 	const res = await authedFetch("/api/posts");
 	const data = await res.json();
 	if (!res.ok) {
@@ -41,6 +42,9 @@ async function loadPosts() {
 	wrap.innerHTML = "";
 	
 	for (const p of data.items) {
+		console.log("Processing post:", p.title, "ID:", p.id);
+		console.log("Post files:", p.files);
+
 		const el = document.createElement("div");
 		el.className = "card";
 		
@@ -58,8 +62,11 @@ async function loadPosts() {
 		postContent.className = 'post-content hidden';
 		
 		const fileAttachmentsHtml = await Promise.all((p.files || []).map(async f => {
+			console.log("Fetching URL for file:", f.original_name || f.path, "ID:", f.id);
 			const urlRes = await authedFetch(`/api/files/${f.id}/url`);
 			const urlData = await urlRes.json();
+			console.log("File URL response:", urlRes.ok, urlData);
+
 			if (!urlRes.ok) {
 				console.error("Failed to get file URL:", urlData.error);
 				return `<span>파일 URL을 가져올 수 없습니다: ${escapeHtml(f.original_name || f.path)}</span>`;
@@ -73,6 +80,7 @@ async function loadPosts() {
 				fileHtml += `<img src="${fileUrl}" alt="${fileName}" style="max-width: 100%; height: auto; display: block; margin-top: 10px;">`;
 			}
 			fileHtml += `<p><a href="${fileUrl}" target="_blank">${fileName}</a></p>`;
+			console.log("Generated file HTML:", fileHtml);
 			return fileHtml;
 		}));
 
@@ -120,6 +128,7 @@ async function createPost() {
 
 	if (file) {
 		$("#uploadInfo").textContent = "파일 업로드 중...";
+		console.log("Uploading file:", file.name);
 		const fd = new FormData();
 		fd.append("file", file);
 		const res = await fetch(API_BASE + "/api/upload", {
@@ -129,11 +138,13 @@ async function createPost() {
 		});
 		
 		const data = await res.json();
+		console.log("File upload response:", res.ok, data);
 		if (!res.ok) {
 			$("#uploadInfo").textContent = "";
 			return alert(data.error || "파일 업로드 실패");
 		}
 		pendingFileId = data.id;
+		console.log("Pending file ID:", pendingFileId);
 	}
 
 	const postPayload = { title, body, password }; // Include password in payload
@@ -141,6 +152,7 @@ async function createPost() {
 		postPayload.file_id = pendingFileId;
 	}
 
+	console.log("Creating post with payload:", postPayload);
 	const res = await authedFetch("/api/posts", {
 		method: "POST",
 		body: JSON.stringify(postPayload),
@@ -148,8 +160,10 @@ async function createPost() {
 
 	if (!res.ok) {
 		const post = await res.json();
+		console.error("Post creation failed:", post.error);
 		return alert(post.error || "게시물 등록 실패");
 	}
+	console.log("Post created successfully.");
 	
 	closeModal();
 	loadPosts();
