@@ -82,18 +82,27 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
 
 // === Posts ===
 app.get("/api/posts", auth, async (req, res) => {
+	console.log("Server: Fetching posts...");
 	const { data, error } = await supabase
 		.from("posts")
 		.select("*")
 		.order("created_at", { ascending: false });
-	if (error) return res.status(500).json({ error: error.message });
+	if (error) {
+		console.error("Server: Error fetching posts:", error.message);
+		return res.status(500).json({ error: error.message });
+	}
+	console.log("Server: Posts fetched. Count:", data.length, "Data:", data);
 
 	// 게시글별 댓글/파일도 같이 내려주기(간단 버전)
 	const ids = data.map((p) => p.id);
+	console.log("Server: Post IDs for fetching comments and files:", ids);
+
 	const [{ data: comments }, { data: files }] = await Promise.all([
 		supabase.from("comments").select("*").in("post_id", ids),
 		supabase.from("files").select("*").in("post_id", ids),
 	]);
+
+	console.log("Server: Files fetched. Count:", files ? files.length : 0, "Files data:", files);
 
 	const map = Object.fromEntries(
 		ids.map((id) => [id, { comments: [], files: [] }])
@@ -102,6 +111,8 @@ app.get("/api/posts", auth, async (req, res) => {
 	files?.forEach((f) => map[f.post_id]?.files.push(f));
 
 	const merged = data.map((p) => ({ ...p, ...map[p.id] }));
+	console.log("Server: Merged data before sending to client:", merged);
+
 	res.json({ items: merged });
 });
 
@@ -117,19 +128,23 @@ app.post("/api/posts", auth, async (req, res) => {
 		.insert({ title, body, password: passwordHash }) // Store the hashed password
 		.select("*")
 		.single();
-	if (error) return res.status(500).json({ error: error.message });
+	if (error) {
+		console.error("Server: Error creating post:", error.message);
+		return res.status(500).json({ error: error.message });
+	}
+	console.log("Server: Post created successfully. Post ID:", post.id);
 
 	// If a file_id is provided, attach it to the newly created post
 	if (file_id) {
+		console.log("Server: Attaching file ID", file_id, "to post ID", post.id);
 		const { error: attachError } = await supabase
 			.from("files")
 			.update({ post_id: post.id })
 			.eq("id", file_id);
 		if (attachError) {
-			console.error("Failed to attach file to post:", attachError.message);
-			// Decide whether to return an error or just log and proceed
-			// For now, we'll just log the error and allow the post to be created
+			console.error("Server: Failed to attach file to post:", attachError.message);
 		}
+		console.log("Server: File attachment process completed for file ID", file_id);
 	}
 
 	res.json(post);
@@ -217,13 +232,18 @@ const upload = multer({ limits: { fileSize: 1024 * 1024 * 100 } }); // 100MB 예
 app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 	if (!req.file) return res.status(400).json({ error: "file required" });
 	const filename = `${Date.now()}-${req.file.originalname}`;
+
 	const { error: upErr } = await supabase.storage
 		.from(BUCKET)
 		.upload(filename, req.file.buffer, {
 			contentType: req.file.mimetype,
 			upsert: false,
 		});
-	if (upErr) return res.status(500).json({ error: upErr.message });
+	if (upErr) {
+		console.error("Server: Error uploading file to storage:", upErr.message);
+		return res.status(500).json({ error: upErr.message });
+	}
+	console.log("Server: File uploaded to storage:", filename);
 
 	// 파일 메타 저장(아직 post_id 없음)
 	const { data, error } = await supabase
@@ -236,7 +256,11 @@ app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 		})
 		.select("*")
 		.single();
-	if (error) return res.status(500).json({ error: error.message });
+	if (error) {
+		console.error("Server: Error saving file metadata to DB:", error.message);
+		return res.status(500).json({ error: error.message });
+	}
+	console.log("Server: File metadata saved to DB. File ID:", data.id);
 
 	res.json(data);
 });
@@ -262,11 +286,19 @@ app.get("/api/files/:id/url", auth, async (req, res) => {
 		.select("*")
 		.eq("id", id)
 		.single();
-	if (ferr || !file) return res.status(404).json({ error: "file not found" });
+	if (ferr || !file) {
+		console.error("Server: File not found for URL request. ID:", id, "Error:", ferr ? ferr.message : "");
+		return res.status(404).json({ error: "file not found" });
+	}
+	console.log("Server: Generating signed URL for file:", file.path);
 	const { data: urlData, error } = await supabase.storage
 		.from(BUCKET)
 		.createSignedUrl(file.path, 60 * 5); // 5분 유효
-	if (error) return res.status(500).json({ error: error.message });
+	if (error) {
+		console.error("Server: Error creating signed URL:", error.message);
+		return res.status(500).json({ error: error.message });
+	}
+	console.log("Server: Signed URL generated successfully.");
 	res.json({ url: urlData.signedUrl });
 });
 
