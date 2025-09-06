@@ -246,7 +246,14 @@ const upload = multer({ limits: { fileSize: 1024 * 1024 * 100 } }); // 100MB 예
 
 app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 	if (!req.file) return res.status(400).json({ error: "file required" });
-	const filename = `${Date.now()}-${req.file.originalname}`;
+	
+	console.log("Server: Original filename from multer:", req.file.originalname);
+
+	// Encode the original filename for safe use in URL/path and to ensure UTF-8 compatibility
+	const encodedOriginalname = encodeURIComponent(req.file.originalname);
+	const filename = `${Date.now()}-${encodedOriginalname}`;
+	
+	console.log("Server: Generated filename (with encoded originalname):", filename);
 
 	const { error: upErr } = await supabase.storage
 		.from(BUCKET)
@@ -267,7 +274,7 @@ app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 			path: filename,
 			mime_type: req.file.mimetype,
 			size_bytes: req.file.size,
-			original_name: req.file.originalname,
+			original_name: req.file.originalname, // Store original name for display
 		})
 		.select("*")
 		.single();
