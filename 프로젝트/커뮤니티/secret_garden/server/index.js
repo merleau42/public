@@ -106,19 +106,33 @@ app.get("/api/posts", auth, async (req, res) => {
 });
 
 app.post("/api/posts", auth, async (req, res) => {
-	const { title, body, password } = req.body || {};
+	const { title, body, password, file_id } = req.body || {};
 	if (!title || !body || !password)
 		return res.status(400).json({ error: "title, body, and password required" });
 
 	const passwordHash = await bcrypt.hash(password, 10); // Hash the password
 
-	const { data, error } = await supabase
+	const { data: post, error } = await supabase
 		.from("posts")
 		.insert({ title, body, password: passwordHash }) // Store the hashed password
 		.select("*")
 		.single();
 	if (error) return res.status(500).json({ error: error.message });
-	res.json(data);
+
+	// If a file_id is provided, attach it to the newly created post
+	if (file_id) {
+		const { error: attachError } = await supabase
+			.from("files")
+			.update({ post_id: post.id })
+			.eq("id", file_id);
+		if (attachError) {
+			console.error("Failed to attach file to post:", attachError.message);
+			// Decide whether to return an error or just log and proceed
+			// For now, we'll just log the error and allow the post to be created
+		}
+	}
+
+	res.json(post);
 });
 
 // New DELETE API for posts
@@ -203,7 +217,6 @@ const upload = multer({ limits: { fileSize: 1024 * 1024 * 100 } }); // 100MB 예
 app.post("/api/upload", auth, upload.single("file"), async (req, res) => {
 	if (!req.file) return res.status(400).json({ error: "file required" });
 	const filename = `${Date.now()}-${req.file.originalname}`;
-
 	const { error: upErr } = await supabase.storage
 		.from(BUCKET)
 		.upload(filename, req.file.buffer, {
