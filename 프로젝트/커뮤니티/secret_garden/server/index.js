@@ -9,6 +9,7 @@ import { supabase } from "./supabase.js";
 import rateLimit from "express-rate-limit";
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 8080;
 const BUCKET = process.env.SUPABASE_BUCKET;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -104,11 +105,25 @@ app.get("/api/posts", auth, async (req, res) => {
 
 	console.log("Server: Files fetched. Count:", files ? files.length : 0, "Files data:", files);
 
+	// Generate signed URLs for files
+	const filesWithSignedUrls = await Promise.all(
+		files.map(async (file) => {
+			const { data: urlData, error: urlError } = await supabase.storage
+				.from(BUCKET)
+				.createSignedUrl(file.path, 60 * 60 * 24); // 24시간 유효
+			if (urlError) {
+				console.error("Server: Error generating signed URL for file", file.path, ":", urlError.message);
+				return { ...file, url: null }; // Return file with null URL on error
+			}
+			return { ...file, url: urlData.signedUrl };
+		})
+	);
+
 	const map = Object.fromEntries(
 		ids.map((id) => [id, { comments: [], files: [] }])
 	);
 	comments?.forEach((c) => map[c.post_id]?.comments.push(c));
-	files?.forEach((f) => map[f.post_id]?.files.push(f));
+	filesWithSignedUrls?.forEach((f) => map[f.post_id]?.files.push(f));
 
 	const merged = data.map((p) => ({ ...p, ...map[p.id] }));
 	console.log("Server: Merged data before sending to client:", merged);
