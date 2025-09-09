@@ -21,6 +21,7 @@
 
   idx.extensions = [
     # "angular.ng-template"
+	"ms-python.vscode-pylance"
 	# 설치 가능:  https://open-vsx.org/ and use "publisher.id"
   ];
 
