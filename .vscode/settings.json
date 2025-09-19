@@ -104,13 +104,13 @@
 			"arguments": ["busut_cafe24"],
 			"priority": 6,
 		},
-		{
-			"id": "dynamic_status",
-			"text": "1",
-			"scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
-			"script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
-			"alignment": "right",
-			"priority": -1
-		}
+		// {
+		// 	"id": "dynamic_status",
+		// 	"text": "1",
+		// 	"scriptEvents": ["vscode.workspace.onDidSaveTextDocument"],
+		// 	"script": "statusBarItem.text = new Date(Date.now()+9*3600000).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit',hour12:true})",
+		// 	"alignment": "right",
+		// 	"priority": -1
+		// }
 	]
 }

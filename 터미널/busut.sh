@@ -1,7 +1,7 @@
 ### 상태 표시줄 버튼 [ ▲github.io ] 스크립트
 clear;
 
-time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d_%H:%M:%S');
+time_kst=$(date -u -d '+9 hours' '+%y.%m.%d %H:%M');
 echo "[실행] ▲busut.cafe24app.com\t$time_kst" >> ~/dev/터미널/.log;
 
 ## [ busut.cafe24app.com ]에 업로드할 내용을, 서브 폴더에 복사하기

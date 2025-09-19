@@ -1,0 +1,7 @@
+nums = (3,2,5,7,1)
+result = len(nums)
+print(result)
+result = max(nums)
+print(result)
+result = min(nums)
+print(result)

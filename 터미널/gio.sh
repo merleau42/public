@@ -1,7 +1,7 @@
 ### 상태 표시줄 버튼 [ ▲github.io ] 스크립트
 clear;
 
-time_kst=$(date -u -d '+9 hours' '+%Y-%m-%d_%H:%M:%S');
+time_kst=$(date -u -d '+9 hours' '+%y.%m.%d %H:%M');
 echo "[실행] ▲github.io\t$time_kst" >> ~/dev/터미널/.log;
 
 PRJ=~/dev/프로젝트;
