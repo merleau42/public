@@ -1,6 +1,0 @@
-result = type(3)
-print(result)
-result = type(3.14)
-print(result)
-result = type("hello")
-print(result)

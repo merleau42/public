@@ -5,7 +5,7 @@ on:
     branches: [ master ]
     paths:
       - '프로젝트/커뮤니티/**'
-     # - '프로젝트/미분류/busut/**'
+      - '프로젝트/미분류/busut/**'
 
 jobs:
   sync:
@@ -14,11 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         target:
-        # 키생성(25519): ssh-keygen -t ed25519 -C "AUTO_TREE" -f ~/.ssh/auto_tree_별명
-        # 키생성(RSA): ssh-keygen -t rsa -C "AUTO_TREE" -f ~/.ssh/auto_tree_별명
+        # 키생성(25519): ssh-keygen -t ed25519 -C "AUTO_TREE_25519" -f ~/.ssh/auto_tree_별명
+        # 키생성(RSA): ssh-keygen -t rsa -C "AUTO_TREE_RSA" -f ~/.ssh/auto_tree_별명
         # 키확인: cat ~/.ssh/auto_tree_별명*
         # 개인키: 메인 저장소 ㅡ 설정 ㅡ Security ㅡ Actions secrets and variables
-        # 공개키: 서브 저장소 ㅡ 설정 ㅡ Security ㅡ Deploy Keys
+        # 공개키: 서브 저장소 ㅡ 설정 ㅡ Security ㅡ Deploy Keys  ///  또는 호스팅 업체 리포지토리 설정
           - name: sites
             ssh_repo: 'git@github.com:merleau42/sites.git'
             branch: 'main'
@@ -27,12 +27,12 @@ jobs:
             deploy_key_secret: 'AUTO_TREE_SITES'
 
           #   cafe24 기존 키 삭제하고, RSA 키로 변경해볼 것.
-          # - name: busut
-          #   ssh_repo: 'busut777@busut.cafe24app.com:busut777_busut'
-          #   branch: 'master'
-          #   prefix: '프로젝트/미분류/busut'
-          #   paths_glob: '프로젝트/미분류/busut/**'
-          #   deploy_key_secret: 'AUTO_TREE_BUSUT'
+          - name: busut
+            ssh_repo: 'busut777@busut.cafe24app.com:busut777_busut'
+            branch: 'master'
+            prefix: '프로젝트/미분류/busut'
+            paths_glob: '프로젝트/미분류/busut/**'
+            deploy_key_secret: 'AUTO_TREE_SITES_RSA'
 
     steps:
       - name: Checkout

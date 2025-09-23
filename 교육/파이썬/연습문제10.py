@@ -125,7 +125,7 @@ def 객체매니저(클래스, 갯수 = None):
 	for i in range(갯수):
 		print(f'<{클래스.타입}{i+1}>')
 		인스턴스 = 클래스()
-		for 변수 in [s.split('_')[1] for 멤버 in dir(클래스) if 'set_' in 멤버]:
+		for 변수 in [멤버.split('_')[1] for 멤버 in dir(클래스) if 'set_' in 멤버]:
 			getattr(인스턴스, f'set_{변수}')( input(f"   ㄴ{변수}는? ") )
 		리스트[i] = 인스턴스
 	
