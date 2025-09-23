@@ -32,7 +32,7 @@ jobs:
             branch: 'master'
             prefix: '프로젝트/미분류/busut'
             paths_glob: '프로젝트/미분류/busut/**'
-            deploy_key_secret: 'AUTO_TREE_SITES_RSA'
+            deploy_key_secret: 'AUTO_TREE_BUSUT'
 
     steps:
       - name: Checkout
