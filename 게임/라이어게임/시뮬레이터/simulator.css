@@ -1,320 +1,332 @@
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
-	overflow: auto;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 html::-webkit-scrollbar {
-	display: none;
+    display: none;
 }
 
 body {
-	font-family: Arial, sans-serif;
-	background-color: ghostwhite;
-	padding-top: 100px; /* Added padding-top to prevent content from being hidden by the fixed top-bar */
+    font-family: Arial, sans-serif;
+    background-color: ghostwhite;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
 }
 
 .top-bar {
-	display: flex;
-	flex-wrap: wrap;
-	background-color: #f0f0f0;
-	font-weight: bold;
-	padding: 5px 10px;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    padding: 5px 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    user-select: none; /* 텍스트 드래그 방지 */
 }
 
 .top-bar > * {
-	min-width: 100px;
+    min-width: 100px;
 }
 
 .bottom-bar {
-	display: flex;
-	background-color: #f0f0f0;
-	font-weight: bold;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	z-index: 100;
-	justify-content: center;
+    display: flex;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+    justify-content: center;
+    user-select: none; /* 텍스트 드래그 방지 */
 }
 
 /* 상단바 버튼 */
 .top-bar button {
-	border: 0;
-	cursor: pointer;
+    border: 0;
+    cursor: pointer;
 }
 
 /* ✅ 퍼즐 카드 영역 */
 .grid-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 3vh 22px;
-	justify-content: center;
-	width: 100%;
-	margin: 0 auto;
-	padding: 2vh 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3vh 22px;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2vh 0;
 }
 
 /* 카드 구성 요소 수정중 */
 .statement-container {
-	display: flex;
-	/* align-items: center; */
-	align-items: flex-end;
-	min-height: 40px;
-	width: max(180px, min(400px, 43vw, 60vh));
-	/* width: max(190px, 31vw, 50vh); */
-	/* max-width: max(190px, min(40vw, 400px)); */
+    display: flex;
+    /* align-items: center; */
+    align-items: flex-end;
+    min-height: 40px;
+    width: max(180px, min(400px, 43vw, 60vh));
+    /* width: max(190px, 31vw, 50vh); */
+    /* max-width: max(190px, min(40vw, 400px)); */
 }
 .statement-container.reverse {
-	flex-direction: row-reverse;
+    flex-direction: row-reverse;
 }
 
 .profile {
-	position: relative;
-	overflow: visible;
+    position: relative;
+    overflow: visible;
 }
 
 .circle {
-	width: max(40px, min(12vh, 10vw));
-	height: max(40px, min(12vh, 10vw));
-	border-radius: 50%;
-	overflow: hidden;
-	border: 2px solid #4a90e2;
-	background-color: white;
-	flex-shrink: 0;
-	margin: 0 min(7.5px, max(3px, 1.5vh));
-	position: relative;
+    width: max(40px, min(12vh, 10vw));
+    height: max(40px, min(12vh, 10vw));
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #4a90e2;
+    background-color: white;
+    flex-shrink: 0;
+    margin: 0 min(7.5px, max(3px, 1.5vh));
+    position: relative;
 }
 .circle img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* ✅ 이모지 버튼 */
 .emoji-button {
-	position: absolute;
-	font-size: max(calc(13px + 0.2vw), calc(13px + 0.5vh));
-	width: 1.8em;
-	height: 1.8em;
-	line-height: 1.8em;
-	text-align: center;
-	transform: translate(-50%, -50%);
-	z-index: 999;
-	cursor: pointer;
-	pointer-events: auto;
+    position: absolute;
+    font-size: max(calc(13px + 0.2vw), calc(13px + 0.5vh));
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 /* ✅ 이모지 선택창 */
 .emoji-picker {
-	position: absolute;
-	display: flex;
-	flex-wrap: wrap;
-	background: #fff8dc;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	padding: 4px;
-	opacity: 0.85;
-	z-index: 1000;
-	width: 100px;
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff8dc;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 4px;
+    opacity: 0.85;
+    z-index: 1000;
+    width: 100px;
 }
 .emoji-picker span {
-	cursor: pointer;
-	padding: 2px 4px;
+    cursor: pointer;
+    padding: 2px 4px;
 }
 .emoji-picker span:hover {
-	background: #eee;
+    background: #eee;
 }
 
-/* ✅ 팻말 */
+/* ✅ 팻말 (수정됨) */
 .placard {
-	position: absolute;
-	left: 75%;
-	background-color: lightyellow;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	padding: 2px 5px;
-	min-height: 24px;
-	text-align: center;
-	white-space: nowrap;
-	z-index: 2;
-	cursor: pointer;
-	transition: transform 0.2s ease;
-	transform-origin: center center;
+    position: absolute;
+    background-color: lightyellow;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 2px 5px;
+    text-align: center;
+    white-space: nowrap;
+    z-index: 2;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    transform-origin: center center;
 }
-.placard.placard-shifted-left {
-	left: -35%;
-}
+
+/* .placard-shifted-left 규칙은 삭제되었습니다. */
+
 .placard:not(.expanded) {
-	bottom: 0%;
-	/* font-size: max(13px, min(18px, max(1.3vw, 1.4vh))); */
-	font-size: max(13px, min(1.3vw, 16px), min(1.7vh, 21px));
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    bottom: -10%; /* 말풍선 내 하단 위치 */
+    left: -20%; /* 말풍선 내 좌측 위치 */
+    font-size: max(13px, min(1.3vw, 16px), min(1.5vh, 21px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* reverse 클래스가 적용될 때 팻말을 우측 하단으로 보내는 규칙 (추가됨) */
+.statement-container.reverse .placard:not(.expanded) {
+	left: auto;
+    right: -20%;
+}
+
 .placard.expanded {
- 	left: 75%;
-	position: fixed;
-	white-space: normal;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 3px;
-	background-color: lightyellow;
-	width: 250px;
-	font-size: 14px;
-	word-break: break-word;
-	padding: 6px;
-	opacity: 0.85;
-	z-index: 1000;
+    position: fixed;
+    white-space: normal;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background-color: lightyellow;
+    width: 250px;
+    font-size: 14px;
+    word-break: break-word;
+    padding: 6px;
+    opacity: 0.85;
+    z-index: 1000;
 }
 .placard .choice-row {
-	display: flex;
-	gap: 3px;
-	justify-content: center;
-	flex-wrap: wrap;
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 .placard .choice {
-	padding: 2px 6px;
-	cursor: pointer;
-	background: transparent;
-	border-radius: 3px;
-	transition: background 0.2s;
+    padding: 2px 6px;
+    cursor: pointer;
+    background: transparent;
+    border-radius: 3px;
+    transition: background 0.2s;
 }
 .placard .choice:hover {
-	background-color: #eee;
+    background-color: #eee;
 }
 
 /* ✅ 말풍선 */
 .bubble {
-	background: white;
-	border: 2px solid #ccc;
-	border-radius: 10px;
-	padding: min(10px, max(3.5px, 1.5vh)) 3.5px;
-	width: 100%;
-	height: min(120px, max(100px, 12vh));
-	box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-	display: flex;
-	flex-direction: column; /* 추가: 내부 요소 세로 정렬 */
-	font-size: max(12px, min(15px, max(1.3vw, 1.7vh)));
-	line-height: 1.3;
-	align-items: center;
-	justify-content: space-between; /* 변경: 요소들을 위아래로 분산 배치 */
-	text-align: center;
-	position: relative; /* 추가: 버튼 위치 지정을 위해 */
-	opacity: 1; /* 기존에 없던 opacity 속성을 1로 설정 */
+    display: flex;
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: min(10px, max(3.5px, 1.5vh)) 3.5px;
+    width: 100%;
+    height: min(120px, max(100px, 12vh));
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    flex-direction: column; /* 추가: 내부 요소 세로 정렬 */
+    font-size: max(12px, min(15px, max(1.3vw, 1.7vh)));
+    line-height: 1.3;
+    align-items: center;
+    justify-content: space-between; /* 변경: 요소들을 위아래로 분산 배치 */
+    text-align: center;
+    position: relative; /* 자식인 placard absolute 위치의 기준이 됨 */
+    opacity: 1;
 }
 
 /* 말풍선 호버 시 네비게이션 컨트롤 표시 */
 .bubble:hover .bubble-nav-controls {
-	opacity: 1;
-	pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* 네비게이션 컨트롤 컨테이너 */
 .bubble-nav-controls {
-	position: absolute;
-	bottom: 5px;
-	right: 5px;
-	display: flex;
-	gap: 5px; /* 버튼 사이 간격 */
-	opacity: 0; /* 기본적으로 숨김 */
-	pointer-events: none; /* 숨겨져 있을 때 클릭 방지 */
-	transition: opacity 0.2s ease-in-out; /* 부드러운 전환 효과 */
+    position: absolute;
+    bottom: 5px;
+    display: flex;
+    gap: 5px; /* 버튼 사이 간격 */
+    opacity: 0; /* 기본적으로 숨김 */
+    pointer-events: none; /* 숨겨져 있을 때 클릭 방지 */
+    transition: opacity 0.2s ease-in-out; /* 부드러운 전환 효과 */
+    cursor: pointer;
+    user-select: none; /* 텍스트 드래그 방지 */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
 }
 
 .statement-text {
-	flex-grow: 1; /* 발언 텍스트가 가능한 공간을 모두 차지하도록 */
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
+    flex-grow: 1; /* 발언 텍스트가 가능한 공간을 모두 차지하도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .nav-button {
-	font-size: 1.5em;
-	cursor: pointer;
-	z-index: 10; /* 다른 요소 위에 표시 */
-	color: #4a90e2; /* 버튼 색상 */
-	background-color: rgba(255, 255, 255, 0.7); /* 배경색 추가 */
-	border-radius: 50%; /* 원형 버튼 */
-	width: 25px;
-	height: 25px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 10; /* 다른 요소 위에 표시 */
+    color: #4a90e2; /* 버튼 색상 */
+    background-color: rgba(255, 255, 255, 0.7); /* 배경색 추가 */
+    border-radius: 50%; /* 원형 버튼 */
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
 }
 
 .nav-button.disabled {
-	color: #ccc; /* 비활성화된 버튼 색상 */
-	cursor: default; /* 비활성화된 버튼 커서 */
-	pointer-events: none; /* 비활성화된 버튼 클릭 방지 */
+    color: #ccc; /* 비활성화된 버튼 색상 */
+    cursor: default; /* 비활성화된 버튼 커서 */
+    pointer-events: none; /* 비활성화된 버튼 클릭 방지 */
 }
 
 .author-display {
-	font-size: 0.8em; /* 저자 정보 글꼴 크기 */
-	color: #555; /* 저자 정보 색상 */
-	margin-top: 5px; /* 발언 텍스트와의 간격 */
+    font-size: 0.8em; /* 저자 정보 글꼴 크기 */
+    color: #555; /* 저자 정보 색상 */
+    margin-top: 5px; /* 발언 텍스트와의 간격 */
 }
 
 .menu {
-	padding: 5px 10px;
-	width: 125px;
-	height: 30px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	background-color: #f9f9f9;
-	cursor: pointer;
-	text-align: center;
-	font-weight: bold;
-	font-size: 14px;
-	margin-bottom: 5px;
+    padding: 5px 10px;
+    width: 125px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
 .setting-value-display {
-	flex: 1 0 auto;
-	width: auto;
+    flex: 1 0 auto;
+    width: auto;
 }
 
 .custom-dropdown-options {
-	font-size: 13px;
-	position: absolute;
-	top: 0;
-	border: 1px solid #ccc;
-	background-color: white;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	z-index: 1000;
-	display: flex;
-	flex-wrap: wrap;
-	max-height: 200px;
-	overflow-y: auto;
-	border-radius: 4px;
-	padding: 5px;
+    font-size: 13px;
+    position: absolute;
+    top: 0;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 4px;
+    padding: 5px;
 }
 
 .custom-dropdown-option {
-	padding: 8px 10px;
-	cursor: pointer;
-	width: 49%;
-	box-sizing: border-box;
-	text-align: center;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 49%;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .custom-dropdown-options.full-width-options .custom-dropdown-option {
-	width: 100%;
+    width: 100%;
 }
 
 
 .custom-dropdown-options span:hover {
-	background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }
