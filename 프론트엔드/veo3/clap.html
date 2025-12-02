@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>클래퍼보드 오버레이 데모</title>
+  <style>
+    :root{
+      --slate-top: 34%;
+      --slate-left: 8%;
+      --slate-width: 84%;
+      --slate-height: 58%;
+
+      --border: transparent;
+      --radius: 10px;
+      --text: #ffffff;
+      --muted: #b8b8b8;
+      --accent: #e98dfb;
+      --ok: #77ffcc;
+      --no: #ff6b6b; /* 붉은 계열 */
+      --row-bg: transparent;
+      --row-bg-odd: transparent;
+    }
+
+    html,body{height:100%;}
+    body{margin:0;background:#0e0e10;color:var(--text);font:16px/1.3 Pretendard, Inter, system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;}
+
+    .board{
+      max-width: min(1000px, 92vw);
+      margin: 32px auto;
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      background:#111;
+    }
+
+    .board__bg{
+      position:absolute; inset:0;
+      background: url('clp.png') center / contain no-repeat;
+      background-color: black; /* 여백 부분 색상 보정 */
+    }
+
+    .overlay{ position:absolute; inset:0; pointer-events:none; }
+
+    .slate-area{
+      position:absolute;
+      top: var(--slate-top);
+      left: var(--slate-left);
+      width: var(--slate-width);
+      height: var(--slate-height);
+      display:grid;
+      grid-template-rows: 56px repeat(7, 1fr) 56px;
+      gap: 0;
+      pointer-events:auto;
+    }
+
+    .box{
+      background: var(--row-bg);
+      border: none;
+      display:grid; align-items:center; padding: 0 14px;
+    }
+
+    .row{
+      grid-template-columns: 140px 64px 1fr;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .scene{
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      font-weight:700; letter-spacing:.4px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .scene h2{margin:0; font-size: clamp(16px, 2.6vw, 22px);} 
+    .scene .num{opacity:.9;}
+
+    .row .label{ color:#f1f1f1; font-weight:600; }
+
+    .toggle{
+      appearance:none; -webkit-appearance:none; border:none; outline:none;
+      background:transparent; color:var(--muted); font-size: 22px; line-height:1; 
+      width: 44px; height: 44px; border-radius: 12px; cursor:pointer;
+      transition: transform .08s ease, background .2s ease;
+    }
+    .toggle[aria-pressed="true"]{ color: var(--ok); }
+    .toggle[data-state="no"]{ color: var(--no); }
+    .toggle:focus-visible{ box-shadow: 0 0 0 3px var(--accent); }
+    .toggle:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+
+    .input{
+      width: 100%; min-height: 40px; border-radius: 10px; padding: 8px 12px;
+      background: transparent; color:var(--text);
+      border: none;
+      outline: none; font: inherit; resize: vertical;
+      white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;
+    }
+    .input::placeholder{ color: transparent; }
+
+    .copybar{
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 14px;
+    }
+    .copybar .hint{ color: var(--muted); font-size: 14px; }
+    .copybtn{
+      pointer-events:auto; cursor:pointer;
+      padding: 10px 14px; border-radius: 12px; border:none;
+      background: transparent; color:var(--text); font-weight:700;
+    }
+
+    @media (max-width: 520px){
+      .row{ grid-template-columns: 1fr 56px; grid-auto-rows: auto; grid-template-areas:
+        "label toggle" "input input"; gap:8px 12px; padding: 10px 14px; }
+      .row .label{ grid-area: label; }
+      .row .cell-toggle{ grid-area: toggle; }
+      .row .cell-input{ grid-area: input; }
+    }
+  </style>
+</head>
+<body>
+  <div class="board" aria-label="클래퍼보드">
+    <div class="board__bg" role="img" aria-label="클래퍼보드 이미지"></div>
+
+    <div class="overlay" aria-hidden="false">
+      <div class="slate-area">
+        <div class="box scene">
+          <h2 id="sceneTitle">#SCENE</h2>
+          <span class="num" aria-labelledby="sceneTitle">1</span>
+        </div>
+
+        <div class="box row">
+          <div class="label">주인공 설정</div>
+          <div class="cell-toggle"><button class="toggle" aria-pressed="true" title="체크 토글">✓</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">배경</div>
+          <div class="cell-toggle"><button class="toggle" aria-pressed="true">✓</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">장면</div>
+          <div class="cell-toggle"><button class="toggle" aria-pressed="true">✓</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">조연 설정</div>
+          <div class="cell-toggle"><button class="toggle" aria-pressed="true">✓</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">카메라</div>
+          <div class="cell-toggle"><button class="toggle" data-state="no" aria-pressed="false">✗</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">효과음</div>
+          <div class="cell-toggle"><button class="toggle" aria-pressed="true">✓</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box row">
+          <div class="label">배경음악</div>
+          <div class="cell-toggle"><button class="toggle" data-state="no" aria-pressed="false">✗</button></div>
+          <div class="cell-input"><textarea class="input"></textarea></div>
+        </div>
+
+        <div class="box copybar">
+          <strong>COPY</strong>
+          <span class="hint">행의 ✓/✗ 은 버튼으로 토글됩니다</span>
+          <button class="copybtn" id="copyBtn" type="button">표 텍스트 복사</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        const next = !pressed;
+        btn.setAttribute('aria-pressed', String(next));
+        if(next){ btn.textContent = '✓'; btn.removeAttribute('data-state'); }
+        else { btn.textContent = '✗'; btn.dataset.state = 'no'; }
+      });
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const rows = [...document.querySelectorAll('.row')].map(r => {
+        const label = r.querySelector('.label')?.textContent.trim() || '';
+        const toggle = r.querySelector('.toggle')?.textContent.trim() || '';
+        const input = r.querySelector('.input')?.value || '';
+        return [label, toggle, input].join('\t');
+      });
+      const header = ['항목','체크','내용'].join('\t');
+      const scene = document.querySelector('.scene .num')?.textContent || '1';
+      const title = `#SCENE ${scene}`;
+      const out = [title, header, ...rows].join('\n');
+      navigator.clipboard.writeText(out)
+        .then(()=>{ 
+          const btn = document.getElementById('copyBtn');
+          const old = btn.textContent; btn.textContent = '복사 완료!'; 
+          setTimeout(()=> btn.textContent = old, 1200);
+        })
+        .catch(()=> alert('복사에 실패했습니다.')); 
+    });
+  </script>
+</body>
+</html>
