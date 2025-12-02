@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>페이지 레이아웃 + 클래퍼보드 컴포넌트 통합</title>
+
+  <style>
+    /* ========= form.html 의 기본 레이아웃 스타일 ========= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
+
+    .page-layout {
+      border: 3px solid green;
+      width: 100%;
+      max-width: 2500px;
+      margin: 0 auto;
+      background-color: #fff;
+    }
+
+    .top-section { display: flex; background-size: cover; }
+
+    .upload-container {
+      flex-basis: calc(4 / 9 * 100%);
+      aspect-ratio: 1 / 1;
+      position: relative;
+      background-image: url('job.gif');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .upload-slot {
+      position: absolute; width: 20%; height: 20%; overflow: hidden;
+      animation: blink 1.4s linear infinite;
+    }
+    .upload-slot.person { border-radius: 40px; }
+    .upload-slot.item { border-radius: 15px; }
+    .upload-slot:hover { background-color: rgba(255, 255, 255, 0.3) !important; }
+    .upload-slot:not(:hover) span { display: none; }
+    .upload-slot:hover span { color: black; }
+
+    .file-input { display: none; }
+    .file-label {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; cursor: zoom-in;
+      font-size: 2.2vw; font-weight: bold; text-shadow: 2px 3px 5px gray; color: gainsboro;
+    }
+    .preview { display: none; width: 100%; height: 100%; object-fit: cover; }
+
+    .middle-placeholder {
+      flex-basis: calc(3 / 9 * 100%);
+      background-image: url('director.gif');
+      background-size: cover; background-position: center;
+      display: flex; justify-content: center; align-items: center;
+      color: #fff; text-shadow: 1px 1px 2px black;
+    }
+
+    .form-placeholder { flex-basis: calc(2 / 9 * 100%); display: flex; flex-direction: column; background-color: #fff; }
+
+    .form-section {
+      flex: 1; display: flex; justify-content: center; align-items: center;
+      padding: 10px; text-align: center; color: #555;
+      background-image: url('goorm.png'); background-size: cover; background-repeat: no-repeat; background-position: center;
+    }
+    .form-section input[type="text"], .form-section input[type="password"] {
+      width: 80%; padding: 8px 0; border: none; background-color: transparent;
+      box-shadow: none; font-size: 2vw; position: relative; left: 2px; top: -2px;
+      border-radius: 0; text-align: center; color: #000; font-weight: bold; outline: none;
+    }
+    .form-section input::placeholder { color: #333; font-weight: normal; }
+    input:focus::placeholder { color: transparent; }
+
+    .clapperboard-grid {
+      padding: 20px; display: grid; gap: 20px; grid-template-columns: 1fr;
+    }
+    .clapperboard-item {
+      aspect-ratio: 4 / 3; color: white; border: 2px solid black;
+      padding: 0; /* 컴포넌트를 꽉 채우도록 패딩 제거 */
+      font-family: monospace; display: flex; flex-direction: column; justify-content: stretch;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .clapperboard-grid { grid-template-columns: 1fr; }
+      .file-label { font-size: 6vmax; }
+      .upload-container, .middle-placeholder, .form-placeholder { border-bottom: none; }
+    }
+
+    @keyframes blink {
+      0% { background-color: rgba(255,255,255,0.3); border: 2px dotted rgba(0,0,0,0.3);}
+      50% { background-color: rgba(255,255,255,0.1); border: 2px dotted rgba(0,0,0,0.1);}
+      100% { background-color: rgba(255,255,255,0.3); border: 2px dotted rgba(0,0,0,0.3);}
+    }
+
+    /* ========= clap.html 컴포넌트 스타일 (네임스페이스 .clap) ========= */
+    .clap { height: 100%; width: 100%; display:block; }
+    .clap { --slate-top: 34%; --slate-left: 8%; --slate-width: 84%; --slate-height: 58%;
+            --border: transparent; --radius: 10px; --text: #ffffff; --muted: #b8b8b8;
+            --accent: #e98dfb; --ok: #77ffcc; --no: #ff6b6b; --row-bg: transparent; --row-bg-odd: transparent; }
+    .clap .board { position: relative; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; height: 100%; width: 100%; }
+    .clap .board__bg { position:absolute; inset:0; background: url('clp2.png') center / cover no-repeat; }
+    .clap .overlay { position:absolute; inset:0; pointer-events:none; }
+    .clap .slate-area {
+      position:absolute; top: var(--slate-top); left: var(--slate-left); width: var(--slate-width); height: var(--slate-height);
+      display:grid; grid-template-rows: 56px repeat(7, 1fr) 56px; gap:0; pointer-events:auto;
+    }
+    .clap .box { background: var(--row-bg); border: none; display:grid; align-items:center; padding: 0 14px; }
+    .clap .row { grid-template-columns: 140px 64px 1fr; border-bottom: 2px solid #ffffff; }
+    .clap .scene { border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); font-weight:700; letter-spacing:.4px; display:flex; align-items:center; gap:10px; }
+    .clap .scene h2 { margin:0; font-size: clamp(16px, 2.6vw, 22px); }
+    .clap .scene .num { opacity:.9; }
+    .clap .row .label { color:#f1f1f1; font-weight:600; }
+    .clap .toggle {
+      appearance:none; -webkit-appearance:none; border:none; outline:none;
+      background:transparent; color:var(--muted); font-size:22px; line-height:1;
+      width:44px; height:44px; border-radius:12px; cursor:pointer;
+      transition: transform .08s ease, background .2s ease;
+    }
+    .clap .toggle[aria-pressed="true"]{ color: var(--ok); }
+    .clap .toggle[data-state="no"]{ color: var(--no); }
+    .clap .toggle:focus-visible{ box-shadow: 0 0 0 3px var(--accent); }
+    .clap .toggle:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+    .clap .input {
+      width:100%; min-height:40px; border-radius:10px; padding:8px 12px;
+      background:transparent; color:var(--text); border:none; outline:none; font:inherit; resize:vertical;
+      white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;
+    }
+    .clap .input::placeholder { color: transparent; }
+    .clap .copybar { border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);
+      display:flex; align-items:center; justify-content:space-between; padding: 0 14px; }
+    .clap .copybar .hint { color: var(--muted); font-size: 14px; }
+    .clap .copybtn {
+      pointer-events:auto; cursor:pointer; padding:10px 14px; border-radius:12px; border:none;
+      background: transparent; color:var(--text); font-weight:700;
+    }
+
+    @media (max-width: 520px){
+      .clap .row{
+        grid-template-columns: 1fr 56px; grid-auto-rows: auto;
+        grid-template-areas: "label toggle" "input input"; gap:8px 12px; padding:10px 14px;
+      }
+      .clap .row .label{ grid-area: label; }
+      .clap .row .cell-toggle{ grid-area: toggle; }
+      .clap .row .cell-input{ grid-area: input; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-layout">
+    <section class="top-section">
+      <div class="upload-container">
+        <div class="upload-slot person" style="top: 3%; left: 22%;">
+          <input type="file" id="file-1" class="file-input" accept="image/*">
+          <label for="file-1" class="file-label">
+            <span>인물</span>
+            <img class="preview" alt="미리보기">
+          </label>
+        </div>
+        <div class="upload-slot person" style="top: 4%; left: 54%;">
+          <input type="file" id="file-2" class="file-input" accept="image/*">
+          <label for="file-2" class="file-label">
+            <span>인물</span>
+            <img class="preview" alt="미리보기">
+          </label>
+        </div>
+        <div class="upload-slot item" style="top: 49%; left: 8%;">
+          <input type="file" id="file-3" class="file-input" accept="image/*">
+          <label for="file-3" class="file-label">
+            <span>소품</span>
+            <span>복장</span>
+            <img class="preview" alt="미리보기">
+          </label>
+        </div>
+        <div class="upload-slot item" style="top: 49%; left: 70%;">
+          <input type="file" id="file-5" class="file-input" accept="image/*">
+          <label for="file-5" class="file-label">
+            <span>소품</span>
+            <span>복장</span>
+            <img class="preview" alt="미리보기">
+          </label>
+        </div>
+      </div>
+
+      <div class="middle-placeholder"></div>
+
+      <div class="form-placeholder">
+        <div class="form-section"><input type="text" placeholder="장래희망은?"></div>
+        <div class="form-section"><input type="text" placeholder="이름은?"></div>
+        <div class="form-section"><input type="password" placeholder="비밀번호는?"></div>
+      </div>
+    </section>
+
+    <section class="clapperboard-grid">
+      <div class="clapperboard-item"></div>
+      <div class="clapperboard-item"></div>
+      <div class="clapperboard-item"></div>
+      <div class="clapperboard-item"></div>
+    </section>
+  </div>
+
+  <script>
+    /* ====== form.html 의 업로드 슬롯 스크립트 유지 ====== */
+    (function(){
+      const uploadSlots = document.querySelectorAll('.upload-slot');
+      uploadSlots.forEach(slot => {
+        const fileInput = slot.querySelector('.file-input');
+        const fileLabel = slot.querySelector('.file-label');
+        const previewImage = slot.querySelector('.preview');
+        const firstSpan = slot.querySelector('span'); // 안내 텍스트
+
+        fileInput.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewImage.src = e.target.result;
+              previewImage.style.display = 'block';
+              if (firstSpan) firstSpan.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      });
+    })();
+
+    /* ====== clap.html -> 함수형 컴포넌트 변환 ====== */
+    function createClap({ scene = 1 } = {}) {
+      const root = document.createElement('div');
+      root.className = 'clap';
+      root.innerHTML = `
+        <div class="board" aria-label="클래퍼보드">
+          <div class="board__bg" role="img" aria-label="클래퍼보드 이미지"></div>
+          <div class="overlay" aria-hidden="false">
+            <div class="slate-area">
+              <div class="box scene">
+                <h2 id="sceneTitle">#SCENE</h2>
+                <span class="num" aria-labelledby="sceneTitle">${String(scene)}</span>
+              </div>
+
+              ${[
+                '주인공 설정','배경','장면','조연 설정','카메라','효과음','배경음악'
+              ].map((label, idx) => {
+                const checked = (label === '카메라' || label === '배경음악') ? false : true;
+                const mark = checked ? '✓' : '✗';
+                const aria = checked ? 'true' : 'false';
+                const dataState = checked ? '' : ' data-state="no"';
+                return `
+                <div class="box row">
+                  <div class="label">${label}</div>
+                  <div class="cell-toggle"><button class="toggle"${dataState} aria-pressed="${aria}">${mark}</button></div>
+                  <div class="cell-input"><textarea class="input"></textarea></div>
+                </div>`;
+              }).join('')}
+
+              <div class="box copybar">
+                <strong>COPY</strong>
+                <span class="hint">행의 ✓/✗ 은 버튼으로 토글됩니다</span>
+                <button class="copybtn" type="button">표 텍스트 복사</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 이벤트: 토글
+      root.querySelectorAll('.toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pressed = btn.getAttribute('aria-pressed') === 'true';
+          const next = !pressed;
+          btn.setAttribute('aria-pressed', String(next));
+          if (next) { btn.textContent = '✓'; btn.removeAttribute('data-state'); }
+          else { btn.textContent = '✗'; btn.dataset.state = 'no'; }
+        });
+      });
+
+      // 이벤트: 복사 (해당 컴포넌트 범위만)
+      root.querySelectorAll('.copybtn').forEach(copyBtn => {
+        copyBtn.addEventListener('click', () => {
+          const board = copyBtn.closest('.board');
+          const rows = [...board.querySelectorAll('.row')].map(r => {
+            const label = r.querySelector('.label')?.textContent.trim() || '';
+            const toggle = r.querySelector('.toggle')?.textContent.trim() || '';
+            const input = r.querySelector('.input')?.value || '';
+            return [label, toggle, input].join('\t');
+          });
+          const header = ['항목','체크','내용'].join('\t');
+          const scene = board.querySelector('.scene .num')?.textContent || '1';
+          const title = `#SCENE ${scene}`;
+          const out = [title, header, ...rows].join('\n');
+
+          navigator.clipboard.writeText(out)
+            .then(() => {
+              const old = copyBtn.textContent;
+              copyBtn.textContent = '복사 완료!';
+              setTimeout(() => copyBtn.textContent = old, 1200);
+            })
+            .catch(() => alert('복사에 실패했습니다.'));
+        });
+      });
+
+      return root;
+    }
+
+    /* ====== 모든 .clapperboard-item 에 컴포넌트 주입 ====== */
+    document.addEventListener('DOMContentLoaded', () => {
+      const slots = document.querySelectorAll('.clapperboard-item');
+      slots.forEach((slot, i) => {
+        slot.innerHTML = ''; // 기존 자리 텍스트 제거
+        slot.appendChild(createClap({ scene: i + 1 }));
+      });
+    });
+  </script>
+</body>
+</html>

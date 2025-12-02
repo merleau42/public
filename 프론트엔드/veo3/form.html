@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이지 레이아웃 (테두리 및 배경색 재조정)</title>
+
+    <style>
+        /* 기본 스타일 초기화 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        /* 전체 페이지 레이아웃 (이미지의 초록색 큰 테두리) */
+        .page-layout {
+            border: 3px solid green;
+            width: 100%;
+            max-width: 2500px;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+
+        /* --- 상단 섹션 --- */
+
+        .top-section {
+            display: flex;
+            /* border: 2px solid lightgreen; 삭제 */
+            /* margin: 20px; 삭제 */
+            background-size: cover;
+        }
+
+        /* 1. 이미지 업로드 컨테이너 (왼쪽, 비율 4) */
+        .upload-container {
+            flex-basis: calc(4 / 9 * 100%); 
+            aspect-ratio: 1 / 1; 
+            position: relative; 
+            /* border-right: 2px solid lightgreen; 삭제 */
+            background-image: url('job.gif');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- 수정된 .upload-slot 스타일 --- */
+        .upload-slot {
+            position: absolute;
+            width: 20%; 
+            height: 20%; 
+            overflow: hidden;
+            /* border: 2px dotted rgba(0, 0, 0, 0.2);  */
+            animation: blink 1.4s linear infinite;
+        }
+
+        .upload-slot.person {
+            border-radius: 40px;
+        }
+
+        .upload-slot.item {
+            border-radius: 15px;
+        }
+
+        .upload-slot:hover {
+            background-color: rgba(255, 255, 255, 0.3) !important; 
+        }
+
+        .upload-slot:not(:hover) span{
+            display: none;
+        }
+        .upload-slot:hover span{
+            color: black;
+        }
+
+
+        .file-input { display: none; }
+
+        /* --- 수정된 .file-label 스타일 --- */
+        .file-label {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-in;
+            font-size: 2.2vw;
+            font-weight: bold;
+            text-shadow: 2px 3px 5px gray;
+            color: gainsboro; 
+        }
+
+        .preview {
+            display: none; 
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 2. 가운데 칸 (비율 3) */
+        .middle-placeholder {
+            flex-basis: calc(3 / 9 * 100%); 
+            /* border-right: 2px solid lightgreen; 삭제 */
+            background-image: url('director.gif');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* 3. 설문폼 플레이스홀더 (오른쪽, 비율 2) */
+        .form-placeholder {
+            flex-basis: calc(2 / 9 * 100%);
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        /* 설문폼 내부의 3개 섹션 */
+        .form-section {
+            flex: 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            text-align: center;
+            color: #555;
+            
+            background-image: url('goorm.png'); 
+            background-size:cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* 인풋 필드 스타일 */
+        .form-section input[type="text"],
+        .form-section input[type="password"] {
+            width: 80%; 
+            padding: 8px 0px;
+            border: none; 
+            
+            background-color: transparent; 
+            box-shadow: none; 
+            font-size: 2vw; 
+            position: relative; 
+            left: 2px;
+            top: -2px; 
+
+            border-radius: 0; 
+            
+            text-align: center;
+            color: #000; 
+            font-weight: bold;
+            outline: none; 
+        }
+
+        .form-section input::placeholder {
+            color: #333; 
+            font-weight: normal;
+        }
+
+        input:focus::placeholder {
+            color: transparent; 
+        }
+
+        /* --- 하단 클래퍼보드 섹션 --- */
+
+        .clapperboard-grid {
+            padding: 20px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(2, 1fr); 
+        }
+
+        .clapperboard-item {
+            aspect-ratio: 4 / 3; 
+            background-color: #333;
+            color: white;
+            border: 2px solid black;
+            padding: 15px;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* --- 반응형 (모바일) --- */
+        @media (max-width: 768px) {
+            .clapperboard-grid {
+                grid-template-columns: 1fr; 
+            }
+
+            /* 모바일에서도 슬롯 크기가 너무 작아지지 않도록 폰트 크기 조정 */
+            .file-label {
+                font-size: 6vmax; 
+            }
+
+            /* .top-section 자식 요소의 모바일 테두리 삭제 */
+            .upload-container,
+            .middle-placeholder,
+            .form-placeholder {
+                border-bottom: none; /* 이전 border-bottom: 2px solid lightgreen; 삭제 */
+            }
+        }
+        @keyframes blink {
+            0%    { background-color: rgba(255, 255, 255, 0.3); border: 2px dotted rgba(0, 0, 0, 0.3);}
+            50%   { background-color: rgba(255, 255, 255, 0.1); border: 2px dotted rgba(0, 0, 0, 0.1);}
+            100%  { background-color: rgba(255, 255, 255, 0.3); border: 2px dotted rgba(0, 0, 0, 0.3);}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-layout">
+
+        <section class="top-section">
+            
+            <div class="upload-container">
+                <div class="upload-slot person" style="top: 3%; left: 22%;">
+                    <input type="file" id="file-1" class="file-input" accept="image/*">
+                    <label for="file-1" class="file-label">
+                        <span>인물</span>
+                        <img class="preview" alt`="미리보기">
+                    </label>
+                </div>
+                <div class="upload-slot person" style="top: 4%; left: 54%;">
+                    <input type="file" id="file-2" class="file-input" accept="image/*">
+                    <label for="file-2" class="file-label">
+                        <span>인물</span>
+                        <img class="preview" alt="미리보기">
+                    </label>
+                </div>
+                <div class="upload-slot item" style="top: 49%; left: 8%;">
+                    <input type="file" id="file-3" class="file-input" accept="image/*">
+                    <label for="file-3" class="file-label">
+                        <span>소품</span>
+                        <span>복장</span>
+                        <img class="preview" alt="미리보기">
+                    </label>
+                </div>
+                <div class="upload-slot item" style="top: 49%; left: 70%;">
+                    <input type="file" id="file-5" class="file-input" accept="image/*">
+                    <label for="file-5" class="file-label">
+                        <span>소품</span>
+                        <span>복장</span>
+                        <img class="preview" alt="미리보기">
+                    </label>
+                </div>
+            </div>
+
+            <div class="middle-placeholder">
+                
+</div>
+
+            <div class="form-placeholder">
+                <div class="form-section">
+                    <input type="text" placeholder="장래희망은?">
+                </div>
+                <div class="form-section">
+                    <input type="text" placeholder="이름은?">
+                </div>
+                <div class="form-section">
+                    <input type="password" placeholder="비밀번호는?">
+                </div>
+            </div>
+        </section>
+
+        <section class="clapperboard-grid">
+            <div class="clapperboard-item">
+                컴포넌트(clap) 자리
+            </div>
+            <div class="clapperboard-item">
+                컴포넌트(clap) 자리
+            </div>
+            <div class="clapperboard-item">
+                컴포넌트(clap) 자리
+            </div>
+            <div class="clapperboard-item">
+                컴포넌트(clap) 자리
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // 페이지의 모든 'upload-slot' 요소를 선택합니다.
+        const uploadSlots = document.querySelectorAll('.upload-slot');
+
+        uploadSlots.forEach(slot => {
+            // 각 슬롯 내부의 필요한 요소들을 찾습니다.
+            const fileInput = slot.querySelector('.file-input');
+            const fileLabel = slot.querySelector('.file-label');
+            const previewImage = slot.querySelector('.preview');
+            const plusIcon = slot.querySelector('span'); // '+' 아이콘
+
+            // 파일 인풋에 'change' 이벤트 리스너를 추가합니다.
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        plusIcon.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
