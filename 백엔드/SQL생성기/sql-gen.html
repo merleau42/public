@@ -709,23 +709,33 @@
 		});
 	}
 
-	function insertBlankRowAfter(row){
+	function insertBlankRowAfter(row, { copyFromRow = null } = {}){
 		const n = colCount();
 		const tr = document.createElement('tr');
 		tr.dataset.row = 'record';
 		tr.innerHTML = `<td></td>` + `<td><div class="cell-edit" contenteditable></div></td>`.repeat(n);
 		row.insertAdjacentElement('afterend', tr);
 
+		// ✅ copyFromRow가 있으면 값 복사
+		if (copyFromRow) {
+			for (let i = 1; i <= n; i++) {
+				const fromEdit = copyFromRow.cells[i]?.querySelector('.cell-edit');
+				const toEdit   = tr.cells[i]?.querySelector('.cell-edit');
+				if (toEdit) toEdit.textContent = (fromEdit?.textContent || "");
+			}
+		}
+
 		ensureRowActionUI();
 		renumberRows();
 		render();
 
+		// 포커스 이동: 복사든 빈행이든 첫 칸으로
 		const firstEdit = tr.cells[1]?.querySelector('.cell-edit');
 		if (firstEdit) {
 			firstEdit.focus();
 			setCursorTo(firstEdit, 0);
 		}
-	}
+}
 
 	function deleteRow(row){
 		const rows = dataSheet.querySelectorAll('tbody tr[data-row="record"]');
@@ -743,10 +753,21 @@
 		if (!row) return;
 
 		const action = btn.dataset.rowAction;
-		if (action === 'add') insertBlankRowAfter(row);
+		if (action === 'add') insertBlankRowAfter(row, { copyFromRow: null });
 		if (action === 'del') deleteRow(row);
 	});
-	// ===== /Row actions =====
+
+	dataSheet.addEventListener('contextmenu', (e) => {
+		const btn = e.target.closest('[data-row-action="add"]');
+		if (!btn) return;
+
+		const row = btn.closest('tr[data-row="record"]');
+		if (!row) return;
+
+		e.preventDefault(); // 브라우저 우클릭 메뉴 막기
+		insertBlankRowAfter(row, { copyFromRow: row });
+	});
+
 
 	// ===== Column actions (+ / x) =====
 	function ensureColActionUI(){
