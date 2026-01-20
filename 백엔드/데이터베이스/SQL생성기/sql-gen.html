@@ -10,8 +10,8 @@
 		body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
 
 		.wrap { display:grid; grid-template-rows: 1fr 0.65fr; height:100vh; overflow:hidden}
-		.up { height: 70vh; padding:12px; overflow:auto; background:#fff; }
-		.down { height: 22vh; padding:12px; background:var(--bg); border-top:1px solid var(--b); }
+		.up { height: 71vh; padding:12px; overflow:auto; background:#fff; }
+		.down { height: 21vh; padding:12px; background:var(--bg); border-top:1px solid var(--b); }
 		.downGrid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; height:100%; }
 
 		h2 { margin:4px 0 8px; font-size:15px; display:flex; align-items:center; gap:8px; }
@@ -43,11 +43,7 @@
 		[data-select="single"] .v-cell.selected { background:var(--selected-bg-single); }
 
 
-		#metaSheet [data-meta="name"] .cell-edit {
-			background-color: palegreen;
-		}
-
-		/* 테이블명 셀 */
+		#metaSheet [data-meta="name"] .cell-edit,
 		#metaSheet [data-meta="table-name"] .cell-edit {
 			background-color: #fff7cc;
 			font-weight: 700;
@@ -144,7 +140,6 @@
 		#dataSheet thead tr[data-meta="name-mirror"] th .cell-edit{
 			display:block;
 			min-height: 22px;
-			padding-right: 28px; /* col-actions 공간 */
 		}
 
 		[data-meta=constraint], [data-meta=constraint-key], [data-meta=type]{
