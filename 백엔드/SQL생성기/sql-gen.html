@@ -558,7 +558,7 @@
 		return records.map(r=>{
 			const values = r.map((v, idx) => formatValueByType(v, cols[idx]?.type, cols[idx]?.size));
 			return `${insertClause}(${values.join(", ")})`;
-		}).join(";\n") + ";" + `\n\nselect ${selectList} from ${tableName};`;
+		}).join(";\n") + ";" + `\n\nselect * from ${tableName};`;
 	}
 
 	function copyToClipboard(textToCopy, buttonElement) {
