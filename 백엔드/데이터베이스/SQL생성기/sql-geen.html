@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>DDL/DML 실시간 생성기</title>
+
+	<style>
+		:root { --b:gray; --bg:#f6f8fa; --selected-bg:palegreen; --selected-bg-single:palegreen; }
+		body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+		.wrap { display:grid; grid-template-rows: 1fr 0.65fr; height:100vh; overflow:hidden}
+		.up { height: 71vh; padding:12px; overflow:auto; background:#fff; }
+		.down { height: 21vh; padding:12px; background:var(--bg); border-top:1px solid var(--b); }
+		.downGrid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; height:100%; }
+
+		h2 { margin:4px 0 8px; font-size:15px; display:flex; align-items:center; gap:8px; }
+
+		/* 버튼/체크박스 라인 */
+		.h-actions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+		.h-actions label{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:normal; }
+
+		button { border:1px solid var(--b); background:#fff; border-radius:8px; cursor:pointer; }
+		button:hover { background:#f2f4f7; }
+
+		/* 테이블 스타일 */
+		table { border-collapse:collapse; width:100%; table-layout:fixed; border: 2px solid black; }
+		#metaSheet { margin-bottom: 15px; }
+		td, th { padding:0; text-align:center; vertical-align:middle; border: 1px solid black}
+		td:first-child, th:first-child {border-right-width: 2px;}
+		.cell-edit { display: block;  height: 100%; outline:none; text-align:center; padding: 3px 6px; box-sizing: border-box;}
+
+		.v-group { display:flex; flex-direction:column; height:100%; }
+		.h-cell, .v-cell {
+			display:flex; align-items:center; justify-content:center;
+			flex:1; padding:3px 6px; font-size:14px; cursor:pointer; user-select:none;
+		}
+		.v-cell { border-top: 1px solid var(--b); }
+		.v-cell:first-child { border-top:none; }
+
+		.h-cell.selected { background:var(--selected-bg); }
+		.v-cell.selected { background:var(--selected-bg); }
+		[data-select="single"] .v-cell.selected { background:var(--selected-bg-single); }
+
+
+		#metaSheet [data-meta="name"] .cell-edit,
+		#metaSheet [data-meta="table-name"] .cell-edit {
+			background-color: #fff8cc;
+			font-weight: 700;
+		}
+
+		textarea {
+			width:100%;
+			height:100%;
+			resize:none;
+			border:1px solid var(--b);
+			border-radius:10px;
+			padding:10px;
+			box-sizing:border-box;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		}
+
+		textarea#ddl { width: 33vw; }
+		textarea#dml { width: 63vw; }
+
+		@media (max-width: 900px){
+			.wrap { grid-template-rows: 1fr 1fr; }
+			.downGrid { grid-template-columns: 1fr; }
+			textarea { height:240px; }
+		}
+
+		td:first-child, th:first-child{ background-color: #f0f0f0; font-weight: bold;width: 10vw; }
+
+		/* ===== dataSheet thead 왼쪽상단 대각선 셀 ===== */
+		.diag-cell{
+			position:relative;
+			background:
+				linear-gradient(to bottom left,
+					transparent 49%,
+					#666 50%,
+					#666 51%,
+					transparent 52%);
+			font-weight:700;
+		}
+		.diag-cell p{
+			margin: 0;
+			padding: 0 3px;
+		}
+
+		/* ===== Row hover actions (+ / x) ===== */
+		#dataSheet tbody tr[data-row="record"] td:first-child{ position:relative; }
+		.row-actions{
+			display:none; align-items:center; gap:6px; justify-content:space-between; padding:0 6px;
+		}
+		.row-actions .emoji-btn{
+			cursor:pointer; user-select:none; font-size:14px; line-height:1;
+			padding:2px 4px; border-radius:6px;
+		}
+		.row-actions .emoji-btn:hover{ background:#e9eef3; }
+		#dataSheet tbody tr[data-row="record"]:hover .row-actions{ display:flex; }
+		.row-no{ display:inline-block; min-width:20px; }
+		#dataSheet tbody tr[data-row="record"] td:first-child .row-no-only{ display:block; }
+		#dataSheet tbody tr[data-row="record"]:hover td:first-child .row-no-only{ display:none; }
+
+		/* ===== Column hover actions (+ / x) on meta name row ===== */
+		#metaSheet thead tr[data-meta="name"] td{ position:relative; }
+		.col-actions{
+			position:absolute; top:2px; right:2px;
+			display:none; gap:4px; align-items:center;
+		}
+		#metaSheet thead tr[data-meta="name"] td:hover .col-actions{ display:flex; }
+		.col-actions .emoji-btn{
+			cursor:pointer; user-select:none; font-size:12px; line-height:1;
+			padding:2px 3px; border-radius:6px;
+			background:rgba(255,255,255,0.8);
+		}
+		.col-actions .emoji-btn:hover{ background:#e9eef3; }
+
+		/* ✅ 메타시트 본문 hover가 헤더에 반영될 때 */
+		#metaSheet thead tr[data-meta="name"] td.col-hover .col-actions{ display:flex; }
+
+		/* ✅ dataSheet thead에도 col-actions */
+		#dataSheet thead th{ position:relative; }
+		#dataSheet thead th:hover .col-actions{ display:flex; }
+		#dataSheet thead th.col-hover .col-actions{ display:flex; }
+
+		/* ===== Empty warning (meta only) ===== */
+		.cell-edit.is-empty {
+			background-color: #FFB347 !important;
+		}
+
+		/* contenteditable placeholder */
+		.cell-edit[data-ph]:empty:before{
+			content: attr(data-ph);
+			color: rgba(0,0,0,0.45);
+			font-weight: 500;
+		}
+
+		/* ===== ✅ dataSheet name-mirror row editable look ===== */
+		#dataSheet thead tr[data-meta="name-mirror"] th .cell-edit{
+			display:block;
+			min-height: 22px;
+		}
+
+		[data-meta=constraint], [data-meta=constraint-key], [data-meta=type]{
+			border-top: 2px solid black;
+		}
+	</style>
+</head>
+
+<body>
+<div class="wrap">
+
+	<!-- UP -->
+	<div class="up">
+		<table id="metaSheet">
+			<thead>
+				<!-- T_NAME -->
+				<tr data-meta="table-name">
+					<td>테이블</td>
+					<td colspan="1">
+						<div class="cell-edit" contenteditable data-table-name></div>
+					</td>
+				</tr>
+
+				<!-- NAME (초기 4개 컬럼) -->
+				<tr data-meta="name">
+					<td>컬럼</td>
+					<td><div class="cell-edit" contenteditable data-col-index="1"></div></td>
+					<td><div class="cell-edit" contenteditable data-col-index="2"></div></td>
+					<td><div class="cell-edit" contenteditable data-col-index="3"></div></td>
+					<td><div class="cell-edit" contenteditable data-col-index="4"></div></td>
+				</tr>
+
+				<!-- ✅ KEY (PK/FK) -->
+				<tr data-meta="constraint-key">
+					<td>키</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="pk">PRIMARY KEY</div>
+							<div class="v-cell" data-k="fk">FOREIGN KEY</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="pk">PRIMARY KEY</div>
+							<div class="v-cell" data-k="fk">FOREIGN KEY</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="pk">PRIMARY KEY</div>
+							<div class="v-cell" data-k="fk">FOREIGN KEY</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="pk">PRIMARY KEY</div>
+							<div class="v-cell" data-k="fk">FOREIGN KEY</div>
+						</div>
+					</td>
+				</tr>
+
+				<!-- Constraints -->
+				<tr data-meta="constraint">
+					<td>제약</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="notnull">NOT NULL</div>
+							<div class="v-cell" data-k="unique">UNIQUE</div>
+							<div class="v-cell" data-k="check">CHECK</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="notnull">NOT NULL</div>
+							<div class="v-cell" data-k="unique">UNIQUE</div>
+							<div class="v-cell" data-k="check">CHECK</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="notnull">NOT NULL</div>
+							<div class="v-cell" data-k="unique">UNIQUE</div>
+							<div class="v-cell" data-k="check">CHECK</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="multiple">
+							<div class="v-cell" data-k="notnull">NOT NULL</div>
+							<div class="v-cell" data-k="unique">UNIQUE</div>
+							<div class="v-cell" data-k="check">CHECK</div>
+						</div>
+					</td>
+				</tr>
+
+				<!-- TYPE -->
+				<tr data-meta="type">
+					<td>자료형</td>
+					<td>
+						<div class="v-group" data-select="single">
+							<div class="v-cell selected" data-v="varchar2">varchar2</div>
+							<div class="v-cell" data-v="char">char</div>
+							<div class="v-cell" data-v="number">number</div>
+							<div class="v-cell" data-v="date">date</div>
+							<div class="v-cell" data-v="timestamp">timestamp</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="single">
+							<div class="v-cell selected" data-v="varchar2">varchar2</div>
+							<div class="v-cell" data-v="char">char</div>
+							<div class="v-cell" data-v="number">number</div>
+							<div class="v-cell" data-v="date">date</div>
+							<div class="v-cell" data-v="timestamp">timestamp</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="single">
+							<div class="v-cell selected" data-v="varchar2">varchar2</div>
+							<div class="v-cell" data-v="char">char</div>
+							<div class="v-cell" data-v="number">number</div>
+							<div class="v-cell" data-v="date">date</div>
+							<div class="v-cell" data-v="timestamp">timestamp</div>
+						</div>
+					</td>
+					<td>
+						<div class="v-group" data-select="single">
+							<div class="v-cell selected" data-v="varchar2">varchar2</div>
+							<div class="v-cell" data-v="char">char</div>
+							<div class="v-cell" data-v="number">number</div>
+							<div class="v-cell" data-v="date">date</div>
+							<div class="v-cell" data-v="timestamp">timestamp</div>
+						</div>
+					</td>
+				</tr>
+
+				<!-- SIZE -->
+				<tr data-meta="size">
+					<td>크기/양식</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+			</thead>
+		</table>
+
+		<table id="dataSheet">
+			<thead>
+				<tr data-meta="name-mirror">
+					<th class="diag-cell"></th>
+					<!-- ✅ name-mirror도 직접 편집 가능 -->
+					<th data-col-index="1"><div class="cell-edit" contenteditable data-col-index="1"></div></th>
+					<th data-col-index="2"><div class="cell-edit" contenteditable data-col-index="2"></div></th>
+					<th data-col-index="3"><div class="cell-edit" contenteditable data-col-index="3"></div></th>
+					<th data-col-index="4"><div class="cell-edit" contenteditable data-col-index="4"></div></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-row="record">
+					<td>1</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+				<tr data-row="record">
+					<td>2</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+				<tr data-row="record">
+					<td>3</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+				<tr data-row="record">
+					<td>4</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+				<tr data-row="record">
+					<td>5</td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+					<td><div class="cell-edit" contenteditable></div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- DOWN -->
+	<div class="down">
+		<div class="downGrid">
+			<div>
+				<h2>
+					DDL
+					<span class="h-actions">
+						<label><input type="checkbox" id="simpleDDL" checked>간략히</label>
+						<button id="copyDDL">DDL 복사</button>
+						<button id="copyAllDDL">모두 복사</button>
+					</span>
+				</h2>
+				<textarea id="ddl"></textarea>
+			</div>
+			<div>
+				<h2>
+					DML
+					<span class="h-actions">
+						<label><input type="checkbox" id="simpleDML" checked>간략히</label>
+						<button id="copyDML">DML 복사</button>
+						<button id="copyAllDML">모두 복사</button>
+					</span>
+				</h2>
+				<textarea id="dml"></textarea>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+(function(){
+	const metaSheet = document.getElementById("metaSheet");
+	const dataSheet = document.getElementById("dataSheet");
+	const ddl = document.getElementById("ddl");
+	const dml = document.getElementById("dml");
+	const simpleDDLCheckbox = document.getElementById("simpleDDL");
+	const simpleDMLCheckbox = document.getElementById("simpleDML");
+
+	const copyDDLButton = document.getElementById("copyDDL");
+	const copyDMLButton = document.getElementById("copyDML");
+	const copyAllDDLButton = document.getElementById("copyAllDDL");
+	const copyAllDMLButton = document.getElementById("copyAllDML");
+
+	function text(cell){
+		const e = cell.querySelector("[contenteditable]");
+		return (e ? e.textContent : "").trim();
+	}
+
+	function colCount(){
+		return metaSheet.querySelector('thead [data-meta="name"]').cells.length - 1;
+	}
+
+	function getTableName(){
+		const el = metaSheet.querySelector('[data-meta="table-name"] [data-table-name]');
+		return (el?.textContent || "").trim() || "테이블";
+	}
+
+	function syncTableNameColspan(){
+		const n = colCount();
+		const row = metaSheet.querySelector('thead [data-meta="table-name"]');
+		if (!row) return;
+		const td = row.cells[1];
+		if (!td) return;
+		td.colSpan = Math.max(1, n);
+	}
+
+	function getTypeByCol(colIndex1Based){
+		const cell = metaSheet.querySelector('thead [data-meta="type"]').cells[colIndex1Based];
+		const selected = cell.querySelector('.v-cell.selected');
+		return (selected ? selected.dataset.v : "varchar2").toLowerCase();
+	}
+
+	function getConstraintsByCol(colIndex1Based){
+		const cell = metaSheet.querySelector('thead [data-meta="constraint"]').cells[colIndex1Based];
+		const selected = [...cell.querySelectorAll('.v-cell.selected')];
+		const cons = {};
+		selected.forEach(el => cons[el.dataset.k] = true);
+		return cons;
+	}
+
+	function cols(){
+		const nameRow = metaSheet.querySelector('thead [data-meta="name"]');
+		const sizeRow = metaSheet.querySelector('thead [data-meta="size"]');
+		const keyRow  = metaSheet.querySelector('thead [data-meta="constraint-key"]');
+
+		const n = colCount();
+		const out = [];
+
+		for(let i=1;i<=n;i++){
+			const name = text(nameRow.cells[i]) || `컬럼${i}`;
+			const size = text(sizeRow.cells[i]) || null;
+			const type = getTypeByCol(i);
+
+			const keySelected = [...keyRow.cells[i].querySelectorAll('.v-cell.selected')];
+			const pk = keySelected.some(el => el.dataset.k === 'pk');
+			const fk = keySelected.some(el => el.dataset.k === 'fk');
+
+			const cons = getConstraintsByCol(i);
+			out.push({ name, type, size, pk, fk, cons });
+		}
+		return out;
+	}
+
+	function inferIsNumeric(v){
+		const s = String(v ?? "").trim();
+		if (s === "") return false;
+		return /^-?\d+(\.\d+)?$/.test(s);
+	}
+
+	// ✅ 날짜는 sizeOrFmt를 to_date/to_timestamp 포맷으로 사용
+	function formatValueByType(v, colType, sizeOrFmt){
+		const s = (v ?? "").toString().trim();
+		if (s === "") return "null";
+
+		const t = (colType || "").toLowerCase();
+
+		const isNumType =
+			t.startsWith("number") || t === "int" || t === "integer" || t === "float" || t === "double";
+		if (isNumType) return inferIsNumeric(s) ? s : "null";
+
+		const fmt = (sizeOrFmt || "").trim();
+		if (t === "date") {
+			const f = fmt || "YYYY-MM-DD";
+			return `to_date('${s.replaceAll("'", "''")}', '${f.replaceAll("'", "''")}')`;
+		}
+		if (t === "timestamp") {
+			const f = fmt || "YYYY-MM-DD HH24:MI:SS";
+			return `to_timestamp('${s.replaceAll("'", "''")}', '${f.replaceAll("'", "''")}')`;
+		}
+
+		return `'${s.replaceAll("'", "''")}'`;
+	}
+
+	function readRecords(cols){
+		const rows = [...dataSheet.querySelectorAll('tbody [data-row="record"]')];
+		const n = cols.length;
+
+		return rows
+			.map(r => {
+				const vals = [];
+				let any = false;
+				for(let i=1;i<=n;i++){
+					const v = text(r.cells[i]);
+					if (v !== "") any = true;
+					vals.push(v);
+				}
+				return any ? vals : null;
+			})
+			.filter(Boolean);
+	}
+
+	function generateDDL(tableName, cols){
+		const simple = simpleDDLCheckbox.checked;
+		const lines = cols.map(c => {
+			let typePart = c.type || "varchar2";
+			if (c.size && c.type !== 'date' && c.type !== 'timestamp') {
+				typePart += `(${c.size})`;
+			}
+
+			let line = `    ${c.name || "/*col*/"} ${typePart}`;
+			if (c.cons?.notnull) line += "  not null";
+			if (c.cons?.unique)  line += "  unique";
+			if (c.cons?.check)   line += "  check(조건)";
+			return line;
+		});
+
+		const pkCols = cols.filter(c=>c.pk).map(c=>c.name).filter(Boolean);
+		if(pkCols.length){
+			if (simple) {
+				lines.push(`    primary key (${pkCols.join(", ")})`);
+			} else {
+				lines.push(`    constraint PK_${tableName} primary key (${pkCols.join(", ")})`);
+			}
+		}
+
+		// ✅ FK 선택 컬럼도 생성 (ref는 placeholder)
+		const fkCols = cols.filter(c=>c.fk).map(c=>c.name).filter(Boolean);
+		if (fkCols.length){
+			fkCols.forEach(col => {
+				if (simple) {
+					lines.push(`    foreign key (${col}) references 테이블(컬럼)`);
+				} else {
+					lines.push(`    constraint FK_${tableName}_${col} foreign key (${col}) references 테이블(컬럼)`);
+				}
+			});
+		}
+
+		return `--- ${tableName} ---\ndrop table ${tableName};\ncreate table ${tableName} (\n${lines.join(",\n")}\n);\ntruncate table ${tableName};`;
+	}
+
+	function generateDML(tableName, cols, records){
+		if(!records.length) return "";
+		const simple = simpleDMLCheckbox.checked;
+
+		let insertClause = `insert into ${tableName}`;
+		if (!simple) {
+			const colNames = cols.map(c => c.name || "/*col*/").join(", ");
+			insertClause += ` (${colNames})`;
+		}
+		insertClause += " values";
+
+		// ✅ select에서 size(포맷) 참조: date/timestamp는 to_char로 표시
+		const selectList = cols.map(c => {
+			const t = (c.type || "").toLowerCase();
+			const fmt = (c.size || "").trim();
+
+			if (t === "date") {
+				const f = fmt || "YYYY-MM-DD";
+				return `to_char(${c.name}, '${f.replaceAll("'", "''")}') as ${c.name}`;
+			}
+			if (t === "timestamp") {
+				const f = fmt || "YYYY-MM-DD HH24:MI:SS";
+				return `to_char(${c.name}, '${f.replaceAll("'", "''")}') as ${c.name}`;
+			}
+			return `${c.name}`;
+		}).join(", ");
+
+		return records.map(r=>{
+			const values = r.map((v, idx) => formatValueByType(v, cols[idx]?.type, cols[idx]?.size));
+			return `${insertClause}(${values.join(", ")})`;
+		}).join(";\n") + ";" + `\n\nselect ${selectList} from ${tableName};`;
+	}
+
+	function copyToClipboard(textToCopy, buttonElement) {
+		navigator.clipboard.writeText(textToCopy).then(() => {
+			const originalText = buttonElement.textContent;
+			buttonElement.textContent = "복사 완료!";
+			setTimeout(() => buttonElement.textContent = originalText, 1500);
+		}).catch(err => {
+			console.error('클립보드 복사 실패:', err);
+			alert('클립보드 복사에 실패했습니다.');
+		});
+	}
+
+	// ===== Cursor Utils =====
+	function setCursorTo(element, location) {
+		if (!element) return;
+		element.focus();
+
+		const selection = window.getSelection();
+		if (!selection) return;
+
+		const totalLen = element.textContent?.length ?? 0;
+		let loc = Number(location);
+		if (Number.isNaN(loc)) loc = totalLen;
+		loc = Math.max(0, Math.min(totalLen, loc));
+
+		function resolveTextOffset(root, textOffset) {
+			let remain = textOffset;
+			const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+			let node = walker.nextNode();
+			if (!node) return { node: root, offset: 0 };
+
+			while (node) {
+				const len = node.nodeValue?.length ?? 0;
+				if (remain <= len) return { node, offset: remain };
+				remain -= len;
+				node = walker.nextNode();
+			}
+
+			let last = null;
+			const w2 = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+			while ((node = w2.nextNode())) last = node;
+			if (last) return { node: last, offset: last.nodeValue.length };
+			return { node: root, offset: 0 };
+		}
+
+		const { node, offset } = resolveTextOffset(element, loc);
+		const range = document.createRange();
+		range.setStart(node, offset);
+		range.collapse(true);
+
+		selection.removeAllRanges();
+		selection.addRange(range);
+	}
+
+	function getCursorLocation(element) {
+		if (!element) return 0;
+		const selection = window.getSelection();
+		if (!selection || selection.rangeCount === 0) return 0;
+
+		const range = selection.getRangeAt(0);
+		if (!element.contains(range.startContainer)) return 0;
+
+		const preRange = document.createRange();
+		preRange.selectNodeContents(element);
+		preRange.setEnd(range.startContainer, range.startOffset);
+
+		return preRange.toString().length;
+	}
+
+	function mapLocationByRatio(curLoc, curLen, nextLen) {
+		if (nextLen <= 0) return 0;
+		if (curLen <= 0) return 0;
+		const ratio = curLoc / curLen;
+		const mapped = Math.round(ratio * nextLen);
+		return Math.max(0, Math.min(nextLen, mapped));
+	}
+	// ===== /Cursor Utils =====
+
+	// ===== Name sync helpers (META <-> DATA THEAD) =====
+	function getMetaNameEdit(colIndex1Based){
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		return nameRow?.cells[colIndex1Based]?.querySelector('.cell-edit') || null;
+	}
+	function getDataHeaderEdit(colIndex1Based){
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		return headerRow?.cells[colIndex1Based]?.querySelector('.cell-edit') || null;
+	}
+
+	// ✅ dataSheet thead에서 편집하면 meta name도 갱신 (커서 영향 없음)
+	function setMetaNameByDataHeader(colIndex1Based, newName){
+		const metaEdit = getMetaNameEdit(colIndex1Based);
+		if (!metaEdit) return;
+		const cur = metaEdit.textContent || "";
+		if (cur === newName) return;
+		metaEdit.textContent = newName;
+	}
+
+	// ✅ meta에서 편집하면 dataSheet thead도 갱신 (단, data 헤더 편집중이면 덮어쓰지 않음)
+	function setDataHeaderNameByMeta(colIndex1Based, newName){
+		const headerEdit = getDataHeaderEdit(colIndex1Based);
+		if (!headerEdit) return;
+
+		const active = document.activeElement;
+		const isEditingHeader = (active === headerEdit);
+		if (isEditingHeader) return;
+
+		const cur = headerEdit.textContent || "";
+		if (cur === newName) return;
+		headerEdit.textContent = newName;
+	}
+	// ===== /Name sync helpers =====
+
+	// ===== Row actions (+ / x) =====
+	function ensureRowActionUI(){
+		const rows = dataSheet.querySelectorAll('tbody tr[data-row="record"]');
+		rows.forEach((row) => {
+			const firstTd = row.cells[0];
+			if (!firstTd) return;
+			if (firstTd.querySelector('.row-actions')) return;
+
+			const initialNo = (firstTd.textContent || "").trim();
+			firstTd.innerHTML = `
+				<div class="row-no-only">${initialNo}</div>
+				<div class="row-actions">
+					<span class="emoji-btn" data-row-action="add" title="아래에 레코드 추가">➕</span>
+					<span class="row-no">${initialNo}</span>
+					<span class="emoji-btn" data-row-action="del" title="레코드 삭제">❌</span>
+				</div>
+			`;
+		});
+	}
+
+	function renumberRows(){
+		const recordRows = dataSheet.querySelectorAll('tbody tr[data-row="record"]');
+		recordRows.forEach((row, idx) => {
+			const no = String(idx + 1);
+			const firstTd = row.cells[0];
+			if (!firstTd) return;
+
+			const noOnly = firstTd.querySelector('.row-no-only');
+			const noSpan = firstTd.querySelector('.row-no');
+
+			if (noOnly) noOnly.textContent = no;
+			else firstTd.textContent = no;
+
+			if (noSpan) noSpan.textContent = no;
+		});
+	}
+
+	function insertBlankRowAfter(row){
+		const n = colCount();
+		const tr = document.createElement('tr');
+		tr.dataset.row = 'record';
+		tr.innerHTML = `<td></td>` + `<td><div class="cell-edit" contenteditable></div></td>`.repeat(n);
+		row.insertAdjacentElement('afterend', tr);
+
+		ensureRowActionUI();
+		renumberRows();
+		render();
+
+		const firstEdit = tr.cells[1]?.querySelector('.cell-edit');
+		if (firstEdit) {
+			firstEdit.focus();
+			setCursorTo(firstEdit, 0);
+		}
+	}
+
+	function deleteRow(row){
+		const rows = dataSheet.querySelectorAll('tbody tr[data-row="record"]');
+		if (rows.length <= 1) return;
+		row.remove();
+		ensureRowActionUI();
+		renumberRows();
+		render();
+	}
+
+	dataSheet.addEventListener('click', (e) => {
+		const btn = e.target.closest('[data-row-action]');
+		if (!btn) return;
+		const row = btn.closest('tr[data-row="record"]');
+		if (!row) return;
+
+		const action = btn.dataset.rowAction;
+		if (action === 'add') insertBlankRowAfter(row);
+		if (action === 'del') deleteRow(row);
+	});
+	// ===== /Row actions =====
+
+	// ===== Column actions (+ / x) =====
+	function ensureColActionUI(){
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		if (!nameRow) return;
+
+		for (let col = 1; col < nameRow.cells.length; col++) {
+			const td = nameRow.cells[col];
+			if (!td) continue;
+			if (td.querySelector('.col-actions')) continue;
+
+			const actions = document.createElement('div');
+			actions.className = 'col-actions';
+			actions.innerHTML = `
+				<span class="emoji-btn" data-col-action="add" title="오른쪽에 컬럼 추가">➕</span>
+				<span class="emoji-btn" data-col-action="del" title="컬럼 삭제">❌</span>
+			`;
+			td.appendChild(actions);
+		}
+	}
+
+	function ensureDataColActionUI(){
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (!headerRow) return;
+
+		for (let col = 1; col < headerRow.cells.length; col++) {
+			const th = headerRow.cells[col];
+			if (!th) continue;
+
+			let edit = th.querySelector('.cell-edit');
+			if (!edit) {
+				edit = document.createElement('div');
+				edit.className = 'cell-edit';
+				edit.setAttribute('contenteditable', '');
+				edit.dataset.colIndex = String(col);
+				th.insertAdjacentElement('afterbegin', edit);
+			}
+
+			if (th.querySelector('.col-actions')) continue;
+
+			const actions = document.createElement('div');
+			actions.className = 'col-actions';
+			actions.innerHTML = `
+				<span class="emoji-btn" data-col-action="add" title="오른쪽에 컬럼 추가">➕</span>
+				<span class="emoji-btn" data-col-action="del" title="컬럼 삭제">❌</span>
+			`;
+			th.appendChild(actions);
+		}
+	}
+
+	function renumberColIndexes(){
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (!nameRow || !headerRow) return;
+
+		const n = nameRow.cells.length - 1;
+		for (let i = 1; i <= n; i++) {
+			const metaCellEdit = nameRow.cells[i]?.querySelector('.cell-edit');
+			if (metaCellEdit) metaCellEdit.dataset.colIndex = String(i);
+
+			const th = headerRow.cells[i];
+			if (th) {
+				th.dataset.colIndex = String(i);
+				const edit = th.querySelector('.cell-edit');
+				if (edit) edit.dataset.colIndex = String(i);
+			}
+		}
+	}
+
+	/* === PART 2 START ===
+	   아래부터 나머지 로직(add/delete column 내부에서 constraint-key 적용,
+	   sync/render/handlers/hover/init, 그리고 닫는 태그까지)이 이어집니다.
+	   다음 메시지에서 Part 2/2를 그대로 붙여넣으시면 완성됩니다.
+	=== PART 2 START === */
+	// Copy buttons
+	copyDDLButton.addEventListener("click", () => copyToClipboard(ddl.value, copyDDLButton));
+	copyDMLButton.addEventListener("click", () => copyToClipboard(dml.value, copyDMLButton));
+	copyAllDDLButton.addEventListener("click", () => copyToClipboard(ddl.value + '\n\n' + dml.value, copyAllDDLButton));
+	copyAllDMLButton.addEventListener("click", () => copyToClipboard(ddl.value + '\n\n' + dml.value, copyAllDMLButton));
+
+	// ===== Column add/delete (continued) =====
+	function addColumnAt(afterColIndex1Based){
+		const n = colCount();
+		const insertPos = Math.max(1, Math.min(n, afterColIndex1Based)) + 1;
+
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		const keyRow  = metaSheet.querySelector('thead tr[data-meta="constraint-key"]');
+		const consRow = metaSheet.querySelector('thead tr[data-meta="constraint"]');
+		const typeRow = metaSheet.querySelector('thead tr[data-meta="type"]');
+		const sizeRow = metaSheet.querySelector('thead tr[data-meta="size"]');
+
+		const nameCell = nameRow.insertCell(insertPos);
+		nameCell.innerHTML = `<div class="cell-edit" contenteditable data-col-index=""></div>`;
+
+		// ✅ KEY: PK/FK 선택 가능
+		const keyCell = keyRow.insertCell(insertPos);
+		keyCell.innerHTML = `
+			<div class="v-group" data-select="multiple">
+				<div class="v-cell" data-k="pk">PRIMARY KEY</div>
+				<div class="v-cell" data-k="fk">FOREIGN KEY</div>
+			</div>`;
+
+		const consCell = consRow.insertCell(insertPos);
+		consCell.innerHTML = `
+			<div class="v-group" data-select="multiple">
+				<div class="v-cell" data-k="notnull">NOT NULL</div>
+				<div class="v-cell" data-k="unique">UNIQUE</div>
+				<div class="v-cell" data-k="check">CHECK</div>
+			</div>`;
+
+		const typeCell = typeRow.insertCell(insertPos);
+		typeCell.innerHTML = `
+			<div class="v-group" data-select="single">
+				<div class="v-cell selected" data-v="varchar2">varchar2</div>
+				<div class="v-cell" data-v="char">char</div>
+				<div class="v-cell" data-v="number">number</div>
+				<div class="v-cell" data-v="date">date</div>
+				<div class="v-cell" data-v="timestamp">timestamp</div>
+			</div>`;
+
+		const sizeCell = sizeRow.insertCell(insertPos);
+		sizeCell.innerHTML = `<div class="cell-edit" contenteditable></div>`;
+
+		// ✅ dataSheet thead (name-mirror): th에 cell-edit 포함해서 삽입
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		const th = document.createElement('th');
+		th.dataset.colIndex = String(insertPos);
+		th.innerHTML = `<div class="cell-edit" contenteditable data-col-index="${insertPos}"></div>`;
+		headerRow.insertBefore(th, headerRow.cells[insertPos] || null);
+
+		// dataSheet tbody
+		dataSheet.querySelectorAll('tbody tr[data-row="record"]').forEach(r=>{
+			const td = r.insertCell(insertPos);
+			td.innerHTML = `<div class="cell-edit" contenteditable></div>`;
+		});
+
+		renumberColIndexes();
+		ensureColActionUI();
+		ensureDataColActionUI();
+		render();
+
+		const newNameEdit = nameRow.cells[insertPos]?.querySelector('.cell-edit');
+		if (newNameEdit) {
+			newNameEdit.focus();
+			setCursorTo(newNameEdit, 0);
+		}
+	}
+
+	function deleteColumnAt(colIndex1Based){
+		const n = colCount();
+		if (n <= 1) return;
+
+		const removePos = Math.max(1, Math.min(n, colIndex1Based));
+
+		const rows = [
+			metaSheet.querySelector('thead tr[data-meta="name"]'),
+			metaSheet.querySelector('thead tr[data-meta="constraint-key"]'),
+			metaSheet.querySelector('thead tr[data-meta="constraint"]'),
+			metaSheet.querySelector('thead tr[data-meta="type"]'),
+			metaSheet.querySelector('thead tr[data-meta="size"]')
+		].filter(Boolean);
+
+		rows.forEach(r => r.deleteCell(removePos));
+
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (headerRow) headerRow.deleteCell(removePos);
+
+		dataSheet.querySelectorAll('tbody tr[data-row="record"]').forEach(r=>{
+			r.deleteCell(removePos);
+		});
+
+		renumberColIndexes();
+		ensureColActionUI();
+		ensureDataColActionUI();
+		render();
+	}
+
+	metaSheet.addEventListener('click', (e) => {
+		const btn = e.target.closest('[data-col-action]');
+		if (!btn) return;
+
+		const td = btn.closest('td');
+		if (!td) return;
+
+		const cellIndex = td.cellIndex;
+		if (cellIndex <= 0) return;
+
+		if (btn.dataset.colAction === 'add') addColumnAt(cellIndex);
+		else if (btn.dataset.colAction === 'del') deleteColumnAt(cellIndex);
+	});
+
+	dataSheet.addEventListener('click', (e) => {
+		const btn = e.target.closest('[data-col-action]');
+		if (!btn) return;
+
+		const th = btn.closest('th');
+		if (!th) return;
+
+		const cellIndex = th.cellIndex;
+		if (cellIndex <= 0) return;
+
+		if (btn.dataset.colAction === 'add') addColumnAt(cellIndex);
+		else if (btn.dataset.colAction === 'del') deleteColumnAt(cellIndex);
+	});
+	// ===== /Column actions =====
+
+	// ===== meta -> data header sync (EDITABLE) =====
+	function syncDataHeaderFromMeta(){
+		const n = colCount();
+
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (!nameRow || !headerRow) return;
+
+		const want = n + 1;
+
+		// 개수 맞추기 (0번은 diag-cell)
+		while (headerRow.cells.length < want) headerRow.appendChild(document.createElement('th'));
+		while (headerRow.cells.length > want) headerRow.deleteCell(headerRow.cells.length - 1);
+
+		const first = headerRow.cells[0];
+		first.className = "diag-cell";
+		first.innerHTML = `<p style="text-align: right">데이터</p><p style="text-align: left">컬럼</p>`;
+
+		for (let i = 1; i <= n; i++) {
+			const th = headerRow.cells[i];
+
+			// ✅ th 안에 editable이 반드시 존재해야 함
+			let edit = th.querySelector('.cell-edit');
+			if (!edit) {
+				edit = document.createElement('div');
+				edit.className = 'cell-edit';
+				edit.setAttribute('contenteditable', '');
+				th.insertAdjacentElement('afterbegin', edit);
+			}
+			edit.dataset.colIndex = String(i);
+
+			// ✅ meta -> data 반영 (단, data 헤더 편집중이면 덮어쓰지 않음)
+			const metaName = (nameRow.cells[i]?.querySelector('.cell-edit')?.textContent || "").trim();
+			setDataHeaderNameByMeta(i, metaName);
+
+			th.dataset.colIndex = String(i);
+			th.classList.remove('is-empty');
+		}
+
+		ensureDataColActionUI();
+	}
+	// ===== /meta -> data header sync (EDITABLE) =====
+
+	// ===== Empty warning + placeholder (META ONLY) =====
+	function applyEmptyNameHighlightAndPlaceholder(){
+		const tableEl = metaSheet.querySelector('[data-meta="table-name"] [data-table-name]');
+		if (tableEl) {
+			const empty = (tableEl.textContent || "").trim() === "";
+			tableEl.classList.toggle('is-empty', empty);
+			if (empty) tableEl.dataset.ph = "테이블 명을 입력하세요";
+			else delete tableEl.dataset.ph;
+		}
+
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		if (!nameRow) return;
+
+		const n = colCount();
+		for (let i = 1; i <= n; i++) {
+			const metaEdit = nameRow.cells[i]?.querySelector('.cell-edit');
+			if (!metaEdit) continue;
+
+			const empty = ((metaEdit.textContent || "").trim() === "");
+			metaEdit.classList.toggle('is-empty', empty);
+			if (empty) metaEdit.dataset.ph = "컬럼 명을 입력하세요";
+			else delete metaEdit.dataset.ph;
+		}
+	}
+	// ===== /Empty warning + placeholder (META ONLY) =====
+
+	function render(){
+		syncTableNameColspan();
+		syncDataHeaderFromMeta(); // ✅ data header도 editable 상태 유지하며 sync
+		applyEmptyNameHighlightAndPlaceholder();
+
+		const tableName = getTableName();
+		const c = cols();
+		const recs = readRecords(c);
+		ddl.value = generateDDL(tableName, c);
+		dml.value = generateDML(tableName, c, recs);
+
+		ensureRowActionUI();
+		renumberRows();
+		ensureColActionUI();
+		ensureDataColActionUI();
+	}
+
+	// ===== input handlers =====
+
+	// metaSheet input: meta name 수정 -> data header 반영 + render
+	metaSheet.addEventListener("input", (e) => {
+		const target = e.target;
+		if(!target.classList.contains('cell-edit')) return;
+
+		// meta name row일 때: data header에 반영
+		if (target.closest('[data-meta="name"]')) {
+			const colIndex = Number(target.dataset.colIndex);
+			const td = target.closest('td');
+			const idx = (!Number.isNaN(colIndex) && colIndex > 0) ? colIndex : (td ? td.cellIndex : null);
+			if (idx) setDataHeaderNameByMeta(idx, (target.textContent || "").trim());
+		}
+		render();
+	});
+
+	// dataSheet input: tbody OR thead(name-mirror)
+	dataSheet.addEventListener("input", (e) => {
+		const target = e.target;
+		if (!target.classList.contains('cell-edit')) return;
+
+		// ✅ name-mirror에서 편집한 경우: meta name도 함께 갱신해야 함
+		const th = target.closest('thead tr[data-meta="name-mirror"] th');
+		if (th) {
+			const colIndex = Number(target.dataset.colIndex) || th.cellIndex;
+			if (colIndex > 0) {
+				setMetaNameByDataHeader(colIndex, (target.textContent || "").trim());
+			}
+			render();
+			return;
+		}
+
+		// tbody 편집이면 그냥 render
+		if (target.closest('#dataSheet tbody')) render();
+	});
+	// ===== /input handlers =====
+
+	// metaSheet click (toggle/select)
+	metaSheet.addEventListener("click", (e) => {
+		const target = e.target;
+		const parent = target.parentElement;
+
+		if (parent?.dataset.select === 'single') {
+			[...parent.children].forEach(c => c.classList.remove('selected'));
+			target.classList.add('selected');
+			render();
+		}
+		else if (parent?.dataset.select === 'multiple' || target.dataset.select === 'toggle') {
+			target.classList.toggle('selected');
+			render();
+		}
+	});
+
+	simpleDDLCheckbox.addEventListener("change", render);
+	simpleDMLCheckbox.addEventListener("change", render);
+
+	// ===== Keyboard navigation (dataSheet tbody + name-mirror) =====
+	dataSheet.addEventListener('keydown', (e) => {
+		const target = e.target;
+		if (!(target.classList.contains('cell-edit') && target.closest('#dataSheet'))) return;
+
+		const inTbody = !!target.closest('#dataSheet tbody');
+		const inTheadName = !!target.closest('#dataSheet thead tr[data-meta="name-mirror"]');
+
+		if (!inTbody && !inTheadName) return;
+
+		const curLoc = getCursorLocation(target);
+		const curLen = target.textContent?.length ?? 0;
+
+		const isCursorAtStart = (curLoc === 0);
+		const isCursorAtEnd = (curLoc === curLen);
+
+		// === THEAD(name-mirror) navigation ===
+		if (inTheadName) {
+			const th = target.closest('th');
+			if (!th) return;
+			const cellIndex = th.cellIndex;
+			const headerRow = th.parentElement;
+
+			if (e.key === 'ArrowLeft') {
+				if (isCursorAtStart && cellIndex > 1) {
+					e.preventDefault();
+					const prevEdit = headerRow.cells[cellIndex - 1]?.querySelector('.cell-edit');
+					if (prevEdit) {
+						prevEdit.focus();
+						setCursorTo(prevEdit, 0);
+					}
+				}
+				return;
+			}
+
+			if (e.key === 'ArrowRight') {
+				if (isCursorAtEnd && cellIndex < headerRow.cells.length - 1) {
+					e.preventDefault();
+					const nextEdit = headerRow.cells[cellIndex + 1]?.querySelector('.cell-edit');
+					if (nextEdit) {
+						nextEdit.focus();
+						setCursorTo(nextEdit, nextEdit.textContent?.length ?? 0);
+					}
+				}
+				return;
+			}
+
+			// Up: 없음(유지)
+			if (e.key === 'ArrowUp') return;
+
+			// Down: 같은 열의 첫 레코드로 이동
+			if (e.key === 'ArrowDown') {
+				e.preventDefault();
+				const firstRow = dataSheet.querySelector('tbody tr[data-row="record"]');
+				const nextEdit = firstRow?.cells[cellIndex]?.querySelector('.cell-edit');
+				if (!nextEdit) return;
+
+				const nextLen = nextEdit.textContent?.length ?? 0;
+				const nextLoc = mapLocationByRatio(curLoc, curLen, nextLen);
+				nextEdit.focus();
+				setCursorTo(nextEdit, nextLoc);
+				return;
+			}
+
+			return;
+		}
+
+		// === TBODY navigation (기존 유지) ===
+		if (inTbody) {
+			const currentRow = target.closest('tr');
+			const currentCell = target.closest('td');
+			const cellIndex = currentCell.cellIndex;
+
+			if (e.key === 'ArrowUp') {
+				e.preventDefault();
+
+				// ✅ 첫 행에서 ArrowUp이면 헤더(name-mirror)로 이동
+				const prevRow = currentRow.previousElementSibling;
+				if (!prevRow) {
+					const headerEdit = dataSheet.querySelector(
+						`thead tr[data-meta="name-mirror"] th:nth-child(${cellIndex + 1}) .cell-edit`
+					);
+					if (headerEdit) {
+						const nextLen = headerEdit.textContent?.length ?? 0;
+						const nextLoc = mapLocationByRatio(curLoc, curLen, nextLen);
+						headerEdit.focus();
+						setCursorTo(headerEdit, nextLoc);
+					}
+					return;
+				}
+
+				if (prevRow.dataset.row !== "record") return;
+
+				const nextCell = prevRow.cells[cellIndex]?.querySelector('.cell-edit');
+				if (!nextCell) return;
+
+				const nextLen = nextCell.textContent?.length ?? 0;
+				const nextLoc = mapLocationByRatio(curLoc, curLen, nextLen);
+
+				nextCell.focus();
+				setCursorTo(nextCell, nextLoc);
+				return;
+			}
+
+			if (e.key === 'ArrowDown') {
+				e.preventDefault();
+
+				const nextRow = currentRow.nextElementSibling;
+				if (!nextRow || nextRow.dataset.row !== "record") return;
+
+				const nextCell = nextRow.cells[cellIndex]?.querySelector('.cell-edit');
+				if (!nextCell) return;
+
+				const nextLen = nextCell.textContent?.length ?? 0;
+				const nextLoc = mapLocationByRatio(curLoc, curLen, nextLen);
+
+				nextCell.focus();
+				setCursorTo(nextCell, nextLoc);
+				return;
+			}
+
+			if (e.key === 'ArrowLeft') {
+				if (isCursorAtStart && cellIndex > 1) {
+					e.preventDefault();
+					const prevCell = currentRow.cells[cellIndex - 1]?.querySelector('.cell-edit');
+					if (prevCell) {
+						prevCell.focus();
+						setCursorTo(prevCell, 0);
+					}
+				}
+				return;
+			}
+
+			if (e.key === 'ArrowRight') {
+				if (isCursorAtEnd && cellIndex < currentRow.cells.length - 1) {
+					e.preventDefault();
+					const nextCell = currentRow.cells[cellIndex + 1]?.querySelector('.cell-edit');
+					if (nextCell) {
+						nextCell.focus();
+						setCursorTo(nextCell, nextCell.textContent?.length ?? 0);
+					}
+				}
+				return;
+			}
+		}
+	});
+	// ===== /Keyboard navigation =====
+
+	// ===== Column hover sync (MetaSheet 전체 → Meta 헤더) =====
+	let metaHoverCol = null;
+	function setMetaHoverCol(colIdx){
+		const nameRow = metaSheet.querySelector('thead tr[data-meta="name"]');
+		if (!nameRow) return;
+
+		if (metaHoverCol && nameRow.cells[metaHoverCol]) {
+			nameRow.cells[metaHoverCol].classList.remove('col-hover');
+		}
+		metaHoverCol = colIdx;
+
+		if (metaHoverCol && nameRow.cells[metaHoverCol]) {
+			nameRow.cells[metaHoverCol].classList.add('col-hover');
+		}
+	}
+
+	metaSheet.addEventListener('mouseover', (e) => {
+		const td = e.target.closest('td');
+		if (!td || !metaSheet.contains(td)) return;
+
+		const tr = td.closest('tr');
+		if (tr?.dataset?.meta === 'table-name') return;
+
+		const idx = td.cellIndex;
+		if (idx <= 0) return setMetaHoverCol(null);
+
+		setMetaHoverCol(idx);
+	});
+	metaSheet.addEventListener('mouseleave', () => setMetaHoverCol(null));
+
+	// ===== Column hover sync (DataSheet tbody/thead → DataSheet thead) =====
+	let dataHoverCol = null;
+
+	function clearDataHoverCol(){
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (!headerRow) return;
+		if (dataHoverCol && headerRow.cells[dataHoverCol]) {
+			headerRow.cells[dataHoverCol].classList.remove('col-hover');
+		}
+		dataHoverCol = null;
+	}
+
+	function setDataHoverCol(colIdx){
+		const headerRow = dataSheet.querySelector('thead tr[data-meta="name-mirror"]');
+		if (!headerRow) return;
+
+		if (!colIdx || colIdx <= 0 || colIdx >= headerRow.cells.length) {
+			clearDataHoverCol();
+			return;
+		}
+
+		if (dataHoverCol && headerRow.cells[dataHoverCol]) {
+			headerRow.cells[dataHoverCol].classList.remove('col-hover');
+		}
+		dataHoverCol = colIdx;
+
+		if (headerRow.cells[dataHoverCol]) {
+			headerRow.cells[dataHoverCol].classList.add('col-hover');
+		}
+	}
+
+	// tbody td hover → thead th에 반영
+	dataSheet.addEventListener('mouseover', (e) => {
+		const td = e.target.closest('td');
+		if (!td) return;
+		if (!td.closest('#dataSheet tbody')) return;
+
+		const idx = td.cellIndex;
+		setDataHoverCol(idx);
+	});
+
+	// thead th hover → col-hover
+	const dataThead = dataSheet.querySelector('thead');
+	if (dataThead) {
+		dataThead.addEventListener('mouseover', (e) => {
+			const th = e.target.closest('th');
+			if (!th) return;
+			const idx = th.cellIndex;
+			setDataHoverCol(idx);
+		});
+		dataThead.addEventListener('mouseleave', () => clearDataHoverCol());
+	}
+
+	dataSheet.addEventListener('mouseleave', () => clearDataHoverCol());
+
+	// ===== init =====
+	ensureColActionUI();
+	ensureDataColActionUI();
+	render();
+})();
+</script>
+</body>
+</html>
