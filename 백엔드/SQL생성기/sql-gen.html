@@ -525,7 +525,7 @@
 			});
 		}
 
-		return `--- ${tableName} ---\ndrop table ${tableName};\ncreate table ${tableName} (\n${lines.join(",\n")}\n);\ntruncate table ${tableName};`;
+		return `--- ${tableName} 정보 ---\ndrop table ${tableName};\ncreate table ${tableName} (\n${lines.join(",\n")}\n);\ntruncate table ${tableName};`;
 	}
 
 	function generateDML(tableName, cols, records){
