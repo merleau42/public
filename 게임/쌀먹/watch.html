@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>사냥 효율 기록</title>
+	<link rel="stylesheet" href="watch.css" />
+</head>
+<body>
+	<div class="sheet">
+		<div class="header-row">
+			<div class="watch-head">스톱워치</div>
+
+			<div class="group" data-group="main">
+				<div class="group-title">
+					<span>재화 보유량</span>
+				</div>
+				<div class="sub-grid">
+					<button type="button" class="sub-cell plus" aria-label="보유 재화량 컬럼 추가">+</button>
+					<div class="sub-cell" contenteditable="true">골드</div>
+					<div class="sub-cell" contenteditable="true">경험치</div>
+				</div>
+			</div>
+
+			<div class="group" data-group="gain">
+				<div class="group-title">
+					<span>추가 획득량</span>
+					<span class="apply-inline">
+						(
+						<label class="apply-toggle-wrap">
+							<span class="small">반영</span>
+							<input type="checkbox" class="apply-toggle" data-group="gain" checked />
+						</label>
+						)
+					</span>
+				</div>
+				<div class="sub-grid">
+					<button type="button" class="sub-cell plus" aria-label="추가 획득량 컬럼 추가">+</button>
+					<div class="sub-cell" contenteditable="true">잡템</div>
+				</div>
+			</div>
+
+			<div class="group" data-group="lose">
+				<div class="group-title">
+					<span>추가 소모량</span>
+					<span class="apply-inline">
+						(
+						<label class="apply-toggle-wrap">
+							<span class="small">반영</span>
+							<input type="checkbox" class="apply-toggle" data-group="lose" checked />
+						</label>
+						)
+					</span>
+				</div>
+				<div class="sub-grid">
+					<button type="button" class="sub-cell plus" aria-label="추가 소모량 컬럼 추가">+</button>
+					<div class="sub-cell" contenteditable="true">헤이스트</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="records" id="records"></div>
+
+		<div class="value-target-modal hidden" id="value-target-modal">
+			<div class="value-target-backdrop"></div>
+			<div class="value-target-dialog">
+				<div class="value-target-title">반영할 재화 선택</div>
+				<div class="value-target-list" id="value-target-list"></div>
+				<div class="value-target-actions">
+					<button type="button" id="value-target-close-btn">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="watch.js"></script>
+</body>
+</html>
