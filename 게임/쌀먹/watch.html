@@ -9,7 +9,15 @@
 <body>
 	<div class="sheet">
 		<div class="header-row">
-			<div class="watch-head">스톱워치</div>
+			<div class="watch-head">
+				<span>스톱워치</span>
+
+				<div class="corner-toolbar">
+					<button type="button" class="corner-tool-btn" id="theme-toggle-btn" title="다크모드">🌙</button>
+					<button type="button" class="corner-tool-btn" id="log-open-btn" title="기록 보기">📜</button>
+					<button type="button" class="corner-tool-btn" id="help-open-btn" title="도움말">❔</button>
+				</div>
+			</div>
 
 			<div class="group" data-group="main">
 				<div class="group-title">
@@ -28,7 +36,6 @@
 					<span class="apply-inline">
 						(
 						<label class="apply-toggle-wrap">
-							<span class="small">반영</span>
 							<input type="checkbox" class="apply-toggle" data-group="gain" checked />
 						</label>
 						)
@@ -46,7 +53,6 @@
 					<span class="apply-inline">
 						(
 						<label class="apply-toggle-wrap">
-							<span class="small">반영</span>
 							<input type="checkbox" class="apply-toggle" data-group="lose" checked />
 						</label>
 						)
@@ -68,6 +74,37 @@
 				<div class="value-target-list" id="value-target-list"></div>
 				<div class="value-target-actions">
 					<button type="button" id="value-target-close-btn">닫기</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="overlay-modal hidden" id="log-modal">
+			<div class="overlay-backdrop"></div>
+			<div class="overlay-dialog">
+				<div class="overlay-title-row">
+					<div class="overlay-title">기록 보기</div>
+					<button type="button" class="overlay-close-btn" id="log-close-btn">닫기</button>
+				</div>
+				<div class="log-list" id="log-list"></div>
+			</div>
+		</div>
+
+		<div class="overlay-modal hidden" id="help-modal">
+			<div class="overlay-backdrop"></div>
+			<div class="overlay-dialog help-dialog">
+				<div class="overlay-title-row">
+					<div class="overlay-title">도움말</div>
+					<button type="button" class="overlay-close-btn" id="help-close-btn">닫기</button>
+				</div>
+
+				<div class="help-body">
+					<div><b>⏱</b> : 스톱워치 시작 / 정지</div>
+					<div>➕ : 스톱워치 추가</div>
+					<div>♻ : 타이머 초기화 및 이어가기</div>
+					<div>❌ : 타이머 삭제</div>
+					<div><b>⚙</b> : 재화 종류 선택</div>
+					<div>📜 : 로그 보기</div>
+					<div>🌙 : 다크모드 전환</div>
 				</div>
 			</div>
 		</div>

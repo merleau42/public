@@ -1,3 +1,6 @@
+const CARET_GUARD = "\u200B";
+const watchLogs = [];
+
 document.addEventListener("DOMContentLoaded", () => {
 	initializeAllGroups();
 	ensureInitialRecord();
@@ -7,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	startGlobalTicker();
 	updateRowGroupFractions();
 	recalculateAllRecords();
+	renderLogList();
 });
 
 function bindGlobalEvents() {
@@ -17,12 +21,43 @@ function bindGlobalEvents() {
 			return;
 		}
 
+		if (event.target.closest("#theme-toggle-btn")) {
+			toggleDarkMode();
+			return;
+		}
+
+		if (event.target.closest("#log-open-btn")) {
+			openOverlayModal("log-modal");
+			renderLogList();
+			return;
+		}
+
+		if (event.target.closest("#help-open-btn")) {
+			openOverlayModal("help-modal");
+			return;
+		}
+
+		if (event.target.closest("#log-close-btn")) {
+			closeOverlayModal("log-modal");
+			return;
+		}
+
+		if (event.target.closest("#help-close-btn")) {
+			closeOverlayModal("help-modal");
+			return;
+		}
+
 		const watchToggle = event.target.closest(".watch-toggle");
 		if (watchToggle) {
 			const recordRow = watchToggle.closest(".record-row");
 			if (recordRow) {
+				const wasRunning = recordRow.dataset.running === "true";
 				toggleStopwatch(recordRow);
 				recalculateRecord(recordRow);
+
+				if (wasRunning) {
+					appendStopLog(recordRow);
+				}
 			}
 			watchToggle.blur();
 			return;
@@ -46,7 +81,7 @@ function bindGlobalEvents() {
 		const resetBtn = event.target.closest(".reset-btn");
 		if (resetBtn) {
 			const recordRow = resetBtn.closest(".record-row");
-			if (recordRow) resetRecordKeepValueRows(recordRow);
+			if (recordRow) resetRecordForReuse(recordRow);
 			resetBtn.blur();
 			closeAllWatchActions();
 			return;
@@ -78,6 +113,7 @@ function bindGlobalEvents() {
 		if (editableCell && !editableCell.classList.contains("readonly-cell")) {
 			const textEl = editableCell.querySelector('.cell-text[contenteditable="true"]');
 			if (textEl && !event.target.closest(".value-target-btn")) {
+				prepareCaretAnchor(textEl);
 				focusEditableText(textEl);
 				return;
 			}
@@ -88,9 +124,25 @@ function bindGlobalEvents() {
 			return;
 		}
 
+		if (event.target.closest("#log-modal .overlay-backdrop")) {
+			closeOverlayModal("log-modal");
+			return;
+		}
+
+		if (event.target.closest("#help-modal .overlay-backdrop")) {
+			closeOverlayModal("help-modal");
+			return;
+		}
+
 		if (!event.target.closest(".watch-cell")) {
 			closeAllWatchActions();
 		}
+	});
+
+	document.addEventListener("focusin", (event) => {
+		const editable = event.target.closest('[contenteditable="true"]');
+		if (!editable) return;
+		prepareCaretAnchor(editable);
 	});
 
 	document.addEventListener("input", (event) => {
@@ -107,6 +159,12 @@ function bindGlobalEvents() {
 			recalculateAllRecords();
 		}
 	});
+
+	document.addEventListener("blur", (event) => {
+		const editable = event.target.closest('[contenteditable="true"]');
+		if (!editable) return;
+		cleanupCaretGuard(editable);
+	}, true);
 
 	document.addEventListener("keydown", (event) => {
 		const watchTime = event.target.closest(".watch-time.editing");
@@ -151,6 +209,137 @@ function bindHoverActions() {
 	});
 }
 
+function toggleDarkMode() {
+	document.body.classList.toggle("dark-mode");
+}
+
+function openOverlayModal(modalId) {
+	const modal = document.getElementById(modalId);
+	if (!modal) return;
+	modal.classList.remove("hidden");
+}
+
+function closeOverlayModal(modalId) {
+	const modal = document.getElementById(modalId);
+	if (!modal) return;
+	modal.classList.add("hidden");
+}
+
+function renderLogList() {
+	const logList = document.getElementById("log-list");
+	if (!logList) return;
+
+	logList.innerHTML = "";
+
+	if (!watchLogs.length) {
+		const empty = document.createElement("div");
+		empty.className = "log-empty";
+		empty.textContent = "아직 기록이 없습니다.";
+		logList.appendChild(empty);
+		return;
+	}
+
+	watchLogs
+		.slice()
+		.reverse()
+		.forEach((logText) => {
+			const item = document.createElement("div");
+			item.className = "log-item";
+			item.textContent = logText;
+			logList.appendChild(item);
+		});
+}
+
+function appendStopLog(recordRow) {
+	const now = new Date();
+	const hh = String(now.getHours()).padStart(2, "0");
+	const mm = String(now.getMinutes()).padStart(2, "0");
+	const timeLabel = `[${hh}:${mm}]`;
+
+	const elapsedMs = Number(recordRow.dataset.elapsedMs || "0");
+	const durationLabel = formatElapsedShort(elapsedMs);
+
+	const changes = getMainChangeSummary(recordRow);
+	const effs = getMainEfficiencySummary(recordRow);
+
+	const logText = `${timeLabel} ${durationLabel}, 　 획득(${changes}), 　 효율(${effs})`;
+	watchLogs.push(logText);
+	renderLogList();
+}
+
+function getMainChangeSummary(recordRow) {
+	const headerMap = getMainHeaderMap();
+	const startCells = getRecordDataRowCells(recordRow, "main", 0);
+	const endCells = getRecordDataRowCells(recordRow, "main", 1);
+
+	const parts = headerMap.map((item, index) => {
+		const startText = getEditableText(startCells[index]);
+		const endText = getEditableText(endCells[index]);
+
+		if (!startText || !endText) return null;
+
+		const startValue = parseNumeric(startText);
+		const endValue = parseNumeric(endText);
+		const diff = endValue - startValue;
+
+		return `${item.label} ${formatSignedNumber(diff)}`;
+	}).filter(Boolean);
+
+	return parts.length ? parts.join(", ") : "없음";
+}
+
+function getMainEfficiencySummary(recordRow) {
+	const headerMap = getMainHeaderMap();
+	const effCells = getRecordDataRowCells(recordRow, "main", 2);
+
+	const parts = headerMap.map((item, index) => {
+		const effText = getEditableText(effCells[index]);
+		if (!effText) return null;
+		const effValue = parseNumeric(effText);
+		return `${item.label} ${formatSignedNumber(effValue)}`;
+	}).filter(Boolean);
+
+	return parts.length ? parts.join(", ") : "없음";
+}
+
+function formatSignedNumber(num) {
+	if (!Number.isFinite(num)) return "0";
+	const absText = formatNumber(Math.abs(num));
+	return num > 0 ? `+${absText}` : num < 0 ? `-${absText}` : "0";
+}
+
+function formatElapsedShort(ms) {
+	const totalSec = Math.floor(ms / 1000);
+	const min = Math.floor(totalSec / 60);
+	const sec = totalSec % 60;
+	return `${min}분 ${sec}초`;
+}
+
+function prepareCaretAnchor(editable) {
+	if (!editable) return;
+
+	const plain = getPlainEditableText(editable);
+	if (plain !== "") return;
+
+	if ((editable.textContent || "") === CARET_GUARD) return;
+	editable.textContent = CARET_GUARD;
+}
+
+function cleanupCaretGuard(editable) {
+	if (!editable) return;
+
+	const cleaned = getPlainEditableText(editable);
+	const current = editable.textContent || "";
+	if (current === cleaned) return;
+
+	editable.textContent = cleaned;
+}
+
+function getPlainEditableText(editable) {
+	if (!editable) return "";
+	return (editable.textContent || "").replace(/\u200B/g, "").trim();
+}
+
 function focusEditableText(textEl) {
 	textEl.focus();
 
@@ -173,6 +362,7 @@ function beginWatchTimeEdit(timeEl) {
 	timeEl.classList.add("editing");
 	timeEl.setAttribute("contenteditable", "true");
 
+	prepareCaretAnchor(timeEl);
 	focusEditableText(timeEl);
 }
 
@@ -181,6 +371,8 @@ function commitWatchTimeEdit(timeEl) {
 
 	const recordRow = timeEl.closest(".record-row");
 	if (!recordRow) return;
+
+	cleanupCaretGuard(timeEl);
 
 	const parsedMs = parseElapsedText(timeEl.textContent);
 	const safeMs = parsedMs == null ? getElapsedMs(recordRow) : parsedMs;
@@ -551,8 +743,8 @@ function buildRecordRow(mainCols, gainCols, loseCols) {
 
 			<div class="watch-actions" aria-label="레코드 작업">
 				<button type="button" class="watch-action-btn add-btn" aria-label="아래에 레코드 추가">➕</button>
-				<button type="button" class="watch-action-btn reset-btn" aria-label="가치만 남기고 비우기">♻</button>
-				<button type="button" class="watch-action-btn delete-btn" aria-label="레코드 삭제">🗑</button>
+				<button type="button" class="watch-action-btn reset-btn" aria-label="조건부 재사용">♻</button>
+				<button type="button" class="watch-action-btn delete-btn" aria-label="레코드 삭제">❌</button>
 			</div>
 		</div>
 
@@ -716,23 +908,30 @@ function clearRowValues(recordRow, groupName, rowIndex) {
 	});
 }
 
-function clearAllRowsExceptValue(recordRow, groupName) {
-	const keepRowIndex = 1;
-	for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-		if (rowIndex !== keepRowIndex) clearRowValues(recordRow, groupName, rowIndex);
-	}
-}
-
 function clearAllRows(recordRow, groupName) {
 	for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
 		clearRowValues(recordRow, groupName, rowIndex);
 	}
 }
 
-function resetRecordKeepValueRows(recordRow) {
-	clearAllRows(recordRow, "main");
-	clearAllRowsExceptValue(recordRow, "gain");
-	clearAllRowsExceptValue(recordRow, "lose");
+function resetRecordForReuse(recordRow) {
+	clearRowValues(recordRow, "gain", 0);
+	clearRowValues(recordRow, "lose", 0);
+
+	const startCells = getRecordDataRowCells(recordRow, "main", 0);
+	const endCells = getRecordDataRowCells(recordRow, "main", 1);
+	const hasAnyEndValue = endCells.some((cell) => getEditableText(cell) !== "");
+
+	if (hasAnyEndValue) {
+		startCells.forEach((startCell, index) => {
+			setEditableText(startCell, getEditableText(endCells[index]));
+		});
+		endCells.forEach((endCell) => {
+			setEditableText(endCell, "");
+		});
+	} else {
+		clearAllRows(recordRow, "main");
+	}
 
 	recordRow.dataset.elapsedMs = "0";
 	recordRow.dataset.running = "false";
@@ -745,7 +944,7 @@ function resetRecordKeepValueRows(recordRow) {
 function deleteRecord(recordRow) {
 	const rows = document.querySelectorAll(".record-row");
 	if (rows.length <= 1) {
-		resetRecordKeepValueRows(recordRow);
+		resetRecordForReuse(recordRow);
 		closeAllWatchActions();
 		return;
 	}
@@ -771,7 +970,7 @@ function getMainHeaderMap() {
 	const cells = Array.from(subGrid.children).slice(1);
 	return cells.map((cell, index) => ({
 		key: `main-${index}`,
-		label: cell.textContent.trim() || `항목${index + 1}`,
+		label: getPlainEditableText(cell) || `항목${index + 1}`,
 		index
 	}));
 }
@@ -780,15 +979,19 @@ function getEditableText(cell) {
 	if (!cell) return "";
 	const textEl = cell.querySelector(".cell-text");
 	if (!textEl) return "";
-	return textEl.textContent.trim();
+	return getPlainEditableText(textEl);
 }
 
 function setEditableText(cell, text) {
 	if (!cell) return;
 	const textEl = cell.querySelector(".cell-text");
-	if (textEl) {
-		textEl.textContent = text;
-	}
+	if (!textEl) return;
+
+	const nextText = text ?? "";
+	const currentText = textEl.textContent ?? "";
+
+	if (currentText === nextText) return;
+	textEl.textContent = nextText;
 }
 
 function parseNumeric(text) {
@@ -803,7 +1006,7 @@ function formatNumber(num) {
 	if (!Number.isFinite(num)) return "";
 	if (Math.abs(num) < 1e-9) return "0";
 	if (Math.abs(num % 1) < 1e-9) return String(Math.round(num));
-	return num.toFixed(2).replace(/\.?0+$/, "");
+	return num.toFixed(1).replace(/\.?0+$/, "");
 }
 
 function recalculateAllRecords() {
