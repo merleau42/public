@@ -1,3 +1,5 @@
+// 26.03.22 13:00 버전
+
 const CARET_GUARD = "\u200B";
 const watchLogs = [];
 
