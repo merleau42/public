@@ -116,7 +116,7 @@ function bindGlobalEvents() {
 			const textEl = editableCell.querySelector('.cell-text[contenteditable="true"]');
 			if (textEl && !event.target.closest(".value-target-btn")) {
 				prepareCaretAnchor(textEl);
-				focusEditableText(textEl);
+				// focusEditableText(textEl); // 이 줄을 제거했습니다.
 				return;
 			}
 		}
